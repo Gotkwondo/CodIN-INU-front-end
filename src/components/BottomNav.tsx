@@ -15,7 +15,10 @@ export default function BottomNav() {
     const pathname = usePathname();
 
     return (
-        <nav className="fixed bottom-0 left-0 right-0 bg-white border-t">
+        <nav
+            className="fixed bottom-0 left-0 right-0 bg-white border-t"
+            style={{ boxShadow: '0 -4px 8px rgba(0, 0, 0, 0.1)' }} // 그림자 스타일 적용
+        >
             <ul className="flex justify-around">
                 {navItems.map((item) => {
                     const isActive = pathname.startsWith(item.href);
