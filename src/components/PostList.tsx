@@ -1,28 +1,19 @@
-// components/PostList.tsx
-'use client';
+// src/components/PostList.tsx
 
 import { FC } from 'react';
 import PostItem from './PostItem';
-
-interface Post {
-    title: string;
-    content: string;
-    views: number;
-    likes: number;
-    comments: number;
-    timeAgo: string;
-    icon: string;
-}
+import { Post } from '@/interfaces/Post';
 
 interface PostListProps {
     posts: Post[];
+    boardName: string;
 }
 
-const PostList: FC<PostListProps> = ({ posts }) => {
+const PostList: FC<PostListProps> = ({ posts, boardName }) => {
     return (
         <ul className="space-y-4">
-            {posts.map((post, index) => (
-                <PostItem key={index} post={post} />
+            {posts.map((post) => (
+                <PostItem key={post.id} post={post} boardName={boardName} />
             ))}
         </ul>
     );
