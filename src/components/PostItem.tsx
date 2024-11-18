@@ -1,27 +1,23 @@
-// components/PostItem.tsx
-'use client';
+// src/components/PostItem.tsx
 
-import { FC } from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
-
-interface Post {
-    title: string;
-    content: string;
-    views: number;
-    likes: number;
-    comments: number;
-    timeAgo: string;
-    icon: string;
-}
+import { Post } from '@/interfaces/Post';
+import {useEffect} from "react";
 
 interface PostItemProps {
     post: Post;
+    boardName: string;
 }
 
-const PostItem: FC<PostItemProps> = ({ post }) => {
+const PostItem: React.FC<PostItemProps> = ({ post, boardName }) => {
+    console.log("post")
+    console.log(post)
+    console.log("boardName")
+    console.log(boardName)
     return (
         <li className="flex items-start space-x-4 bg-white p-1 border-b">
-            <div className="flex-1">
+            <Link href={`./${boardName}/${post.id}`} className="flex-1">
                 <h3 className="text-sm font-semibold text-gray-800">{post.title}</h3>
                 <p className="text-xs text-gray-600">{post.content}</p>
                 <div className="flex items-center text-xs text-gray-500 mt-4 space-x-4">
@@ -29,7 +25,7 @@ const PostItem: FC<PostItemProps> = ({ post }) => {
                     <span>❤️ {post.likes}</span>
                     <span>💬 {post.comments}</span>
                 </div>
-            </div>
+            </Link>
             <div>
                 <div className="w-12 h-12">
                     <Image

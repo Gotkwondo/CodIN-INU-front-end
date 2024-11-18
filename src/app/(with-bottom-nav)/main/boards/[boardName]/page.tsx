@@ -1,6 +1,5 @@
-// app/boards/[boardName]/page.tsx
-'use client';
-
+// src/app/(with-bottom-nav)/main/boards/[boardName]/page.tsx
+"use client"
 import { FC, useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Tabs from '@/components/Tabs';
@@ -17,7 +16,11 @@ const BoardPage: FC = () => {
     const board = boardData[boardName];
 
     if (!board) {
-        return <div>존재하지 않는 게시판입니다.</div>;
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <h2 className="text-xl font-semibold text-gray-700">존재하지 않는 게시판입니다.</h2>
+            </div>
+        );
     }
 
     // 탭 정보 설정
@@ -45,17 +48,14 @@ const BoardPage: FC = () => {
             {/* 페이지 헤더 */}
             <header className="text-center my-4">
                 <h1 className="text-2xl font-bold text-gray-700 flex items-center justify-center">
-                    {/* 아이콘은 필요에 따라 추가 */}
-                    <span className="mr-2">🖐️</span> {board.name}
+                    <span className="mr-2">{board.icon}</span> {board.name}
                 </h1>
                 {/* Tabs 컴포넌트 사용 */}
-                {hasTabs && (
-                    <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
-                )}
+                {hasTabs && <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />}
             </header>
 
             {/* PostList 컴포넌트 사용 */}
-            <PostList posts={posts} />
+            <PostList posts={posts} boardName={boardName} />
         </div>
     );
 };
