@@ -52,17 +52,7 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
                 {/* 추가적인 게시물 내용 표시 */}
             </article>
 
-            {/* 댓글 작성 섹션 */}
-            <section className="mt-8">
-                <h2 className="text-xl font-semibold">댓글 작성</h2>
-                <CommentForm postId={postId} />
-            </section>
 
-            {/* 댓글 목록 섹션 */}
-            <section className="mt-8">
-                <h2 className="text-xl font-semibold">댓글</h2>
-                <CommentList postId={postId} />
-            </section>
         </div>
     );
 }
