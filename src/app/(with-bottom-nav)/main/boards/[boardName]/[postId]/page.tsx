@@ -1,9 +1,6 @@
 // src/app/boards/[boardName]/[postId]/page.tsx
-
-import { Post } from '@/interfaces/Post';
-import { localPosts } from '@/data/localPosts';
-import CommentForm from '@/components/CommentForm';
-import CommentList from '@/components/CommentList';
+import { Post } from "@/interfaces/Post";
+import { localPosts } from "@/data/localPosts";
 
 interface PostDetailPageProps {
     params: {
@@ -12,7 +9,11 @@ interface PostDetailPageProps {
     };
 }
 
-export default function PostDetailPage({ params }: PostDetailPageProps) {
+export default async function PostDetailPage({
+                                                 params: rawParams,
+                                             }: PostDetailPageProps) {
+    // 비동기로 params 처리
+    const params = await Promise.resolve(rawParams);
     const { boardName, postId } = params;
 
     // 게시물 ID를 숫자로 변환
@@ -31,7 +32,9 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
     if (!post) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <h2 className="text-xl font-semibold text-gray-700">게시물을 찾을 수 없습니다.</h2>
+                <h2 className="text-xl font-semibold text-gray-700">
+                    게시물을 찾을 수 없습니다.
+                </h2>
             </div>
         );
     }
@@ -49,10 +52,7 @@ export default function PostDetailPage({ params }: PostDetailPageProps) {
             </header>
             <article className="prose">
                 <p>{post.content}</p>
-                {/* 추가적인 게시물 내용 표시 */}
             </article>
-
-
         </div>
     );
 }
