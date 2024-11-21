@@ -2,8 +2,10 @@
 
 import '../signup.css';
 import {useState} from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function SignupAuth() {
+  const router = useRouter();
     const [code, setCode] = useState<string[]>(new Array(6).fill(""));
 
   // `element`는 HTMLInputElement로 타입 지정
@@ -39,7 +41,7 @@ export default function SignupAuth() {
                 />
                 ))}
             </div>
-            <button id='submit'>다음</button>
+            <button id='submit' onClick={()=>router.push('/signup/password')}>다음</button>
         </div>
     );
 }
