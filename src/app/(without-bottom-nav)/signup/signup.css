@@ -129,6 +129,7 @@
         align-items: center;
         margin-left: 24px;
         color: #000000;
+        margin-top: 35px;
 
 
       }
@@ -152,6 +153,7 @@
         display: flex;
         align-items: center;
         text-align: center;
+        margin-top: 11px;
 
         color: #4D4D4D;
 
@@ -172,14 +174,16 @@
         align-items: center;
         margin-left: 28px;
         color: #808080;
-
+        margin-top: 12px;
 
       }
       #accept{
        display: flex;
+       position: absolute;
        flex-direction: row;
        align-self: flex-start;
        margin-left: 21px;
+       bottom: 193px;
       }
       #acceptBtn{
         -webkit-appearance: none;  /* Safari */
@@ -198,7 +202,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-         border-color: #0D99FF;     /* 체크된 상태 테두리 색 */
+         border-color: #0D99FF;  
+         /* 체크된 상태 테두리 색 */
       }
       #acceptBtn:checked::after{
         content: '✔'; /* 체크 표시 */
@@ -214,7 +219,7 @@
 
         width: auto;
         height: 17px;
-
+        margin-left: 8px; 
 
         font-family: 'Noto Sans KR';
         font-style: normal;
@@ -231,8 +236,9 @@
       #checkBoxCont{
          
         box-sizing: border-box;
-
-      
+        position: absolute;
+        bottom: 89px;
+     
         width: 350px;
         height: 94px;
        
@@ -241,4 +247,106 @@
         border-radius: 9px;
 
       }
+
+      #profile_title{
+    
+      width: auto;
+      height: 29px;
+
+      font-family: 'Noto Sans KR';
+      font-style: normal;
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 29px;
+      display: flex;
+      align-items: center;
+      margin-left: 24px;
+      margin-top: 38px;
+      align-self: flex-start;
+      color: #000000;
+
+
+      }
+      #profileImgBtn{
+
+        width: 87px;
+        height: 87px;
+        border-radius: 50%;
+        background-image: url('../../../../public/icons/Camera.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        background: #E6E6E6;
+        align-self: flex-start;
+        margin-top: 24px;
+        margin-left: 24px;
+
+      }
+      #nickname{
+        margin-top: 26px;
+        width: 348px;
+        border: none;
+        border-bottom: 1px solid #CCCCCC;
+        outline: none;
+        color: #000000;
+        font-family: 'Noto Sans KR';
+        font-weight: 500;
+        padding-bottom: 3px;
+      }
+
+      #interest_title{
+    
+      width: auto;
+      height: 29px;
+
+      font-family: 'Noto Sans KR';
+      font-style: normal;
+      font-weight: 500;
+      letter-spacing:-1px ;
+      font-size: 20px;
+      line-height: 29px;
+      display: flex;
+      align-items: center;
+      margin-top: 45px;
+      margin-left: 24px;
+      color: #000000;
+      align-self: flex-start;
+
+
+      }
+      #interest{
+        height: calc(100vh - 395px - 100px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        
+        align-self: flex-start;
+        margin-left: 29px;
+        margin-top: 12px;
+        
+      }
+      .checkbox_label{
+        display: flex;
+        flex-direction: row;
+        align-self: flex-start;
+        align-items: flex-start;
+        width: auto;
+        height: 17px;
+        font-family: 'Noto Sans KR';
+        font-style: normal;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 17px;
+        display: flex;
+        align-items: center;
+      
+        text-align: center;
+
+        color: #000000;
+
+      }
+
+      .interCheck{
+        margin-right: 13px;
+      }
+   
 }

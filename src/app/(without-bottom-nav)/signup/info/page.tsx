@@ -1,6 +1,10 @@
+'use client';
 import '../signup.css';
+import { useRouter } from 'next/navigation';
 
 export default function SignupInfo() {
+    const router = useRouter();
+
     return (
         <div className='signup'>
         <div id='back_btn'> {`<`} </div>
@@ -17,7 +21,7 @@ export default function SignupInfo() {
         <div id='checkBoxCont'>
             이용 약간 및 개인정보 처리방침 동의 체크박스
         </div>
-        <button id='submit'>다음</button>
+        <button id='submit' onClick={()=>router.push('/signup/profile')}>다음</button>
     </div>
     );
 }
