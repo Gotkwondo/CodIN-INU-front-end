@@ -14,8 +14,10 @@ const PostList: FC<PostListProps> = ({ posts, boardName, boardType }) => {
             className={
                 boardType === "gallery"
                     ? "grid grid-cols-2 gap-4"
-                    : "space-y-4"
-            } // 갤러리형: 그리드 / 리스트형: 세로 정렬
+                    : boardType === "imageAndLabel"
+                        ? "grid grid-cols-2 gap-4" // `imageAndLabel`에 대한 추가 스타일
+                        : "space-y-4"
+            }
         >
             {posts.map((post) => (
                 <PostItem
