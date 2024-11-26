@@ -348,5 +348,19 @@
       .interCheck{
         margin-right: 13px;
       }
+
+      #emailForm{
+        display: flex;
+      }
+   .error-message, .error-message1{
+    color: red;
+    font-size: 0.5em;
+    align-self: flex-start;
+    margin-left: 20px;
+    margin-top: 10px;
+    width: 320px;
+    height: 14px; /* 고정된 높이 설정 */
+    
+   }
    
 }

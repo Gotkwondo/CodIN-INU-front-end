@@ -1,6 +1,10 @@
+'use client';
 import './login.css';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+    const router = useRouter();
+
     return (
         <div className="Login">
             <div id="logo"></div>
@@ -15,11 +19,11 @@ export default function LoginPage() {
                 
             </div>
             <div id="else">
-                <button id="findId">아이디 찾기 </button>
+                <button id="findId" >아이디 찾기 </button>
                 <div id="divider"> | </div>
                 <button id="findPW"> 비밀번호 찾기</button>
                 <div id="divider"> | </div>
-                <button id="signup">회원가입</button>
+                <button id="signup" onClick={()=> router.push('/signup')}>회원가입</button>
             </div>
             <div id="buttonCont">
                 <button id='loginBtn'>로그인</button>
