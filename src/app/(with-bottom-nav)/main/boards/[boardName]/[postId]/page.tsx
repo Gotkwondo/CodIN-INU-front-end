@@ -1,6 +1,6 @@
-// src/app/boards/[boardName]/[postId]/page.tsx
 import { Post } from "@/interfaces/Post";
 import { localPosts } from "@/data/localPosts";
+import PostDetailClient from "./PostDetailClient";
 
 interface PostDetailPageProps {
     params: {
@@ -9,22 +9,17 @@ interface PostDetailPageProps {
     };
 }
 
-export default async function PostDetailPage({
-                                                 params: rawParams,
-                                             }: PostDetailPageProps) {
-    // 비동기로 params 처리
-    const params = await Promise.resolve(rawParams);
-    const { boardName, postId } = params;
+export default async function PostDetailPage({ params }: PostDetailPageProps) {
+    // `params`는 비동기적으로 제공되므로 대기 후 사용
+    const resolvedParams = await Promise.resolve(params);
+    const { boardName, postId } = resolvedParams;
 
     // 게시물 ID를 숫자로 변환
     const postIdNumber = parseInt(postId, 10);
-
-    // 로컬 데이터에서 게시물 찾기
     const boardPosts = localPosts[boardName];
     let post: Post | undefined;
 
     if (boardPosts) {
-        // 모든 탭의 게시물을 합쳐서 검색
         const allPosts = Object.values(boardPosts).flat();
         post = allPosts.find((p) => p.id === postIdNumber);
     }
@@ -39,20 +34,6 @@ export default async function PostDetailPage({
         );
     }
 
-    return (
-        <div className="bg-white min-h-screen p-4 pb-16">
-            <header className="mb-4">
-                <h1 className="text-2xl font-bold text-gray-800">{post.title}</h1>
-                <div className="flex items-center text-sm text-gray-500 mt-2 space-x-4">
-                    <span>👁️ {post.views}</span>
-                    <span>❤️ {post.likes}</span>
-                    <span>💬 {post.comments}</span>
-                    <span>{post.timeAgo}</span>
-                </div>
-            </header>
-            <article className="prose">
-                <p>{post.content}</p>
-            </article>
-        </div>
-    );
+    // 클라이언트 컴포넌트에 데이터 전달
+    return <PostDetailClient post={post} />;
 }
