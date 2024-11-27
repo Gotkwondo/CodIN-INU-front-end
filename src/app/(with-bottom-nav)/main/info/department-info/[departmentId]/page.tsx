@@ -1,25 +1,57 @@
 import { departments } from "@/data/departmentInfo";
 
-interface DepartmentDetailPageProps {
-    params: {
-        departmentId: string;
-    };
+// departments 배열의 타입 정의
+interface Professor {
+    name: string;
+    position: string;
+    phone?: string;
+    email?: string;
 }
 
-export default function DepartmentDetailPage({ params }: DepartmentDetailPageProps) {
-    const department = departments.find((dept) => dept.id === params.departmentId);
+interface Department {
+    id: string;
+    name: string;
+    location?: string;
+    phone?: string;
+    fax?: string;
+    openHours?: string;
+    vacationHours?: string;
+    professors?: Professor[];
+}
+
+// 페이지 Props 타입 정의
+interface DepartmentDetailPageProps {
+    params: Promise<{
+        departmentId: string;
+    }>;
+}
+
+export default async function DepartmentDetailPage({
+                                                       params,
+                                                   }: DepartmentDetailPageProps) {
+    // `params`는 비동기적으로 제공되므로 대기 후 사용
+    const resolvedParams = await params;
+
+    // departmentId 가져오기
+    const department = departments.find(
+        (dept: Department) => dept.id === resolvedParams.departmentId
+    );
 
     if (!department) {
         return (
             <div className="p-4 bg-gray-100 min-h-screen">
-                <h1 className="text-xl font-bold text-center text-gray-800">학과를 찾을 수 없습니다.</h1>
+                <h1 className="text-xl font-bold text-center text-gray-800">
+                    학과를 찾을 수 없습니다.
+                </h1>
             </div>
         );
     }
 
     return (
         <div className="p-4 bg-gray-100 min-h-screen">
-            <h1 className="text-xl font-bold text-center text-gray-800 mb-4">{department.name}</h1>
+            <h1 className="text-xl font-bold text-center text-gray-800 mb-4">
+                {department.name}
+            </h1>
             <div className="bg-gray-50 rounded-lg p-4 mb-4 shadow">
                 <img
                     src="/images/map.png" // 맵 이미지는 하드코딩된 것으로 가정
@@ -57,7 +89,10 @@ export default function DepartmentDetailPage({ params }: DepartmentDetailPagePro
             <h2 className="text-lg font-bold text-gray-800 mb-2">교수진</h2>
             <ul className="space-y-4">
                 {department.professors?.map((professor, index) => (
-                    <li key={index} className="flex items-start space-x-4 p-4 bg-white border rounded shadow">
+                    <li
+                        key={index}
+                        className="flex items-start space-x-4 p-4 bg-white border rounded shadow"
+                    >
                         <div className="bg-gray-200 rounded-full w-12 h-12 flex items-center justify-center text-sm font-bold">
                             {professor.name[0]}
                         </div>
