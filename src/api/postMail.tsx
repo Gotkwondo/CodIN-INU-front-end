@@ -1,6 +1,6 @@
 import axios, {AxiosResponse} from 'axios';
 
-const BASE_URL = 'https://www.codin.co.kr';
+const BASE_URL = 'https://www.codin.co.kr/api';
 
 export const PostMail = async (email:string): Promise<any> => {
     console.log("전송 데이터", email);

@@ -7,7 +7,7 @@ import { PostMailCheck } from '@/api/postMailCheck';
 
 export default function SignupAuth() {
   const router = useRouter();
-  const [code, setCode] = useState<string[]>(new Array(6).fill(""));
+  const [code, setCode] = useState<string[]>(new Array(8).fill(""));
   const email= localStorage.getItem("userEmail");
   // `element`는 HTMLInputElement로 타입 지정
   const handleInputChange = (element: HTMLInputElement, index: number) => {
@@ -36,7 +36,8 @@ export default function SignupAuth() {
     console.log(codeString);
 
     try{
-      await PostMailCheck(email, codeString);
+      const response = await PostMailCheck(email, codeString);
+      console.log(response);
       router.push('/signup/password')
     }catch(error){
       console.log("인증번호 확인 실패", error);
