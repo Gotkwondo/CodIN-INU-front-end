@@ -1,4 +1,24 @@
-export const departments = [
+// src/data/departmentInfo.ts
+export interface Professor {
+    name: string;
+    position: string;
+    phone?: string;
+    email?: string;
+}
+
+export interface Department {
+    id: string;
+    name: string;
+    image: string;
+    location?: string;
+    phone?: string;
+    fax?: string;
+    openHours?: string;
+    vacationHours?: string;
+    professors?: Professor[];
+}
+
+export const departments: Department[] = [
     {
         id: "computer-engineering",
         name: "컴퓨터공학부",

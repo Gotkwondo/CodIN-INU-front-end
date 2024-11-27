@@ -1,20 +1,25 @@
-export const professorPosts = [
+// src/data/professorPosts.ts
+import { Post } from "@/interfaces/Post";
+
+export const professorPosts: Post[] = [
     {
         id: 1,
-        title: "오지은 교수님 연구실",
-        content: "AI 연구, 딥러닝, 머신러닝 관련 연구실입니다.",
-        icon: "/images/professor1.png",
-        views: 100,
-        likes: 10,
-        comments: 5,
+        title: "김교수 연구실",
+        content: "인공지능과 빅데이터 연구",
+        icon: "👨‍🏫",
+        views: 120,
+        likes: 34,
+        comments: 12,
+        timeAgo: "2시간 전", // 추가
     },
     {
         id: 2,
-        title: "김철수 교수님 연구실",
-        content: "네트워크 보안, 클라우드 컴퓨팅 연구실입니다.",
-        icon: "/images/professor2.png",
-        views: 120,
-        likes: 20,
-        comments: 8,
+        title: "이교수 연구실",
+        content: "네트워크 및 보안 연구",
+        icon: "👩‍🔬",
+        views: 98,
+        likes: 22,
+        comments: 5,
+        timeAgo: "1일 전", // 추가
     },
 ];
