@@ -3,16 +3,14 @@ import { localPosts } from "@/data/localPosts";
 import PostDetailClient from "./PostDetailClient";
 
 interface PostDetailPageProps {
-    params: Promise<{
+    params: {
         boardName: string;
         postId: string;
-    }>;
+    };
 }
 
-export default async function PostDetailPage({ params }: PostDetailPageProps) {
-    // `params`는 비동기적으로 제공되므로 대기 후 사용
-    const resolvedParams = await params;
-    const { boardName, postId } = resolvedParams;
+export default function PostDetailPage({ params }: PostDetailPageProps) {
+    const { boardName, postId } = params;
 
     // 게시물 ID를 숫자로 변환
     const postIdNumber = parseInt(postId, 10);
