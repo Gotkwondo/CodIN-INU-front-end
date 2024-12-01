@@ -8,8 +8,11 @@ import { AuthContext } from '@/context/AuthContext';
 export default function LoginPage() {
     const router = useRouter();
     const [email, setEmail] = useState<string>("");
+    const [rememberMe, setRememberMe] = useState<boolean>(false);
     const [password, setPassword] = useState<string>("");
     const authContext = useContext(AuthContext);
+    
+    
     if(!authContext){
         throw new Error('MyConsumer must be used within a MyProvider')
     }
@@ -24,6 +27,11 @@ export default function LoginPage() {
         setPassword(e.target.value);
         console.log('pw:',e.target.value);
     }
+
+    const handleRememberMeChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        setRememberMe(e.target.checked);
+    };
+    
     
     const handleLogin = async (e:React.MouseEvent<HTMLButtonElement>):Promise<void> =>{
         e.preventDefault();
@@ -33,7 +41,7 @@ export default function LoginPage() {
         try{
             const response = await PostLogin(email, password);
             console.log(`로그인 결과: ${response}`);
-            const token = response['authorization'];
+            const token = response.headers['authorization'];
             if (token) {
                 console.log('Authorization 토큰:', token);
 
@@ -50,6 +58,7 @@ export default function LoginPage() {
             alert('이메일 혹은 비밀번호가 틀립니다. 다시 시도해주세요.')
         }
     }
+
 
     useEffect(() => {
         if (Auth.accessToken) {

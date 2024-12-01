@@ -17,7 +17,7 @@ export const PostLogin = async (email:string, password:string): Promise<any> => 
 
         console.log(response.data);
         console.log(response.headers);
-        return response.headers;
+        return response;
       } catch (error: any) {
         if (error.response) {
           const { status, data } = error.response;
