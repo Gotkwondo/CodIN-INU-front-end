@@ -2,22 +2,19 @@ import axios, {AxiosResponse} from 'axios';
 
 const BASE_URL = 'https://www.codin.co.kr/api';
 
-export const PostLogin = async (email:string, password:string): Promise<any> => {
-    console.log("전송 데이터", email, password);
-    axios.defaults.withCredentials = true;
+export const PostLogin = async (userData:object): Promise<any> => {
+    console.log("전송 데이터", userData);
+
     try{
         const response: AxiosResponse<any> = await axios.post(
-            `${BASE_URL}/auth/login`,
+            `${BASE_URL}/auth/signup`, 
             {
-                email: email,
-                password: password
-            },
-            {withCredentials: true}
+                userData
+            }
         );
 
         console.log(response.data);
-        console.log(response.headers);
-        return response.headers;
+        return response.data;
       } catch (error: any) {
         if (error.response) {
           const { status, data } = error.response;
