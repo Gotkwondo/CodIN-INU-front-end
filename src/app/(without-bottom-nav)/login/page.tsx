@@ -36,7 +36,8 @@ export default function LoginPage() {
 
                 // 로그인 성공 후 메인 페이지로 이동
                 router.push('/main');
-            } else {
+            } 
+            else {
                 console.warn('Authorization 토큰이 응답에 없습니다.');
             }
         }catch(error){
