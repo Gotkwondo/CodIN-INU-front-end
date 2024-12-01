@@ -2,7 +2,7 @@ import axios, {AxiosResponse} from 'axios';
 
 const BASE_URL = 'https://www.codin.co.kr/api';
 
-export const PostLogin = async (userData:object): Promise<any> => {
+export const PostSignup = async (userData:object): Promise<any> => {
     console.log("전송 데이터", userData);
 
     try{

@@ -2,8 +2,8 @@
 import '../signup.css';
 import { useRouter } from 'next/navigation';
 import { UserContext } from '@/context/UserContext';
-import { useContext, useState } from 'react';
-
+import { useContext, useState, useEffect } from 'react';
+import { PostSignup } from '@/api/postSignup';
 
 export default function SignupProfile() {
     const router = useRouter();
@@ -40,21 +40,51 @@ export default function SignupProfile() {
         updateUser({nickname : nickname});
     }
 
+    
     const handleSubmit = async(e:React.MouseEvent<HTMLButtonElement>):Promise<void> => {
         e.preventDefault();
         if(nickname && profileImg){
-            
+            try{
+                const response = await PostSignup(User);
+                console.log(User);
+                console.log(`회원가입 결과: ${response}`);
+                
+                
+            }catch(error){
+                console.error("회원가입 실패", error);
+                alert('회원가입에 실패하였습니다. 다시 시도해주세요.')
+            }
             router.push('/main')
         }
        
 
         
      }
+
+     useEffect(() => {
+        if(nickname){
+            updateUser({nickname: nickname});
+        }
+    }, [nickname]);
+
+    useEffect(() => {
+        if(profileImg){
+            updateUser({profileImageUrl : profileImg});
+        }
+        console.log(User);
+    }, [nickname, profileImg]);
     return (
         <div className='signup'>
         <div id='back_btn'> {`<`} </div>
         <div id='profile_title'>프로필 생성</div>
-        <input id='profileImgBtn' type='file' accept = 'image/*' onChange={handleImageChange}/>
+        <label htmlFor='profileImgBtn1' id='profileImgBtn' 
+        style={{
+            backgroundImage: profileImg?`url(${profileImg})`:undefined,
+            backgroundRepeat:'no-repeat',
+            backgroundSize: 'cover'
+        }}>
+            <input id='profileImgBtn1' type='file' accept = 'image/*' onChange={handleImageChange}/>
+        </label>
         <input id='nickname' placeholder='닉네임' onChange={handleNicknameChange}></input>
        {/* <div id='interest_title'>관심사를 선택하세요</div>
         <form id='interest'>

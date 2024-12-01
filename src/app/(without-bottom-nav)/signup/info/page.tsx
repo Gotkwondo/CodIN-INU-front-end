@@ -54,7 +54,7 @@ export default function SignupInfo() {
 
      const handlenext = (e:React.MouseEvent<HTMLButtonElement>):void => {
         e.preventDefault();
-        if(studentId && department && profileImg){
+        if(studentId && department){
             updateUser(
                 {studentId: studentId,
                 department: department});
@@ -72,9 +72,9 @@ export default function SignupInfo() {
             <option value={'정보통신공학과'}>정보통신공학과</option>
             <option value={'임베디드시스템공학과'}>임베디드시스템공학과</option>
         </select>
-        <div id='imageText'>학적 정보 이미지 업로드</div>
+        {/*<div id='imageText'>학적 정보 이미지 업로드</div>
         <input type='file' accept = 'image/*' id='imgFileBtn' onChange={handleImageChange}/>
-        <div id='info'>학적 정보 업로드에 대한 안내 문구</div>
+        <div id='info'>학적 정보 업로드에 대한 안내 문구</div>*/}
         <div id='accept'>
         <input type="checkbox" id="acceptBtn" onClick={handleChecked}></input>
             <div id='acceptMent'>동의합니다</div>

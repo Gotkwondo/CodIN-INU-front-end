@@ -62,10 +62,10 @@ export default function LoginPage() {
             <div id="inputBox">
                 <input id="email" placeholder='이메일' onChange={handleEmailChange}></input>
                 <input id="password" placeholder='비밀번호' onChange={handlePWChange}></input>
-                <div id='remainCont'>
+                {/*<div id='remainCont'>
                     <input type="checkbox" id="remain"></input>
                     <label id="remainText">로그인 유지</label>
-                </div>
+                </div>*/}
           
                 
             </div>

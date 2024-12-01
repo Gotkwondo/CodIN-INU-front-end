@@ -273,15 +273,17 @@
 
 
       }
+      #profileImgBtn1{
+        display: none;
+      }
       #profileImgBtn{
 
         width: 87px;
         height: 87px;
         border-radius: 50%;
-        background-image: url('../../../../public/icons/Camera.png');
+        background-image: url('../../../../public/icons/profile.png');
         background-repeat: no-repeat;
         background-size: contain;
-        background: #E6E6E6;
         align-self: flex-start;
         margin-top: 24px;
         margin-left: 24px;
