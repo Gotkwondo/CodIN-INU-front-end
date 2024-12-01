@@ -1,14 +1,20 @@
 'use client';
 import './login.css';
 import { useRouter } from 'next/navigation';
-import React, {useState} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import { PostLogin } from '@/api/postLogin';
+import { AuthContext } from '@/context/AuthContext';
 
 export default function LoginPage() {
     const router = useRouter();
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const authContext = useContext(AuthContext);
+    if(!authContext){
+        throw new Error('MyConsumer must be used within a MyProvider')
+    }
 
+    const {Auth, updateAuth} = authContext;
     const handleEmailChange = (e:React.ChangeEvent<HTMLInputElement>):void =>{
         setEmail(e.target.value);
         console.log('email:',e.target.value);
@@ -18,7 +24,7 @@ export default function LoginPage() {
         setPassword(e.target.value);
         console.log('pw:',e.target.value);
     }
-
+    
     const handleLogin = async (e:React.MouseEvent<HTMLButtonElement>):Promise<void> =>{
         e.preventDefault();
         if(email && password){
@@ -26,13 +32,12 @@ export default function LoginPage() {
         }
         try{
             const response = await PostLogin(email, password);
-            console.log(`로그인 결과: ${response.data}`);
-            const token = response.headers['Authorization'];
+            console.log(`로그인 결과: ${response}`);
+            const token = response['authorization'];
             if (token) {
                 console.log('Authorization 토큰:', token);
 
-                // 로컬 스토리지에 토큰 저장
-                localStorage.setItem('authToken', token);
+                updateAuth({accessToken : token});
 
                 // 로그인 성공 후 메인 페이지로 이동
                 router.push('/main');
@@ -45,6 +50,13 @@ export default function LoginPage() {
             alert('이메일 혹은 비밀번호가 틀립니다. 다시 시도해주세요.')
         }
     }
+
+    useEffect(() => {
+        if (Auth.accessToken) {
+            console.log('새로운 토큰이 설정되었습니다:', Auth.accessToken);
+        }
+    }, [Auth.accessToken]); // Auth.accessToken의 변경을 감지
+
     return (
         <div className="Login">
             <div id="logo"></div>

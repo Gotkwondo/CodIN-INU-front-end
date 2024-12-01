@@ -83,6 +83,11 @@
         bottom: 35px;
         color: #ffffff;
     }
+
+    #submit:disabled{
+      background: #E6E6E6;
+      color: #808080;
+    }
     .code-inputs {
         margin-top: 16px;
         display: flex;
@@ -134,7 +139,7 @@
 
       }
       #imgFileBtn{
-        margin-left: 38px;
+        margin-left: 28px;
         width: 64px;
         height: 24px;
         align-self: flex-start;
@@ -144,6 +149,7 @@
 
         background: #E6E6E6;
         border-radius: 4px;
+        border: none;
 
         font-family: 'Noto Sans KR';
         font-style: normal;

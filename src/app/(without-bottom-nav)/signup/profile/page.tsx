@@ -1,16 +1,62 @@
 'use client'
 import '../signup.css';
 import { useRouter } from 'next/navigation';
+import { UserContext } from '@/context/UserContext';
+import { useContext, useState } from 'react';
+
 
 export default function SignupProfile() {
     const router = useRouter();
+    const [profileImg, setProfileImg ] = useState<string>("");
+    const [nickname, setNickname] = useState<string>("");
+    const userContext = useContext(UserContext);
+    if(!userContext){
+        throw new Error('MyConsumer must be used within a MyProvider')
+    }
+
+    const {User, updateUser} = userContext;
+
+    const handleImageChange = (e:React.ChangeEvent<HTMLInputElement>):void => {
+        const files = e.target.files;
+        if(files && files[0]){
+           const uploadFile = files[0];
+           const reader = new FileReader();
+           reader.readAsDataURL(uploadFile);
+           reader.onloadend = () => {
+               if (reader.result){
+                    setProfileImg(reader.result as string);
+                    console.log(reader.result as string);
+                    console.log(profileImg);
+                    updateUser({profileImageUrl : profileImg});
+               }
+           }
+        }
+
+    }
+
+    const handleNicknameChange = (e:React.ChangeEvent<HTMLInputElement>):void => {
+        setNickname(e.target.value);
+        console.log(e.target.value);
+        updateUser({nickname : nickname});
+    }
+
+    const handleSubmit = async(e:React.MouseEvent<HTMLButtonElement>):Promise<void> => {
+        e.preventDefault();
+        if(nickname && profileImg){
+            
+            router.push('/main')
+        }
+       
+
+        
+     }
     return (
         <div className='signup'>
         <div id='back_btn'> {`<`} </div>
         <div id='profile_title'>프로필 생성</div>
-        <button id='profileImgBtn'></button>
-        <input id='nickname' placeholder='닉네임'></input>
-        <div id='interest_title'>관심사를 선택하세요</div>
+        <input id='profileImgBtn' type='file' accept = 'image/*' onChange={handleImageChange}/>
+        <input id='nickname' placeholder='닉네임' onChange={handleNicknameChange}></input>
+       {/* <div id='interest_title'>관심사를 선택하세요</div>
         <form id='interest'>
       
         
@@ -68,8 +114,8 @@ export default function SignupProfile() {
                 스타트업 및 창업
             </label>
 
-        </form>
-        <button id='submit' onClick={()=> router.push('/main')}>회원가입</button>
+        </form> */}
+        <button id='submit' onClick={handleSubmit}>회원가입</button>
     </div>
     );
 }
