@@ -1,3 +1,5 @@
+"use client";
+
 import React, { createContext, useState, ReactNode } from 'react';
 
 interface User {
@@ -52,3 +54,4 @@ export const UserProvider: React.FC<UserProviderProps> = ({children}) => {
         </UserContext.Provider>
     );
 };
+
