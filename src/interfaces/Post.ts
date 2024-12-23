@@ -1,11 +1,14 @@
 // src/interfaces/Post.ts
 export interface Post {
-    id: number;
+    postId: string; // API 응답의 postId
     title: string;
     content: string;
-    icon?: string;
-    views: number;
-    likes: number;
-    comments: number;
-    timeAgo: string; // 필수 속성
+    postCategory: string;
+    createdAt: string;
+    anonymous: boolean;
+    commentCount: number;
+    likeCount: number;
+    scrapCount: number;
+    postImageUrl: string[]; // 이미지 URL 배열
+    userId: string;
 }

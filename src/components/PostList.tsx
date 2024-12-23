@@ -21,7 +21,7 @@ const PostList: FC<PostListProps> = ({ posts, boardName, boardType }) => {
         >
             {posts.map((post) => (
                 <PostItem
-                    key={post.id}
+                    key={post.postId} // 변경: id에서 postId로 수정
                     post={post}
                     boardName={boardName}
                     boardType={boardType} // 게시판 타입 전달
