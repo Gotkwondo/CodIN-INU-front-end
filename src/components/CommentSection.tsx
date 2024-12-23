@@ -1,54 +1,211 @@
-import React, { useState } from "react";
-import { commentsData } from "@/data/commentsData";
+"use client";
+
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+interface Comment {
+    commentId: string;
+    userId: string;
+    content: string | null;
+    likeCount: number;
+    deleted: boolean;
+    replies: Comment[];
+}
 
 interface CommentSectionProps {
-    boardName: string;
     postId: string;
 }
 
-const CommentSection: React.FC<CommentSectionProps> = ({ boardName, postId }) => {
-    const [newComment, setNewComment] = useState("");
+export default function CommentSection({ postId }: CommentSectionProps) {
+    const [comments, setComments] = useState<Comment[]>([]);
+    const [newComment, setNewComment] = useState<string>("");
+    const [replyCommentId, setReplyCommentId] = useState<string | null>(null);
+    const [newReply, setNewReply] = useState<string>("");
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    // commentsData에서 boardName과 postId에 해당하는 댓글 가져오기
-    const comments = commentsData[boardName]?.[postId] || [];
+    useEffect(() => {
+        const fetchComments = async () => {
+            try {
+                const token = localStorage.getItem("accessToken");
+                if (!token) {
+                    setError("로그인이 필요합니다.");
+                    setLoading(false);
+                    return;
+                }
 
-    const handleAddComment = () => {
+                const response = await axios.get(
+                    `https://www.codin.co.kr/api/comments/post/${postId}`,
+                    {
+                        headers: { Authorization: token },
+                    }
+                );
+
+                if (response.data.success) {
+                    setComments(response.data.dataList || []);
+                } else {
+                    setError(response.data.message || "댓글 로드 실패");
+                }
+            } catch (err) {
+                console.error("API 호출 오류:", err);
+                setError("API 호출 중 오류가 발생했습니다.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchComments();
+    }, [postId]);
+
+    const handleCommentSubmit = async () => {
         if (!newComment.trim()) return;
 
-        // 새 댓글 추가 로직 (예: 서버 요청)
-        console.log("새 댓글:", newComment);
-        setNewComment("");
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token) {
+                setError("로그인이 필요합니다.");
+                return;
+            }
+
+            const response = await axios.post(
+                `https://www.codin.co.kr/api/comments/${postId}`,
+                { content: newComment },
+                {
+                    headers: { Authorization: token },
+                }
+            );
+
+            if (response.data.success) {
+                const newCommentData: Comment = response.data.data;
+                setComments((prev) => [newCommentData, ...prev]);
+                setNewComment("");
+            } else {
+                setError(response.data.message || "댓글 작성 실패");
+            }
+        } catch (err) {
+            console.error("API 호출 오류:", err);
+            setError("API 호출 중 오류가 발생했습니다.");
+        }
     };
 
+    const handleReplySubmit = async () => {
+        if (!newReply.trim() || !replyCommentId) return;
+
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token) {
+                setError("로그인이 필요합니다.");
+                return;
+            }
+
+            const response = await axios.post(
+                `https://www.codin.co.kr/api/replies/${replyCommentId}`,
+                { content: newReply },
+                {
+                    headers: { Authorization: token },
+                }
+            );
+
+            if (response.data.success) {
+                const newReplyData: Comment = response.data.data;
+                setComments((prev) =>
+                    prev.map((comment) =>
+                        comment.commentId === replyCommentId
+                            ? {
+                                ...comment,
+                                replies: [newReplyData, ...comment.replies],
+                            }
+                            : comment
+                    )
+                );
+                setNewReply("");
+                setReplyCommentId(null);
+            } else {
+                setError(response.data.message || "대댓글 작성 실패");
+            }
+        } catch (err) {
+            console.error("API 호출 오류:", err);
+            setError("API 호출 중 오류가 발생했습니다.");
+        }
+    };
+
+    if (loading) {
+        return <p>댓글을 불러오는 중입니다...</p>;
+    }
+
+    if (error) {
+        return <p className="text-red-500">{error}</p>;
+    }
+
     return (
-        <div>
-            <h2 className="text-lg font-bold mb-4">댓글</h2>
-            <ul className="space-y-4">
-                {comments.map((comment) => (
-                    <li key={comment.id} className="p-4 bg-gray-100 rounded-lg shadow">
-                        <p className="font-medium">{comment.author}</p>
-                        <p className="text-sm">{comment.content}</p>
-                        <p className="text-xs text-gray-500">{comment.createdAt}</p>
-                        <p className="text-sm">좋아요 {comment.likes}</p>
-                    </li>
-                ))}
-            </ul>
-            <div className="mt-4">
+        <div className="mt-8">
+            <h3 className="text-lg font-semibold mb-4">댓글</h3>
+            <div className="mb-4">
                 <textarea
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="댓글을 입력하세요."
-                    className="w-full p-2 border rounded"
+                    placeholder="댓글을 입력하세요"
+                    className="w-full border p-2 rounded text-black"
                 />
                 <button
-                    onClick={handleAddComment}
-                    className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
+                    onClick={handleCommentSubmit}
+                    className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
                 >
-                    댓글 추가
+                    댓글 등록
                 </button>
             </div>
+            <ul>
+                {comments.map((comment) => (
+                    <li key={comment.commentId} className="border-b py-2">
+                        <div className="text-black">
+                            <div className="flex items-center mb-1">
+                                <span className="font-semibold">익명</span>
+                                <span className="text-sm text-gray-500 ml-2">· 9시간 전</span>
+                            </div>
+                            <p>{comment.content || "내용이 없습니다."}</p>
+                            <div className="flex items-center text-sm text-gray-500 mt-1">
+                                ❤️ {comment.likeCount} {comment.deleted && "(삭제됨)"}
+                                <button
+                                    onClick={() => setReplyCommentId(comment.commentId)}
+                                    className="ml-4 text-blue-500"
+                                >
+                                    답글 달기
+                                </button>
+                            </div>
+                        </div>
+                        {comment.commentId === replyCommentId && (
+                            <div className="mt-2 ml-6">
+                                <textarea
+                                    value={newReply}
+                                    onChange={(e) => setNewReply(e.target.value)}
+                                    placeholder="대댓글을 입력하세요"
+                                    className="w-full border p-2 rounded text-black"
+                                />
+                                <button
+                                    onClick={handleReplySubmit}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+                                >
+                                    대댓글 등록
+                                </button>
+                            </div>
+                        )}
+                        <ul className="mt-2 ml-6">
+                            {comment.replies?.map((reply) => (
+                                <li key={reply.commentId} className="border-b py-2">
+                                    <div className="flex items-center mb-1">
+                                        <span className="font-semibold">익명</span>
+                                        <span className="text-sm text-gray-500 ml-2">· 9시간 전</span>
+                                    </div>
+                                    <p className="text-black">{reply.content || "내용이 없습니다."}</p>
+                                    <div className="flex items-center text-sm text-gray-500 mt-1">
+                                        ❤️ {reply.likeCount} {reply.deleted && "(삭제됨)"}
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </li>
+                ))}
+            </ul>
         </div>
     );
-};
-
-export default CommentSection;
+}
