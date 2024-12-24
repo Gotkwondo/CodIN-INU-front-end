@@ -1,0 +1,111 @@
+.pb-16{
+    display: flex;
+    justify-content: center;
+   
+}
+.findPW{
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    justify-content: flex-start;
+    align-items: center;
+    width: 390px;
+    height: 100vh;
+
+    #back_btn{
+        margin-top: 55px;
+        width: 32px;
+        height: 32px;
+        font-family: serif;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 32px;
+        line-height: 29px;
+        display: flex;
+        align-items: center;
+        align-self: flex-start;
+        color: #CCCCCC;
+        margin-left: 11px;
+
+    }
+    #title{
+      
+
+     
+        width: auto;
+        height: 29px;
+        margin-top: 86px;
+        margin-left: 21px;
+        font-family: 'Noto Sans KR';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 29px;
+        display: flex;
+        align-items: center;
+        align-self: flex-start;
+        color: #000000;
+
+
+    }
+    #email{
+        margin-top: 43px;
+        width: 348px;
+
+        border: none;
+        border-bottom: 1px solid #CCCCCC;
+        outline: none;
+        color: #000000;
+        font-family: 'Noto Sans KR';
+        font-weight: 500;
+        padding-bottom: 3px;
+        
+
+    }
+    #nextBtn{
+      
+        width: 350px;
+        height: 36px;
+        background: #0D99FF;
+        border-radius: 50px;
+        position: absolute;
+        bottom: 35px;
+        color: #ffffff;
+    }
+
+    #nextBtn:disabled{
+      background: #E6E6E6;
+      color: #808080;
+    }
+
+    #submit{
+        /* Rectangle 4 */
+
+        width: 86px;
+        height: 25px;
+        background: #E6E6E6;
+        border-radius: 50px;
+
+        display: flex;
+        position:absolute;
+        left:calc(50% + 90px);
+        top: 245px;
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        color: #808080;
+
+
+    }
+
+    #emailForm{
+        display: flex;
+        flex-direction: row;
+    }
+}
