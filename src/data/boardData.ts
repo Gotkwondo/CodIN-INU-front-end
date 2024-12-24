@@ -8,6 +8,7 @@ export interface Tab {
 
 export interface Board {
     name: string;
+    icon?: string;
     tabs: Tab[];
     type: 'list' | 'gallery'; // 게시판 유형: 'list' 또는 'gallery'
 }
