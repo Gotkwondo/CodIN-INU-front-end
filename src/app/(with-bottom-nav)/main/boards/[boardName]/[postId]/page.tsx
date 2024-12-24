@@ -1,12 +1,14 @@
 import PostDetailClient from "./PostDetailClient";
 
 interface PostDetailPageProps {
-    params: {
-        boardName: string;
-        postId: string;
-    };
+    params: Promise<{ boardName: string; postId: string }>;
 }
 
-export default function PostDetailPage({ params }: PostDetailPageProps) {
-    return <PostDetailClient postId={params.postId} />;
+export default async function PostDetailPage({
+                                                 params,
+                                             }: PostDetailPageProps) {
+    // params를 await로 처리
+    const resolvedParams = await params;
+
+    return <PostDetailClient postId={resolvedParams.postId} />;
 }
