@@ -1,6 +1,7 @@
+
 "use client";
 
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Tabs from "@/components/Tabs";
@@ -8,12 +9,12 @@ import PostList from "@/components/PostList";
 import { boardData } from "@/data/boardData";
 import { Post } from "@/interfaces/Post";
 import axios from "axios";
+import Image from "next/image";
 
 const BoardPage: FC = () => {
     const params = useParams();
     const boardName = params.boardName as string;
 
-    // 게시판 정보 가져오기
     const board = boardData[boardName];
 
     if (!board) {
@@ -32,71 +33,167 @@ const BoardPage: FC = () => {
 
     const [activeTab, setActiveTab] = useState<string>(defaultTab);
     const [posts, setPosts] = useState<Post[]>([]);
+    const [page, setPage] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [hasMore, setHasMore] = useState<boolean>(true);
+
+    const [selectedImages, setSelectedImages] = useState<string[]>([]); // 선택된 이미지 상태
+
+    const isFetching = useRef(false);
+
+    const fetchPosts = async (pageNumber: number) => {
+        if (isFetching.current) return;
+
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token) {
+                console.error("토큰이 없습니다. 로그인이 필요합니다.");
+                return;
+            }
+
+            const activePostCategory =
+                tabs.find((tab) => tab.value === activeTab)?.postCategory || "";
+
+            console.log("API 호출: 카테고리", activePostCategory, "페이지:", pageNumber);
+
+            setIsLoading(true);
+            isFetching.current = true;
+
+            const response = await axios.get(
+                `https://www.codin.co.kr/api/posts/category`,
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                    params: {
+                        postCategory: activePostCategory,
+                        page: pageNumber,
+                    },
+                }
+            );
+
+            if (response.data.success) {
+                const contents = Array.isArray(response.data.data.contents)
+                    ? response.data.data.contents
+                    : [];
+
+                console.log("가져온 데이터:", contents);
+
+                setPosts((prevPosts) => [...prevPosts, ...contents]);
+
+                if (response.data.data.nextPage === -1) {
+                    setHasMore(false);
+                    console.log("더 이상 데이터가 없습니다.");
+                }
+            } else {
+                console.error("데이터 로드 실패:", response.data.message);
+            }
+        } catch (error) {
+            console.error("API 호출 오류:", error);
+        } finally {
+            setIsLoading(false);
+            isFetching.current = false;
+        }
+    };
+
+    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        if (files) {
+            const newImages = Array.from(files).map((file) =>
+                URL.createObjectURL(file)
+            );
+            setSelectedImages((prevImages) => [...prevImages, ...newImages]);
+        }
+        event.target.value = ""; // 파일 선택 초기화
+    };
+
+    const handleRemoveImage = (index: number) => {
+        setSelectedImages((prevImages) =>
+            prevImages.filter((_, i) => i !== index)
+        );
+    };
 
     useEffect(() => {
-        // API 호출하여 게시물 가져오기
-        const fetchPosts = async () => {
+        // 컴포넌트가 처음 로드되었을 때 상태 초기화
+        const initializeBoard = async () => {
+            setIsLoading(true);
             try {
-                const token = localStorage.getItem("accessToken"); // 토큰 가져오기
-                if (!token) {
-                    console.error("토큰이 없습니다. 로그인이 필요합니다.");
-                    return;
-                }
-
-                // 현재 활성 탭에 해당하는 postCategory 가져오기
-                const activePostCategory =
-                    tabs.find((tab) => tab.value === activeTab)?.postCategory || "";
-
-                console.log("Active Tab Post Category:", activePostCategory);
-
-                const response = await axios.get(
-                    `https://www.codin.co.kr/api/posts/category`,
-                    {
-                        headers: {
-                            Authorization: token, // Authorization 헤더 추가
-                        },
-                        params: {
-                            postCategory: activePostCategory, // postCategory 설정
-                        },
-                    }
-                );
-
-                console.log("API Response:", response.data);
-
-                if (response.data.success) {
-                    setPosts(response.data.dataList);
-                } else {
-                    console.error("게시물 로드 실패:", response.data.message);
-                }
+                setPosts([]); // 초기화
+                setPage(0);
+                setHasMore(true);
+                await fetchPosts(0); // 첫 번째 데이터 로드
             } catch (error) {
-                console.error("API 호출 오류:", error);
+                console.error("초기화 실패:", error);
+            } finally {
+                setIsLoading(false);
             }
         };
 
-        fetchPosts();
+        initializeBoard(); // 초기화 함수 호출
     }, [boardName, activeTab]);
 
+    useEffect(() => {
+        const handleScroll = () => {
+            if (
+                window.innerHeight + document.documentElement.scrollTop >=
+                document.documentElement.offsetHeight - 300 &&
+                !isLoading &&
+                hasMore &&
+                !isFetching.current
+            ) {
+                console.log("스크롤 이벤트: 다음 페이지 로드");
+                setPage((prevPage) => prevPage + 1);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [isLoading, hasMore]);
+
+    useEffect(() => {
+        if (page >= 0) {
+            console.log("페이지 변경: 새 데이터 요청", "페이지:", page);
+            fetchPosts(page);
+        }
+    }, [page]);
+
     return (
-        <div className="bg-white min-h-screen p-4 pb-16 relative">
-            {/* 페이지 헤더 */}
-            <header className="text-center my-4">
-                <h1 className="text-2xl font-bold text-gray-700 flex items-center justify-center">
-                    <span className="mr-2">{board.icon}</span> {board.name}
-                </h1>
-                {hasTabs && (
-                    <Tabs
-                        tabs={tabs}
-                        activeTab={activeTab}
-                        onTabChange={(tab) => {
-                            console.log("Tab changed to:", tab);
-                            setActiveTab(tab);
-                        }}
-                    />
-                )}
+        <div className="bg-white min-h-screen relative">
+            {/* 고정 헤더 */}
+            <header className="sticky top-0 bg-white z-50 shadow-md">
+                <div className="text-center my-4 p-4">
+                    <h1 className="text-2xl font-bold text-gray-700 flex items-center justify-center">
+                        <span className="mr-2">{board.icon}</span> {board.name}
+                    </h1>
+                    {hasTabs && (
+                        <Tabs
+                            tabs={tabs}
+                            activeTab={activeTab}
+                            onTabChange={(tab) => {
+                                console.log("탭 변경:", tab);
+                                setActiveTab(tab);
+                            }}
+                        />
+                    )}
+                </div>
             </header>
 
-            {/* PostList 컴포넌트에 게시판 타입 전달 */}
-            <PostList posts={posts} boardName={boardName} boardType={boardType} />
+
+
+            {/* 게시물 리스트 */}
+            <main className="p-4">
+                <PostList posts={posts} boardName={boardName} boardType={boardType} />
+
+                {/* 로딩 표시 */}
+                {isLoading && (
+                    <div className="text-center my-4 text-gray-500">로딩 중...</div>
+                )}
+
+                {/* 데이터가 없을 때 메시지 */}
+                {!hasMore && !isLoading && posts.length === 0 && (
+                    <div className="text-center my-4 text-gray-500">게시물이 없습니다.</div>
+                )}
+            </main>
 
             {/* 글쓰기 버튼 */}
             <Link

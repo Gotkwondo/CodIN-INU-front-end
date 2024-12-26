@@ -138,23 +138,9 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     }
 
     return (
-        <div className="mt-8">
+        <div className="relative mt-8">
             <h3 className="text-lg font-semibold mb-4">댓글</h3>
-            <div className="mb-4">
-                <textarea
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="댓글을 입력하세요"
-                    className="w-full border p-2 rounded text-black"
-                />
-                <button
-                    onClick={handleCommentSubmit}
-                    className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
-                >
-                    댓글 등록
-                </button>
-            </div>
-            <ul>
+            <ul className="mb-20">
                 {comments.map((comment) => (
                     <li key={comment.commentId} className="border-b py-2">
                         <div className="text-black">
@@ -206,6 +192,22 @@ export default function CommentSection({ postId }: CommentSectionProps) {
                     </li>
                 ))}
             </ul>
+
+            {/* 입력창 섹션 */}
+            <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 flex items-center space-x-2">
+                <textarea
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="댓글을 입력하세요"
+                    className="flex-grow border p-2 rounded text-black"
+                />
+                <button
+                    onClick={handleCommentSubmit}
+                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                >
+                    등록
+                </button>
+            </div>
         </div>
     );
 }

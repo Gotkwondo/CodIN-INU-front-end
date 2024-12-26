@@ -1,14 +1,13 @@
-import PostDetailClient from "./PostDetailClient";
+// PostDetailPage.tsx (하위 페이지)
+import LayoutWithBottomNav from '../../../../layout';
+import PostDetailClient from './PostDetailClient';
 
 interface PostDetailPageProps {
-    params: Promise<{ boardName: string; postId: string }>;
+    params: { postId: string };
 }
 
-export default async function PostDetailPage({
-                                                 params,
-                                             }: PostDetailPageProps) {
-    // params를 await로 처리
-    const resolvedParams = await params;
-
-    return <PostDetailClient postId={resolvedParams.postId} />;
+export default function PostDetailPage({ params }: PostDetailPageProps) {
+    return (
+            <PostDetailClient postId={params.postId} />
+    );
 }
