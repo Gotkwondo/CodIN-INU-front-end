@@ -63,7 +63,7 @@ export default function Chat() {
             <div className="Chat">
                 
                 {chatList.map((data, index)=>(
-                   <div>
+                   <div id='chatCont'>
                     <div id="profile"></div>
                     <div id="main_cont">
                         <div id="name">{data.title}</div>
@@ -88,8 +88,9 @@ export default function Chat() {
                 <div id='title'> {`<게시판/>`} </div>
                 <button id='searchBtn'></button>
             </div>
+            <div id='tag'>{`<ul>`}</div>
             <ChatList chatList={dummy}/>
-           
+           <div id='tag1'>{`</ul>`}</div>
         </div>
     );
 }

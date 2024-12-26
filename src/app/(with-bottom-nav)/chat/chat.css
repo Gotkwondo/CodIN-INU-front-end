@@ -28,4 +28,163 @@
         margin-left: 11px;
 
     }
+
+    #topCont{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    #title{
+
+
+        width: 80px;
+        height: 26px;
+        margin-top: 56px;
+
+        font-family: 'ABeeZee';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 17px;
+        line-height: 21px;
+        margin-left: 112px;
+        letter-spacing: -0.5px;
+        margin-right: 112px;
+        color: #000000;
+
+
+    }   
+    
+    #searchBtn{
+
+        width: 22px;
+        height: 22px;
+        background-image: url('../../../../public/icons/searchIcon.png');
+        background-repeat: no-repeat;
+        margin-top: 60px;
+        margin-right: 21px;
+    }
+
+    #Chat{
+        display: flex;
+        width:100% ;
+
+    }
+    #chatCont{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        width: calc(100% - 44px);
+        height: 49px;
+        margin-bottom: 18px;
+        margin-left: 22px;
+        margin-right: 22px;
+    }
+
+    #profile{
+        width: 49px;
+        height: 49px;
+        background-image: url('../../../../public/icons/anonymous-profile.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+    #main_cont{
+        display: flex;
+        flex-direction: column;
+        width: 242px;
+        
+    }
+    #ect{
+
+    }
+    #name{
+
+        width: auto;
+        height: 22px;
+
+
+        font-family: 'Noto Sans KR';
+        font-style: normal;
+        font-weight: 600;
+        letter-spacing: -0.5px;
+        font-size: 15px;
+        line-height: 22px;
+        margin-left: 12px;
+
+        color: #000000;
+
+  
+    }
+    #ment{
+ 
+        width: auto;
+        height: 19px;
+        left: 83px;
+        top: 153px;
+
+        font-family: 'Noto Sans KR';
+        font-style: normal;
+        font-weight: 500;
+        letter-spacing: -0.5px;
+        font-size: 13px;
+        line-height: 19px;
+        color: #808080;
+        margin-left: 12px;
+        margin-top: 1px;
+
+
+    }
+    #time{
+  
+        width: auto;
+        height: 17px;
+
+        font-family: 'Noto Sans KR';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 17px;
+
+        color: #808080;
+
+
+    }
+    #tag{
+        align-self: flex-start;
+        margin-top: 7px;
+        margin-left: 23px;
+        margin-bottom: 16px ;
+        width: 33px;
+        height: 18px;
+
+
+        font-family: 'ABeeZee';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 15px;
+        line-height: 18px;
+
+        color: #808080;
+
+
+    }
+
+    #tag1{
+        align-self: flex-end;
+
+        width: 39px;
+        height: 18px;
+        margin-right: 19px;
+
+
+        font-family: 'ABeeZee';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 15px;
+        line-height: 18px;
+        color: #808080;
+
+
+    }
 }
