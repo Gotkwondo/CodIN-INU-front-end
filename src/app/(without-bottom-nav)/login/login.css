@@ -161,7 +161,8 @@
         display: flex;
         flex-direction: row;
         margin-top: 37px;
-
+        justify-content: center;
+  
     }
     #findId{
         font-family: 'Noto Sans KR';

@@ -301,6 +301,18 @@
         padding-bottom: 3px;
       }
 
+      #name{
+        margin-top: 26px;
+        width: 348px;
+        border: none;
+        border-bottom: 1px solid #CCCCCC;
+        outline: none;
+        color: #000000;
+        font-family: 'Noto Sans KR';
+        font-weight: 500;
+        padding-bottom: 3px;
+      }
+
       #interest_title{
     
       width: auto;
