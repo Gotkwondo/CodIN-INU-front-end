@@ -1,6 +1,7 @@
 import { FC } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import BottomNav from "@/components/BottomNav";
 
 
 const menuItems = [
@@ -101,8 +102,7 @@ const MainPage: FC = () => {
                     ))}
                 </div>
             </section>
-
-
+            <BottomNav />
         </div>
     );
 };

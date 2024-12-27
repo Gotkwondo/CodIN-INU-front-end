@@ -9,12 +9,15 @@ import PostList from "@/components/PostList";
 import { boardData } from "@/data/boardData";
 import { Post } from "@/interfaces/Post";
 import axios from "axios";
+import { useRouter } from "next/navigation";
+
 import Image from "next/image";
 
 const BoardPage: FC = () => {
     const params = useParams();
     const boardName = params.boardName as string;
 
+    const router = useRouter(); // useRouter 훅 추가
     const board = boardData[boardName];
 
     if (!board) {
@@ -47,9 +50,9 @@ const BoardPage: FC = () => {
         try {
             const token = localStorage.getItem("accessToken");
             if (!token) {
-                console.error("토큰이 없습니다. 로그인이 필요합니다.");
-                return;
+                console.error("토큰이 없습니다. 로그인이 필요합니다. 로그인페이지로");
             }
+
 
             const activePostCategory =
                 tabs.find((tab) => tab.value === activeTab)?.postCategory || "";
@@ -90,6 +93,9 @@ const BoardPage: FC = () => {
             }
         } catch (error) {
             console.error("API 호출 오류:", error);
+            if(error.status === 401){
+                window.location.href = "/login"; // 로그인 페이지로 리다이렉트
+            }
         } finally {
             setIsLoading(false);
             isFetching.current = false;
@@ -161,19 +167,51 @@ const BoardPage: FC = () => {
         <div className="bg-white min-h-screen relative">
             {/* 고정 헤더 */}
             <header className="sticky top-0 bg-white z-50 shadow-md">
-                <div className="text-center my-4 p-4">
-                    <h1 className="text-2xl font-bold text-gray-700 flex items-center justify-center">
-                        <span className="mr-2">{board.icon}</span> {board.name}
-                    </h1>
+                <div className="max-w-4xl mx-auto px-4 py-2">
+                    <div className="flex items-center justify-between h-16">
+                        {/* Back Button */}
+                        <button
+                            onClick={() => router.replace('/main')}
+                            className="text-gray-700 hover:text-gray-900 transition duration-300"
+                            aria-label="뒤로가기"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={2}
+                                stroke="currentColor"
+                                className="w-6 h-6"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M15 19l-7-7 7-7"
+                                />
+                            </svg>
+                        </button>
+
+                        {/* Title */}
+                        <h1 className="text-2xl font-bold text-gray-700 flex items-center justify-center">
+                            <span className="mr-2">{board.icon}</span> {board.name}
+                        </h1>
+
+                        {/* Right Spacer */}
+                        <div className="w-6"></div>
+                    </div>
+
+                    {/* Tabs Section */}
                     {hasTabs && (
-                        <Tabs
-                            tabs={tabs}
-                            activeTab={activeTab}
-                            onTabChange={(tab) => {
-                                console.log("탭 변경:", tab);
-                                setActiveTab(tab);
-                            }}
-                        />
+                        <div className="mt-2">
+                            <Tabs
+                                tabs={tabs}
+                                activeTab={activeTab}
+                                onTabChange={(tab) => {
+                                    console.log("탭 변경:", tab);
+                                    setActiveTab(tab);
+                                }}
+                            />
+                        </div>
                     )}
                 </div>
             </header>

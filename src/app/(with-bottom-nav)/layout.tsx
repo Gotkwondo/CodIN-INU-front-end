@@ -20,10 +20,10 @@ export default function LayoutWithBottomNav({
     return (
         <>
             {/* 스택 상태일 때만 헤더를 표시 */}
-            {isStackState && <Header title={headerTitle} mode={headerMode} />}
-            <main className={isStackState ? 'pt-16' : ''}>{children}</main>
+            {/*{isStackState && <Header title={headerTitle} mode={headerMode} />}*/}
+            {children}
             {/* 스택 상태가 아니면 바텀 네비게이션 표시 */}
-            {!isStackState && <BottomNav />}
+            {/*{!isStackState && <BottomNav />}*/}
         </>
     );
 }

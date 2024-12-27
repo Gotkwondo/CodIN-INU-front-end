@@ -1,11 +1,11 @@
-//src/app/(with-bottom-nav)/main/boards/[boardName]/[postId]/PostDetailClient.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Post } from "@/interfaces/Post";
-import CommentSection from "@/components/CommentSection"; // 댓글 섹션 컴포넌트 import
 import Image from "next/image";
+import { Post } from "@/interfaces/Post";
+import CommentSection from "@/components/CommentSection";
+import { FaEye, FaHeart, FaRegCommentDots, FaBookmark } from "react-icons/fa";
 
 interface PostDetailClientProps {
     postId: string;
@@ -15,7 +15,6 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
     const [post, setPost] = useState<Post | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [modalImage, setModalImage] = useState<string | null>(null); // 모달 이미지 상태
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -23,15 +22,21 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                 const token = localStorage.getItem("accessToken");
                 if (!token) {
                     setError("로그인이 필요합니다.");
+
+                    window.location.href = "/login"; // 로그인 페이지로 리다이렉트
                     setLoading(false);
                     return;
                 }
+
+
 
                 const response = await axios.get(`https://www.codin.co.kr/api/posts/${postId}`, {
                     headers: {
                         Authorization: token,
                     },
                 });
+
+                console.log("Response Data:", response.data); // 응답 데이터 콘솔 출력
 
                 if (response.data.success) {
                     setPost(response.data.data);
@@ -49,7 +54,9 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
         fetchPost();
     }, [postId]);
 
-    const handleLike = async () => {
+
+
+    const toggleAction = async (action: "like" | "bookmark") => {
         try {
             const token = localStorage.getItem("accessToken");
             if (!token) {
@@ -57,37 +64,38 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                 return;
             }
 
-            await axios.post(
-                `https://www.codin.co.kr/api/likes`,
-                { likeType: "POST", id: postId },
-                {
-                    headers: { Authorization: token },
-                }
-            );
-            console.log("좋아요 추가 완료");
-        } catch (error) {
-            console.error("좋아요 추가 실패", error);
-        }
-    };
+            let url = "";
+            let method = post?.[action === "like" ? "isLiked" : "isBookmarked"] ? "DELETE" : "POST";
+            let data = {};
 
-    const handleScrap = async () => {
-        try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) {
-                console.error("토큰이 없습니다.");
-                return;
+            if (action === "like") {
+                url = "https://www.codin.co.kr/api/likes";
+                data = { likeType: "POST", id: postId };
+            } else if (action === "bookmark") {
+                url = `https://www.codin.co.kr/api/scraps/${postId}`;
             }
 
-            await axios.post(
-                `https://www.codin.co.kr/api/scraps/${postId}`,
-                {},
-                {
-                    headers: { Authorization: token },
-                }
-            );
-            console.log("스크랩 추가 완료");
+            await axios({
+                method,
+                url,
+                data,
+                headers: { Authorization: token },
+            });
+
+            if (post) {
+                setPost({
+                    ...post,
+                    [action === "like" ? "isLiked" : "isBookmarked"]: !post[action === "like" ? "isLiked" : "isBookmarked"],
+                    likeCount:
+                        action === "like"
+                            ? post.isLiked
+                                ? post.likeCount - 1
+                                : post.likeCount + 1
+                            : post.likeCount,
+                });
+            }
         } catch (error) {
-            console.error("스크랩 추가 실패", error);
+            console.error(`${action === "like" ? "좋아요" : "북마크"} 토글 실패`, error);
         }
     };
 
@@ -116,38 +124,35 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
     }
 
     return (
-
-        <div className="bg-white min-h-screen p-4 pb-16">
-            <header className="mb-4">
-                <h1 className="text-2xl font-bold text-gray-800">{post.title}</h1>
-                <div className="flex items-center text-sm text-gray-500 mt-2 space-x-4">
-                    <span>❤️ {post.likeCount}</span>
-                    <span>💬 {post.commentCount}</span>
-                    <span>⭐ {post.scrapCount}</span>
-                    <span>{post.createdAt}</span>
+        <div className="bg-white min-h-screen p-4">
+            {/* 헤더 섹션 */}
+            <div className="flex items-center space-x-4 mb-4">
+                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                    <span className="text-gray-600 text-sm">익명</span>
                 </div>
-            </header>
-            <article className="prose mb-8 text-black">
-                <p>{post.content}</p>
-            </article>
+                <div>
+                    <h4 className="text-sm font-semibold text-gray-800">{post.authorName || "익명"}</h4>
+                    <p className="text-xs text-gray-500">{post.createdAt}</p>
+                </div>
+            </div>
 
-            {/* 이미지 리스트 섹션 */}
+            {/* 본문 섹션 */}
+            <div className="mb-4">
+                <p className="text-gray-800 text-base">{post.content}</p>
+            </div>
+
+            {/* 이미지 섹션 */}
             {post.postImageUrl && post.postImageUrl.length > 0 && (
-                <div className="mb-8">
-                    <h3 className="text-lg font-semibold text-gray-700 mb-4">이미지</h3>
-                    <div className="flex overflow-x-auto space-x-4 p-2 border rounded bg-gray-100">
+                <div className="mb-4">
+                    <div className="grid grid-cols-3 gap-2">
                         {post.postImageUrl.map((imageUrl, index) => (
-                            <div
-                                key={index}
-                                className="relative w-32 h-32 flex-shrink-0 cursor-pointer"
-                                onClick={() => setModalImage(imageUrl)}
-                            >
+                            <div key={index} className="w-full h-32 relative">
                                 <Image
                                     src={imageUrl}
                                     alt={`Post image ${index}`}
-                                    width={128}
-                                    height={128}
-                                    className="object-cover w-full h-full rounded"
+                                    layout="fill"
+                                    objectFit="cover"
+                                    className="rounded"
                                 />
                             </div>
                         ))}
@@ -155,50 +160,29 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                 </div>
             )}
 
-            {/* 버튼 섹션 */}
-            <div className="flex space-x-4 mb-8">
-                <button
-                    className="flex items-center px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    onClick={handleLike}
-                >
-                    ❤️ 좋아요
-                </button>
-                <button
-                    className="flex items-center px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                    onClick={handleScrap}
-                >
-                    ⭐ 스크랩
-                </button>
-                <button
-                    className="flex items-center px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-                    onClick={() => navigator.share && navigator.share({ title: post.title, url: window.location.href })}
-                >
-                    🔗 공유하기
+            {/* 액션 섹션 */}
+            <div className="flex items-center justify-between text-gray-500 text-sm border-t border-b py-2 mb-4">
+                <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-1">
+                        <FaEye className="w-5 h-5" />
+                        <span>{post.viewCount}</span>
+                    </div>
+                    <button onClick={() => toggleAction("like")} className="flex items-center space-x-1">
+                        <FaHeart className={`w-5 h-5 ${post.isLiked ? "text-red-500" : "text-gray-500"}`} />
+                        <span>{post.likeCount}</span>
+                    </button>
+                    <div className="flex items-center space-x-1">
+                        <FaRegCommentDots className="w-5 h-5" />
+                        <span>{post.commentCount}</span>
+                    </div>
+                </div>
+                <button onClick={() => toggleAction("bookmark")} className="flex items-center space-x-1">
+                    <FaBookmark className={`w-5 h-5 ${post.isBookmarked ? "text-green-500" : "text-gray-500"}`} />
+                    <span>{post.isBookmarked ? 1 : 0}</span>
                 </button>
             </div>
 
-            {/* 모달 */}
-            {modalImage && (
-                <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-                    <div className="relative w-auto max-w-3xl">
-                        <Image
-                            src={modalImage}
-                            alt="Modal Image"
-                            width={800}
-                            height={800}
-                            className="object-contain rounded"
-                        />
-                        <button
-                            className="absolute top-2 right-2 bg-white text-black rounded-full w-8 h-8 flex items-center justify-center shadow"
-                            onClick={() => setModalImage(null)}
-                        >
-                            ✕
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {/* 댓글 섹션 추가 */}
+            {/* 댓글 섹션 */}
             <CommentSection postId={postId} />
         </div>
     );
