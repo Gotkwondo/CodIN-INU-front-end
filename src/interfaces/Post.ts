@@ -1,6 +1,6 @@
 // src/interfaces/Post.ts
 export interface Post {
-    postId: string; // API 응답의 postId
+    _id: string; // API 응답의 postId
     title: string;
     content: string;
     postCategory: string;

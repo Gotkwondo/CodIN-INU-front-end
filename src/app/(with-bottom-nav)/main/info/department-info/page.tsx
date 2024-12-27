@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Tabs from "@/components/Tabs";
-import { departments } from "@/data/departmentInfo";
+import Image from "next/image";
+import Link from "next/link"; // Link 추가
 
 export default function DepartmentInfoPage() {
     const [activeTab, setActiveTab] = useState("phoneDirectory");
@@ -14,6 +15,33 @@ export default function DepartmentInfoPage() {
     const tabs = [
         { label: "전화번호부", value: "phoneDirectory" },
         { label: "교수님 및 연구실", value: "professors" },
+    ];
+
+    const departments = [
+        {
+            id: 1,
+            name: "컴퓨터 공학부",
+            image: "/images/컴퓨터공학부.png",
+            departmentName: "COMPUTER_SCI",
+        },
+        {
+            id: 2,
+            name: "임베디드시스템공학과",
+            image: "/images/임베디드시스템공학과.png",
+            departmentName: "EMBEDDED",
+        },
+        {
+            id: 3,
+            name: "정보통신학과",
+            image: "/images/정보통신학과.png",
+            departmentName: "INFO_COMM",
+        },
+        {
+            id: 4,
+            name: "교학실",
+            image: "/images/교학실.png",
+            departmentName: "STAFF",
+        },
     ];
 
     useEffect(() => {
@@ -49,22 +77,21 @@ export default function DepartmentInfoPage() {
                 <ul className="grid grid-cols-2 gap-4 mt-4">
                     {departments.map((department) => (
                         <li key={department.id}>
-                            <div className="block p-4 border rounded-lg shadow bg-white">
-                                <div className="aspect-square flex items-center justify-center bg-gray-50 rounded mb-2">
-                                    {department.image ? (
-                                        <img
-                                            src={department.image}
+                            <Link href={`./department-info/${department.departmentName}`}>
+                                <div className="block p-4 border rounded-lg shadow bg-white cursor-pointer hover:shadow-lg">
+                                    <div className="aspect-square flex items-center justify-center bg-gray-50 rounded mb-2">
+                                        <Image
+                                            src={department.image.replace('/public', '')}
                                             alt={department.name}
-                                            className="w-20 h-20 object-contain"
+                                            width={80}
+                                            height={80}
                                         />
-                                    ) : (
-                                        <span className="text-gray-400">이미지 없음</span>
-                                    )}
+                                    </div>
+                                    <p className="text-center font-medium text-gray-800">
+                                        {department.name}
+                                    </p>
                                 </div>
-                                <p className="text-center font-medium text-gray-800">
-                                    {department.name}
-                                </p>
-                            </div>
+                            </Link>
                         </li>
                     ))}
                 </ul>
