@@ -11,6 +11,9 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        text: {
+          DEFAULT: '#000000', // 기본 텍스트 색상을 검정으로 설정
+        },
       },
     },
   },
