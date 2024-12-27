@@ -80,8 +80,7 @@ export default function LoginPage() {
                 
             </div>
             <div id="else">
-                <button id="findId" >아이디 찾기 </button>
-                <div id="divider"> | </div>
+               
                 <button id="findPW"> 비밀번호 찾기</button>
                 <div id="divider"> | </div>
                 <button id="signup" onClick={()=> router.push('/signup')}>회원가입</button>

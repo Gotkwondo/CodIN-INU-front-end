@@ -1,7 +1,7 @@
 'use client';
 
 import '../signup.css';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import { useRouter } from 'next/navigation';
 import { PostMailCheck } from '@/api/postMailCheck';
 import { MdMarkEmailUnread } from 'react-icons/md';
@@ -10,15 +10,13 @@ export default function SignupAuth() {
   const router = useRouter();
   const [code, setCode] = useState<string[]>(new Array(8).fill(""));
   const [email, setEmail] = useState<string>('');
-  if (typeof window !== "undefined"){
-
-    const email= localStorage.getItem("userEmail");
-    if(email){
-      setEmail(email);
-
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("userEmail");
+    if (storedEmail) {
+      setEmail(storedEmail);
     }
+  }, []);  // Empty dependency array to run only once on mount
 
-  }
   // `element`는 HTMLInputElement로 타입 지정
   const handleInputChange = (element: HTMLInputElement, index: number) => {
     // `newCode`는 `code` 배열의 복사본

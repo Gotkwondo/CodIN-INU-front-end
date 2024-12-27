@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import '../signup.css';
 import { useRouter } from 'next/navigation';
 import { UserContext } from '@/context/UserContext';
@@ -6,146 +6,100 @@ import { useContext, useState, useEffect } from 'react';
 import { PostSignup } from '@/api/postSignup';
 
 export default function SignupProfile() {
-    const router = useRouter();
-    const [profileImg, setProfileImg ] = useState<string>("");
-    const [nickname, setNickname] = useState<string>("");
-    const userContext = useContext(UserContext);
-    if(!userContext){
-        throw new Error('MyConsumer must be used within a MyProvider')
-    }
+  const router = useRouter();
+  const [profileImg, setProfileImg] = useState<string>(); // 프로필 이미지 상태 수정
+  const [name, setName] = useState<string>("");
+  const [nickname, setNickname] = useState<string>("");
+  const [email, setEmail] = useState<string>('');
+  const userContext = useContext(UserContext);
 
-    const {User, updateUser} = userContext;
+  if (!userContext) {
+    throw new Error('MyConsumer must be used within a MyProvider');
+  }
 
-    const handleImageChange = (e:React.ChangeEvent<HTMLInputElement>):void => {
-        const files = e.target.files;
-        if(files && files[0]){
-           const uploadFile = files[0];
-           const reader = new FileReader();
-           reader.readAsDataURL(uploadFile);
-           reader.onloadend = () => {
-               if (reader.result){
-                    setProfileImg(reader.result as string);
-                    console.log(reader.result as string);
-                    console.log(profileImg);
-                    updateUser({profileImageUrl : profileImg});
-               }
+  const { User, updateUser } = userContext;
+
+  const handleImageChange = (e:React.ChangeEvent<HTMLInputElement>):void => {
+    const files = e.target.files;
+    if(files && files[0]){
+       const uploadFile = files[0];
+       const reader = new FileReader();
+       reader.readAsDataURL(uploadFile);
+       reader.onloadend = () => {
+           if (reader.result){
+                setProfileImg(reader.result as string);
+                console.log(reader.result as string);
+                console.log(profileImg);
+                updateUser({profileImageUrl : profileImg});
            }
-        }
-
+       }
     }
 
-    const handleNicknameChange = (e:React.ChangeEvent<HTMLInputElement>):void => {
-        setNickname(e.target.value);
-        console.log(e.target.value);
-        updateUser({nickname : nickname});
-    }
+}
 
-    
-    const handleSubmit = async(e:React.MouseEvent<HTMLButtonElement>):Promise<void> => {
-        e.preventDefault();
-        if(nickname && profileImg){
-            try{
-                const response = await PostSignup(User);
-                console.log(User);
-                console.log(`회원가입 결과: ${response}`);
-                
-                
-            }catch(error){
-                console.error("회원가입 실패", error);
-                alert('회원가입에 실패하였습니다. 다시 시도해주세요.')
-            }
-            router.push('/main')
-        }
+
+
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setNickname(e.target.value);
+    updateUser({ nickname: e.target.value });
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setName(e.target.value);
+    updateUser({ name: e.target.value });
+  };
+
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("userEmail");
+    if (storedEmail) {
+      setEmail(storedEmail);
+      updateUser({ email: storedEmail });
+    }
+  }, []);
+
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
+    e.preventDefault();
+
+    if (nickname && profileImg) {
+      try {
        
+        const response = await PostSignup(User);
+        console.log('회원가입 결과:', response);
+        router.push('/main');
+      } catch (error) {
+        console.error("회원가입 실패", error);
+        alert('회원가입에 실패하였습니다. 다시 시도해주세요.');
+      }
+    }
+  };
 
-        
-     }
+  useEffect(() => {
+    if (nickname) {
+      updateUser({ nickname });
+    }
+  }, [nickname]);
 
-     useEffect(() => {
-        if(nickname){
-            updateUser({nickname: nickname});
-        }
-    }, [nickname]);
+  useEffect(() => {
+    if (profileImg) {
+      updateUser({ profileImageUrl: profileImg });
+    }
+  }, [nickname, profileImg]);
 
-    useEffect(() => {
-        if(profileImg){
-            updateUser({profileImageUrl : profileImg});
-        }
-        console.log(User);
-    }, [nickname, profileImg]);
-    return (
-        <div className='signup'>
-        <div id='back_btn'> {`<`} </div>
-        <div id='profile_title'>프로필 생성</div>
-        <label htmlFor='profileImgBtn1' id='profileImgBtn' 
+  return (
+    <div className='signup'>
+      <div id='back_btn'>{`<`}</div>
+      <div id='profile_title'>프로필 생성</div>
+      <label htmlFor='profileImgBtn1' id='profileImgBtn'
         style={{
-            backgroundImage: profileImg?`url(${profileImg})`:undefined,
-            backgroundRepeat:'no-repeat',
-            backgroundSize: 'cover'
+          backgroundImage: profileImg ? `url(${profileImg})` : undefined,
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover'
         }}>
-            <input id='profileImgBtn1' type='file' accept = 'image/*' onChange={handleImageChange}/>
-        </label>
-        <input id='nickname' placeholder='닉네임' onChange={handleNicknameChange}></input>
-       {/* <div id='interest_title'>관심사를 선택하세요</div>
-        <form id='interest'>
-      
-        
-            <label htmlFor="web" className='checkbox_label'>
-                <input type='checkBox' id='web' className='interCheck' value={'web'} ></input>
-                웹 개발
-            </label>
-
-            <label htmlFor="app"  className='checkbox_label'>
-                <input type='checkBox' id='app'className='interCheck'></input>
-                앱 개발
-            </label>
-            <label htmlFor="game" className='checkbox_label'>
-                <input type='checkBox' id='game'className='interCheck'></input>
-                게임 개발
-            </label>
-
-            <label htmlFor="network" className='checkbox_label'>
-                <input type='checkBox'id='network'className='interCheck'></input>
-                네트워크 및 보안
-            </label>
-
-            <label htmlFor="ai" className='checkbox_label'>
-                <input type='checkBox' id='ai'className='interCheck'></input>
-                인공지능 및 머신러닝
-            </label>
-
-            <label htmlFor="DB" className='checkbox_label'>
-                <input type='checkBox' id='DB'className='interCheck'></input>
-                데이터베이스
-            </label>
-
-            <label htmlFor="hardware" className='checkbox_label'>
-                <input type='checkBox' id='hardware'className='interCheck'></input>
-                하드웨어 설계
-            </label>
-
-            <label htmlFor="RTOS" className='checkbox_label'>
-                <input type='checkBox'id='RTOS'className='interCheck'></input>
-                RTOS 기반 소프트웨어
-            </label>
-
-            <label htmlFor="signal_processing" className='checkbox_label'>
-                <input type='checkBox' id='signal_processing'className='interCheck'></input>
-                신호 처리 시스템
-            </label>
-
-            <label htmlFor="IoT" className='checkbox_label'>
-                <input type='checkBox' id='IoT'className='interCheck'></input>
-                IoT 시스템
-            </label>
-
-            <label htmlFor="startup" className='checkbox_label'>
-                <input type='checkBox'id='startup'className='interCheck'></input>
-                스타트업 및 창업
-            </label>
-
-        </form> */}
-        <button id='submit' onClick={handleSubmit}>회원가입</button>
+        <input id='profileImgBtn1' type='file' accept='image/*' onChange={handleImageChange} />
+      </label>
+      <input id='nickname' placeholder='닉네임' value={nickname} onChange={handleNicknameChange} />
+      <input id='name' placeholder='이름' value={name} onChange={handleNameChange} />
+      <button id='submit' onClick={handleSubmit}>회원가입</button>
     </div>
-    );
+  );
 }

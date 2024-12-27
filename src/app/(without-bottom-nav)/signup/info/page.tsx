@@ -68,9 +68,10 @@ export default function SignupInfo() {
         <div id='title'>학적 정보 등록</div>
         <input id='email' placeholder='학번' onChange={handleIdChange}/>
         <select id='password' defaultValue='컴퓨터공학부' onChange={handleDpartmentChange}>
-            <option value={'컴퓨터공학부'}>컴퓨터공학부</option>
-            <option value={'정보통신공학과'}>정보통신공학과</option>
-            <option value={'임베디드시스템공학과'}>임베디드시스템공학과</option>
+            <option value={'COMPUTER_SCI'}>컴퓨터공학부</option>
+            <option value={'INFO_COMM'}>정보통신공학과</option>
+            <option value={'EMBEDDED'}>임베디드시스템공학과</option>
+            <option value={'STAFF'}>교직원</option>
         </select>
         {/*<div id='imageText'>학적 정보 이미지 업로드</div>
         <input type='file' accept = 'image/*' id='imgFileBtn' onChange={handleImageChange}/>
