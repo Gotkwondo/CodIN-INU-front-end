@@ -6,6 +6,8 @@ import Image from "next/image";
 import { Post } from "@/interfaces/Post";
 import CommentSection from "@/components/CommentSection";
 import { FaEye, FaHeart, FaRegCommentDots, FaBookmark } from "react-icons/fa";
+import CustomZoomImage from "@/components/ZoomableImageModal";
+import ZoomableImageModal from "@/components/ZoomableImageModal";
 
 interface PostDetailClientProps {
     postId: string;
@@ -143,21 +145,8 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
 
             {/* 이미지 섹션 */}
             {post.postImageUrl && post.postImageUrl.length > 0 && (
-                <div className="mb-4">
-                    <div className="grid grid-cols-3 gap-2">
-                        {post.postImageUrl.map((imageUrl, index) => (
-                            <div key={index} className="w-full h-32 relative">
-                                <Image
-                                    src={imageUrl}
-                                    alt={`Post image ${index}`}
-                                    layout="fill"
-                                    objectFit="cover"
-                                    className="rounded"
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                <ZoomableImageModal images={post.postImageUrl} />
+
             )}
 
             {/* 액션 섹션 */}

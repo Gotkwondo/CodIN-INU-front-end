@@ -17,6 +17,7 @@ export const boardData: Record<string, Board> = {
     'need-help': {
         name: '구해요',
         tabs: [
+            { label: '전체', value: 'all', postCategory: 'REQUEST' },
             { label: '스터디', value: 'study', postCategory: 'REQUEST_STUDY' },
             { label: '프로젝트', value: 'project', postCategory: 'REQUEST_PROJECT' },
             { label: '공모전/대회', value: 'competition', postCategory: 'REQUEST_COMPETITION' },
@@ -27,9 +28,20 @@ export const boardData: Record<string, Board> = {
     'communicate': {
         name: '소통해요',
         tabs: [
+            { label: '전체', value: 'all', postCategory: 'COMMUNICATION' },
             { label: '질문', value: 'question', postCategory: 'COMMUNICATION_QUESTION' },
             { label: '취업수기', value: 'job-experience', postCategory: 'COMMUNICATION_JOB' },
             { label: '꿀팁공유', value: 'tips', postCategory: 'COMMUNICATION_TIP' },
+        ],
+        type: 'list', // 리스트형
+    },
+    'extracurricular': {
+        name: '비교과',
+        tabs: [
+            { label: '전체', value: 'all', postCategory: 'EXTRACURRICULAR' },
+            { label: '정보대', value: 'question', postCategory: 'EXTRACURRICULAR_INNER' },
+            { label: 'StarINU', value: 'job-experience', postCategory: 'EXTRACURRICULAR_INNER' },
+            { label: '교외', value: 'tips', postCategory: 'EXTRACURRICULAR_OUTER' },
         ],
         type: 'list', // 리스트형
     },
