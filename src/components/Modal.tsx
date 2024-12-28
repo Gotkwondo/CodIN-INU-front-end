@@ -2,7 +2,16 @@
 import { ReactNode, useState } from "react";
 import ReportModal from "./ReportModal"; // ReportModal 컴포넌트 임포트
 
-const Modal = ({ children, onClose }: { children: ReactNode; onClose: () => void }) => {
+type Post = {
+    id: string;
+    title: string;
+    content: string;
+    author: string;
+    createdAt: string;
+    [key: string]: any; // 추가 데이터 허용
+};
+
+const Modal = ({ children, onClose, post = { id: '', title: '', content: '', author: '', createdAt: '' } }: { children: ReactNode; onClose: () => void; post?: Post }) => {
     const handleBack = () => {
         onClose();
     };
@@ -16,6 +25,9 @@ const Modal = ({ children, onClose }: { children: ReactNode; onClose: () => void
 
     const handleMenuAction = (action: string) => {
         if (action === "chat") {
+        console.log(post);
+        //post.userId로  유저 아이디 가져올수 있음
+
             alert("채팅하기 클릭됨");
         } else if (action === "report") {
             setIsReportModalOpen(true); // 신고 모달 열기
@@ -54,7 +66,7 @@ const Modal = ({ children, onClose }: { children: ReactNode; onClose: () => void
                             />
                         </svg>
                     </button>
-                    <h3 className="text-lg font-semibold text-gray-800">구해요</h3>
+                    <h3 className="text-lg font-semibold text-gray-800">{post.title}</h3>
                     <div className="relative">
                         <button
                             className="p-2 rounded-full hover:bg-gray-100"
@@ -103,6 +115,7 @@ const Modal = ({ children, onClose }: { children: ReactNode; onClose: () => void
 
                 {/* 본문 컨텐츠 */}
                 <div className="p-4 overflow-y-auto flex-grow">
+                    <p>{post.content}</p>
                     {children}
                 </div>
             </div>
@@ -111,7 +124,7 @@ const Modal = ({ children, onClose }: { children: ReactNode; onClose: () => void
             {isReportModalOpen && (
                 <ReportModal
                     onClose={closeReportModal}
-                    postId="examplePostId" // 여기에 실제 postId 전달
+                    postId={post.id} // post의 ID 전달
                 />
             )}
         </div>

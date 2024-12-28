@@ -2,20 +2,10 @@ import { ReactNode } from 'react';
 import BottomNav from '../../components/BottomNav';
 import Header from '../../components/Header';
 
-interface LayoutWithBottomNavProps {
-    children: ReactNode;
-    headerTitle?: string;
-    headerMode?: 'search' | 'menu';
-    isStackState?: boolean; // 스택 상태를 나타내는 props
-}
 
 export default function LayoutWithBottomNav({
                                                 children,
-                                                headerTitle = 'Default Title',
-                                                headerMode = 'menu',
-                                                isStackState = false, // 기본값은 false (스택 상태 아님)
-                                            }: LayoutWithBottomNavProps) {
-    console.log("isStackState:", isStackState); // 디버깅용 로그
+                                            }) {
 
     return (
         <>
@@ -27,3 +17,36 @@ export default function LayoutWithBottomNav({
         </>
     );
 }
+// 리팩토링용
+// 'use client'
+// import { useState } from 'react';
+// import BottomNav from '../../components/BottomNav';
+// import Header from '../../components/Header';
+//
+// export default function LayoutWithBottomNav({ children }) {
+//     const [layoutState, setLayoutState] = useState('both'); // 'header', 'bottom', 'both' 중 하나
+//     const [headerTitle, setHeaderTitle] = useState('헤더 제목'); // 헤더 제목
+//     const [headerMode, setHeaderMode] = useState('헤더 모드'); // 헤더 모드
+//
+//     return (
+//         <>
+//             {/* 헤더만 표시 */}
+//             {layoutState === 'header' && <Header title={headerTitle} mode={headerMode} />}
+//
+//             {/* 바텀탭만 표시 */}
+//             {layoutState === 'bottom' && <BottomNav />}
+//
+//             {/* 둘 다 표시 */}
+//             {layoutState === 'both' && (
+//                 <>
+//                     <Header title={headerTitle} mode={headerMode} />
+//                     <BottomNav />
+//                 </>
+//             )}
+//
+//             {/* 자식 컴포넌트 (페이지 내용) */}
+//             {children}
+//         </>
+//     );
+// }
+//

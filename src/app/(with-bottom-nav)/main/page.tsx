@@ -2,7 +2,8 @@ import { FC } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import BottomNav from "@/components/BottomNav";
-
+import { FaBell } from "react-icons/fa";
+import ZoomableImageModal from "../../../components/ZoomableImageModal"; // 커스텀 이미지 컴포넌트 경로 설정
 
 const menuItems = [
     { label: "구해요", href: "/main/boards/need-help", icon: "/icons/need-help.png" },
@@ -16,36 +17,45 @@ const menuItems = [
 ];
 
 
+const Calendar = () => {
+    // 현재 날짜를 기반으로 연도와 월을 가져옵니다.
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1
+
+    return (
+        <section className="my-6">
+            {/* 동적 이미지 */}
+            <div className="relative w-full h-96 mt-4">
+                <ZoomableImageModal
+                    images={`/images/calendar/calendar_${year}_${month}.jpg`} // 동적 이미지 경로
+                    initialIndex={0} // 한 장의 이미지 처리
+                />
+            </div>
+        </section>
+    );
+};
+
+
+
 const MainPage: FC = () => {
     return (
-        <div className="bg-gray-100 min-h-screen p-4">
-            <header className="flex items-center justify-between p-4 bg-white shadow-md">
-                <h1 className="text-blue-600 text-2xl font-bold">&lt;CodIN/&gt;</h1>
-                <div className="text-gray-500">🔔</div>
+        <div className="bg-gray-100 min-h-screen">
+            <header className="flex items-center justify-between p-4 bg-white ">
+                {/* 로고 */}
+                <h1 className="text-blue-500 text-3xl font-extrabold tracking-wide">
+                    &lt;CodIN/&gt;
+                </h1>
+                {/* 알람 아이콘 */}
+                <div className="text-gray-600 text-2xl relative">
+                    <FaBell />
+                    <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
+                </div>
             </header>
 
-            <section className="my-6">
-                <h2 className="text-center text-gray-700 text-lg font-semibold">정보기술대학 캘린더</h2>
-                <div className="text-center text-3xl text-gray-800 font-bold">10</div>
+           <Calendar/>
 
-                <div className="grid grid-cols-7 gap-2 mt-4 text-center text-gray-700">
-                    {["일", "월", "화", "수", "목", "금", "토"].map((day, index) => (
-                        <div key={index} className="font-semibold">{day}</div>
-                    ))}
-                    {/* Calendar Dates - 각 날짜에 따라 색상을 다르게 설정 */}
-                    {/* 대략적인 날짜와 일정 표시를 위한 예제 */}
-                    {[...Array(31)].map((_, index) => (
-                        <div
-                            key={index}
-                            className={`p-2 rounded-lg ${index === 2 ? 'bg-red-200' : index === 4 ? 'bg-blue-200' : ''}`}
-                        >
-                            {index + 1}
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            <section className="my-6 bg-white rounded-lg p-4 shadow-md">
+            <section className="my-6 bg-white rounded-lg p-4 m-4">
                 <div className="grid grid-cols-4 gap-4">
                     {/* 메뉴 아이콘들 */}
                     {menuItems.map((menu, index) => (
