@@ -131,11 +131,13 @@
        
     display: flex;
     flex-direction: row;
+    margin-bottom: 9px;
         }
     .message-right{
   
-    display: flex;
-        flex-direction: column;
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-start;
     }
     .messages::-webkit-scrollbar{
       display: none;
@@ -155,7 +157,7 @@
         align-self: flex-end;
         background: #0D99FF;
         border-radius: 25px;
-        margin-bottom:2PX;
+        margin-bottom:9PX;
         max-width:200px;
         white-space: normal;
         
@@ -239,5 +241,26 @@
         background-repeat: no-repeat;
         background-size: contain;
         margin-left: 22px;
+    }
+
+    #time{
+        
+        width: auto;
+        height: 14px;
+        margin-left: 4px;
+        margin-right: 4px;
+
+        font-family: 'Noto Sans KR';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 11px;
+        line-height: 16px;  
+       
+
+        color: #787878;
+        align-self: flex-end;
+        margin-bottom: 9px;
+
+
     }
 }

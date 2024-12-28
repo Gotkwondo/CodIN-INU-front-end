@@ -10,7 +10,7 @@ interface Message {
     id: string;
     senderId: string;
     content: string;
-    createdAt:Date;
+    createdAt:string;
     me: boolean;
 }
 
@@ -45,11 +45,11 @@ export default function ChatRoom() {
         }
     }, []);
 
-    const Message = ({ id, content, me }: Message) => {
-        const messageClass = me ?'message-left': 'message-right'  ;
+    const Message = ({ id, content, me, createdAt }: Message) => {
+        const messageClass = me ? 'message-right': 'message-left' ;
         return (
             <div className={messageClass}>
-             {!me ? (
+             {me ? (
                 <div className="modi" />
             ) : (
                 // me가 아닐 경우에만 profile div를 추가로 표시
@@ -58,6 +58,7 @@ export default function ChatRoom() {
                 <div id={id} className={`message_${messageClass}`}>
                     <div className="message-text">{content}</div>
                 </div>
+                <div id='time'>{createdAt}</div>
             </div>
         );
     };
@@ -70,7 +71,7 @@ export default function ChatRoom() {
                         key={i}
                         id={message.senderId}
                         content={message.content}
-                        me={message.me} senderId={''} createdAt={undefined}                    />
+                        me={message.me} senderId={''} createdAt={message.createdAt}                    />
                 ))}
                 <div ref={messagesEndRef} />
             </div>
@@ -83,9 +84,23 @@ export default function ChatRoom() {
 
     const MessageForm = ({ onMessageSubmit }: MessageFormProps) => {
         const [messageContent, setMessageContent] = useState<string>('');
+        const [time, setTime] = useState<string>('');
+
+        const getCurrentTime = () => {
+            const options: Intl.DateTimeFormatOptions = {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true, // 12시간 형식 사용
+            };
+            const currentTime = new Date();
+            return currentTime.toLocaleTimeString('ko-KR', options);
+        };
 
         const handleSubmit = (e: FormEvent) => {
             e.preventDefault();
+
+            const currentTime = getCurrentTime();
+
             const message: Message = {
                 content: messageContent,
                 me: true // `me` 값을 true로 설정
@@ -93,7 +108,7 @@ export default function ChatRoom() {
 
                 senderId: '',
                 id: '',
-                createdAt: undefined
+                createdAt: currentTime
             };
             onMessageSubmit(message);
             setMessageContent('');
