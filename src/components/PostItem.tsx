@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { FaEye, FaHeart, FaRegCommentDots, FaBookmark } from "react-icons/fa";
 import { Post } from "@/interfaces/Post";
 
 interface PostItemProps {
@@ -8,6 +9,27 @@ interface PostItemProps {
     onOpenModal: (post: Post) => void; // 모달 열기 핸들러
 }
 
+// 아이콘 + 텍스트 렌더링 컴포넌트
+const PostStat = ({
+                      icon: Icon,
+                      count,
+                      isActive,
+                      activeColor,
+                  }: {
+    icon: React.ElementType;
+    count: number;
+    isActive: boolean;
+    activeColor: string;
+}) => {
+    const colorClass = isActive ? activeColor : "text-gray-400";
+    return (
+        <span className="flex items-center space-x-1">
+            <Icon className={colorClass} />
+            <span>{count}</span>
+        </span>
+    );
+};
+
 const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenModal }) => {
     const imageUrl = post.postImageUrl.length > 0 ? post.postImageUrl[0] : null;
 
@@ -15,6 +37,15 @@ const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenM
         e.preventDefault(); // 기본 Link 동작 방지
         onOpenModal(post); // 모달 열기
     };
+
+    const postStats = (
+        <div className="flex items-center text-xs text-gray-500 mt-2 space-x-4">
+            <PostStat icon={FaEye} count={post.hits || 0} isActive={false} activeColor="text-gray-400" />
+            <PostStat icon={FaRegCommentDots} count={post.commentCount} isActive={false} activeColor="text-gray-400" />
+            <PostStat icon={FaHeart} count={post.likeCount} isActive={post.userInfo.like} activeColor="text-red-500" />
+            <PostStat icon={FaBookmark} count={post.scrapCount} isActive={post.userInfo.scrap} activeColor="text-yellow-500" />
+        </div>
+    );
 
     if (boardType === "gallery") {
         // 갤러리형 디자인
@@ -37,11 +68,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenM
                             {post.title}
                         </h3>
                         <p className="text-xs text-gray-600 line-clamp-2">{post.content}</p>
-                        <div className="flex items-center text-xs text-gray-500 mt-2 space-x-4">
-                            <span>❤️ {post.likeCount}</span>
-                            <span>💬 {post.commentCount}</span>
-                            <span>⭐ {post.scrapCount}</span>
-                        </div>
+                        {postStats}
                     </div>
                 </a>
             </li>
@@ -73,11 +100,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenM
                 <a href="#" onClick={handleClick} className="flex-1">
                     <h3 className="text-sm font-semibold text-gray-800">{post.title}</h3>
                     <p className="text-xs text-gray-600 line-clamp-2">{post.content}</p>
-                    <div className="flex items-center text-xs text-gray-500 mt-2 space-x-4">
-                        <span>❤️ {post.likeCount}</span>
-                        <span>💬 {post.commentCount}</span>
-                        <span>⭐ {post.scrapCount}</span>
-                    </div>
+                    {postStats}
                 </a>
                 {imageUrl && (
                     <div className="ml-4 w-16 h-16 overflow-hidden rounded bg-gray-50 flex-shrink-0">

@@ -1,6 +1,7 @@
 'use client';
 import { ReactNode, useState } from "react";
-import ReportModal from "./ReportModal"; // ReportModal 컴포넌트 임포트
+import ReportModal from "./ReportModal";
+import {boardData} from "@/data/boardData"; // ReportModal 컴포넌트 임포트
 
 type Post = {
     id: string;
@@ -41,6 +42,19 @@ const Modal = ({ children, onClose, post = { id: '', title: '', content: '', aut
         setIsReportModalOpen(false); // 신고 모달 닫기
     };
 
+
+    // postCategory에 해당하는 Board 이름 가져오기 함수
+    const getBoardNameByPostCategory = (category: string): string | null => {
+        for (const key in boardData) {
+            const board = boardData[key];
+            const matchingTab = board.tabs.find(tab => tab.postCategory === category);
+            if (matchingTab) {
+                return board.name; // 상위 Board 이름 반환
+            }
+        }
+        return null; // 일치하는 항목이 없는 경우
+    };
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
             <div className="bg-white rounded-lg shadow-lg w-full max-w-lg h-full flex flex-col">
@@ -66,7 +80,7 @@ const Modal = ({ children, onClose, post = { id: '', title: '', content: '', aut
                             />
                         </svg>
                     </button>
-                    <h3 className="text-lg font-semibold text-gray-800">{post.title}</h3>
+                    <h3 className="text-xl font-semibold text-gray-800">{getBoardNameByPostCategory(post.postCategory)}</h3>
                     <div className="relative">
                         <button
                             className="p-2 rounded-full hover:bg-gray-100"
@@ -115,7 +129,6 @@ const Modal = ({ children, onClose, post = { id: '', title: '', content: '', aut
 
                 {/* 본문 컨텐츠 */}
                 <div className="p-4 overflow-y-auto flex-grow">
-                    <p>{post.content}</p>
                     {children}
                 </div>
             </div>

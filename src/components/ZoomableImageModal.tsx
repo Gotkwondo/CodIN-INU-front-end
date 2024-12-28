@@ -90,24 +90,39 @@ const ZoomableImageModal = ({ images }) => {
 
     return (
         <div>
-            {/* 가로 스크롤 이미지 리스트 */}
-            <div className="flex overflow-x-auto space-x-2 p-2">
-                {imageArray.map((imageUrl, index) => (
-                    <div
-                        key={index}
-                        className="w-32 h-32 flex-shrink-0 relative cursor-pointer"
-                        onClick={() => openModal(index)}
-                    >
-                        <Image
-                            src={imageUrl}
-                            alt={`Thumbnail ${index}`}
-                            layout="fill"
-                            objectFit="cover"
-                            className="rounded"
-                        />
-                    </div>
-                ))}
-            </div>
+            {imageArray.length === 1 ? (
+                // 이미지가 하나일 경우 상위 컴포넌트에 꽉 차게 표시
+                <div className="w-full h-full flex items-center justify-center">
+                    <Image
+                        src={imageArray[0]}
+                        alt="Single Image"
+                        layout="responsive"
+                        width={800}
+                        height={600}
+                        className="object-cover"
+                        onClick={() => openModal(0)}
+                    />
+                </div>
+            ) : (
+                // 가로 스크롤 이미지 리스트
+                <div className="flex overflow-x-auto space-x-2 p-2 bg-gray-200 rounded">
+                    {imageArray.map((imageUrl, index) => (
+                        <div
+                            key={index}
+                            className="w-32 h-32 flex-shrink-0 relative cursor-pointer"
+                            onClick={() => openModal(index)}
+                        >
+                            <Image
+                                src={imageUrl}
+                                alt={`Thumbnail ${index}`}
+                                layout="fill"
+                                objectFit="cover"
+                                className="rounded"
+                            />
+                        </div>
+                    ))}
+                </div>
+            )}
 
             {/* 모달 */}
             {isModalOpen && (
@@ -153,6 +168,10 @@ const ZoomableImageModal = ({ images }) => {
                                             : "cursor-pointer"
                                     }`}
                                     disabled={currentIndex === 0}
+                                    style={{
+                                        cursor: "pointer",
+                                        zIndex: 100, // 이미지 위에 버튼 표시
+                                    }}
                                 >
                                     <FaChevronLeft size={20} />
                                 </button>
@@ -164,6 +183,10 @@ const ZoomableImageModal = ({ images }) => {
                                             : "cursor-pointer"
                                     }`}
                                     disabled={currentIndex === imageArray.length - 1}
+                                    style={{
+                                        cursor: "pointer",
+                                        zIndex: 100, // 이미지 위에 버튼 표시
+                                    }}
                                 >
                                     <FaChevronRight size={20} />
                                 </button>

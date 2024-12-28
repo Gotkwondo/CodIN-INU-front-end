@@ -6,7 +6,6 @@ import Image from "next/image";
 import { Post } from "@/interfaces/Post";
 import CommentSection from "@/components/CommentSection";
 import { FaEye, FaHeart, FaRegCommentDots, FaBookmark } from "react-icons/fa";
-import CustomZoomImage from "@/components/ZoomableImageModal";
 import ZoomableImageModal from "@/components/ZoomableImageModal";
 
 interface PostDetailClientProps {
@@ -18,19 +17,18 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+
+
     useEffect(() => {
         const fetchPost = async () => {
             try {
                 const token = localStorage.getItem("accessToken");
                 if (!token) {
                     setError("로그인이 필요합니다.");
-
-                    window.location.href = "/login"; // 로그인 페이지로 리다이렉트
+                    window.location.href = "/login";
                     setLoading(false);
                     return;
                 }
-
-
 
                 const response = await axios.get(`https://www.codin.co.kr/api/posts/${postId}`, {
                     headers: {
@@ -38,7 +36,7 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                     },
                 });
 
-                console.log("Response Data:", response.data); // 응답 데이터 콘솔 출력
+                console.log("Response Data:", response.data);
 
                 if (response.data.success) {
                     setPost(response.data.data);
@@ -57,7 +55,6 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
     }, [postId]);
 
 
-
     const toggleAction = async (action: "like" | "bookmark") => {
         try {
             const token = localStorage.getItem("accessToken");
@@ -66,40 +63,55 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                 return;
             }
 
-            let url = "";
-            let method = post?.[action === "like" ? "isLiked" : "isBookmarked"] ? "DELETE" : "POST";
-            let data = {};
+            // API 요청 데이터 및 URL 설정
+            const url =
+                action === "like"
+                    ? "https://www.codin.co.kr/api/likes"
+                    : `https://www.codin.co.kr/api/scraps/${postId}`;
+            const requestData =
+                action === "like" ? { likeType: "POST", id: post._id } : undefined;
 
-            if (action === "like") {
-                url = "https://www.codin.co.kr/api/likes";
-                data = { likeType: "POST", id: postId };
-            } else if (action === "bookmark") {
-                url = `https://www.codin.co.kr/api/scraps/${postId}`;
-            }
-
-            await axios({
-                method,
-                url,
-                data,
-                headers: { Authorization: token },
+            // API 호출
+            const response = await axios.post(url, requestData, {
+                headers: {
+                    Authorization: token,
+                    "Content-Type": "application/json",
+                },
             });
 
-            if (post) {
-                setPost({
-                    ...post,
-                    [action === "like" ? "isLiked" : "isBookmarked"]: !post[action === "like" ? "isLiked" : "isBookmarked"],
-                    likeCount:
-                        action === "like"
-                            ? post.isLiked
-                                ? post.likeCount - 1
-                                : post.likeCount + 1
-                            : post.likeCount,
-                });
+            console.log(`${action === "like" ? "좋아요" : "북마크"} 응답:`, response.data);
+
+            if (response.data.success) {
+                if (post) {
+                    setPost({
+                        ...post,
+                        userInfo: {
+                            ...post.userInfo,
+                            [action === "like" ? "like" : "scrap"]: !post.userInfo[action === "like" ? "like" : "scrap"],
+                        },
+                        likeCount:
+                            action === "like"
+                                ? post.userInfo.like
+                                    ? post.likeCount - 1
+                                    : post.likeCount + 1
+                                : post.likeCount,
+                        scrapCount:
+                            action === "bookmark"
+                                ? post.userInfo.scrap
+                                    ? post.scrapCount - 1
+                                    : post.scrapCount + 1
+                                : post.scrapCount,
+                    });
+                }
+            } else {
+                console.error(response.data.message || `${action === "like" ? "좋아요" : "북마크"} 실패`);
             }
         } catch (error) {
             console.error(`${action === "like" ? "좋아요" : "북마크"} 토글 실패`, error);
         }
     };
+
+
 
     if (loading) {
         return (
@@ -126,8 +138,7 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
     }
 
     return (
-        <div className="bg-white min-h-screen p-4">
-            {/* 헤더 섹션 */}
+        <div className="bg-white min-h-screen p-1">
             <div className="flex items-center space-x-4 mb-4">
                 <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
                     <span className="text-gray-600 text-sm">익명</span>
@@ -137,41 +148,35 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                     <p className="text-xs text-gray-500">{post.createdAt}</p>
                 </div>
             </div>
-
-            {/* 본문 섹션 */}
             <div className="mb-4">
+                <h2 className="text-xl font-semibold text-gray-800 pb-3">{post.title}</h2>
                 <p className="text-gray-800 text-base">{post.content}</p>
             </div>
-
-            {/* 이미지 섹션 */}
             {post.postImageUrl && post.postImageUrl.length > 0 && (
                 <ZoomableImageModal images={post.postImageUrl} />
-
             )}
-
-            {/* 액션 섹션 */}
             <div className="flex items-center justify-between text-gray-500 text-sm border-t border-b py-2 mb-4">
                 <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-1">
                         <FaEye className="w-5 h-5" />
-                        <span>{post.viewCount}</span>
+                        <span>{post.viewCount || 0}</span>
                     </div>
                     <button onClick={() => toggleAction("like")} className="flex items-center space-x-1">
-                        <FaHeart className={`w-5 h-5 ${post.isLiked ? "text-red-500" : "text-gray-500"}`} />
+                        <FaHeart className={`w-5 h-5 ${post.userInfo.like ? "text-red-500" : "text-gray-500"}`} />
                         <span>{post.likeCount}</span>
                     </button>
+
                     <div className="flex items-center space-x-1">
                         <FaRegCommentDots className="w-5 h-5" />
                         <span>{post.commentCount}</span>
                     </div>
                 </div>
                 <button onClick={() => toggleAction("bookmark")} className="flex items-center space-x-1">
-                    <FaBookmark className={`w-5 h-5 ${post.isBookmarked ? "text-green-500" : "text-gray-500"}`} />
-                    <span>{post.isBookmarked ? 1 : 0}</span>
+                    <FaBookmark className={`w-5 h-5 ${post.userInfo.scrap ? "text-yellow-300" : "text-gray-500"}`} />
+                    <span>{post.scrapCount}</span>
                 </button>
-            </div>
 
-            {/* 댓글 섹션 */}
+            </div>
             <CommentSection postId={postId} />
         </div>
     );
