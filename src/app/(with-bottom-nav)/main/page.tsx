@@ -53,8 +53,10 @@ const MainPage: FC = () => {
                 </div>
             </header>
 
-           <Calendar/>
+            <section className="p-3">
+                <Calendar/>
 
+            </section>
             <section className="my-6 bg-white rounded-lg p-4 m-4">
                 <div className="grid grid-cols-4 gap-4">
                     {/* 메뉴 아이콘들 */}
