@@ -53,7 +53,7 @@ const PostList: React.FC<{ posts: any[]; boardName: string; boardType: string }>
 
             {/* 모달 */}
             {selectedPost && (
-                <Modal onClose={closeModal}>
+                <Modal onClose={closeModal} post={selectedPost}>
                     {/* PostDetailClient 컴포넌트에 상세 데이터 전달 */}
                     <PostDetailClient postId={selectedPost._id} />
                 </Modal>

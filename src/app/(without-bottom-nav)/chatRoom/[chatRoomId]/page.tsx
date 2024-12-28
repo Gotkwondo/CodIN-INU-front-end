@@ -1,10 +1,12 @@
 'use client'
 import './chatRoom.css';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams} from 'next/navigation';
 import { useContext, useState, useEffect, useRef, FormEvent } from 'react';
 import BottomNav from "@/components/BottomNav";
 import { AuthContext } from '@/context/AuthContext';
-
+import { GetChatData } from '@/api/getChatData';
+import * as StompJs from '@stomp/stompjs';
+import { Stomp } from '@stomp/stompjs';
 // 메시지 타입 정의
 interface Message {
     id: string;
@@ -24,26 +26,62 @@ interface MessageFormProps {
 
 export default function ChatRoom() {
     const router = useRouter();
+    const { chatRoomId } = useParams(); 
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const authContext = useContext(AuthContext);
 
     if (!authContext) {
         throw new Error('AuthContext를 사용하려면 AuthProvider로 감싸야 합니다.');
     }
-
     const { Auth } = authContext;
     const [chatList, setChatList] = useState<any[]>([]); // 타입을 더 구체적으로 지정할 수 있음
     const [accessToken, setToken] = useState<string>('');
-    const [socket, setSocket] = useState<WebSocket | null>(null); // WebSocket 타입 추가
     const [userType, setUserType] = useState<string>('');
+   const [title, setTitle] = useState<string>('');
     const [messages, setMessages] = useState<Message[]>([]); // Message 타입 배열
-
+    const socket = new WebSocket('wss://www.codin.co.kr/api/ws-stomp');
+    const stompClient = Stomp.over(socket);
+    const headers = {
+        'Authorization': accessToken
+    }
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
         if (token) {
             setToken(token);
         }
     }, []);
+
+    useEffect(() =>{
+        if (!accessToken) return;
+        console.log('전송 헤더',headers);
+
+        stompClient.connect(headers, (frame)=>{
+            
+            console.log('connected:' + frame);
+            stompClient.subscribe(`/queue/`+chatRoomId,  (message)=>{
+                const receivedMessage = JSON.parse(message.body);
+                setMessages(prevMessages => [...prevMessages, receivedMessage]);
+            });
+
+
+        })
+        const fetchChatRoomData = async()=>{
+            try{
+                console.log('토큰:',accessToken);
+                const title = localStorage.getItem('roomName');
+                setTitle(title);
+                console.log('전송데이터:',chatRoomId)
+                const data = await GetChatData(accessToken, chatRoomId as string, 0 );
+                console.log(data); 
+               
+            }catch(error){
+                console.log("채팅 정보를 불러오는 데 실패했습니다.",error);
+            }
+        }
+
+        fetchChatRoomData();
+    },[accessToken] );
+
 
     const Message = ({ id, content, me, createdAt }: Message) => {
         const messageClass = me ? 'message-right': 'message-left' ;
@@ -136,14 +174,14 @@ export default function ChatRoom() {
 
     const handleMessageSubmit = (message: Message) => {
         setMessages((prevMessages) => [...prevMessages, message]);
-     
+        stompClient.send("/pub/chats/"+chatRoomId,headers,JSON.stringify(message));
     };
 
     return (
         <div className='chatroom'>
             <div id='topCont'>
                 <button id='backBtn'>{`<`}</button>
-                <div id='title'>{`<익명/>`}</div>
+                <div id='title'>{`<${title}/>`}</div>
                 <button id='ect'>...</button>
             </div>
             <div id='date'>2024.11.26</div>

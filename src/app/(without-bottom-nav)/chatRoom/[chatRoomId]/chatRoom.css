@@ -222,7 +222,7 @@
 
     }
     #sendBtn{
-        background-image: url('../../../../public/icons/Send.png');
+        background-image: url('../../../../../public/icons/Send.png');
         background-repeat: no-repeat;
         background-size: contain;
         width: 20px;
@@ -241,7 +241,7 @@
     #profile{
         width: 36px;
         height: 36px;
-        background-image: url('../../../../public/icons/anonymous-profile.png');
+        background-image: url('../../../../../public/icons/anonymous-profile.png');
         background-repeat: no-repeat;
         background-size: contain;
         margin-left: 22px;
@@ -273,7 +273,7 @@
 
         width: 17px;
         height: 17px;
-        background-image: url('../../../../public/icons/chat_camera.png');
+        background-image: url('../../../../../public/icons/chat_camera.png');
         background-repeat: no-repeat;
         background-size: contain;
         margin-right: 12px;
