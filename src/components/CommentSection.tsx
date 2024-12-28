@@ -21,7 +21,11 @@ interface Comment {
 interface CommentSectionProps {
     postId: string;
 }
-
+interface ApiResponse {
+    success: boolean;
+    message?: string;
+    dataList?: Comment[]; // dataList가 존재할 수 있음
+}
 const timeAgo = (timestamp: string): string => {
     const now = new Date();
     const createdAt = new Date(timestamp);
@@ -113,7 +117,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
             const token = localStorage.getItem("accessToken");
             if (!token) throw new Error("로그인이 필요합니다.");
 
-            const { data } = await axios.get(
+            const { data } = await axios.get<ApiResponse>(
                 `https://www.codin.co.kr/api/comments/post/${postId}`,
                 {
                     headers: { Authorization: token },
@@ -121,7 +125,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
             );
 
             if (data.success) {
-                const validComments = (data.dataList || []).map((comment: Comment) => ({
+                const validComments = (data.dataList || []).map((comment) => ({
                     ...comment,
                     content: comment.content || "내용이 없습니다.",
                 }));
