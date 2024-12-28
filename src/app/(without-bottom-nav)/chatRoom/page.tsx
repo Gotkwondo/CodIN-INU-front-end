@@ -85,7 +85,7 @@ export default function ChatRoom() {
     const MessageForm = ({ onMessageSubmit }: MessageFormProps) => {
         const [messageContent, setMessageContent] = useState<string>('');
         const [time, setTime] = useState<string>('');
-
+        const inputRef = useRef<HTMLInputElement | null>(null); 
         const getCurrentTime = () => {
             const options: Intl.DateTimeFormatOptions = {
                 hour: '2-digit',
@@ -112,18 +112,21 @@ export default function ChatRoom() {
             };
             onMessageSubmit(message);
             setMessageContent('');
+           
         };
 
         return (
             <div id='inputCont'>
              <button id='imageSubmit'></button>
-            <form onSubmit={handleSubmit} id='messagesendForm'>
+            <form onSubmit={handleSubmit} id='messagesendForm' autoComplete='off'>
                 <input
                     id='messageInput'
                     type="text"
                     value={messageContent}
                     onChange={(e) => setMessageContent(e.target.value)}
                     placeholder="메시지를 입력하세요"
+                    autoFocus
+                   
                 />
                 <button type="submit" id='sendBtn'></button>
             </form>
@@ -133,6 +136,7 @@ export default function ChatRoom() {
 
     const handleMessageSubmit = (message: Message) => {
         setMessages((prevMessages) => [...prevMessages, message]);
+     
     };
 
     return (
