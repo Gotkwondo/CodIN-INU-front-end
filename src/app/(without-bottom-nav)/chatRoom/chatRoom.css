@@ -184,6 +184,10 @@
 
     }
     #inputCont{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
        position: fixed;
        bottom: 36px;
     }
@@ -261,6 +265,18 @@
         align-self: flex-end;
         margin-bottom: 9px;
 
+
+    }
+
+    #imageSubmit{
+
+
+        width: 17px;
+        height: 17px;
+        background-image: url('../../../../public/icons/chat_camera.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        margin-right: 12px;
 
     }
 }

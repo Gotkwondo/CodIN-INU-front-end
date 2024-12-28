@@ -2,11 +2,11 @@ import axios, {AxiosResponse} from 'axios';
 
 const BASE_URL = 'https://www.codin.co.kr/api';
 
-export const GetChatRoomData = async (accessToken:string): Promise<any> => {
+export const GetChatRoomData = async (accessToken:string, chatRoomId:string, page:number): Promise<any> => {
     axios.defaults.withCredentials = true;
     try{
         const response: AxiosResponse<any> = await axios.get(
-            `${BASE_URL}/chatroom`,
+            `${BASE_URL}/chats/list/${chatRoomId}`,
            { headers: {
              Authorization: ` ${accessToken}`
           }}
