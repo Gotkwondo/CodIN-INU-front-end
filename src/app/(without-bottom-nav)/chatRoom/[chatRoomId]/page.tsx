@@ -7,6 +7,7 @@ import { AuthContext } from '@/context/AuthContext';
 import { GetChatData } from '@/api/getChatData';
 import * as StompJs from '@stomp/stompjs';
 import { Stomp } from '@stomp/stompjs';
+import  SockJS from 'sockjs-client';
 // 메시지 타입 정의
 interface Message {
     id: string;
@@ -38,12 +39,13 @@ export default function ChatRoom() {
     const [accessToken, setToken] = useState<string>('');
     const [userType, setUserType] = useState<string>('');
    const [title, setTitle] = useState<string>('');
+   const [content, setContent] = useState<string>('');
     const [messages, setMessages] = useState<Message[]>([]); // Message 타입 배열
-    const socket = new WebSocket('wss://www.codin.co.kr/api/ws-stomp');
-    const stompClient = Stomp.over(socket);
+   const [stompClient, setStompClient] = useState<any>(null);
     const headers = {
         'Authorization': accessToken
     }
+
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
         if (token) {
@@ -51,8 +53,18 @@ export default function ChatRoom() {
         }
     }, []);
 
+    useEffect(()=>{
+        const socket = new SockJS('https://www.codin.co.kr/api/ws-stomp');
+        const stomp = Stomp.over(socket);
+
+        setStompClient(stomp);
+    },[]);
+
+useEffect(() => {
+    console.log('Messages updated:', messages);  // 상태 업데이트 후 메시지 확인
+}, [messages]);
     useEffect(() =>{
-        if (!accessToken) return;
+        if (!accessToken || !stompClient) return;
         console.log('전송 헤더',headers);
 
         stompClient.connect(headers, (frame)=>{
@@ -60,11 +72,24 @@ export default function ChatRoom() {
             console.log('connected:' + frame);
             stompClient.subscribe(`/queue/`+chatRoomId,  (message)=>{
                 const receivedMessage = JSON.parse(message.body);
-                setMessages(prevMessages => [...prevMessages, receivedMessage]);
+                console.log('Received message:', receivedMessage); 
+                setMessages(prevMessages => [...prevMessages, {
+                    id:receivedMessage.body.data.id,
+                    senderId:receivedMessage.body.data.senderId, 
+                    content: receivedMessage.body.data.content,
+                    createdAt:receivedMessage.body.data.createdAt,
+                    me: false
+                }]);
             });
+            const sendMessage = {
+                type: "SEND",
+                content: content.trim(),
+                contentTypte: "TEXT"
+            };
+            stompClient.send("/pub/chats/"+chatRoomId,headers,JSON.stringify(sendMessage) )
 
 
-        })
+        },[messages])
         const fetchChatRoomData = async()=>{
             try{
                 console.log('토큰:',accessToken);
@@ -149,7 +174,7 @@ export default function ChatRoom() {
                 createdAt: currentTime
             };
             onMessageSubmit(message);
-            setMessageContent('');
+            setContent(messageContent);
            
         };
 
@@ -174,7 +199,13 @@ export default function ChatRoom() {
 
     const handleMessageSubmit = (message: Message) => {
         setMessages((prevMessages) => [...prevMessages, message]);
-        stompClient.send("/pub/chats/"+chatRoomId,headers,JSON.stringify(message));
+        const sendMessage = {
+            type: "SEND",
+            content: message.content,
+            contentType: "TEXT"
+        }
+        stompClient.send(`/pub/chats/${chatRoomId}`,headers,JSON.stringify(sendMessage));
+        console.log(message.content);
     };
 
     return (
