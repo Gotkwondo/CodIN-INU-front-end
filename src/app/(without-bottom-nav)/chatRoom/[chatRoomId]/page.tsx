@@ -42,6 +42,8 @@ export default function ChatRoom() {
    const [content, setContent] = useState<string>('');
     const [messages, setMessages] = useState<Message[]>([]); // Message 타입 배열
    const [stompClient, setStompClient] = useState<any>(null);
+   const [myId, setMyID] = useState<string>('');
+
     const headers = {
         'Authorization': accessToken
     }
@@ -95,9 +97,12 @@ useEffect(() => {
                 console.log('토큰:',accessToken);
                 const title = localStorage.getItem('roomName');
                 setTitle(title);
+
                 console.log('전송데이터:',chatRoomId)
                 const data = await GetChatData(accessToken, chatRoomId as string, 0 );
                 console.log(data); 
+                
+                setMessages(data.data.dataList || []);
                
             }catch(error){
                 console.log("채팅 정보를 불러오는 데 실패했습니다.",error);
