@@ -37,7 +37,6 @@ export default function ChatRoom() {
     const { Auth } = authContext;
     const [chatList, setChatList] = useState<any[]>([]); // 타입을 더 구체적으로 지정할 수 있음
     const [accessToken, setToken] = useState<string>('');
-    const [userType, setUserType] = useState<string>('');
    const [title, setTitle] = useState<string>('');
    const [content, setContent] = useState<string>('');
     const [messages, setMessages] = useState<Message[]>([]); // Message 타입 배열
@@ -72,24 +71,19 @@ useEffect(() => {
         stompClient.connect(headers, (frame)=>{
             
             console.log('connected:' + frame);
-            stompClient.subscribe(`/queue/`+chatRoomId,  (message)=>{
+            stompClient.subscribe('/queue/'+chatRoomId,  (message)=>{
                 const receivedMessage = JSON.parse(message.body);
                 console.log('Received message:', receivedMessage); 
+                if (receivedMessage.body.data.senderId != myId) {
                 setMessages(prevMessages => [...prevMessages, {
                     id:receivedMessage.body.data.id,
                     senderId:receivedMessage.body.data.senderId, 
                     content: receivedMessage.body.data.content,
                     createdAt:receivedMessage.body.data.createdAt,
                     me: false
-                }]);
+                }]); }
             });
-            const sendMessage = {
-                type: "SEND",
-                content: content.trim(),
-                contentTypte: "TEXT"
-            };
-            stompClient.send("/pub/chats/"+chatRoomId,headers,JSON.stringify(sendMessage) )
-
+         
 
         },[messages])
         const fetchChatRoomData = async()=>{
@@ -102,8 +96,9 @@ useEffect(() => {
                 const data = await GetChatData(accessToken, chatRoomId as string, 0 );
                 console.log(data); 
                 
-                setMessages(data.data.dataList || []);
-               
+                setMessages(data.data.data.chatting || []);
+                setMyID(data.data.data.currentUserId);
+
             }catch(error){
                 console.log("채팅 정보를 불러오는 데 실패했습니다.",error);
             }
@@ -114,20 +109,21 @@ useEffect(() => {
 
 
     const Message = ({ id, content, me, createdAt }: Message) => {
-        const messageClass = me ? 'message-right': 'message-left' ;
+        const messageClass = id = myId ? 'message-right': 'message-left' ;
         return (
             <div className={messageClass}>
-             {me ? (
-                <div className="modi" />
-            ) : (
-                // me가 아닐 경우에만 profile div를 추가로 표시
-                <div id="profile"></div> // 프로필을 나타내는 div, 필요에 따라 수정 가능
-            )}
-                <div id={id} className={`message_${messageClass}`}>
-                    <div className="message-text">{content}</div>
-                </div>
-                <div id='time'>{createdAt}</div>
-            </div>
+            {id != myId ? (
+               <div className="modi" />
+           ) : (
+               // me가 아닐 경우에만 profile div를 추가로 표시
+               <div id="profile"></div> // 프로필을 나타내는 div, 필요에 따라 수정 가능
+           )}
+               <div id={id} className={`message_${messageClass}`}>
+                   <div className="message-text">{content}</div>
+               </div>
+               <div id='time'>{createdAt}</div>
+           </div>
+            
         );
     };
 
@@ -171,7 +167,7 @@ useEffect(() => {
 
             const message: Message = {
                 content: messageContent,
-                me: true // `me` 값을 true로 설정
+                me: true // me 값을 true로 설정
                 ,
 
                 senderId: '',
