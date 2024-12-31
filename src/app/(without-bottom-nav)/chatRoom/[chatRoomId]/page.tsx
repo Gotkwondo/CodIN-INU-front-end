@@ -47,6 +47,20 @@ export default function ChatRoom() {
         'Authorization': accessToken
     }
 
+    const formatCustomDate = (customDate: string) => {
+        try {
+            const [datePart, timePart] = customDate.split(' ');
+            const [hours, minutes] = timePart.split(':').map(Number);
+    
+            const period = hours >= 12 ? '오후' : '오전';
+            const formattedHours = hours % 12 || 12; // 12시간제 변환
+            return `${period} ${formattedHours}:${minutes.toString().padStart(2, '0')}`;
+        } catch (error) {
+            console.error('날짜 변환 오류:', error);
+            return customDate; // 변환 실패 시 원래 값 반환
+        }
+    };
+
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
         if (token) {
@@ -64,48 +78,56 @@ export default function ChatRoom() {
 useEffect(() => {
     console.log('Messages updated:', messages);  // 상태 업데이트 후 메시지 확인
 }, [messages]);
-    useEffect(() =>{
-        if (!accessToken || !stompClient) return;
-        console.log('전송 헤더',headers);
+useEffect(() => {
+    const fetchChatRoomData = async () => {
+        try {
+            console.log('토큰:', accessToken);
+            const title = localStorage.getItem('roomName');
+            setTitle(title);
 
-        stompClient.connect(headers, (frame)=>{
-            
-            console.log('connected:' + frame);
-            stompClient.subscribe('/queue/'+chatRoomId,  (message)=>{
-                const receivedMessage = JSON.parse(message.body);
-                console.log('Received message:', receivedMessage); 
-                if (receivedMessage.body.data.senderId != myId) {
-                setMessages(prevMessages => [...prevMessages, {
-                    id:receivedMessage.body.data.id,
-                    senderId:receivedMessage.body.data.senderId, 
-                    content: receivedMessage.body.data.content,
-                    createdAt:receivedMessage.body.data.createdAt,
-                    me: false
-                }]); }
-            });
-         
+            console.log('전송데이터:', chatRoomId);
+            const data = await GetChatData(accessToken, chatRoomId as string, 0);
+            console.log(data);
 
-        },[messages])
-        const fetchChatRoomData = async()=>{
-            try{
-                console.log('토큰:',accessToken);
-                const title = localStorage.getItem('roomName');
-                setTitle(title);
-
-                console.log('전송데이터:',chatRoomId)
-                const data = await GetChatData(accessToken, chatRoomId as string, 0 );
-                console.log(data); 
-                
-                setMessages(data.data.data.chatting || []);
-                setMyID(data.data.data.currentUserId);
-
-            }catch(error){
-                console.log("채팅 정보를 불러오는 데 실패했습니다.",error);
-            }
+            setMessages(data.data.data.chatting || []);
+            setMyID(data.data.data.currentUserId);
+        } catch (error) {
+            console.log('채팅 정보를 불러오는 데 실패했습니다.', error);
         }
+    };
 
+    if (accessToken) {
         fetchChatRoomData();
-    },[accessToken] );
+    }
+}, [accessToken, chatRoomId]);
+
+useEffect(() => {
+    if (!accessToken || !stompClient || !myId) return;
+
+    console.log('전송 헤더', headers);
+
+    stompClient.connect(headers, (frame) => {
+        console.log('connected:', frame);
+
+        stompClient.subscribe(`/queue/${chatRoomId}`, (message) => {
+            const receivedMessage = JSON.parse(message.body);
+            console.log('Received message:', receivedMessage);
+
+            if (receivedMessage.body.data.senderId !== myId) {
+                setMessages((prevMessages) => [
+                    ...prevMessages,
+                    {
+                        id: receivedMessage.body.data.id,
+                        senderId: receivedMessage.body.data.senderId,
+                        content: receivedMessage.body.data.content,
+                        createdAt: formatCustomDate(receivedMessage.body.data.createdAt),
+                        me: false,
+                    },
+                ]);
+            }
+        });
+    });
+}, [accessToken, stompClient, myId, chatRoomId]);
 
 
     const Message = ({ id, content, me, createdAt }: Message) => {
