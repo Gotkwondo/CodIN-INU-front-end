@@ -157,7 +157,7 @@ useEffect(() => {
                         key={i}
                         id={message.senderId}
                         content={message.content}
-                        me={message.me} senderId={''} createdAt={message.createdAt}                    />
+                        me={message.me} senderId={''} createdAt={formatCustomDate(message.createdAt)}                    />
                 ))}
                 <div ref={messagesEndRef} />
             </div>
