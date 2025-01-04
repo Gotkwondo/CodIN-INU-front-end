@@ -1,15 +1,15 @@
 'use client';
 
-import React, { ReactNode, useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface StackPage {
     id: string;
-    content: ReactNode;
+    content: ReactElement; // ReactNode 대신 ReactElement로 제한
 }
 
 interface StackNavigationProps {
-    initialPage: ReactNode; // 첫 번째 기본 페이지
+    initialPage: ReactElement; // 첫 번째 기본 페이지
 }
 
 export default function StackNavigation({ initialPage }: StackNavigationProps) {
@@ -18,7 +18,7 @@ export default function StackNavigation({ initialPage }: StackNavigationProps) {
     ]);
 
     // 새 페이지 추가
-    const pushPage = (content: ReactNode) => {
+    const pushPage = (content: ReactElement) => {
         const newPage: StackPage = {
             id: `page-${stack.length + 1}`,
             content,
@@ -46,48 +46,18 @@ export default function StackNavigation({ initialPage }: StackNavigationProps) {
                         transition={{ duration: 0.3 }}
                         style={{ zIndex: index + 1 }}
                     >
-                        {React.cloneElement(page.content as React.ReactElement, {
+                        {React.cloneElement(page.content, {
                             pushPage,
                             popPage,
-                        })}
+                        } as PageProps)}
                     </motion.div>
                 ))}
             </AnimatePresence>
         </div>
     );
 }
+
 interface PageProps {
-    pushPage: (content: ReactNode) => void;
+    pushPage: (content: ReactElement) => void;
     popPage: () => void;
 }
-//
-// export function MainPage({ pushPage }: PageProps) {
-//     return (
-//         <div className="p-4">
-//             <h1>메인 페이지</h1>
-//             <button
-//                 className="mt-4 p-2 bg-blue-500 text-white rounded"
-//                 onClick={() =>
-//                     pushPage(<DetailPage />) // 새로운 페이지를 스택에 추가
-//                 }
-//             >
-//                 상세 페이지 열기
-//             </button>
-//         </div>
-//     );
-// }
-//
-// export function DetailPage({ popPage }: PageProps) {
-//     return (
-//         <div className="p-4">
-//             <h1>상세 페이지</h1>
-//             <button
-//                 className="mt-4 p-2 bg-red-500 text-white rounded"
-//                 onClick={popPage} // 현재 페이지를 스택에서 제거
-//             >
-//                 뒤로가기
-//             </button>
-//         </div>
-//     );
-// }
-
