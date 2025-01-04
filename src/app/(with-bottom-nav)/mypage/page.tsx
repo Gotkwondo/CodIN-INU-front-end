@@ -37,12 +37,12 @@ export default function MyPage() {
     }, []);
 
     const menuItems = [
-        { label: "프로필 편집", href: "/mypage/profile/edit" },
-        { label: "게시글", href: "/mypage/profile/posts" },
-        { label: "좋아요", href: "/mypage/profile/likes" },
-        { label: "댓글", href: "/mypage/profile/comments" },
-        { label: "스크랩", href: "/mypage/profile/scraps", isSpacer: true },
-        { label: "알림 설정", href: "/mypage/settings/notifications" },
+        { label: "프로필 편집", href: "/mypage/edit" },
+        { label: "게시글", href: "/mypage/board/posts" },
+        { label: "좋아요", href: "/mypage/board/likes" },
+        { label: "댓글", href: "/mypage/board/comments" },
+        { label: "스크랩", href: "/mypage/board/scraps", isSpacer: true },
+        { label: "알림 설정", href: "/mypage/notifications" },
         { label: "차단 관리", href: "/mypage/settings/block", isSpacer: true },
         { label: "로그아웃", href: "/mypage/logout" },
         { label: "회원 탈퇴", href: "/mypage/delete-account" },

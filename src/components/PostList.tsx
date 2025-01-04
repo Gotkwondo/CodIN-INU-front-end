@@ -21,7 +21,8 @@ const PostList: React.FC<{ posts: any[]; boardName: string; boardType: string }>
         const currentUrl = new URL(window.location.href);
         currentUrl.searchParams.set("postId", post._id);
 
-        router.push(currentUrl.toString(), { shallow: true, scroll: false });
+        // URL 변경 후 shallow 업데이트
+        router.push(currentUrl.toString());
     };
 
     const closeModal = () => {
@@ -30,7 +31,8 @@ const PostList: React.FC<{ posts: any[]; boardName: string; boardType: string }>
         const currentUrl = new URL(window.location.href);
         currentUrl.searchParams.delete("postId");
 
-        router.push(currentUrl.toString(), { shallow: true, scroll: false });
+        // URL 변경 후 shallow 업데이트
+        router.push(currentUrl.toString());
     };
 
     return (
@@ -54,7 +56,6 @@ const PostList: React.FC<{ posts: any[]; boardName: string; boardType: string }>
             {/* 모달 */}
             {selectedPost && (
                 <Modal onClose={closeModal} post={selectedPost}>
-                    {/* PostDetailClient 컴포넌트에 상세 데이터 전달 */}
                     <PostDetailClient postId={selectedPost._id} />
                 </Modal>
             )}

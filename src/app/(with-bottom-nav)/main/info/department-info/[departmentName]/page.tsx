@@ -1,12 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation"; // useParams로 변경
+import { useParams, useRouter } from "next/navigation"; // useRouter 추가
 import axios from "axios";
 
-import { FaArrowLeft } from "react-icons/fa";
 export default function DepartmentPage() {
-    const { departmentName } = useParams(); // URL의 [departmentName] 파라미터 가져오기
+    const params = useParams(); // URL의 파라미터 가져오기
+    const router = useRouter(); // useRouter 초기화
+
+    // departmentName 가져오기 (배열인지 여부 체크 후 처리)
+    const departmentName = Array.isArray(params.departmentName)
+        ? params.departmentName[0]
+        : params.departmentName;
 
     const [info, setInfo] = useState(null); // 학과 정보 저장
     const [loading, setLoading] = useState(true); // 로딩 상태
@@ -18,6 +23,7 @@ export default function DepartmentPage() {
         "STAFF": "교직원",
         "IT_COLLEGE": "정보기술 대학"
     };
+
     useEffect(() => {
         if (!departmentName) {
             console.log("departmentName is not available"); // 디버깅 로그 추가
@@ -49,7 +55,7 @@ export default function DepartmentPage() {
     }, [departmentName]);
 
     return (
-        <div className=" bg-gray-50 min-h-screen">
+        <div className="bg-gray-50 min-h-screen">
             <div className="relative mb-6">
                 <div className="flex items-center bg-gray-100 py-4 px-6 shadow-md rounded">
                     <button

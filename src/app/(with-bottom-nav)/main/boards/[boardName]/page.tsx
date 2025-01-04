@@ -1,23 +1,18 @@
-
 "use client";
 
 import { FC, useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import Tabs from "@/components/Tabs";
 import PostList from "@/components/PostList";
 import { boardData } from "@/data/boardData";
 import { Post } from "@/interfaces/Post";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 
-import Image from "next/image";
+import BoardLayout from "@/components/BoardLayout";
 
 const BoardPage: FC = () => {
     const params = useParams();
     const boardName = params.boardName as string;
-
-    const router = useRouter(); // useRouter 훅 추가
     const board = boardData[boardName];
 
     if (!board) {
@@ -40,10 +35,9 @@ const BoardPage: FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [hasMore, setHasMore] = useState<boolean>(true);
 
-    const [selectedImages, setSelectedImages] = useState<string[]>([]); // 선택된 이미지 상태
-
     const isFetching = useRef(false);
 
+    // 게시물 요청 함수
     const fetchPosts = async (pageNumber: number) => {
         if (isFetching.current) return;
 
@@ -52,7 +46,6 @@ const BoardPage: FC = () => {
             if (!token) {
                 console.error("토큰이 없습니다. 로그인이 필요합니다. 로그인페이지로");
             }
-
 
             const activePostCategory =
                 tabs.find((tab) => tab.value === activeTab)?.postCategory || "";
@@ -63,7 +56,7 @@ const BoardPage: FC = () => {
             isFetching.current = true;
 
             const response = await axios.get(
-                `https://www.codin.co.kr/api/posts/category`,
+                "https://www.codin.co.kr/api/posts/category",
                 {
                     headers: {
                         Authorization: token,
@@ -91,9 +84,9 @@ const BoardPage: FC = () => {
             } else {
                 console.error("데이터 로드 실패:", response.data.message);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("API 호출 오류:", error);
-            if(error.status === 401){
+            if (error.status === 401) {
                 window.location.href = "/login"; // 로그인 페이지로 리다이렉트
             }
         } finally {
@@ -102,25 +95,8 @@ const BoardPage: FC = () => {
         }
     };
 
-    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = event.target.files;
-        if (files) {
-            const newImages = Array.from(files).map((file) =>
-                URL.createObjectURL(file)
-            );
-            setSelectedImages((prevImages) => [...prevImages, ...newImages]);
-        }
-        event.target.value = ""; // 파일 선택 초기화
-    };
-
-    const handleRemoveImage = (index: number) => {
-        setSelectedImages((prevImages) =>
-            prevImages.filter((_, i) => i !== index)
-        );
-    };
-
+    // 게시판 초기화
     useEffect(() => {
-        // 컴포넌트가 처음 로드되었을 때 상태 초기화
         const initializeBoard = async () => {
             setIsLoading(true);
             try {
@@ -135,9 +111,11 @@ const BoardPage: FC = () => {
             }
         };
 
-        initializeBoard(); // 초기화 함수 호출
+        initializeBoard();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [boardName, activeTab]);
 
+    // 스크롤에 의한 무한 스크롤 처리
     useEffect(() => {
         const handleScroll = () => {
             if (
@@ -156,6 +134,7 @@ const BoardPage: FC = () => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, [isLoading, hasMore]);
 
+    // page 변경 시 새로운 데이터 요청
     useEffect(() => {
         if (page >= 0) {
             console.log("페이지 변경: 새 데이터 요청", "페이지:", page);
@@ -164,74 +143,28 @@ const BoardPage: FC = () => {
     }, [page]);
 
     return (
-        <div className="bg-white min-h-screen relative">
-            {/* 고정 헤더 */}
-            <header className="sticky top-0 bg-white z-50 shadow-md">
-                <div className="max-w-4xl mx-auto px-4 py-2">
-                    <div className="flex items-center justify-between h-16">
-                        {/* Back Button */}
-                        <button
-                            onClick={() => router.replace('/main')}
-                            className="text-gray-700 hover:text-gray-900 transition duration-300"
-                            aria-label="뒤로가기"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={2}
-                                stroke="currentColor"
-                                className="w-6 h-6"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M15 19l-7-7 7-7"
-                                />
-                            </svg>
-                        </button>
+        <BoardLayout
+            board={board}
+            activeTab={activeTab}
+            onTabChange={(tab) => {
+                console.log("탭 변경:", tab);
+                setActiveTab(tab);
+            }}
+        >
+            {/* children으로 PostList와 기타 UI를 렌더 */}
+            <PostList posts={posts} boardName={boardName} boardType={boardType} />
 
-                        {/* Title */}
-                        <h1 className="text-2xl font-bold text-gray-700 flex items-center justify-center">
-                            <span className="mr-2">{board.icon}</span> {board.name}
-                        </h1>
+            {/* 로딩 표시 */}
+            {isLoading && (
+                <div className="text-center my-4 text-gray-500">로딩 중...</div>
+            )}
 
-                        {/* Right Spacer */}
-                        <div className="w-6"></div>
-                    </div>
-
-                    {/* Tabs Section */}
-                    {hasTabs && (
-                        <div className="mt-2">
-                            <Tabs
-                                tabs={tabs}
-                                activeTab={activeTab}
-                                onTabChange={(tab) => {
-                                    console.log("탭 변경:", tab);
-                                    setActiveTab(tab);
-                                }}
-                            />
-                        </div>
-                    )}
+            {/* 데이터가 없을 때 메시지 */}
+            {!hasMore && !isLoading && posts.length === 0 && (
+                <div className="text-center my-4 text-gray-500">
+                    게시물이 없습니다.
                 </div>
-            </header>
-
-
-
-            {/* 게시물 리스트 */}
-            <main className="p-4">
-                <PostList posts={posts} boardName={boardName} boardType={boardType} />
-
-                {/* 로딩 표시 */}
-                {isLoading && (
-                    <div className="text-center my-4 text-gray-500">로딩 중...</div>
-                )}
-
-                {/* 데이터가 없을 때 메시지 */}
-                {!hasMore && !isLoading && posts.length === 0 && (
-                    <div className="text-center my-4 text-gray-500">게시물이 없습니다.</div>
-                )}
-            </main>
+            )}
 
             {/* 글쓰기 버튼 */}
             <Link
@@ -259,7 +192,7 @@ const BoardPage: FC = () => {
                     />
                 </svg>
             </Link>
-        </div>
+        </BoardLayout>
     );
 };
 

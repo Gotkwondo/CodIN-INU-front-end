@@ -60,34 +60,34 @@ interface PageProps {
     pushPage: (content: ReactNode) => void;
     popPage: () => void;
 }
-
-export function MainPage({ pushPage }: PageProps) {
-    return (
-        <div className="p-4">
-            <h1>메인 페이지</h1>
-            <button
-                className="mt-4 p-2 bg-blue-500 text-white rounded"
-                onClick={() =>
-                    pushPage(<DetailPage />) // 새로운 페이지를 스택에 추가
-                }
-            >
-                상세 페이지 열기
-            </button>
-        </div>
-    );
-}
-
-export function DetailPage({ popPage }: PageProps) {
-    return (
-        <div className="p-4">
-            <h1>상세 페이지</h1>
-            <button
-                className="mt-4 p-2 bg-red-500 text-white rounded"
-                onClick={popPage} // 현재 페이지를 스택에서 제거
-            >
-                뒤로가기
-            </button>
-        </div>
-    );
-}
+//
+// export function MainPage({ pushPage }: PageProps) {
+//     return (
+//         <div className="p-4">
+//             <h1>메인 페이지</h1>
+//             <button
+//                 className="mt-4 p-2 bg-blue-500 text-white rounded"
+//                 onClick={() =>
+//                     pushPage(<DetailPage />) // 새로운 페이지를 스택에 추가
+//                 }
+//             >
+//                 상세 페이지 열기
+//             </button>
+//         </div>
+//     );
+// }
+//
+// export function DetailPage({ popPage }: PageProps) {
+//     return (
+//         <div className="p-4">
+//             <h1>상세 페이지</h1>
+//             <button
+//                 className="mt-4 p-2 bg-red-500 text-white rounded"
+//                 onClick={popPage} // 현재 페이지를 스택에서 제거
+//             >
+//                 뒤로가기
+//             </button>
+//         </div>
+//     );
+// }
 

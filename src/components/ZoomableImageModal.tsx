@@ -4,7 +4,11 @@ import Image from "next/image";
 import { IoClose } from "react-icons/io5"; // React Icons에서 닫기 아이콘 사용
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa"; // 좌우 화살표 아이콘
 
-const ZoomableImageModal = ({ images }) => {
+interface ZoomableImageModalProps {
+    images: string | string[]; // 단일 이미지 또는 이미지 배열
+}
+
+const ZoomableImageModal: React.FC<ZoomableImageModalProps> = ({ images }) => {
     // 이미지를 배열 형태로 통일
     const imageArray = Array.isArray(images) ? images : [images];
     const [isModalOpen, setIsModalOpen] = useState(false);

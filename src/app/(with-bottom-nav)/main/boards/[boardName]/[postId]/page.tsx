@@ -2,12 +2,14 @@
 import LayoutWithBottomNav from '../../../../layout';
 import PostDetailClient from './PostDetailClient';
 
-interface PostDetailPageProps {
-    params: { postId: string };
+export interface PostDetailPageProps {
+    params: Promise<{ _id: string }>;
 }
 
-export default function PostDetailPage({ params }: PostDetailPageProps) {
+
+export default async function PostDetailPage({ params }: PostDetailPageProps) {
+    const resolvedParams = await params; // Promise 해제
     return (
-            <PostDetailClient postId={params.postId} />
+        <PostDetailClient postId={resolvedParams._id} />
     );
 }

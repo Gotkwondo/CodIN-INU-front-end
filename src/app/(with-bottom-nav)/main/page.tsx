@@ -29,7 +29,6 @@ const Calendar = () => {
             <div className="relative w-full h-96 mt-4">
                 <ZoomableImageModal
                     images={`/images/calendar/calendar_${year}_${month}.jpg`} // 동적 이미지 경로
-                    initialIndex={0} // 한 장의 이미지 처리
                 />
             </div>
         </section>
