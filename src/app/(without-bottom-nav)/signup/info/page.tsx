@@ -8,7 +8,7 @@ export default function SignupInfo() {
     const router = useRouter();
     const formData= new FormData();
     const [ studentId, setId] = useState<string>("");
-    const [ department, setDepartment] = useState<string>("컴퓨터공학부");
+    const [ department, setDepartment] = useState<string>("COMPUTER_SCI");
     const [profileImg, setProfileImg ] = useState<string>("");
     const [checked, setChecked] = useState<boolean>(false);
     const userContext = useContext(UserContext);

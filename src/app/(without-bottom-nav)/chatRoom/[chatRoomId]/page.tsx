@@ -8,6 +8,8 @@ import { GetChatData } from '@/api/getChatData';
 import * as StompJs from '@stomp/stompjs';
 import { Stomp } from '@stomp/stompjs';
 import  SockJS from 'sockjs-client';
+import { deleteRoom } from '@/api/deleteRoom';
+import { PostChatImage } from '@/api/postChatImage';
 // 메시지 타입 정의
 interface Message {
     id: string;
@@ -15,6 +17,8 @@ interface Message {
     content: string;
     createdAt:string;
     me: boolean;
+    imageUrl?: string;
+    contentType: string;
 }
 
 interface MessageListProps {
@@ -42,11 +46,15 @@ export default function ChatRoom() {
     const [messages, setMessages] = useState<Message[]>([]); // Message 타입 배열
    const [stompClient, setStompClient] = useState<any>(null);
    const [myId, setMyID] = useState<string>('');
+    const [isMenuOpen, setMenuOpen] = useState(false);
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     const headers = {
         'Authorization': accessToken
     }
-
+    const toggleMenu = () => {
+        setMenuOpen((prev) => !prev); // 메뉴 열기/닫기
+    };
     const formatCustomDate = (customDate: string) => {
         try {
             const [datePart, timePart] = customDate.split(' ');
@@ -89,7 +97,7 @@ useEffect(() => {
             const data = await GetChatData(accessToken, chatRoomId as string, 0);
             console.log(data);
 
-            setMessages(data.data.data.chatting || []);
+            setMessages((data.data.data.chatting || []).slice().reverse());
             setMyID(data.data.data.currentUserId);
         } catch (error) {
             console.log('채팅 정보를 불러오는 데 실패했습니다.', error);
@@ -109,7 +117,7 @@ useEffect(() => {
     stompClient.connect(headers, (frame) => {
         console.log('connected:', frame);
 
-        stompClient.subscribe(`/queue/${chatRoomId}`, (message) => {
+        stompClient.subscribe(`/queue/`+chatRoomId, (message) => {
             const receivedMessage = JSON.parse(message.body);
             console.log('Received message:', receivedMessage);
 
@@ -122,6 +130,7 @@ useEffect(() => {
                         content: receivedMessage.body.data.content,
                         createdAt: formatCustomDate(receivedMessage.body.data.createdAt),
                         me: false,
+                        contentType: receivedMessage.body.data.contentTyp,
                     },
                 ]);
             }
@@ -130,7 +139,7 @@ useEffect(() => {
 }, [accessToken, stompClient, myId, chatRoomId]);
 
 
-    const Message = ({ id, content, me, createdAt }: Message) => {
+    const Message = ({ id, content, createdAt, contentType }: Message) => {
         const messageClass = id = myId ? 'message-right': 'message-left' ;
         return (
             <div className={messageClass}>
@@ -141,7 +150,13 @@ useEffect(() => {
                <div id="profile"></div> // 프로필을 나타내는 div, 필요에 따라 수정 가능
            )}
                <div id={id} className={`message_${messageClass}`}>
-                   <div className="message-text">{content}</div>
+                   <div className="message-text">    
+                    {contentType === 'IMAGE' ? (
+                        <img src={content} alt="첨부된 이미지" className="message-image" />
+                    ) : (
+                        content
+                    )}
+                    </div>
                </div>
                <div id='time'>{createdAt}</div>
            </div>
@@ -157,7 +172,11 @@ useEffect(() => {
                         key={i}
                         id={message.senderId}
                         content={message.content}
-                        me={message.me} senderId={''} createdAt={formatCustomDate(message.createdAt)}                    />
+                    me={message.me} 
+                        senderId={''}
+                        createdAt={formatCustomDate(message.createdAt)}   
+                        contentType={message.contentType}
+                     />
                 ))}
                 <div ref={messagesEndRef} />
             </div>
@@ -189,21 +208,56 @@ useEffect(() => {
 
             const message: Message = {
                 content: messageContent,
-                me: true // me 값을 true로 설정
-                ,
-
+                me: true ,
                 senderId: '',
                 id: '',
-                createdAt: currentTime
+                createdAt: currentTime,
+                contentType: 'Text',
             };
-            onMessageSubmit(message);
+            if (imageFile) {
+                // 이미지가 선택되었으면 Base64로 변환하여 메시지에 포함
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                  const imageBase64 = reader.result as string;
+                  const imageMessage: Message = {
+                    ...message,
+                    content: imageBase64,
+                    contentType: 'IMAGE' // 이미지 URL을 추가
+                  };
+                  onMessageSubmit(imageMessage); // 이미지 메시지 전송
+                  PostChatImage(accessToken, imageFile);
+                  console.log('이미지 파일 보냄');
+                  setImageFile(null); // 이미지 파일 상태 초기화
+                };
+                reader.readAsDataURL(imageFile); // 파일을 Base64로 읽음
+            } else {
+              onMessageSubmit(message); // 일반 텍스트 메시지 전송
+            }
+      
             setContent(messageContent);
            
         };
 
+        const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+            if (e.target.files) {
+              setImageFile(e.target.files[0]); // 이미지 파일 상태 업데이트
+            }    
+          };
+
+
         return (
             <div id='inputCont'>
-             <button id='imageSubmit'></button>
+                 <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          style={{ display: 'none' }}
+          ref={inputRef}
+        />
+        <button
+          id="imageSubmit"
+          onClick={() => inputRef.current?.click()} // 이미지 파일 선택
+        ></button>
             <form onSubmit={handleSubmit} id='messagesendForm' autoComplete='off'>
                 <input
                     id='messageInput'
@@ -220,6 +274,19 @@ useEffect(() => {
         );
     };
 
+
+    const exitRoom = async(chatRoomId: string | string[] ) => {
+
+            try {
+                console.log('토큰:', accessToken);
+                const response = await deleteRoom(accessToken, chatRoomId);
+                console.log(response);
+                router.push('/chat')
+
+            } catch (error) {
+                console.log("채팅방 나가기를 실패했습니다.", error);
+            }
+    }
     const handleMessageSubmit = (message: Message) => {
         setMessages((prevMessages) => [...prevMessages, message]);
         const sendMessage = {
@@ -227,16 +294,35 @@ useEffect(() => {
             content: message.content,
             contentType: "TEXT"
         }
-        stompClient.send(`/pub/chats/${chatRoomId}`,headers,JSON.stringify(sendMessage));
+        stompClient.send(`/pub/chats/` + chatRoomId ,headers,JSON.stringify(sendMessage));
         console.log(message.content);
     };
 
     return (
         <div className='chatroom'>
             <div id='topCont'>
-                <button id='backBtn'>{`<`}</button>
+                <button id='backBtn' onClick={() => router.push('/chat')}>{`<`}</button>
                 <div id='title'>{`<${title}/>`}</div>
-                <button id='ect'>...</button>
+                <button id='ect'  onClick={toggleMenu}>...
+                                       
+                </button> 
+                 {isMenuOpen && (
+                            <div className="menuCont">
+                                   <ul className="listBox">
+                                      {/* 메뉴 아이템 주석 처리 */}
+                                      <li className="btn1" onClick={()=>exitRoom(chatRoomId)}> 
+                                        방 나가기
+                                    </li>
+                                    {/*}
+                                    <li className="btn2">
+                                         차단하기
+                                    </li>
+                                     <li className="btn3">
+                                        알림끄기
+                                       </li>*/}
+                                </ul>
+                               </div>
+                        )}
             </div>
             <div id='date'>2024.11.26</div>
             <div id='chatBox'>
@@ -246,4 +332,5 @@ useEffect(() => {
             <MessageForm onMessageSubmit={handleMessageSubmit} />
         </div>
     );
+
 }

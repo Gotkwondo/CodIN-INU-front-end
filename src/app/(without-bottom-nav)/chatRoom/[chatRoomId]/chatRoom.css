@@ -72,7 +72,6 @@
         color: #B3B3B3;
 
         transform: rotate(90deg);
-
         margin-top: 62px;
         margin-left:133px ;
     }
@@ -278,5 +277,46 @@
         background-size: contain;
         margin-right: 12px;
 
+    }
+
+    .menuCont{
+
+     
+
+        background: #FFFFFF;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+        border-radius: 5px;
+
+        width: 105px;
+        height: auto;
+        padding-left: 24px;
+        padding-right: 24px;
+       
+        display:flex;
+        position: fixed;
+        top:81px;
+        left: calc(50% + 78px);
+       
+        
+    }
+    .listBox{
+        display: flex;
+        width: auto;
+        flex-direction: column;
+        font-family: 'Noto Sans KR';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 19px;
+        color: #000000;
+
+
+
+
+    }
+    .btn1{
+        width: auto;
+        margin-top: 7px;
+        margin-bottom: 7px;
     }
 }

@@ -41,12 +41,14 @@ export default function LoginPage() {
             const response = await PostLogin(email, password);
             console.log(`로그인 결과: ${response}`);
             const token = response.headers['authorization'];
+            const refreshToken = response.headers['x-refresh-token']
             if (token) {
                 console.log('Authorization 토큰:', token);
+                console.log('리프레시:', refreshToken);
 
                 // 토큰 저장 (localStorage 또는 sessionStorage)
                 localStorage.setItem('accessToken', token);
-
+                localStorage.setItem('refresh-token', `Bearer ${refreshToken}`);
                 // AuthContext 업데이트
                 updateAuth({ accessToken: token });
 
@@ -87,7 +89,7 @@ export default function LoginPage() {
             </div>
             <div id="else">
                
-                <button id="findPW"> 비밀번호 찾기</button>
+                <button id="findPW" onClick={()=> router.push('/findPW')}> 비밀번호 찾기</button>
                 <div id="divider"> | </div>
                 <button id="signup" onClick={() => router.push('/signup')}>
                     회원가입
