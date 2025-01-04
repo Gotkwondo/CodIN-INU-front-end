@@ -292,8 +292,9 @@ useEffect(() => {
         const sendMessage = {
             type: "SEND",
             content: message.content,
-            contentType: "TEXT"
+            contentType: message.contentType
         }
+        console.log(message.contentType);
         stompClient.send(`/pub/chats/` + chatRoomId ,headers,JSON.stringify(sendMessage));
         console.log(message.content);
     };
