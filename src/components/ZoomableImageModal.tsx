@@ -103,7 +103,7 @@ const ZoomableImageModal: React.FC<ZoomableImageModalProps> = ({ images }) => {
                         layout="responsive"
                         width={800}
                         height={600}
-                        className="object-cover"
+                        className="object-cover rounded-lg" // rounded-lg 추가
                         onClick={() => openModal(0)}
                     />
                 </div>

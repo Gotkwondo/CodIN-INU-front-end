@@ -26,9 +26,14 @@ const Calendar = () => {
     return (
         <section className="my-6">
             {/* 동적 이미지 */}
-            <div className="relative w-full h-96 mt-4">
+            <div className="relative w-full  mt-4 ">
+                {/*해당 날자 이미지*/}
+                {/*<ZoomableImageModal*/}
+                {/*    images={`/images/calendar/calendar_${year}_${month}.jpg`} // 동적 이미지 경로*/}
+                {/*    initialIndex={0} // 한 장의 이미지 처리*/}
+                {/*/>*/}
                 <ZoomableImageModal
-                    images={`/images/calendar/calendar_${year}_${month}.jpg`} // 동적 이미지 경로
+                    images={`/images/calendar/calendar_2024_12.jpg`} // 동적 이미지 경로
                 />
             </div>
         </section>
