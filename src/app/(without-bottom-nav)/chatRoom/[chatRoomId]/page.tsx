@@ -44,7 +44,11 @@ export default function ChatRoom() {
    const [title, setTitle] = useState<string>('');
    const [content, setContent] = useState<string>('');
     const [messages, setMessages] = useState<Message[]>([]); // Message 타입 배열
-   const [stompClient, setStompClient] = useState<any>(null);
+    const [page, setPage] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [hasMore, setHasMore] = useState<boolean>(true);
+    const chatBoxRef = useRef<HTMLDivElement | null >(null);
+    const [stompClient, setStompClient] = useState<any>(null);
    const [myId, setMyID] = useState<string>('');
     const [isMenuOpen, setMenuOpen] = useState(false);
     const [imageFile, setImageFile] = useState<File | null>(null);
@@ -139,6 +143,38 @@ useEffect(() => {
     });
 }, [accessToken, stompClient, myId, chatRoomId]);
 
+
+const fetchChatRoomData = async (page: number) => {
+    if (!hasMore || isLoading) return;
+
+    setIsLoading(true);
+    try {
+        const data = await GetChatData(accessToken, chatRoomId as string, page);
+        const newMessages = data.data.data.chatting || [];
+        if (newMessages.length === 0) {
+            setHasMore(false); // 더 이상 불러올 데이터가 없음
+        } else {
+            setMessages((prev) => [...newMessages.reverse(), ...prev]); // 이전 메시지 추가
+        }
+    } catch (error) {
+        console.error('채팅 정보를 불러오는 데 실패했습니다.', error);
+    } finally {
+        setIsLoading(false);
+    }
+};
+
+
+useEffect(() => {
+    fetchChatRoomData(page);
+}, [page]);
+
+const handleScroll = () => {
+    if (!chatBoxRef.current) return;
+    const { scrollTop } = chatBoxRef.current;
+    if (scrollTop === 0 && hasMore && !isLoading) {
+        setPage((prev) => prev + 1); // 다음 페이지 요청
+    }
+};
 
     const Message = ({ id, content, createdAt, contentType }: Message) => {
         const messageClass = id = myId ? 'message-right': 'message-left' ;
@@ -344,7 +380,8 @@ useEffect(() => {
                         )}
             </div>
             <div id='date'>2024.11.26</div>
-            <div id='chatBox'>
+            <div id='chatBox' ref={chatBoxRef} onScroll={handleScroll}>
+            {isLoading && <div className="loading">Loading...</div>}
                 <MessageList messages={messages} />
             </div>
             <div id='divider'></div>
