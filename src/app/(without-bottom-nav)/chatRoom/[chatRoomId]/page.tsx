@@ -177,10 +177,10 @@ const handleScroll = () => {
 };
 
     const Message = ({ id, content, createdAt, contentType }: Message) => {
-        const messageClass = id = myId ? 'message-right': 'message-left' ;
+        const messageClass = id != myId ?  'message-left':'message-right' ;
         return (
             <div className={messageClass}>
-            {id != myId ? (
+            {id == myId ? (
                <div className="modi" />
            ) : (
                // me가 아닐 경우에만 profile div를 추가로 표시
@@ -202,19 +202,42 @@ const handleScroll = () => {
     };
 
     const MessageList = ({ messages }: MessageListProps) => {
-        return (
-            <div className="messages" style={{ overflowY: 'scroll', maxHeight: '660px' }}>
-                {messages.map((message, i) => (
+        const renderMessagesWithDateSeparators = () => {
+            const result: JSX.Element[] = [];
+            let lastDate: string | null = null;
+    
+            messages.forEach((message, i) => {
+                const messageDate = message.createdAt.split(' ')[0]; // 메시지 날짜 부분 추출
+                if (messageDate !== lastDate) {
+                    // 날짜가 바뀌면 새로운 날짜 표시 추가
+                    result.push(
+                        <div id='date' key={`date-${messageDate}-${i}`} className="date-separator">
+                            {messageDate}
+                        </div>
+                    );
+                    lastDate = messageDate;
+                }
+    
+                // 메시지 추가
+                result.push(
                     <Message
                         key={i}
                         id={message.senderId}
                         content={message.content}
-                    me={message.me} 
+                        me={message.me}
                         senderId={''}
-                        createdAt={formatCustomDate(message.createdAt)}   
+                        createdAt={formatCustomDate(message.createdAt)}
                         contentType={message.contentType}
-                     />
-                ))}
+                    />
+                );
+            });
+    
+            return result;
+        };
+    
+        return (
+            <div className="messages" >
+                {renderMessagesWithDateSeparators()}
                 <div ref={messagesEndRef} />
             </div>
         );
@@ -228,28 +251,30 @@ const handleScroll = () => {
         const [messageContent, setMessageContent] = useState<string>('');
         const [time, setTime] = useState<string>('');
         const inputRef = useRef<HTMLInputElement | null>(null); 
-        const getCurrentTime = () => {
-            const options: Intl.DateTimeFormatOptions = {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true, // 12시간 형식 사용
-            };
-            const currentTime = new Date();
-            return currentTime.toLocaleTimeString('ko-KR', options);
+        const getCurrentTime = (date:Date) => {
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 1을 더해야 함
+            const day = date.getDate().toString().padStart(2, '0');
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            const seconds = date.getSeconds().toString().padStart(2, '0');
+        
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         };
 
         const handleSubmit = (e: FormEvent) => {
             e.preventDefault();
 
-            const currentTime = getCurrentTime();
-
+            const currentTime = new Date();
+            const formattedTime = getCurrentTime(currentTime)
+            
             const message: Message = {
                 content: messageContent,
-                me: true ,
-                senderId: '',
+                me: true,
+                senderId: myId,
                 id: '',
-                createdAt: currentTime,
-                contentType: 'Text',
+                createdAt: formattedTime,
+                contentType: 'TEXT',
             };
             if (imageFile) {
                 // 이미지가 선택되었으면 Base64로 변환하여 메시지에 포함
@@ -267,11 +292,12 @@ const handleScroll = () => {
                   setImageFile(null); // 이미지 파일 상태 초기화
                 };
                 reader.readAsDataURL(imageFile); // 파일을 Base64로 읽음
-            } else {
-              onMessageSubmit(message); // 일반 텍스트 메시지 전송
+            } else {   
+                setContent(messageContent);
+                 onMessageSubmit(message); // 일반 텍스트 메시지 전송
             }
       
-            setContent(messageContent);
+         
            
         };
 
@@ -379,7 +405,7 @@ const handleScroll = () => {
                                </div>
                         )}
             </div>
-            <div id='date'>2024.11.26</div>
+           
             <div id='chatBox' ref={chatBoxRef} onScroll={handleScroll}>
             {isLoading && <div className="loading">Loading...</div>}
                 <MessageList messages={messages} />

@@ -17,7 +17,7 @@
         display: flex;
         width: 100%;
         flex-direction: row;
-        justify-content: flex-start;
+        justify-content: space-between;
     }
     #backBtn{
         margin-top: 55px;
@@ -50,7 +50,7 @@
         color: #000000;
 
         margin-top: 56px;
-        margin-left: 121px;
+        
 
 
     }
@@ -73,10 +73,12 @@
 
         transform: rotate(90deg);
         margin-top: 62px;
-        margin-left:133px ;
+        margin-right: 11px;
     }
     #date{
-      
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
         width: auto;
         height: 19px;
        margin-top: 12px;
@@ -87,14 +89,13 @@
         font-size: 13px;
         line-height: 19px;
         /* identical to box height */
-
         color: #808080;
 
 
     }
     #chatBox{
         width:100% ;
-        max-height: calc(100vh - 215px);
+        max-height: calc(100vh - 170px);
         overflow-y: scroll;
         
     }
