@@ -2,16 +2,21 @@ import axios, {AxiosResponse} from 'axios';
 
 const BASE_URL = 'https://www.codin.co.kr/api';
 
-export const PostMailPW = async (email:string): Promise<any> => {
-    console.log("전송 데이터", email);
-
+export const deleteRoom = async (accessToken:string, chatRoomId:string | string[]): Promise<any> => {
+    console.log("전송 데이터", chatRoomId);
+    axios.defaults.withCredentials = true;
     try{
-        const response: AxiosResponse<any> = await axios.post(
-            `${BASE_URL}/email/auth/password`, {email: email}
+        const response: AxiosResponse<any> = await axios.delete(
+            `${BASE_URL}/chatroom/${chatRoomId}`,
+            
+            { headers: {
+                Authorization: ` ${accessToken}`
+             }},
         );
 
         console.log(response.data);
-        return response.data;
+        console.log(response.headers);
+        return response;
       } catch (error: any) {
         if (error.response) {
           const { status, data } = error.response;

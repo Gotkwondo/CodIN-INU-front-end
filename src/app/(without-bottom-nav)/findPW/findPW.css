@@ -83,7 +83,7 @@
 
         width: 86px;
         height: 25px;
-        background: #E6E6E6;
+        background: #0D99FF;
         border-radius: 50px;
 
         display: flex;
@@ -99,12 +99,45 @@
         align-items: center;
         justify-content: center;
 
-        color: #808080;
+        color: #ffffff;
 
 
     }
+    .codeInput{
+        margin-top: 15px;
+        width: 348px;
+        border: none;
+        border-bottom: 1px solid #CCCCCC;
+        outline: none;
+        color: #000000;
+        font-family: 'Noto Sans KR';
+        font-weight: 500;
+        padding-bottom: 3px;
+    }
+    #timer{
+        align-self: center;
+        margin-left: -25px;
+        width: 24px;
+        height: 17px;
+        font-family: 'Noto Sans KR';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 17px;
+        display: flex;
+        align-items: center;
+        text-align: right;
 
+        color: #FF5D68;
+
+
+    }
     #emailForm{
+        display: flex;
+        flex-direction: row;
+    }
+
+    #codeCont{
         display: flex;
         flex-direction: row;
     }

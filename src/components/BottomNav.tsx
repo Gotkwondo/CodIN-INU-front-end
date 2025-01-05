@@ -7,7 +7,7 @@ import { FaHome, FaSearch, FaEnvelope, FaUser } from 'react-icons/fa';
 const navItems = [
     { name: '메인', href: '/main', icon: <FaHome /> },
     { name: '검색', href: '/search', icon: <FaSearch /> },
-    { name: '쪽지', href: '/messages', icon: <FaEnvelope /> },
+    { name: '쪽지', href: '/chat', icon: <FaEnvelope /> },
     { name: '마이페이지', href: '/mypage', icon: <FaUser /> },
 ];
 

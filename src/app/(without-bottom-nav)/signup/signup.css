@@ -1,7 +1,7 @@
 .pb-16{
     display: flex;
     justify-content: center;
-   
+   height: 100vh;
 }
 .signup{
     display: flex;
@@ -189,7 +189,7 @@
        flex-direction: row;
        align-self: flex-start;
        margin-left: 21px;
-       bottom: 193px;
+       bottom: 393px;
       }
       #acceptBtn{
         -webkit-appearance: none;  /* Safari */
@@ -246,13 +246,43 @@
         bottom: 89px;
      
         width: 350px;
-        height: 94px;
-       
+        max-height: 300px;
+        overflow-y: scroll;
+       padding: 5px;
         background: #FFFFFF;
         border: 1px solid #CCCCCC;
         border-radius: 9px;
+        
+
+        font-family: 'Noto Sans KR';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 17px;
+        display: flex;
+       
+        text-align: center;
+
+        color: #000000;
+
 
       }
+      ::-webkit-scrollbar{
+        width: 6px;
+        
+        
+        
+      }
+      .scroll-container::-webkit-scrollbar-track {
+      
+        margin: 5px; /* 스크롤바 트랙의 여백 */
+    }
+      ::-webkit-scrollbar-thumb{
+        background-color: #808080;
+        border-radius: 5px;
+        
+      }
+    
 
       #profile_title{
     

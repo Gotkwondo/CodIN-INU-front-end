@@ -1,6 +1,7 @@
 'use client';
 import { ReactNode, useState } from "react";
-import ReportModal from "./ReportModal";
+import ReportModal from "./ReportModal"; // ReportModal 컴포넌트 임포트
+import { PostChatRoom } from "@/api/postChatRoom";
 import {boardData} from "@/data/boardData"; // ReportModal 컴포넌트 임포트
 
 type Post = {
@@ -23,13 +24,24 @@ const Modal = ({ children, onClose, post = { id: '', title: '', content: '', aut
 
     const [menuOpen, setMenuOpen] = useState(false);
     const [isReportModalOpen, setIsReportModalOpen] = useState(false); // 신고 모달 상태
-
+    const startChat = async()=>{
+        try{
+            const accessToken = localStorage.getItem("accessToken");
+            const response = await PostChatRoom(accessToken ,post.title, post.userId);
+            console.log('채팅방 생성이 완료되었습니다');
+            
+        }catch(error){
+            console.log('채팅방 생성을 실패하였습니다.',error);
+        }
+    }
     const handleMenuAction = (action: string) => {
         if (action === "chat") {
         console.log(post);
         //post.userId로  유저 아이디 가져올수 있음
 
             alert("채팅하기 클릭됨");
+            startChat();
+           
         } else if (action === "report") {
             setIsReportModalOpen(true); // 신고 모달 열기
         } else if (action === "block") {
