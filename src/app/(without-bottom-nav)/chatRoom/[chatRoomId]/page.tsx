@@ -48,6 +48,7 @@ export default function ChatRoom() {
    const [myId, setMyID] = useState<string>('');
     const [isMenuOpen, setMenuOpen] = useState(false);
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
 
     const headers = {
         'Authorization': accessToken
@@ -240,13 +241,29 @@ useEffect(() => {
 
         const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
             if (e.target.files) {
-              setImageFile(e.target.files[0]); // 이미지 파일 상태 업데이트
+              const file = e.target.files[0]; 
+              setImageFile(file); // 선택한 파일 상태 업데이트
+
+              // Base64 변환하여 미리보기 설정
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                  setImagePreview(reader.result as string);
+              };
+              reader.readAsDataURL(file);
             }    
           };
 
 
         return (
+         <div id='imagePrevCont'>
+                    {imagePreview && (   
+            <div className="image-preview">
+                <button id='imgPrevDelete' onClick={() => {setImagePreview(null); setImageFile(null)}}>x</button> {/* 미리보기 제거 버튼 */}
+             <img id='imagePrev' src={imagePreview} alt="미리보기 이미지" />
+             </div>
+    )}
             <div id='inputCont'>
+            
                  <input
           type="file"
           accept="image/*"
@@ -270,6 +287,7 @@ useEffect(() => {
                 />
                 <button type="submit" id='sendBtn'></button>
             </form>
+            </div>
             </div>
         );
     };
