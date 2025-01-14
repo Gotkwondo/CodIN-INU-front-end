@@ -65,7 +65,7 @@ export default function SignupPw() {
 
     return (
         <div className='signup'>
-        <div id='back_btn'> {`<`} </div>
+        <div id='back_btn'  onClick={()=> router.push('/signup/auth')}> {`<`} </div>
         <div id='title'>비밀번호 생성</div>
         <input 
         type='password'

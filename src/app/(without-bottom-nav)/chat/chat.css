@@ -1,10 +1,10 @@
 .pb-16{
     display: flex;
     justify-content: center;
-   height: 100vh;
+    height: 100vh;
 }
 .chat{
-    display: flex;
+    display: flex !important;
     flex-direction: column;
     background-color: #ffffff;
     justify-content: flex-start;
@@ -21,8 +21,8 @@
         font-style: normal;
         font-weight: 600;
         font-size: 32px;
-        line-height: 29px;
-        display: flex;
+        line-height: 219px;
+        display: flex !important;
         align-items: center;
         align-self: flex-start;
         color: #CCCCCC;
@@ -31,7 +31,7 @@
     }
 
     #topCont{
-        display: flex;
+        display: flex !important;
         flex-direction: row;
         justify-content: flex-start;
         width: 100%;
@@ -68,12 +68,12 @@
     }
 
     #Chat{
-        display: flex;
+        display: flex !important;
         width:100% ;
 
     }
     #chatCont{
-        display: flex;
+        display: flex !important;
         flex-direction: row;
         justify-content: flex-start;
         width: calc(100% - 44px);
@@ -91,7 +91,7 @@
         background-size: contain;
     }
     #main_cont{
-        display: flex;
+        display: flex !important;
         flex-direction: column;
         width: 242px;
         

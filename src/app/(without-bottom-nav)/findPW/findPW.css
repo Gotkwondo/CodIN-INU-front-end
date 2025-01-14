@@ -4,7 +4,7 @@
    
 }
 .findPW{
-    display: flex;
+    display: flex !important;
     flex-direction: column;
     background-color: #ffffff;
     justify-content: flex-start;
@@ -21,7 +21,7 @@
         font-weight: 600;
         font-size: 32px;
         line-height: 29px;
-        display: flex;
+        display: flex !important;
         align-items: center;
         align-self: flex-start;
         color: #CCCCCC;
@@ -41,7 +41,7 @@
         font-weight: 600;
         font-size: 20px;
         line-height: 29px;
-        display: flex;
+        display: flex !important;
         align-items: center;
         align-self: flex-start;
         color: #000000;
@@ -72,6 +72,11 @@
         bottom: 35px;
         color: #ffffff;
     }
+    #nextBtn:active{
+        transform: scale(0.95); /* 클릭 시 크기가 약간 줄어듦 */
+        background: #007ACC; /* 색상 변경 */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 클릭 시 그림자 효과 */
+    }
 
     #nextBtn:disabled{
       background: #E6E6E6;
@@ -86,7 +91,7 @@
         background: #0D99FF;
         border-radius: 50px;
 
-        display: flex;
+        display: flex !important;
         position:absolute;
         left:calc(50% + 90px);
         top: 245px;
@@ -95,7 +100,7 @@
         font-weight: 400;
         font-size: 12px;
         line-height: 15px;
-        display: flex;
+        display: flex !important;
         align-items: center;
         justify-content: center;
 
@@ -103,6 +108,13 @@
 
 
     }
+
+    #submit:active{
+        transform: scale(0.95); /* 클릭 시 크기가 약간 줄어듦 */
+        background: #007ACC; /* 색상 변경 */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 클릭 시 그림자 효과 */
+    }
+
     .codeInput{
         margin-top: 15px;
         width: 348px;
@@ -124,7 +136,7 @@
         font-weight: 400;
         font-size: 12px;
         line-height: 17px;
-        display: flex;
+        display: flex !important;
         align-items: center;
         text-align: right;
 
@@ -133,12 +145,12 @@
 
     }
     #emailForm{
-        display: flex;
+        display: flex !important;
         flex-direction: row;
     }
 
     #codeCont{
-        display: flex;
+        display: flex !important;
         flex-direction: row;
     }
 }

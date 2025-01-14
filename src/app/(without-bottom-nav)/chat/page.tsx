@@ -91,8 +91,8 @@ export default function Chat() {
     return (
         <div className='chat'>
             <div id='topCont'>
-                <button id='back_btn'>{`<`}</button>
-                <div id='title'>{`<게시판/>`}</div>
+                <button id='back_btn' onClick={() => router.push('/main')}>{`<`}</button>
+                <div id='title'>{`<쪽지/>`}</div>
                 <button id='searchBtn'></button>
             </div>
             <div id='tag'>{`<ul>`}</div>
