@@ -5,7 +5,7 @@
 
 }
 .chatroom{
-    display: flex;
+    display: flex !important;
     flex-direction: column;
     background-color: #ffffff;
     justify-content: flex-start;
@@ -14,7 +14,7 @@
     height: 100vh;
 
     #topCont{
-        display: flex;
+        display: flex !important;
         width: 100%;
         flex-direction: row;
         justify-content: space-between;
@@ -28,7 +28,7 @@
         font-weight: 600;
         font-size: 32px;
         line-height: 29px;
-        display: flex;
+        display: flex !important;
         align-items: center;
         align-self: flex-start;
         color: #CCCCCC;
@@ -76,7 +76,7 @@
         margin-right: 11px;
     }
     #date{
-        display: flex;
+        display: flex !important;
         flex-direction: row;
         justify-content: center;
         width: auto;
@@ -100,12 +100,12 @@
         
     }
     #messages{
-        display: flex;
+        display: flex !important;
         flex-direction: row;
         justify-content: flex-start;
     }
     .message_message-left{
-        display: flex;
+        display: flex !important;
         padding-left: 13px;
         padding-right: 13px;
         padding-top: 5px;
@@ -129,13 +129,13 @@
       }
       .message-left{
        
-    display: flex;
+    display: flex !important;
     flex-direction: row;
     margin-bottom: 9px;
         }
     .message-right{
   
-        display: flex;
+        display: flex !important;
         flex-direction: row-reverse;
         justify-content: flex-start;
     }
@@ -146,7 +146,7 @@
         display: none;
       }
     .message_message-right{
-        display: flex;
+        display: flex !important;
         padding-left: 13px;
         padding-right: 13px;
         padding-top: 5px;
@@ -184,7 +184,7 @@
 
     }
     #inputCont{
-        display: flex;
+        display: flex !important;
         flex-direction: row;
         align-items: center;
         justify-content: flex-start;
@@ -195,7 +195,7 @@
     #imagePrevCont{
         width:390px ;
         height: 200px;
-        display: flex;
+        display: flex !important;
         flex-direction: column;
         position: fixed;
         bottom: 0px;
@@ -207,7 +207,7 @@
         height: 120px;
         position: fixed;
         bottom: 81px;
-        display: flex;
+        display: flex !important;
         flex-direction: column;
         padding-right: 15px;
         background-color: #5c5c5c55;
@@ -268,7 +268,7 @@
 
     }
     #messagesendForm{
-        display: flex;
+        display: flex !important;
         flex-direction: row;
         align-items: center;
     }
@@ -328,7 +328,7 @@
         padding-left: 24px;
         padding-right: 24px;
        
-        display:flex;
+        display:flex !important;
         position: fixed;
         top:81px;
         left: calc(50% + 78px);
@@ -336,7 +336,7 @@
         
     }
     .listBox{
-        display: flex;
+        display: flex !important;
         width: auto;
         flex-direction: column;
         font-family: 'Noto Sans KR';
