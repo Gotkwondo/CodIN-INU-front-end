@@ -1,7 +1,17 @@
 .pb-16{
     display: flex;
     justify-content: center;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
 
+}
+.body{
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
 }
 .Login{
         display: flex !important;
@@ -48,6 +58,8 @@
 
 
         }
+
+        
 
         #email{
             display: flex;
@@ -217,5 +229,67 @@
             color: #ffffff;
 
         }
+        #loginBtn:active{
+            transform: scale(0.95); /* 클릭 시 크기가 약간 줄어듦 */
+        background: #007ACC; /* 색상 변경 */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 클릭 시 그림자 효과 */
+        }
 }
 
+@media screen and (max-width: 390px) {
+    .Login{ 
+
+            width: 100vw;
+            height: 100vh;
+            display: flex !important;
+            align-items: center !important;
+    
+       
+        #logo{
+            width: 70%;
+          
+        }
+        #inputBox{
+            width: 100%;
+        }
+        #email{
+            width:80%;
+        }
+
+        #password{
+            width: 80%;
+        }
+
+        #remainCont{
+            width: 80%;
+        }
+
+        #else{
+            width: 52.3%;
+        }
+
+        #buttonCont{
+            width: 80%;
+        }
+
+        #loginBtn{
+            width: 80%;
+        }
+    }
+}
+
+@media screen and (max-height: 600px) {
+    .Login{
+        #logo{
+            margin-top: 21%;
+        }
+
+        #inputBox{
+            margin-top: 15%;
+        }
+
+        #else{
+            margin-top: 5%;
+        }
+    }
+}

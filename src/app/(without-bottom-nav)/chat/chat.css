@@ -67,11 +67,16 @@
         margin-right: 21px;
     }
 
-    #Chat{
+    .ChatListCont{
+
         display: flex !important;
-        width:100% ;
+        flex-direction: column;
+        width: 100%;
+        max-height: calc(100vh - 205px);
+        overflow-y: scroll;
 
     }
+
     #chatCont{
         display: flex !important;
         flex-direction: row;
@@ -81,8 +86,10 @@
         margin-bottom: 18px;
         margin-left: 22px;
         margin-right: 22px;
+       
     }
 
+   
     #profile{
         width: 49px;
         height: 49px;
@@ -96,9 +103,7 @@
         width: 242px;
         
     }
-    #ect{
-
-    }
+    
     #name{
 
         width: auto;
@@ -133,6 +138,8 @@
         color: #808080;
         margin-left: 12px;
         margin-top: 1px;
+        max-width: 100%;
+        overflow-x:hidden;
 
 
     }
@@ -188,4 +195,40 @@
 
 
     }
+}
+
+nav{
+    width: 100%;
+    position: fixed;
+    bottom: 0px !important;
+    margin: 0;
+}
+
+@media screen and (max-width: 390px) {
+
+    .chat{
+        width: 100%;
+    }
+
+    #topCont{
+        width: 100% ;
+        justify-content: space-between !important;
+    }
+
+    #title{
+        width: auto !important;
+        margin-left: 0px !important;
+        margin-right: 0px !important;
+        
+    }
+
+    .ChatListCont{
+        width: 100%;
+    }
+
+    #main_cont{
+        width:62% !important;
+    }
+    
+   
 }

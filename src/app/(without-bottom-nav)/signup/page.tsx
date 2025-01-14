@@ -27,12 +27,13 @@ export default function Signup() {
             console.log(`${email}로 인증코드 전송`);
             updateUser({email: email});
             console.log("context updated",email);
-
+            alert("이메일을 전송하였습니다. 잠시만 기다려주세요.");
             localStorage.setItem("userEmail", email);
         }
         try{
             await PostMail(email);
             console.log("이메일 전송 완료");
+            
             router.push('signup/auth');
         }catch(error){
             console.error("이메일 전송 실패", error);

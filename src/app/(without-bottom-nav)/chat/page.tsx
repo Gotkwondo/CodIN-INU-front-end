@@ -65,7 +65,7 @@ export default function Chat() {
     const ChatList = ({ chatList }: ChatListProps) => {
         const options: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric' };
         return (
-            <div className="Chat">
+            <div className="ChatListCont">
                 {chatList.map((data, index) => (
                     <div
                         key={data.chatRoomId} // 여기서 고유한 key를 설정
@@ -91,8 +91,8 @@ export default function Chat() {
     return (
         <div className='chat'>
             <div id='topCont'>
-                <button id='back_btn'>{`<`}</button>
-                <div id='title'>{`<게시판/>`}</div>
+                <button id='back_btn' onClick={() => router.push('/main')}>{`<`}</button>
+                <div id='title'>{`<쪽지/>`}</div>
                 <button id='searchBtn'></button>
             </div>
             <div id='tag'>{`<ul>`}</div>

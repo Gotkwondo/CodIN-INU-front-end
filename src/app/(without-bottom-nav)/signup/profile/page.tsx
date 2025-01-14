@@ -60,16 +60,19 @@ export default function SignupProfile() {
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
     e.preventDefault();
 
-    if (nickname && profileImg) {
+    if (nickname && name) {
       try {
        
         const response = await PostSignup(User);
         console.log('회원가입 결과:', response);
-        router.push('/main');
+        router.push('/login');
       } catch (error) {
         console.error("회원가입 실패", error);
-        alert('회원가입에 실패하였습니다. 다시 시도해주세요.');
+        const message = error.response.data.message;
+        alert(message);
       }
+    }else{
+      alert("모든 정보를 입력해주세요.")
     }
   };
 

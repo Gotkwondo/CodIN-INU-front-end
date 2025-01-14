@@ -49,6 +49,7 @@ export default function SignupAuth() {
       router.push('/signup/password')
     }catch(error){
       console.log("인증번호 확인 실패", error);
+      alert('인증번호 인증에 실패하였습니다. 다시 시도해주세요.')
     }
   }
     return (

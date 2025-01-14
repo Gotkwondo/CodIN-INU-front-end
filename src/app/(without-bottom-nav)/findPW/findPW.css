@@ -72,6 +72,11 @@
         bottom: 35px;
         color: #ffffff;
     }
+    #nextBtn:active{
+        transform: scale(0.95); /* 클릭 시 크기가 약간 줄어듦 */
+        background: #007ACC; /* 색상 변경 */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 클릭 시 그림자 효과 */
+    }
 
     #nextBtn:disabled{
       background: #E6E6E6;
@@ -103,6 +108,13 @@
 
 
     }
+
+    #submit:active{
+        transform: scale(0.95); /* 클릭 시 크기가 약간 줄어듦 */
+        background: #007ACC; /* 색상 변경 */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 클릭 시 그림자 효과 */
+    }
+
     .codeInput{
         margin-top: 15px;
         width: 348px;
