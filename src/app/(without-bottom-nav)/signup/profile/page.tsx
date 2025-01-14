@@ -87,7 +87,7 @@ export default function SignupProfile() {
 
   return (
     <div className='signup'>
-      <div id='back_btn'>{`<`}</div>
+      <div id='back_btn'  onClick={()=> router.push('/signup/info')}>{`<`}</div>
       <div id='profile_title'>프로필 생성</div>
       <label htmlFor='profileImgBtn1' id='profileImgBtn'
         style={{

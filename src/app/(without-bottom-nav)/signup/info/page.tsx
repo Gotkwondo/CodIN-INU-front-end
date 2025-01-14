@@ -64,7 +64,7 @@ export default function SignupInfo() {
      }
     return (
         <div className='signup'>
-        <div id='back_btn'> {`<`} </div>
+        <div id='back_btn'  onClick={()=> router.push('/signup/password')}> {`<`} </div>
         <div id='title'>학적 정보 등록</div>
         <input id='email' placeholder='학번' onChange={handleIdChange}/>
         <select id='password' defaultValue='컴퓨터공학부' onChange={handleDpartmentChange}>
