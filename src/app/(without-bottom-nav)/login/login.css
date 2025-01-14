@@ -4,7 +4,7 @@
 
 }
 .Login{
-        display: flex;
+        display: flex !important;
         flex-direction: column;
         background-color: #ffffff;
         justify-content: flex-start;
@@ -158,7 +158,7 @@
         #else{
             width:204px;
             height: 16px;
-            display: flex;
+            display: flex !important;
             flex-direction: row;
             margin-top: 37px;
             justify-content: center;
