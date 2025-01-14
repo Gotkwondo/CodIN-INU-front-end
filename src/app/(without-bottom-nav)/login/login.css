@@ -7,6 +7,12 @@
     height: 100vh !important;
 
 }
+.body{
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+}
 .Login{
         display: flex !important;
         flex-direction: column;
@@ -235,9 +241,13 @@
 
             width: 100vw;
             height: 100vh;
+            display: flex !important;
+            align-items: center !important;
     
+       
         #logo{
-            width: 73.846%;
+            width: 70%;
+          
         }
         #inputBox{
             width: 100%;
@@ -268,3 +278,18 @@
     }
 }
 
+@media screen and (max-height: 600px) {
+    .Login{
+        #logo{
+            margin-top: 21%;
+        }
+
+        #inputBox{
+            margin-top: 15%;
+        }
+
+        #else{
+            margin-top: 5%;
+        }
+    }
+}

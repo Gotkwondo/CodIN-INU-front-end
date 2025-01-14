@@ -189,11 +189,11 @@
       }
       #accept{
        display: flex !important;
-       position: absolute;
+      
        flex-direction: row;
        align-self: flex-start;
        margin-left: 21px;
-       bottom: 393px;
+       margin-top: 60px;
       }
       #acceptBtn{
         -webkit-appearance: none;  /* Safari */
@@ -250,7 +250,7 @@
         bottom: 89px;
      
         width: 350px;
-        max-height: 300px;
+        max-height: calc(100vh - 500px);
         overflow-y: scroll;
        padding: 5px;
         background: #FFFFFF;
@@ -417,4 +417,57 @@
     
    }
    
+}
+
+@media screen and (max-width: 390px) {
+
+  .signup{
+    width: 100vw;
+
+    #title{
+      width: auto;
+    }
+    #emailForm{
+      padding-left: 10px;
+      width: 100%;
+    }
+    #email{
+      margin-left: 10px;
+      width: 89.23%;
+      
+    }
+
+    #password{
+      width: 89.23%;
+    }
+
+    #submit{
+      width: 89.74%;
+      align-self: center;
+    }
+
+    #checkBoxCont{
+      width: 89.74%;
+    }
+
+    #nickname{
+      width: 89.23%;
+    }
+
+    #name{
+      width: 89.23%;
+    }
+  
+    .code-input{
+    width: 8.974%;
+    
+  }
+  .code-inputs{
+    gap: 2.564%;
+  }
+
+
+  }
+
+
 }

@@ -65,7 +65,7 @@ export default function Chat() {
     const ChatList = ({ chatList }: ChatListProps) => {
         const options: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric' };
         return (
-            <div className="Chat">
+            <div className="ChatListCont">
                 {chatList.map((data, index) => (
                     <div
                         key={data.chatRoomId} // 여기서 고유한 key를 설정

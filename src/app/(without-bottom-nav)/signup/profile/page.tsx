@@ -60,7 +60,7 @@ export default function SignupProfile() {
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
     e.preventDefault();
 
-    if (nickname && profileImg) {
+    if (nickname && name) {
       try {
        
         const response = await PostSignup(User);
@@ -71,6 +71,8 @@ export default function SignupProfile() {
         const message = error.response.data.message;
         alert(message);
       }
+    }else{
+      alert("모든 정보를 입력해주세요.")
     }
   };
 

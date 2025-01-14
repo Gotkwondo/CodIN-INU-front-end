@@ -357,3 +357,27 @@
     }
  
 }
+
+
+@media screen and (max-width: 390px) {
+
+    .chatroom{
+        #imagePrevCont{
+            width: 100%;
+        }
+
+        #inputCont{
+            width: 82.3%;
+         
+        }
+
+        #divider{
+            width: 100%;
+        }
+
+        #messagesendForm{
+            width:  85.3%;
+        }
+       
+    }
+}
