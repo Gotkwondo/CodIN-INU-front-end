@@ -1,7 +1,7 @@
 .pb-16{
-    display: flex !important;
+    display: flex;
     justify-content: center;
-   height: 100vh;
+    height: 100vh;
 }
 .chat{
     display: flex !important;
