@@ -142,7 +142,7 @@ export default function Vote() {
             <div id="voteCont">
                 {voteList.map((vote) => (
                     <div key={vote._id} id='voteIndex'>
-                        <h3 id='voteTitle'  onClick={()=> router.push(`/vote/${vote._id}`)}>{vote.title}</h3>
+                        <h3 id='voteTitle'>{vote.title}</h3>
                         <p id='voteContent'>{vote.content}</p>
                         <div id='voteContainer'>
                         {calculateDaysLeft(vote.poll.pollEndTime) > 0 && vote.poll.hasUserVoted === false ?  (
@@ -178,7 +178,7 @@ export default function Vote() {
                                     </div>
                                     
                                     <div id='statusbar'></div>
-                                    <div id="pollOptionBar"style={{ width: `${(vote.poll.pollVotesCounts[i] / vote.poll.totalParticipants) * 100}%`, }}></div>
+                                    <div id="pollOptionBar"style={{ width: `${(vote.poll.pollVotesCounts[i] / vote.poll.totalParticipants) * 100}%`,}}></div>
                                     <div id='pollOptionCount'></div>
                                 </li>
                                
