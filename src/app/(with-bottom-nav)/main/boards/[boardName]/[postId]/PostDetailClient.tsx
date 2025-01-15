@@ -17,6 +17,8 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+
+
     useEffect(() => {
         const fetchPost = async () => {
             try {
@@ -52,6 +54,7 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
         fetchPost();
     }, [postId]);
 
+
     const toggleAction = async (action: "like" | "bookmark") => {
         try {
             const token = localStorage.getItem("accessToken");
@@ -60,6 +63,7 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                 return;
             }
 
+            // API 요청 데이터 및 URL 설정
             const url =
                 action === "like"
                     ? "https://www.codin.co.kr/api/likes"
@@ -67,6 +71,7 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
             const requestData =
                 action === "like" ? { likeType: "POST", id: post._id } : undefined;
 
+            // API 호출
             const response = await axios.post(url, requestData, {
                 headers: {
                     Authorization: token,
@@ -106,6 +111,8 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
         }
     };
 
+
+
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
@@ -134,14 +141,10 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
         <div className="bg-white min-h-screen p-1">
             <div className="flex items-center space-x-4 mb-4">
                 <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    <span className="text-gray-600 text-sm">
-                        {/*{post.anonymous ? "익명" : post.nickname || "익명"}*/}
-                    </span>
+                    <span className="text-gray-600 text-sm">익명</span>
                 </div>
                 <div>
-                    <h4 className="text-sm font-semibold text-gray-800">
-                        {post.anonymous ? "익명" : post.nickname || "익명"}
-                    </h4>
+                    <h4 className="text-sm font-semibold text-gray-800">{post.authorName || "익명"}</h4>
                     <p className="text-xs text-gray-500">{post.createdAt}</p>
                 </div>
             </div>
@@ -172,6 +175,7 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                     <FaBookmark className={`w-5 h-5 ${post.userInfo.scrap ? "text-yellow-300" : "text-gray-500"}`} />
                     <span>{post.scrapCount}</span>
                 </button>
+
             </div>
             <CommentSection postId={postId} />
         </div>
