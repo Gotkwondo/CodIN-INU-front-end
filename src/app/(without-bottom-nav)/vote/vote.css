@@ -452,6 +452,54 @@
         border-color: #C0C0C0;  /* 클릭 시 테두리 색상 */
         box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1); 
        }
+       #profileCont{
+        display: flex;
+        flex-direction: row;
+        align-self: flex-start;
+        margin-left: 21px;
+        margin-top: 6px;
+        margin-bottom: 0px;
+    }
+
+    #profileImg{
+            
+        width: 36px;
+        height: 36px;
+        background-image: url('../../../../public/icons/anonymous-profile.png');
+        background-repeat: no-repeat;
+        background-size: contain;
+        margin-right:11px ;
+
+    }
+
+    #ectCont{
+        display: flex;
+        flex-direction: column;
+    }
+
+    #userName{
+        font-family: Noto Sans KR;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 18.82px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        color: #000000;
+        margin-bottom: 5px;
+    }
+
+    #createdAt{
+        font-family: Noto Sans KR;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 17.38px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        color: #808080;
+
+    }
 
        #endTimeCont{
                
@@ -967,6 +1015,193 @@
             font-weight: normal;
             font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
           }
+
+          #divider_B{
+            
+                width: 390px;
+                height: 27px;
+                position: fixed;
+                bottom: 81px ;
+
+                background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(204, 204, 204, 0.2) 100%);
+
+          }
+
+          #inputCont{
+            display: flex;
+            flex-direction: row;
+            position: fixed;
+            align-items: center;
+
+            bottom:36px ;
+          }
+
+          #anounCont{
+            display: flex;
+            flex-direction: row;
+            margin-right: -50px;
+            z-index: 1;
+
+          }
+
+          #anounBtn{
+            -webkit-appearance: none;  /* Safari */
+            -moz-appearance: none;     /* Firefox */
+            appearance: none;           /* Chrome, Edge 등 */
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;        /* 테두리 동그랗게 */
+            background-color: #D9D9D9;    /* 배경색 */
+            cursor: pointer;
+            position: relative;       
+   
+          }
+
+                
+        #anounBtn:checked{
+            background-color: #0D99FF; /* 체크된 상태 배경색 */
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            border-color: #0D99FF;  
+            /* 체크된 상태 테두리 색 */
+        }
+        #anounBtn:checked::after{
+            content: '✔'; /* 체크 표시 */
+            display: flex !important;
+            justify-content: center;
+            align-items: center;
+            font-size: 15px; /* 체크 표시 크기 */
+            color: white;    /* 체크 표시 색상 */
+            font-weight: normal;
+            font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+        }
+        #anounMent{
+
+            width: auto;
+            height: 17px;
+            margin-left: 6px; 
+
+            font-family: 'Noto Sans KR';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 17px;
+            display: flex !important;
+            align-items: center;
+            color: #0D99FF;
+
+        }
+
+        #commentInput{
+                
+            width: 350px;
+            height: 34px;
+           
+            padding-left: 60px;
+            background: #F2F2F2;
+            border-radius: 34px;
+
+        }
+
+        #commentInput:focus{
+            outline: none;
+        }
+
+        #commentSend{
+           margin-left: -30px;
+            width: 20px;
+            height: 20px;
+         
+            background-image: url('../../../../public/icons/Send.png');
+        }
+        #commentCont{
+            align-self: flex-start;
+            margin-left: 22px;
+            max-height: calc(100vh - 425px);
+            overflow-y: scroll;
+        }
+
+        #commentCont::-webkit-scrollbar{
+            display: none;
+        }
+
+        #conT3{
+            display: flex !important;
+            flex-direction: row;
+        }
+        #commentIndex{
+            margin-bottom: 8px ;
+        }
+        #Com_profileImg{
+    
+            width: 27px;
+            height: 27px;
+            background-image: url('../../../../public/icons/anonymous-profile.png');
+            background-repeat: no-repeat;
+            background-size: contain;
+            margin-right: 8px;
+
+        }
+
+        #ectCont{
+            display: flex !important;
+            flex-direction: column;
+        }
+
+        #firstCont{
+            display: flex !important;
+            flex-direction: row;
+            margin-bottom: 4px;
+        }
+
+        #commentNick{
+            font-family: Noto Sans KR;
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 15.93px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            color: #000000;
+        }
+
+        #createdBefore{
+            font-family: Noto Sans KR;
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 15.93px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            color: #808080;
+            margin-left: 3px;
+        }
+
+        #comContent{
+                
+            width: auto;
+            height: auto;
+
+
+            font-family: 'Noto Sans KR';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 17px;
+
+            color: #000000;
+
+ 
+        }
+
+        #heartCont{
+            display: flex !important;
+            flex-direction: row;
+            margin-left: 30px;
+        }
+
+
 }
 
 @media screen and (max-width: 390px) {
@@ -1011,7 +1246,7 @@
         }
 
         #statusbar{
-            width: 82.05%;
+            width: 100%;
         }
 
         #pollOpCont{
@@ -1045,6 +1280,85 @@
         #submit{
             width:  89.743% ;
         }
+
+        #profileCont{
+            display: flex;
+            flex-direction: row;
+            align-self: flex-start;
+            margin-left: 21px;
+            margin-top: 6px;
+            margin-bottom: -20px;
+        }
+
+        #profileImg{
+                
+            width: 36px;
+            height: 36px;
+            background-image: url('../../../../public/icons/anonymous-profile.png');
+            background-repeat: no-repeat;
+            background-size: contain;
+            margin-right:11px ;
+
+        }
+
+        #ectCont{
+            display: flex;
+            flex-direction: column;
+        }
+
+        #userName{
+            font-family: Noto Sans KR;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 18.82px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            color: #000000;
+            margin-bottom: 5px;
+        }
+
+        #createdAt{
+            font-family: Noto Sans KR;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 17.38px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            color: #808080;
+
+        }
+        #divider_B{
+
+            width: 100%;
+            height: 27px;
+            position: fixed;
+            bottom: 81px ;
+
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(204, 204, 204, 0.2) 100%);
+
+        }
+
+        #inputCont{
+            display: flex;
+            flex-direction: row;
+            position: fixed;
+            align-items: center;
+            width: 89.74%;
+
+            bottom:36px ;
+        }
+
+        #commentInput{
+            width: 89.74%;
+            height: 34px;
+           
+            padding-left: 60px;
+            background: #F2F2F2;
+            border-radius: 34px;
+        }
+       
     }
 
 }
