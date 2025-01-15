@@ -8,6 +8,7 @@ import { PostVoting } from '@/api/postVoting';
 import { GetVoteDetail } from '@/api/getVoteDetail';
 import { useParams } from 'next/navigation';
 import { GetComments } from '@/api/getComments';
+import { PostComments } from '@/api/postComment';
 
 export default function VoteDetail() {
     const router = useRouter();
@@ -19,6 +20,26 @@ export default function VoteDetail() {
     const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: number[] }>({});
     const [vote, setVote] = useState<vote | null>(null);
     const { voteId } = useParams();
+    const [checked, setChecked] = useState<boolean>(false);
+    const [comment, setComment] = useState<string>("");
+    const [commentList, setCommentList] = useState<any>([]);
+    interface comment{
+        anonymous: boolean,
+        content : string,
+        createdAt : string,
+        deleted : boolean,
+        likeCount : number,
+        nickname : string,
+        replies :  string[],
+        userId : string,
+        userImageUrl : string,
+        userInfo : {like: boolean},
+        _id : string
+    }
+
+    interface CommentListProps{
+        commentList: comment[];
+    }
 
     interface vote {
         
@@ -52,6 +73,12 @@ export default function VoteDetail() {
             console.error("voteId가 URL에 존재하지 않습니다");
         }
     }, [voteId]);
+
+      const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        setComment(e.target.value);
+        
+      };
+    
 
     const handleCheckboxChange = (voteId: string, index: number, multipleChoice: boolean) => {
         setSelectedOptions((prevSelected) => {
@@ -89,8 +116,9 @@ export default function VoteDetail() {
                 const voteData = await GetVoteDetail(accessToken, voteId);
                 const commentData = await GetComments(accessToken, voteId);
                 console.log(voteData.data);
-                console.log(commentData.data);
-
+                console.log(commentData.dataList);
+                const newCommentData = commentData.dataList || [];
+                setCommentList((prev)=>[...newCommentData, ...prev]);
                 setVote(voteData.data);
             } catch (error) {
                 console.log("투표 정보를 불러오지 못했습니다.", error);
@@ -100,6 +128,32 @@ export default function VoteDetail() {
         getVoteData();
     }, [accessToken, voteId]);
 
+    const CommentList = ({commentList}: CommentListProps) =>{
+        return(
+            <div id='commentCont'>
+               {commentList.map((comment, i) => (
+                <div key={i} id='commentIndex'>
+                    <div id='conT3'>
+                    <div id='Com_profileImg'></div>
+                    <div id='ectCont'>
+                        <div id='firstCont'>
+                        <div id='commentNick'>{comment.anonymous ? '익명' : comment.nickname}</div>                        <div id='createdBefore'> • {comment.createdAt}</div>
+                        </div>
+
+                        <div id='comContent'>{comment.content}</div>
+                    </div>
+                    </div>
+                    <div id='heartCont'>
+                    <div id='likeIcon'></div>
+                    <div id='likeCount'>{comment.likeCount}
+
+                    </div>
+                    </div>
+                </div>
+               ))}
+            </div>
+        )
+    }
     const calculateDaysLeft = (endDate: string) => {
         const end = new Date(endDate);  // 투표 종료 시간을 Date 객체로 변환
         const now = new Date();  // 현재 시간
@@ -133,6 +187,27 @@ export default function VoteDetail() {
         };
         return new Intl.DateTimeFormat('ko-KR', options).format(date);
     };
+
+     const handleChecked = (e:React.MouseEvent<HTMLInputElement>):void =>{
+            if (checked){setChecked(false);}
+            else {setChecked(true);}
+         }
+
+    const handleCommentSend = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
+                e.preventDefault();
+
+                 try {
+                                   
+                                    const response = await PostComments(accessToken, voteId, comment, checked);
+                                    console.log('결과:', response);
+                                    window.location.reload();  
+
+                                  } catch (error) {
+                                    console.error("댓글 작성 실패", error);
+                                    const message = error.response.data.message;
+                                    alert(message);
+                                  }
+            }
     return (
         <div className="vote">
             <div id="topCont">
@@ -222,12 +297,16 @@ export default function VoteDetail() {
                     </div>
                 )}
             </div>
-
-            <div>
-
+                <CommentList commentList={commentList}/>
+            <div id='divider_B'></div>
+            <div id='inputCont'>
+            <div id='anounCont'>
+                    <input type="checkbox" id="anounBtn" onClick={handleChecked}></input>
+                        <div id='anounMent'>익명</div>
+                    </div>
+                <input id='commentInput' placeholder='댓글을 입력하세요' onChange={handleCommentChange}></input>
+                <button id='commentSend' onClick={handleCommentSend}></button>
             </div>
-            
-            <BottomNav activeIndex={0}/>
         </div>
     );
 }
