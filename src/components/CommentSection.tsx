@@ -101,6 +101,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     const [newComment, setNewComment] = useState<string>("");
     const [editCommentId, setEditCommentId] = useState<string | null>(null);
     const [editContent, setEditContent] = useState<string>("");
+    const [currentUserId, setCurrentUserId] = useState<string>("");
     const [newReply, setNewReply] = useState<string>("");
     const [replyTargetId, setReplyTargetId] = useState<string | null>(null);
     const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
@@ -129,18 +130,38 @@ export default function CommentSection({ postId }: CommentSectionProps) {
                     ...comment,
                     content: comment.content || "내용이 없습니다.",
                 }));
-                console.log("Comments:", validComments);
                 setComments(validComments);
             } else {
                 throw new Error(data.message || "댓글 로드 실패");
             }
+
+
+
         } catch (err: any) {
             setError(err.message || "API 호출 중 오류가 발생했습니다.");
         } finally {
             setLoading(false);
         }
     };
+    const fetchCurrentUser = async () => {
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token) throw new Error("로그인이 필요합니다.");
 
+            const { data } = await axios.get("https://www.codin.co.kr/api/users", {
+                headers: { Authorization: token },
+            });
+
+            if (data.success) {
+                setCurrentUserId(data.data._id); // 현재 사용자 ID 저장
+                console.log("현재 사용자 정보:", data.data);
+            } else {
+                throw new Error("사용자 정보를 가져오지 못했습니다.");
+            }
+        } catch (err: any) {
+            console.error("사용자 정보 호출 오류:", err.message);
+        }
+    };
     const submitComment = async (content: string) => {
         try {
             const token = localStorage.getItem("accessToken");
@@ -302,7 +323,8 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     };
 
     useEffect(() => {
-        fetchComments();
+        fetchCurrentUser(); // 현재 사용자 정보 가져오기
+        fetchComments(); // 댓글 데이터 가져오기
     }, [postId]);
 
     useEffect(() => {
@@ -381,21 +403,25 @@ export default function CommentSection({ postId }: CommentSectionProps) {
                                         >
                                             답글 달기
                                         </button>
-                                        <button
-                                            className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                                            onClick={() => {
-                                                setEditCommentId(comment._id);
-                                                setEditContent(comment.content || "");
-                                            }}
-                                        >
-                                            수정하기
-                                        </button>
-                                        <button
-                                            className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                                            onClick={() => deleteComment(comment._id)}
-                                        >
-                                            삭제하기
-                                        </button>
+                                        {currentUserId === comment.userId && ( // 본인 댓글인지 확인
+                                            <>
+                                                <button
+                                                    className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                                                    onClick={() => {
+                                                        setEditCommentId(comment._id);
+                                                        setEditContent(comment.content || "");
+                                                    }}
+                                                >
+                                                    수정하기
+                                                </button>
+                                                <button
+                                                    className="block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100"
+                                                    onClick={() => deleteComment(comment._id)}
+                                                >
+                                                    삭제하기
+                                                </button>
+                                            </>
+                                        )}
                                     </div>
                                 )}
                             </div>
