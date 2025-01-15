@@ -123,7 +123,7 @@ export default function Chat() {
                 <VoteList voteList={voteList} />
             </div>
             <div id="tag1">{`</ul>`}</div>
-            <BottomNav  activeIndex={1}/>
+            <BottomNav />
         </div>
     );
 }
