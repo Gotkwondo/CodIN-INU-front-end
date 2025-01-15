@@ -398,6 +398,52 @@
             flex-direction: row;
             align-items: center;
         }
+
+        #time{
+            width: auto;
+            height: 14px;
+            margin-left: 4px;
+            margin-right: 4px;
+    
+            font-family: 'Noto Sans KR';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 11px;
+            line-height: 16px;  
+           
+    
+            color: #787878;
+            align-self: flex-end;
+            margin-bottom: 9px;
+        }
+
+        #messageInput{
+            width: 82.3%;
+            height: 34px;
+            background: #F2F2F2;
+            border-radius: 34px;
+            padding-left: 15px;
+            padding-right: 40px;
+            outline: none;
+        }
+
+        #sendBtn{
+            background-image: url('../../../../../public/icons/Send.png');
+            background-repeat: no-repeat;
+            background-size: contain;
+            width: 20px;
+            height: 20px;
+            margin-left: -36px;
+            
+        }
        
+        #imageSubmit{
+            width: 17px;
+            height: 17px;
+            background-image: url('../../../../../public/icons/chat_camera.png');
+            background-repeat: no-repeat;
+            background-size: contain;
+            margin-right: 12px;
+        }
     }
 }
