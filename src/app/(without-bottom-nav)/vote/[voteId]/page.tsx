@@ -7,7 +7,6 @@ import { AuthContext } from '@/context/AuthContext';
 import { PostVoting } from '@/api/postVoting';
 import { GetVoteDetail } from '@/api/getVoteDetail';
 import { useParams } from 'next/navigation';
-
 export default function VoteDetail() {
     const router = useRouter();
     const authContext = useContext(AuthContext);
@@ -18,7 +17,6 @@ export default function VoteDetail() {
     const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: number[] }>({});
     const [vote, setVote] = useState<vote | null>(null);
     const { voteId } = useParams();
-
     interface vote {
         
         title: string;
@@ -45,17 +43,14 @@ export default function VoteDetail() {
         anonymous: boolean;
         _id: string;
     }
-
     useEffect(() => {
         if (!voteId) {
             console.error("voteId가 URL에 존재하지 않습니다");
         }
     }, [voteId]);
-
     const handleCheckboxChange = (voteId: string, index: number, multipleChoice: boolean) => {
         setSelectedOptions((prevSelected) => {
             const currentSelection = prevSelected[voteId] || [];
-
             if (multipleChoice) {
                 // 여러 개 선택 가능
                 if (currentSelection.includes(index)) {
@@ -71,17 +66,14 @@ export default function VoteDetail() {
             }
         });
     };
-
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
         if (token) {
             setToken(token);
         }
     }, []);
-
     useEffect(() => {
         if (!accessToken || !voteId) return;
-
         const getVoteData = async () => {
             try {
                 console.log('토큰:', accessToken);
@@ -92,10 +84,8 @@ export default function VoteDetail() {
                 console.log("투표 정보를 불러오지 못했습니다.", error);
             }
         };
-
         getVoteData();
     }, [accessToken, voteId]);
-
     const calculateDaysLeft = (endDate: string) => {
         const end = new Date(endDate);  // 투표 종료 시간을 Date 객체로 변환
         const now = new Date();  // 현재 시간
@@ -106,7 +96,6 @@ export default function VoteDetail() {
     
         return daysLeft;
     };
-
     const votingHandler = async (e: React.MouseEvent<HTMLButtonElement>, voteId: string) => {
         e.preventDefault();
         try {
@@ -136,7 +125,6 @@ export default function VoteDetail() {
                 <div id="title">{`<게시글/>`}</div>
                 <button id="searchBtn"></button> 
             </div>
-
             <div id='profileCont'>
                 <div id='profileImg'></div>
                 <div id='ectCont'>
@@ -190,7 +178,6 @@ export default function VoteDetail() {
                                 {vote.poll.multipleChoice && <div id='ismulti'> • 복수투표</div>}
                             </div>
                         </div>
-
                         <div id='pollEndTime'>
                             {calculateDaysLeft(vote.poll.pollEndTime) > 0 ? (
                                 <>
@@ -219,7 +206,7 @@ export default function VoteDetail() {
                 )}
             </div>
             
-            <BottomNav />
+            <BottomNav activeIndex={0}/>
         </div>
     );
 }

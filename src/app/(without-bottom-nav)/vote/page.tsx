@@ -5,8 +5,9 @@ import { useContext, useState, useEffect, useRef } from 'react';
 import BottomNav from "@/components/BottomNav";
 import { AuthContext } from '@/context/AuthContext';
 import { GetVoteData } from '@/api/getVoteData';
+import { PostVoting } from '@/api/postVoting';
 
-export default function Chat() {
+export default function Vote() {
     const router = useRouter();
     const authContext = useContext(AuthContext);
     const chatBoxRef = useRef<HTMLDivElement | null >(null);
@@ -16,6 +17,7 @@ export default function Chat() {
     const [page, setPage] = useState<number>(0);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [hasMore, setHasMore] = useState<boolean>(true);
+    const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
 
     interface VoteData {
         title: string;
@@ -30,21 +32,41 @@ export default function Chat() {
             like:boolean;
         }
         poll:{
-             pollOptions: string[];
+             pollOptions: string[]; 
              multipleChoice: boolean;
              pollEndTime: string;
-             pollVotesCounts: string[];
+             pollVotesCounts: number[];
              userVoteOptions:string[] | string ;
              totalParticipants: number;
              hasUserVoted: boolean;
              pollFinished: boolean;
             }
         anonymous: boolean;
+        _id: string;
     }
 
     interface VoteListProps {
         voteList: VoteData[]; // VoteData 타입의 배열
     }
+    const handleCheckboxChange = (voteId: string, index: number, multipleChoice: boolean) => {
+        setSelectedOptions((prevSelected) => {
+            const currentSelection = prevSelected[voteId] || [];
+
+            if (multipleChoice) {
+                // 여러 개 선택 가능
+                if (currentSelection.includes(index)) {
+                    // 이미 선택된 경우, 선택 해제
+                    return { ...prevSelected, [voteId]: currentSelection.filter(item => item !== index) };
+                } else {
+                    // 선택되지 않은 경우, 추가
+                    return { ...prevSelected, [voteId]: [...currentSelection, index] };
+                }
+            } else {
+                // 단일 선택만 가능
+                return { ...prevSelected, [voteId]: [index] }; // 하나의 옵션만 선택
+            }
+        });
+    };
 
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
@@ -65,13 +87,13 @@ export default function Chat() {
                 console.log('토큰:', accessToken);
                 const voteData = await GetVoteData(accessToken, page);
                 const newVoteData = voteData.data.contents || [];
-                console.log(voteData.data.contents);
+                console.log(voteData.data);
                 if (newVoteData.length === 0) {
                     setHasMore(false); // 더 이상 불러올 데이터가 없음
                 } else {
-                   setVoteList((prev) => [...newVoteData.reverse(), ...prev]); // 이전 메시지 추가
+                   setVoteList((prev) => [...newVoteData, ...prev]); // 이전 메시지 추가
                 }
-
+                setIsLoading(false)
             } catch (error) {
                 console.log("투표 정보를 불러오지 못했습니다.", error);
                 setVoteList([]);
@@ -90,11 +112,34 @@ export default function Chat() {
         }
     };
 
+    const calculateDaysLeft = (endDate: string) => {
+        const end = new Date(endDate);  // 투표 종료 시간을 Date 객체로 변환
+        const now = new Date();  // 현재 시간
+        const timeDiff = end.getTime() - now.getTime();  // ms 단위 차이 계산
+    
+        // 시간 차이를 일 단위로 변환
+        const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));  // 하루는 1000 * 3600 * 24 ms
+    
+        return daysLeft;
+    };
+
+    const votingHandler = async (e: React.MouseEvent<HTMLButtonElement>, voteId: string) => {
+        e.preventDefault();
+        try {
+            const response = await PostVoting(accessToken, voteId, selectedOptions[voteId] || []);
+            console.log('결과:', response);
+            window.location.reload();  
+        } catch (error) {
+            console.error("투표 실패", error);
+            const message = error.response.data.message;
+            alert(message);
+        }
+    };
+    
     // VoteList 컴포넌트: voteList를 받아서 렌더링하는 컴포넌트
     const VoteList = ({ voteList }: VoteListProps) => {
         return (
             <div id="voteCont">
-
                 {voteList.map((vote) => (
                     <div key={vote._id} id='voteIndex'>
                         <h3 id='voteTitle'  onClick={()=> router.push(`/vote/${vote._id}`)}>{vote.title}</h3>
@@ -103,12 +148,24 @@ export default function Chat() {
                         {calculateDaysLeft(vote.poll.pollEndTime) > 0 && vote.poll.hasUserVoted === false ?  (
                             <>
                         <ul id='ulCont'>
-
                             {vote.poll.pollOptions.map((option, i) => (
-                                <li key={i}>{option}</li>
+                                <li id='pollCont'  key={i}> 
+                                    <input 
+                                        type='checkBox' 
+                                        key={i} 
+                                        className='voteOption'
+                                        id={`pollOptionCheckBox-${vote._id}-${i}`}  
+                                        onChange={() => handleCheckboxChange(vote._id, i, vote.poll.multipleChoice)}
+                                        checked={selectedOptions[vote._id]?.includes(i) || false}
+                                        disabled={vote.poll.pollFinished}
+                                        >
+
+                                        </input>
+                                    <p id='optionText1'>{option}</p>
+                                </li>
+                               
                             ))}
                         </ul>
-
                         <button id='voteBtn'  disabled={selectedOptions[vote._id]?.length === 0} onClick={(e) => votingHandler(e, vote._id)}>투표하기</button>
                         </>
                         ) : (
@@ -161,7 +218,6 @@ export default function Chat() {
                         </div> 
                         <div id='divider'></div>
                     
-
                     </div>
                 ))}
             </div>
@@ -169,19 +225,20 @@ export default function Chat() {
     };
 
     return (
-        <div className="chat">
+        <div className="vote">
             <div id="topCont">
-                <button id="back_btn">{`<`}</button>
+                <button id="back_btn"  onClick={()=> router.push('/main')}>{`<`}</button>
                 <div id="title">{`<익명 투표/>`}</div>
                 <button id="searchBtn"></button>
             </div>
             <div id="tag">{`<ul>`}</div>
-            {/* 올바르게 voteList 데이터를 전달 */}
+           
             <div id='VoteListCont' ref={chatBoxRef} onScroll={handleScroll}>
                 {isLoading && <div className="loading">Loading...</div>}
                 <VoteList voteList={voteList} />
             </div>
             <div id="tag1">{`</ul>`}</div>
+            <button id="writeBtn"  onClick={()=> router.push('/vote/write')}></button>
             <BottomNav activeIndex={0}/>
         </div>
     );
