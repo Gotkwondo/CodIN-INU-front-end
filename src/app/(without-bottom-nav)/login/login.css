@@ -299,6 +299,11 @@
 
         #else{
             width: 52.3%;
+            height: 16px;
+            display: flex !important;
+            flex-direction: row;
+            margin-top: 37px;
+            justify-content: center;
         }
 
         #buttonCont{
@@ -315,6 +320,8 @@
             color: #ffffff;
 
         }
+
+    
     }
 }
 
@@ -335,6 +342,10 @@
 
         #else{
             margin-top: 5%;
+            height: 16px;
+            display: flex !important;
+            flex-direction: row;
+            justify-content: center;
         }
     }
 }
