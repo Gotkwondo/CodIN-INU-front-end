@@ -1011,7 +1011,7 @@
         }
 
         #statusbar{
-            width: 82.05%;
+            width: 100%;
         }
 
         #pollOpCont{
@@ -1045,6 +1045,57 @@
         #submit{
             width:  89.743% ;
         }
+
+        #profileCont{
+            display: flex;
+            flex-direction: row;
+            align-self: flex-start;
+            margin-left: 21px;
+            margin-top: 6px;
+            margin-bottom: -20px;
+        }
+
+        #profileImg{
+                
+            width: 36px;
+            height: 36px;
+            background-image: url('../../../../public/icons/anonymous-profile.png');
+            background-repeat: no-repeat;
+            background-size: contain;
+            margin-right:11px ;
+
+        }
+
+        #ectCont{
+            display: flex;
+            flex-direction: column;
+        }
+
+        #userName{
+            font-family: Noto Sans KR;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 18.82px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            color: #000000;
+            margin-bottom: 5px;
+        }
+
+        #createdAt{
+            font-family: Noto Sans KR;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 17.38px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            color: #808080;
+
+        }
+
+       
     }
 
 }
