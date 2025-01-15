@@ -61,7 +61,7 @@ export default function MyPage() {
     }
 
     return (
-        <div className="min-h-screen bg-white p-4 mt-10">
+        <div className="w-full min-h-screen bg-white p-4 mt-10">
             <Header title={"마이페이지"} mode = "none"/>
             {/* 사용자 정보 섹션 */}
             <div className="flex items-center justify-between px-4 py-8">
@@ -108,7 +108,7 @@ export default function MyPage() {
                     </li>
                 ))}
             </ul>
-            <BottomNav/>
+            <BottomNav activeIndex={0}/>
         </div>
     );
 }

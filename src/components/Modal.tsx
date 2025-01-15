@@ -1,8 +1,10 @@
 'use client';
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import ReportModal from "./ReportModal"; // ReportModal 컴포넌트 임포트
 import { PostChatRoom } from "@/api/postChatRoom";
-import {boardData} from "@/data/boardData"; // ReportModal 컴포넌트 임포트
+import { boardData } from "@/data/boardData"; // ReportModal 컴포넌트 임포트
+
+
 
 type Post = {
     id: string;
@@ -13,35 +15,43 @@ type Post = {
     [key: string]: any; // 추가 데이터 허용
 };
 
-const Modal = ({ children, onClose, post = { id: '', title: '', content: '', author: '', createdAt: '' } }: { children: ReactNode; onClose: () => void; post?: Post }) => {
-    const handleBack = () => {
-        onClose();
-    };
-
-    if (typeof window !== "undefined") {
-        window.onpopstate = handleBack;
-    }
-
+const Modal = ({
+                   children,
+                   onClose,
+                   post = { id: '', title: '', content: '', author: '', createdAt: '' },
+               }: { children: ReactNode; onClose: () => void; post?: Post }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [isReportModalOpen, setIsReportModalOpen] = useState(false); // 신고 모달 상태
-    const startChat = async()=>{
-        try{
+    const menuRef = useRef<HTMLDivElement | null>(null); // 메뉴 영역 감지용 useRef
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setMenuOpen(false); // 외부 클릭 시 메뉴 닫기
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const startChat = async () => {
+        try {
             const accessToken = localStorage.getItem("accessToken");
-            const response = await PostChatRoom(accessToken ,post.title, post.userId);
-            console.log('채팅방 생성이 완료되었습니다');
-            
-        }catch(error){
-            console.log('채팅방 생성을 실패하였습니다.',error);
+            const response = await PostChatRoom(accessToken, post.title, post.userId);
+            console.log("채팅방 생성이 완료되었습니다");
+        } catch (error) {
+            console.log("채팅방 생성에 실패하였습니다.", error);
         }
-    }
+    };
+
     const handleMenuAction = (action: string) => {
         if (action === "chat") {
-        console.log(post);
-        //post.userId로  유저 아이디 가져올수 있음
-
             alert("채팅하기 클릭됨");
             startChat();
-           
         } else if (action === "report") {
             setIsReportModalOpen(true); // 신고 모달 열기
         } else if (action === "block") {
@@ -54,12 +64,10 @@ const Modal = ({ children, onClose, post = { id: '', title: '', content: '', aut
         setIsReportModalOpen(false); // 신고 모달 닫기
     };
 
-
-    // postCategory에 해당하는 Board 이름 가져오기 함수
     const getBoardNameByPostCategory = (category: string): string | null => {
         for (const key in boardData) {
             const board = boardData[key];
-            const matchingTab = board.tabs.find(tab => tab.postCategory === category);
+            const matchingTab = board.tabs.find((tab) => tab.postCategory === category);
             if (matchingTab) {
                 return board.name; // 상위 Board 이름 반환
             }
@@ -68,7 +76,7 @@ const Modal = ({ children, onClose, post = { id: '', title: '', content: '', aut
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+        <div className=" fixed inset-0 bg-black bg-opacity-50 z-50">
             <div className="bg-white rounded-lg shadow-lg w-full max-w-lg h-full flex flex-col">
                 {/* 헤더 디자인 */}
                 <div className="flex items-center justify-between p-4 border-b border-gray-300">
@@ -92,8 +100,10 @@ const Modal = ({ children, onClose, post = { id: '', title: '', content: '', aut
                             />
                         </svg>
                     </button>
-                    <h3 className="text-xl font-semibold text-gray-800">{getBoardNameByPostCategory(post.postCategory)}</h3>
-                    <div className="relative">
+                    <h3 className="text-xl font-semibold text-gray-800">
+                        {getBoardNameByPostCategory(post.postCategory)}
+                    </h3>
+                    <div className="relative" ref={menuRef}>
                         <button
                             className="p-2 rounded-full hover:bg-gray-100"
                             onClick={() => setMenuOpen(!menuOpen)}
@@ -140,17 +150,12 @@ const Modal = ({ children, onClose, post = { id: '', title: '', content: '', aut
                 </div>
 
                 {/* 본문 컨텐츠 */}
-                <div className="p-4 overflow-y-auto flex-grow">
-                    {children}
-                </div>
+                <div className="p-4 overflow-y-auto flex-grow">{children}</div>
             </div>
 
             {/* 신고 모달 */}
             {isReportModalOpen && (
-                <ReportModal
-                    onClose={closeReportModal}
-                    postId={post.id} // post의 ID 전달
-                />
+                <ReportModal onClose={closeReportModal} postId={post.id} />
             )}
         </div>
     );
