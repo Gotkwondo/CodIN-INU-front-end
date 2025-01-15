@@ -169,7 +169,7 @@ export default function Vote() {
                         <button id='voteBtn'  disabled={selectedOptions[vote._id]?.length === 0} onClick={(e) => votingHandler(e, vote._id)}>투표하기</button>
                         </>
                         ) : (
-                           <div>
+                           <div id='conT'>
                               {vote.poll.pollOptions.map((option, i) => (
                                 <li  key={i} id='pollOpCont'> 
                                 <div id='cont1'>

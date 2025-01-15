@@ -1,6 +1,9 @@
 .pb-16{
     display: flex;
     justify-content: center;
+    height: 100vh !important;
+    margin: 0;
+    padding: 0;
    
 }
 .findPW{
@@ -10,7 +13,7 @@
     justify-content: flex-start;
     align-items: center;
     width: 390px;
-    height: 100vh;
+    height: 100vh !important;
 
     #back_btn{
         margin-top: 55px;
@@ -152,5 +155,40 @@
     #codeCont{
         display: flex !important;
         flex-direction: row;
+    }
+}
+
+
+@media screen and (max-width: 390px) {
+    .findPW{
+        width: 100%;
+        
+        #email{
+            width: 89.23%;
+        }
+       
+        #emailForm{
+            width: 90%;
+        }
+        #codeCont{
+            width: 90%;
+        }
+        #submit{
+            width: 22.0%;
+        }
+
+        #nextBtn{
+            width: 89.74%;
+            align-self: center;
+        }
+
+        #codeInput{
+            width: 89.23%;
+        }
+
+        #cont1{
+            width: 90%;
+        }
+
     }
 }

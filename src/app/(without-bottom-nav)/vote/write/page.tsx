@@ -165,6 +165,7 @@ export default function Vote() {
                           clearIcon
                           clockIcon
                           locale="ko-KR"
+                          hourAriaLabel='false'
                           
                          />
                 </div>
