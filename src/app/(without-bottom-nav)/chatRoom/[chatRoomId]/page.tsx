@@ -133,7 +133,7 @@ useEffect(() => {
                         id: receivedMessage.body.data.id,
                         senderId: receivedMessage.body.data.senderId,
                         content: receivedMessage.body.data.content,
-                        createdAt: formatCustomDate(receivedMessage.body.data.createdAt),
+                        createdAt: receivedMessage.body.data.createdAt,
                         me: false,
                         contentType: receivedMessage.body.data.contentTyp,
                     },
@@ -208,7 +208,8 @@ const handleScroll = () => {
     
             messages.forEach((message, i) => {
                 const messageDate = message.createdAt.split(' ')[0]; // 메시지 날짜 부분 추출
-                if (messageDate !== lastDate) {
+                console.log(messageDate);
+                if ( messageDate !== lastDate) {
                     // 날짜가 바뀌면 새로운 날짜 표시 추가
                     result.push(
                         <div id='date' key={`date-${messageDate}-${i}`} className="date-separator">
