@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaHeart, FaCheckCircle, FaPaperPlane } from "react-icons/fa";
-
+import { useRef } from "react";
 interface Comment {
     _id: string;
     userId: string;
@@ -109,7 +109,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [anonymous, setAnonymous] = useState<boolean | null>(true);
-
+    const menuRef = useRef<HTMLDivElement | null>(null);
     const fetchComments = async () => {
         setLoading(true);
         setError(null);
@@ -129,6 +129,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
                     ...comment,
                     content: comment.content || "내용이 없습니다.",
                 }));
+                console.log("Comments:", validComments);
                 setComments(validComments);
             } else {
                 throw new Error(data.message || "댓글 로드 실패");
@@ -147,7 +148,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
             const { data } = await axios.post(
                 `https://www.codin.co.kr/api/comments/${postId}`,
-                { content },
+                { content, anonymous }, // anonymous 추가
                 {
                     headers: { Authorization: token },
                 }
@@ -167,6 +168,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
             setSubmitLoading(false);
         }
     };
+
 
     const updateComment = async (commentId: string, content: string) => {
         try {
@@ -303,94 +305,119 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         fetchComments();
     }, [postId]);
 
+    useEffect(() => {
+        // 메뉴 외부를 클릭하면 닫히도록 설정
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setMenuOpenId(null);
+            }
+        };
+
+        // 이벤트 리스너 추가
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            // 컴포넌트 언마운트 시 이벤트 리스너 제거
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     const renderComments = (comments: Comment[], depth: number = 0) => (
         <ul>
-            {comments.map((comment) => (
-                comment.deleted? null : (
-                <li
-                    key={comment._id}
-                    className={`border-b py-4 ${
-                        depth > 0 ? "ml-6 pl-4 border-l-2 border-gray-300" : ""
-                    }`}
-                >
-                    <div className="flex justify-between items-start">
-                        <div>
-                            <div className="flex items-center mb-1">
-                                <span className="font-semibold text-gray-800">{comment.nickname || "익명"}</span>
-                                <span className="text-sm text-gray-500 ml-2">
+            {comments.map((comment) =>
+                comment.deleted ? null : (
+                    <li
+                        key={comment._id}
+                        className={`border-b py-4 ${
+                            depth > 0 ? "ml-6 pl-4 border-l-2 border-gray-300" : ""
+                        }`}
+                    >
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <div className="flex items-center mb-1">
+                                <span className="font-semibold text-gray-800">
+                                    {console.log(comment.content + comment.anonymous)}
+
+                                    {comment.anonymous == "true"  ? "익명" : comment.nickname}
+                                </span>
+                                    <span className="text-sm text-gray-500 ml-2">
                                     · {timeAgo(comment.createdAt)}
                                 </span>
-                            </div>
-                            {editCommentId === comment._id ? (
-                                <div className="p-4 bg-gray-50 border rounded-lg shadow-sm">
-                                    <CommentInput
-                                        anonymous={anonymous}
-                                        setAnonymous={setAnonymous}
-                                        value={editContent}
-                                        onChange={(e) => setEditContent(e.target.value)}
-                                        onSubmit={() => updateComment(comment._id, editContent)}
-                                        submitLoading={submitLoading}
-                                        placeholder="댓글을 수정하세요"
-                                    />
                                 </div>
-                            ) : (
-                                <p className="text-gray-700">{comment.content}</p>
-                            )}
-                            <div className="flex items-center text-sm text-gray-500 mt-2">
-                                <FaHeart className="text-red-500 mr-1" /> {comment.likeCount}
-                                {comment.deleted && " (삭제됨)"}
+                                {editCommentId === comment._id ? (
+                                    <div className="p-4 bg-gray-50 border rounded-lg shadow-sm">
+                                        <CommentInput
+                                            anonymous={anonymous}
+                                            setAnonymous={setAnonymous}
+                                            value={editContent}
+                                            onChange={(e) => setEditContent(e.target.value)}
+                                            onSubmit={() => updateComment(comment._id, editContent)}
+                                            submitLoading={submitLoading}
+                                            placeholder="댓글을 수정하세요"
+                                        />
+                                    </div>
+                                ) : (
+                                    <p className="text-gray-700">{comment.content}</p>
+                                )}
+                                <div className="flex items-center text-sm text-gray-500 mt-2">
+                                    <FaHeart className="text-red-500 mr-1" /> {comment.likeCount}
+                                    {comment.deleted && " (삭제됨)"}
+                                </div>
+                            </div>
+                            <div className="relative"  ref={menuRef}>
+                                <button
+                                    className="text-gray-500 hover:text-gray-800"
+                                    onClick={() =>
+                                        setMenuOpenId(menuOpenId === comment._id ? null : comment._id)
+                                    }
+                                >
+                                    ⋮
+                                </button>
+                                {menuOpenId === comment._id && (
+                                    <div className="absolute right-0 mt-2 bg-white border rounded shadow-lg w-32 z-10">
+                                        <button
+                                            className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                                            onClick={() => setReplyTargetId(comment._id)}
+                                        >
+                                            답글 달기
+                                        </button>
+                                        <button
+                                            className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                                            onClick={() => {
+                                                setEditCommentId(comment._id);
+                                                setEditContent(comment.content || "");
+                                            }}
+                                        >
+                                            수정하기
+                                        </button>
+                                        <button
+                                            className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                                            onClick={() => deleteComment(comment._id)}
+                                        >
+                                            삭제하기
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
-                        <div className="relative">
-                            <button
-                                className="text-gray-500 hover:text-gray-800"
-                                onClick={() => setMenuOpenId(menuOpenId === comment._id ? null : comment._id)}
-                            >
-                                ⋮
-                            </button>
-                            {menuOpenId === comment._id && (
-                                <div className="absolute right-0 mt-2 bg-white border rounded shadow-lg w-32 z-10">
-                                    <button
-                                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                                        onClick={() => setReplyTargetId(comment._id)}
-                                    >
-                                        답글 달기
-                                    </button>
-                                    <button
-                                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                                        onClick={() => {
-                                            setEditCommentId(comment._id);
-                                            setEditContent(comment.content || "");
-                                        }}
-                                    >
-                                        수정하기
-                                    </button>
-                                    <button
-                                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                                        onClick={() => deleteComment(comment._id)}
-                                    >
-                                        삭제하기
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                    {replyTargetId === comment._id && (
-                        <div className="p-4 bg-gray-50 border rounded-lg shadow-sm">
-                            <CommentInput
-                                anonymous={anonymous}
-                                setAnonymous={setAnonymous}
-                                value={newReply}
-                                onChange={(e) => setNewReply(e.target.value)}
-                                onSubmit={() => submitReply(newReply, comment._id)}
-                                submitLoading={submitLoading}
-                                placeholder="답글을 입력하세요"
-                            />
-                        </div>
-                    )}
-                    {comment.replies.length > 0 && renderComments(comment.replies, depth + 1)}
-                </li>)
-            ))}
+                        {replyTargetId === comment._id && (
+                            <div className="p-4 bg-gray-50 border rounded-lg shadow-sm">
+                                <CommentInput
+                                    anonymous={anonymous}
+                                    setAnonymous={setAnonymous}
+                                    value={newReply}
+                                    onChange={(e) => setNewReply(e.target.value)}
+                                    onSubmit={() => submitReply(newReply, comment._id)}
+                                    submitLoading={submitLoading}
+                                    placeholder="답글을 입력하세요"
+                                />
+                            </div>
+                        )}
+                        {comment.replies.length > 0 &&
+                            renderComments(comment.replies, depth + 1)}
+                    </li>
+                )
+            )}
         </ul>
     );
 
