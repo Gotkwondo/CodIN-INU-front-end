@@ -55,13 +55,14 @@ export default function DepartmentInfoPage() {
                     if (response.data.success) {
                         setProfessorPosts(response.data.dataList);
                     } else {
-                        throw new Error(response.data.message || "데이터를 가져오는 데 실패했습니다.");
+                        setError(response.data.message || "데이터를 가져오는 데 실패했습니다.");
                     }
                 } catch (err) {
                     setError(err.message || "알 수 없는 오류가 발생했습니다.");
                 } finally {
                     setLoading(false);
                 }
+
             };
 
             fetchProfessorPosts();
