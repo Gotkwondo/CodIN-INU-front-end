@@ -60,7 +60,6 @@
         }
 
         
-
         #email{
             display: flex;
             width: 312px;
@@ -185,7 +184,6 @@
             display: flex;
             align-items: center;
             text-align: center;
-
             color: #000000;
         }
         #findPW{
@@ -251,13 +249,48 @@
         }
         #inputBox{
             width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+          
         }
         #email{
             width:80%;
+            display: flex;
+            height: 36px;
+            background: #F2F2F2;
+            border-radius: 50px;
+            color: #000000;
+            padding-left: 17px;
+            font-family: 'Noto Sans KR';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 22px;
+            display: flex;
+            align-items: center;
+            outline: none;
+
         }
 
         #password{
             width: 80%;
+            display: flex;
+            height: 36px;
+            background: #F2F2F2;
+            border-radius: 50px;
+            margin-top: 4px;
+            color: #000000;
+            padding-left: 17px;
+            font-family: 'Noto Sans KR';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 15px;
+            line-height: 22px;
+            display: flex;
+            align-items: center;
+            outline: none;
         }
 
         #remainCont{
@@ -274,6 +307,13 @@
 
         #loginBtn{
             width: 80%;
+            height: 36px;
+            position: absolute;
+            bottom: 35px;
+            background: #0D99FF;
+            border-radius: 50px;
+            color: #ffffff;
+
         }
     }
 }
@@ -286,6 +326,11 @@
 
         #inputBox{
             margin-top: 15%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+           
         }
 
         #else{
