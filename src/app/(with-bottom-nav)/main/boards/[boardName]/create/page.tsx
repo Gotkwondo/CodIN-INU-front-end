@@ -1,4 +1,5 @@
 "use client";
+//생성 페이지
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { boardData } from "@/data/boardData";

@@ -1,5 +1,5 @@
 "use client";
-
+// 정보대 소개 페이지
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Tabs from "@/components/Tabs";
