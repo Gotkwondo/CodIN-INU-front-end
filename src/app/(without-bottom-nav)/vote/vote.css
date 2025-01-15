@@ -60,10 +60,10 @@
 
         width: 22px;
         height: 22px;
-        background-image: url('../../../../public/icons/searchIcon.png');
-        background-repeat: no-repeat;
+      
         margin-top: 60px;
         margin-right: 21px;
+    
     }
 
     .VoteListCont{
@@ -558,60 +558,46 @@
 
        .react-time-picker__inputGroup{
         width: auto;
-        visibility: hidden;
+        visibility: hidden !important;
+        margin-top: -35px;
+        margin-left: -30px;
        }
 
 
        .react-time-picker input {
         visibility: visible !important;
-        position: static !important;
         z-index: auto !important;
         display: flex !important;
     }
     .react-time-picker__inputGroup__leadingZero{
-        display: none;
+        display: none !important;
+        visibility: hidden !important;
     }
     .react-time-picker__inputGroup__divider{
-        display: none;
+        display: none !important;
+        visibility: hidden !important;
     }
     
     .react-time-picker__inputGroup__hour{
-        display: none;
+        display: none !important;
+        visibility: hidden !important;
     }
-            
-        .time-picker__selected{
-            width: auto;
-            height: auto;
-            color: black;
-        }
-        .time-picker__selected-time {
-            color: black;
-            text-align: center;
-        }
+    .react-time-picker__inputGroup__input,
+    .react-time-picker__inputGroup__minute{
+        display: none !important;
+        visibility: hidden !important;
+        color: #ffffff;
+    }
 
-        .time-picker__selector {
-
-            width: 280px;
-            height: 202px;
-
-            margin-left: -60px;
-            background: #FFFFFF;
-            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
-            border-radius: 17px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 15px;
-        
-
-        }
-
-        #time-picker{
-            display: flex;
-            flex-direction: column;
-        
-
-        }
+    .react-time-picker__inputGroup__input,
+    .react-time-picker__inputGroup__hour {
+      display: none !important;
+      visibility: hidden !important;
+    }
+    .react-time-picker__inputGroup__input--hasLeadingZero{
+        display: none !important;
+        visibility: hidden !important;
+    }
 
         #voteCont{
             display: flex !important;
@@ -984,6 +970,81 @@
 }
 
 @media screen and (max-width: 390px) {
+    .vote{
+        width: 100%;
 
-    
+        #topCont{
+            width: 100%;
+        }
+
+        #VoteListCont{
+            width: 100%;
+        }
+
+        #voteCont{
+            width: 100%;
+            margin: 0;
+            display: flex;
+        
+        }
+
+        #voteIndex{
+            width: 100%;
+            align-self: center;
+            padding: 15px;
+        }
+        #voteContainer{
+            width: 89.74%;
+           align-self: center;
+        }
+
+        #voteBtn:enabled{
+            width: 83.07%;
+        }
+
+        #voteBtn:disabled{
+            width: 83.07%;
+        }
+
+        #divider{
+            width: 94.35%;
+        }
+
+        #statusbar{
+            width: 82.05%;
+        }
+
+        #pollOpCont{
+            width: 100%;
+        }
+
+        #conT{
+            width: 80%;
+        }
+
+        #voteCont_write{
+            width:  89.743% ;
+        }
+        
+        #write_title{
+            width: 83.07% ;
+        }
+
+        .option{
+            width: 83.07%;
+        }
+
+        #addOption{
+            width: 83.07%;
+        }
+
+        #endTimeCont{
+            width: 89.743%  ;
+        }
+
+        #submit{
+            width:  89.743% ;
+        }
+    }
+
 }

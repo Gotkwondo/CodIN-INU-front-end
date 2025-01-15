@@ -1,21 +1,26 @@
 'use client';
-import '../../signup/signup.css';
+import '../../../signup/signup.css';
 import { useRouter } from 'next/navigation';
-import { useState, useContext } from 'react';
-import { UserContext } from '@/context/UserContext';
+import { useState, useContext, useEffect } from 'react';
+import { PutPassword } from '@/api/putPassword';
+import { useParams } from 'next/navigation';
+
+
 export default function SignupPw() {
     const router = useRouter();
     const [ password, setPassword] = useState<string>("");
     const [ confirmPassword, setConfirmPassword] = useState("");
     const [passwordError, setPasswordError] = useState(""); 
     const [confirmPasswordError, setConfirmPasswordError] = useState(""); 
-    const userContext = useContext(UserContext);
+    const { code } = useParams();
+    
 
-    if(!userContext){
-        throw new Error('MyConsumer must be used within a MyProvider')
-    }
+    useEffect(() => {
+      if (!code) {
+        console.error("code가 URL에 존재하지 않습니다");
+      }
+    }, [code]);
 
-    const {User, updateUser} = userContext;
 
     const validatePassword = (value: string) => {
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
@@ -54,9 +59,16 @@ export default function SignupPw() {
         e.preventDefault();
 
         if (!passwordError && !confirmPasswordError && password && confirmPassword) {
-          updateUser({password : password});
-          console.log("비밀번호 설정 완료:", password, User);
-          router.push('/signup/info');
+           try {
+                             
+                              const response = await PutPassword(code, password);
+                              console.log('결과:', response);
+                              router.push('/login');
+                            } catch (error) {
+                              console.error("비밀번호 변경경 실패", error);
+                              const message = error.response.data.message;
+                              alert(message);
+                            }
                 } else {
           console.log("비밀번호 설정 오류");
         }
