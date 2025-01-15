@@ -4,6 +4,8 @@ import ReportModal from "./ReportModal"; // ReportModal 컴포넌트 임포트
 import { PostChatRoom } from "@/api/postChatRoom";
 import { boardData } from "@/data/boardData"; // ReportModal 컴포넌트 임포트
 
+
+
 type Post = {
     id: string;
     title: string;
@@ -74,7 +76,7 @@ const Modal = ({
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+        <div className=" fixed inset-0 bg-black bg-opacity-50 z-50">
             <div className="bg-white rounded-lg shadow-lg w-full max-w-lg h-full flex flex-col">
                 {/* 헤더 디자인 */}
                 <div className="flex items-center justify-between p-4 border-b border-gray-300">

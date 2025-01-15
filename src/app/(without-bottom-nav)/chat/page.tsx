@@ -57,7 +57,7 @@ export default function Chat() {
 
     const handleGoChatRoom = (chatRoomID: string, roomName: string) => {
         // roomName을 state로 넘기는 방법 (localStorage는 사용하지 않음)
-        
+
         localStorage.setItem('roomName',roomName);
         router.push(`/chatRoom/${chatRoomID}` );
     };
@@ -98,7 +98,7 @@ export default function Chat() {
             <div id='tag'>{`<ul>`}</div>
             <ChatList chatList={chatList} />
             <div id='tag1'>{`</ul>`}</div>
-            <BottomNav />
+            <BottomNav activeIndex={2}/>
         </div>
     );
 }

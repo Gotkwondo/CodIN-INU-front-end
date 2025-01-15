@@ -40,10 +40,10 @@ export const boardData: Record<string, Board> = {
         tabs: [
             { label: '전체', value: 'all', postCategory: 'EXTRACURRICULAR' },
             { label: '정보대', value: 'question', postCategory: 'EXTRACURRICULAR_INNER' },
-            { label: 'StarINU', value: 'job-experience', postCategory: 'EXTRACURRICULAR_INNER' },
+            { label: 'StarINU', value: 'job-experience', postCategory: 'EXTRACURRICULAR_STARINU' },
             { label: '교외', value: 'tips', postCategory: 'EXTRACURRICULAR_OUTER' },
         ],
-        type: 'list', // 리스트형
+        type: 'gallery', // 리스트형
     },
     'best': {
         name: '베스트 게시물',
@@ -53,8 +53,8 @@ export const boardData: Record<string, Board> = {
     'used-books': {
         name: '중고 서적',
         tabs: [
-            { label: '판매중', value: 'selling', postCategory: 'EXTRACURRICULAR_OUTER' },
-            { label: '구매중', value: 'buying', postCategory: 'EXTRACURRICULAR_INNER' },
+            { label: '판매중', value: 'selling', postCategory: 'BOOKS_SELL' },
+            { label: '구매중', value: 'buying', postCategory: 'BOOKS_BUY' },
         ],
         type: 'gallery', // 갤러리형
     },

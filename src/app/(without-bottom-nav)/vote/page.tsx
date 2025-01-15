@@ -30,7 +30,7 @@ export default function Chat() {
             like:boolean;
         }
         poll:{
-             pollOptions: string[]; 
+             pollOptions: string[];
              multipleChoice: boolean;
              pollEndTime: string;
              pollVotesCounts: string[];
@@ -71,7 +71,7 @@ export default function Chat() {
                 } else {
                    setVoteList((prev) => [...newVoteData.reverse(), ...prev]); // 이전 메시지 추가
                 }
-                
+
             } catch (error) {
                 console.log("투표 정보를 불러오지 못했습니다.", error);
                 setVoteList([]);
@@ -123,7 +123,7 @@ export default function Chat() {
                 <VoteList voteList={voteList} />
             </div>
             <div id="tag1">{`</ul>`}</div>
-            <BottomNav />
+            <BottomNav  activeIndex={1}/>
         </div>
     );
 }

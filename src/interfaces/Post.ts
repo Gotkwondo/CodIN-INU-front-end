@@ -12,7 +12,7 @@ export interface Post {
     postImageUrl: string[]; // 이미지 URL 배열
     userId: string;
     nickname?: string;
-
+    userImageUrl?: string;
     // 추가된 필드
     authorName?: string; // 작성자 이름 (익명일 경우 옵션)
     viewCount?: number; // 조회수

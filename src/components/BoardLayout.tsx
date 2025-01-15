@@ -24,7 +24,7 @@ const BoardLayout: FC<BoardLayoutProps> = ({
     const hasTabs = tabs.length > 0;
 
     return (
-        <div className="bg-white min-h-screen relative">
+        <div className="bg-white min-h-screen w-full relative">
             {/* 고정 헤더 */}
             <header className="sticky top-0 bg-white z-50 shadow-md">
                 <div className="max-w-4xl mx-auto px-4 py-2">
