@@ -3,10 +3,10 @@ import {FC, useEffect, useState} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import BottomNav from "@/components/BottomNav";
-import {FaBell, FaEye, FaHeart, FaRegCommentDots} from "react-icons/fa";
+import {FaBell, FaEye, FaHeart, FaRegCommentDots,FaRegBell} from "react-icons/fa";
 import ZoomableImageModal from "../../../components/ZoomableImageModal";
 import {boardData} from "@/data/boardData";
-
+import AlarmModal from "@/components/AlarmModal"; // 알림 아이콘 추가
 const timeAgo = (timestamp: string): string => {
     const now = new Date();
     const createdAt = new Date(timestamp);
@@ -54,7 +54,11 @@ const MainPage: FC = () => {
     const [rankingPosts, setRankingPosts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
+    const [hasNewAlarm, setHasNewAlarm] = useState(false); // 알람 여부
 
+    const handleOpenModal = () => setIsModalOpen(true);
+    const handleCloseModal = () => setIsModalOpen(false);
     const mapPostCategoryToLabel = (postCategory: string) => {
         for (const boardKey in boardData) {
             const board = boardData[boardKey];
@@ -101,9 +105,15 @@ const MainPage: FC = () => {
                 <div className="flex items-center">
                     <Image src="/images/codinlogo.png" alt="CodIN Logo" width={160} height={60} />
                 </div>
-                <div className="text-gray-600 text-2xl relative">
-                    <FaBell />
-                    <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
+                <div className="relative">
+                    {/* 알림 아이콘 */}
+                    <button onClick={handleOpenModal} className="text-gray-600 text-2xl">
+                        {hasNewAlarm ? (
+                            <FaBell className="text-red-500" /> // 새 알람이 있을 때
+                        ) : (
+                            <FaRegBell /> // 새 알람이 없을 때
+                        )}
+                    </button>
                 </div>
             </header>
 
@@ -113,8 +123,14 @@ const MainPage: FC = () => {
             </section>
 
             {/* 메뉴 섹션 */}
-            <section className="my-6 bg-[#ebf0f7] rounded-lg p-4 mx-4">
-                <div className="grid grid-cols-4 gap-4">
+            <section className="my-6  mx-4 relative flex flex-col">
+                {/* 왼쪽 위에 <div> 텍스트 추가 (메뉴 외부, 왼쪽 정렬) */}
+                <div className="self-start p-2 text-sm text-gray-700">
+                    <span>&lt;div&gt;</span>
+                </div>
+
+                {/* 메뉴 아이템 */}
+                <div className="grid grid-cols-4 gap-4  bg-[#ebf0f7] p-4 rounded-lg">
                     {menuItems.map((menu, index) => (
                         <Link
                             href={menu.href}
@@ -126,16 +142,25 @@ const MainPage: FC = () => {
                             </div>
                             {/* 텍스트 줄바꿈 */}
                             <span className="text-sm font-medium mt-2 break-words leading-tight">
-          {menu.label.split(" ").map((word, i) => (
-              <span key={i} className="block">
-              {word}
-            </span>
-          ))}
-        </span>
+                    {menu.label.split(" ").map((word, i) => (
+                        <span key={i} className="block">
+                            {word}
+                        </span>
+                    ))}
+                </span>
                         </Link>
                     ))}
                 </div>
+
+                {/* 오른쪽 아래에 <div> 텍스트 추가 (메뉴 외부, 오른쪽 정렬) */}
+                <div className="self-end p-2 text-sm text-gray-700">
+                    <span>&lt;/div&gt;</span>
+                </div>
             </section>
+
+
+
+
 
 
             {/* 게시물 랭킹 */}
@@ -198,9 +223,10 @@ const MainPage: FC = () => {
                     )}
                 </div>
             </section>
-
+            {isModalOpen && <AlarmModal onClose={handleCloseModal} />}
             {/* 하단 네비게이션 */}
             <BottomNav activeIndex={0}/>
+
         </div>
     );
 };
