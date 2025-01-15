@@ -140,16 +140,34 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
     return (
         <div className="bg-white min-h-screen p-1">
             <div className="flex items-center space-x-4 mb-4">
-                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    <span className="text-gray-600 text-sm">익명</span>
+                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+                    {post.anonymous ? (
+                        <img
+                            src="/images/anonymousUserImage.png" // 정적 경로의 익명 이미지
+                            alt="Anonymous profile"
+                            className="w-full h-full object-cover"
+                        />
+                    ) : post.userImageUrl ? (
+                        <img
+                            src={post.userImageUrl}
+                            alt="User profile"
+                            className="w-full h-full object-cover"
+                        />
+                    ) : (
+                        <span className="text-gray-600 text-sm">No Image</span>
+                    )}
                 </div>
+
                 <div>
-                    <h4 className="text-sm font-semibold text-gray-800">{post.authorName || "익명"}</h4>
+                    <h4 className="text-sm font-semibold text-gray-800">
+                        {post.anonymous ? "익명" : post.nickname || "익명"}
+                    </h4>
                     <p className="text-xs text-gray-500">{post.createdAt}</p>
                 </div>
             </div>
-            <div className="mb-4">
-                <h2 className="text-xl font-semibold text-gray-800 pb-3">{post.title}</h2>
+
+            <div className="mb-8">
+                <h3 className="text-lg font-semibold text-gray-800 pb-3">{post.title}</h3>
                 <p className="text-gray-800 text-base">{post.content}</p>
             </div>
             {post.postImageUrl && post.postImageUrl.length > 0 && (
@@ -177,7 +195,7 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                 </button>
 
             </div>
-            <CommentSection postId={postId} />
+            <CommentSection postId={postId} postName={post.title}/>
         </div>
     );
 }

@@ -1,8 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { FaHeart, FaCheckCircle, FaPaperPlane } from "react-icons/fa";
+import {
+    FaHeart,
+    FaCheckCircle,
+    FaPaperPlane,
+    FaTimes, // 추가: 닫기(X) 아이콘
+} from "react-icons/fa";
+import { startChat } from "@/api/postChatRoom"; // startChat 함수 가져오기
 
 interface Comment {
     _id: string;
@@ -20,12 +26,15 @@ interface Comment {
 
 interface CommentSectionProps {
     postId: string;
+    postName: string;
 }
+
 interface ApiResponse {
     success: boolean;
     message?: string;
-    dataList?: Comment[]; // dataList가 존재할 수 있음
+    dataList?: Comment[];
 }
+
 const timeAgo = (timestamp: string): string => {
     const now = new Date();
     const createdAt = new Date(timestamp);
@@ -34,14 +43,11 @@ const timeAgo = (timestamp: string): string => {
     if (diffInSeconds < 60) {
         return "방금 전";
     } else if (diffInSeconds < 3600) {
-        const minutes = Math.floor(diffInSeconds / 60);
-        return `${minutes}분 전`;
+        return `${Math.floor(diffInSeconds / 60)}분 전`;
     } else if (diffInSeconds < 86400) {
-        const hours = Math.floor(diffInSeconds / 3600);
-        return `${hours}시간 전`;
+        return `${Math.floor(diffInSeconds / 3600)}시간 전`;
     } else {
-        const days = Math.floor(diffInSeconds / 86400);
-        return `${days}일 전`;
+        return `${Math.floor(diffInSeconds / 86400)}일 전`;
     }
 };
 
@@ -62,45 +68,44 @@ const CommentInput = ({
     submitLoading: boolean;
     placeholder: string;
 }) => (
-    <div className="flex items-center bg-gray-200 border rounded-full shadow py-0.5 px-3 ">
+    <div className="flex items-center bg-gray-100 border border-gray-300 rounded-full py-1 px-2">
         <button
             onClick={() => setAnonymous((prev) => !prev)}
-            className="flex items-center space-x-2 focus:outline-none"
+            className="flex items-center space-x-1 focus:outline-none mr-2"
         >
             <FaCheckCircle
-                className={`h-5 w-5 ${
-                    anonymous ? "text-blue-500" : "text-gray-400"
-                }`}
+                className={`h-5 w-5 ${anonymous ? "text-blue-500" : "text-gray-400"}`}
             />
             <span
                 className={`text-sm font-medium ${
                     anonymous ? "text-blue-500" : "text-gray-500"
                 }`}
             >
-                익명
-            </span>
+        익명
+      </span>
         </button>
         <input
             value={value}
             onChange={onChange}
             placeholder={placeholder}
-            className="flex-grow bg-transparent ml-4 text-sm outline-none placeholder-gray-500"
+            className="flex-grow bg-transparent text-sm outline-none placeholder-gray-400"
         />
         <button
             onClick={onSubmit}
-            className="text-blue-500 hover:text-blue-600 p-2 disabled:opacity-50"
+            className="ml-2 text-white bg-blue-500 hover:bg-blue-600 transition-colors duration-200 rounded-full p-2 disabled:opacity-50"
             disabled={submitLoading}
         >
-            <FaPaperPlane className="h-6 w-6" />
+            <FaPaperPlane className="h-5 w-5" />
         </button>
     </div>
 );
 
-export default function CommentSection({ postId }: CommentSectionProps) {
+export default function CommentSection({ postId ,postName}: CommentSectionProps) {
     const [comments, setComments] = useState<Comment[]>([]);
     const [newComment, setNewComment] = useState<string>("");
     const [editCommentId, setEditCommentId] = useState<string | null>(null);
     const [editContent, setEditContent] = useState<string>("");
+    const [currentUserId, setCurrentUserId] = useState<string>("");
     const [newReply, setNewReply] = useState<string>("");
     const [replyTargetId, setReplyTargetId] = useState<string | null>(null);
     const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
@@ -108,7 +113,11 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     const [submitLoading, setSubmitLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [anonymous, setAnonymous] = useState<boolean | null>(true);
+    const [anonymous, setAnonymous] = useState<boolean>(true);
+    const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+    const menuRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
     const fetchComments = async () => {
         setLoading(true);
@@ -119,9 +128,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
             const { data } = await axios.get<ApiResponse>(
                 `https://www.codin.co.kr/api/comments/post/${postId}`,
-                {
-                    headers: { Authorization: token },
-                }
+                { headers: { Authorization: token } }
             );
 
             if (data.success) {
@@ -140,17 +147,35 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         }
     };
 
+    const fetchCurrentUser = async () => {
+        try {
+            const token = localStorage.getItem("accessToken");
+            if (!token) throw new Error("로그인이 필요합니다.");
+
+            const { data } = await axios.get("https://www.codin.co.kr/api/users", {
+                headers: { Authorization: token },
+            });
+
+            if (data.success) {
+                setCurrentUserId(data.data._id);
+            } else {
+                throw new Error("사용자 정보를 가져오지 못했습니다.");
+            }
+        } catch (err: any) {
+            console.error("사용자 정보 호출 오류:", err.message);
+        }
+    };
+
     const submitComment = async (content: string) => {
         try {
             const token = localStorage.getItem("accessToken");
             if (!token) throw new Error("로그인이 필요합니다.");
 
+            setSubmitLoading(true);
             const { data } = await axios.post(
                 `https://www.codin.co.kr/api/comments/${postId}`,
-                { content },
-                {
-                    headers: { Authorization: token },
-                }
+                { content, anonymous },
+                { headers: { Authorization: token } }
             );
 
             if (data.success) {
@@ -176,9 +201,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
             const { data } = await axios.patch(
                 `https://www.codin.co.kr/api/comments/${commentId}`,
                 { content },
-                {
-                    headers: { Authorization: token },
-                }
+                { headers: { Authorization: token } }
             );
 
             if (data.success) {
@@ -202,9 +225,7 @@ export default function CommentSection({ postId }: CommentSectionProps) {
 
             const { data } = await axios.delete(
                 `https://www.codin.co.kr/api/comments/${commentId}`,
-                {
-                    headers: { Authorization: token },
-                }
+                { headers: { Authorization: token } }
             );
 
             if (data.success) {
@@ -219,68 +240,16 @@ export default function CommentSection({ postId }: CommentSectionProps) {
         }
     };
 
-    const updateReply = async (replyId: string, content: string) => {
-        try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) throw new Error("로그인이 필요합니다.");
-
-            const { data } = await axios.patch(
-                `https://www.codin.co.kr/api/replies/${replyId}`,
-                { content },
-                {
-                    headers: { Authorization: token },
-                }
-            );
-
-            if (data.success) {
-                fetchComments();
-                setReplyTargetId(null);
-                setNewReply("");
-                setSuccessMessage("대댓글이 수정되었습니다.");
-                setTimeout(() => setSuccessMessage(null), 2000);
-            } else {
-                throw new Error(data.message || "대댓글 수정 실패");
-            }
-        } catch (err: any) {
-            setError(err.message || "API 호출 중 오류가 발생했습니다.");
-        }
-    };
-
-    const deleteReply = async (replyId: string) => {
-        try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) throw new Error("로그인이 필요합니다.");
-
-            const { data } = await axios.delete(
-                `https://www.codin.co.kr/api/replies/${replyId}`,
-                {
-                    headers: { Authorization: token },
-                }
-            );
-
-            if (data.success) {
-                fetchComments();
-                setSuccessMessage("대댓글이 삭제되었습니다.");
-                setTimeout(() => setSuccessMessage(null), 2000);
-            } else {
-                throw new Error(data.message || "대댓글 삭제 실패");
-            }
-        } catch (err: any) {
-            setError(err.message || "API 호출 중 오류가 발생했습니다.");
-        }
-    };
-
     const submitReply = async (content: string, commentId: string) => {
         try {
             const token = localStorage.getItem("accessToken");
             if (!token) throw new Error("로그인이 필요합니다.");
 
+            setSubmitLoading(true);
             const { data } = await axios.post(
                 `https://www.codin.co.kr/api/replies/${commentId}`,
                 { content, anonymous },
-                {
-                    headers: { Authorization: token },
-                }
+                { headers: { Authorization: token } }
             );
 
             if (data.success) {
@@ -300,29 +269,99 @@ export default function CommentSection({ postId }: CommentSectionProps) {
     };
 
     useEffect(() => {
+        fetchCurrentUser();
         fetchComments();
     }, [postId]);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            for (const [id, ref] of menuRefs.current.entries()) {
+                if (ref && !ref.contains(event.target as Node)) {
+                    setMenuOpenId((prevId) => (prevId === id ? null : prevId));
+                }
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const toggleMenu = (commentId: string) => {
+        setMenuOpenId((prevId) => (prevId === commentId ? null : commentId));
+    };
+
+    const renderDeleteModal = () =>
+        isModalOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                <div className="bg-white rounded-lg shadow-lg p-6 w-80">
+                    <p className="text-gray-800 text-lg font-semibold mb-4">
+                        댓글을 삭제하시겠습니까?
+                    </p>
+                    <div className="flex justify-end space-x-4">
+                        <button
+                            className="px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors duration-200"
+                            onClick={() => setIsModalOpen(false)}
+                        >
+                            취소
+                        </button>
+                        <button
+                            className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 transition-colors duration-200"
+                            onClick={() => {
+                                if (deleteTargetId) deleteComment(deleteTargetId);
+                                setIsModalOpen(false);
+                            }}
+                        >
+                            삭제
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
 
     const renderComments = (comments: Comment[], depth: number = 0) => (
         <ul>
             {comments.map((comment) => (
-                comment.deleted? null : (
                 <li
                     key={comment._id}
-                    className={`border-b py-4 ${
-                        depth > 0 ? "ml-6 pl-4 border-l-2 border-gray-300" : ""
+                    className={`py-4 ${
+                        depth > 0
+                            ? "ml-6 pl-4 border-l-2 border-gray-200 bg-gray-50 rounded"
+                            : "border-b border-gray-200"
                     }`}
                 >
                     <div className="flex justify-between items-start">
-                        <div>
+                        <div className="pr-2 w-full">
+                            {/* 닉네임 & 작성 시간 */}
                             <div className="flex items-center mb-1">
-                                <span className="font-semibold text-gray-800">{comment.nickname || "익명"}</span>
-                                <span className="text-sm text-gray-500 ml-2">
-                                    · {timeAgo(comment.createdAt)}
-                                </span>
+                            <span className="font-semibold text-gray-800 text-sm">
+                                {comment.anonymous ? "익명" : comment.nickname}
+                            </span>
+                                <span className="text-xs text-gray-500 ml-2">
+                                · {timeAgo(comment.createdAt)}
+                            </span>
                             </div>
-                            {editCommentId === comment._id ? (
-                                <div className="p-4 bg-gray-50 border rounded-lg shadow-sm">
+
+                            {/* 삭제된 댓글 표시 */}
+                            {comment.deleted ? (
+                                <p className="text-gray-400 italic text-sm">(삭제된 댓글입니다)</p>
+                            ) : editCommentId === comment._id ? (
+                                <div className="p-4 bg-white border border-gray-200 rounded shadow-sm mt-2 relative">
+                                    <div className="flex items-center justify-between mb-3">
+                                    <span className="text-sm font-semibold text-gray-700">
+                                        댓글 수정
+                                    </span>
+                                        <button
+                                            className="text-gray-400 hover:text-gray-600"
+                                            onClick={() => {
+                                                setEditCommentId(null);
+                                                setEditContent("");
+                                            }}
+                                        >
+                                            <FaTimes className="h-4 w-4" />
+                                        </button>
+                                    </div>
+
                                     <CommentInput
                                         anonymous={anonymous}
                                         setAnonymous={setAnonymous}
@@ -334,81 +373,45 @@ export default function CommentSection({ postId }: CommentSectionProps) {
                                     />
                                 </div>
                             ) : (
-                                <p className="text-gray-700">{comment.content}</p>
+                                <p className="text-gray-700 text-sm mb-2">{comment.content}</p>
                             )}
-                            <div className="flex items-center text-sm text-gray-500 mt-2">
+
+                            {/* 좋아요 수 */}
+                            <div className="flex items-center text-xs text-gray-500">
                                 <FaHeart className="text-red-500 mr-1" /> {comment.likeCount}
-                                {comment.deleted && " (삭제됨)"}
                             </div>
                         </div>
-                        <div className="relative">
-                            <button
-                                className="text-gray-500 hover:text-gray-800"
-                                onClick={() => setMenuOpenId(menuOpenId === comment._id ? null : comment._id)}
-                            >
-                                ⋮
-                            </button>
-                            {menuOpenId === comment._id && (
-                                <div className="absolute right-0 mt-2 bg-white border rounded shadow-lg w-32 z-10">
-                                    <button
-                                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                                        onClick={() => setReplyTargetId(comment._id)}
-                                    >
-                                        답글 달기
-                                    </button>
-                                    <button
-                                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                                        onClick={() => {
-                                            setEditCommentId(comment._id);
-                                            setEditContent(comment.content || "");
-                                        }}
-                                    >
-                                        수정하기
-                                    </button>
-                                    <button
-                                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                                        onClick={() => deleteComment(comment._id)}
-                                    >
-                                        삭제하기
-                                    </button>
-                                </div>
-                            )}
-                        </div>
                     </div>
-                    {replyTargetId === comment._id && (
-                        <div className="p-4 bg-gray-50 border rounded-lg shadow-sm">
-                            <CommentInput
-                                anonymous={anonymous}
-                                setAnonymous={setAnonymous}
-                                value={newReply}
-                                onChange={(e) => setNewReply(e.target.value)}
-                                onSubmit={() => submitReply(newReply, comment._id)}
-                                submitLoading={submitLoading}
-                                placeholder="답글을 입력하세요"
-                            />
-                        </div>
-                    )}
+
+                    {/* 대댓글 렌더링 */}
                     {comment.replies.length > 0 && renderComments(comment.replies, depth + 1)}
-                </li>)
+                </li>
             ))}
         </ul>
     );
 
+
+
     return (
-        <div className="relative mt-8 mb-20">
+        <div className="relative mt-8 mb-28 max-w-2xl mx-auto">
             <h3 className="text-lg font-semibold mb-4 text-gray-800">댓글</h3>
-            {error && <p className="text-red-500">{error}</p>}
+            {error && <p className="text-red-500 mb-2">{error}</p>}
             {renderComments(comments)}
-            <div className="fixed bottom-0 left-0 right-0 bg-white p-4 space-x-2 shadow-md border-t">
-                <CommentInput
-                    anonymous={anonymous}
-                    setAnonymous={setAnonymous}
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    onSubmit={() => submitComment(newComment)}
-                    submitLoading={submitLoading}
-                    placeholder="댓글을 입력하세요"
-                />
+            {renderDeleteModal()}
+
+            {/* 댓글 작성 인풋창(화면 하단 고정) */}
+            <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-md border-t border-gray-200">
+                <div className="max-w-2xl mx-auto">
+                    <CommentInput
+                        anonymous={anonymous}
+                        setAnonymous={setAnonymous}
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        onSubmit={() => submitComment(newComment)}
+                        submitLoading={submitLoading}
+                        placeholder="댓글을 입력하세요"
+                    />
+                </div>
             </div>
         </div>
     );
