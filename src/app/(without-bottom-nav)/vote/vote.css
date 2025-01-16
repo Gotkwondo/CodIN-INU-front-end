@@ -1133,6 +1133,15 @@
         #commentIndex{
             margin-bottom: 8px ;
         }
+        #likeIcon.liked{
+            width: 14px;
+            height: 14px;
+            background-image: url('../../../../public/icons/Heartfull.png');
+            background-repeat: no-repeat;
+            background-size: contain;
+            margin-left: 5px;
+            z-index: 1;
+        }
         #Com_profileImg{
     
             width: 27px;
