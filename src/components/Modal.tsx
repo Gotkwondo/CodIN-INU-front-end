@@ -42,7 +42,13 @@ const Modal = ({
         try {
             const accessToken = localStorage.getItem("accessToken");
             const response = await PostChatRoom(accessToken, post.title, post.userId);
+
             console.log("채팅방 생성이 완료되었습니다");
+            if (response?.data.data.chatRoomId) {
+                window.location.href = `/chat}`;
+            } else {
+                throw new Error("Chat room ID is missing in the response.");
+            }
         } catch (error) {
             console.log("채팅방 생성에 실패하였습니다.", error);
         }

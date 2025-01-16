@@ -46,7 +46,7 @@ export default function DepartmentInfoPage() {
             id: 4,
             name: "교학실",
             image: "/images/교학실.png",
-            departmentName: "STAFF",
+            departmentName: "IT_COLLEGE",
         },
     ];
 
@@ -78,7 +78,7 @@ export default function DepartmentInfoPage() {
     return (
         <div className="p-4 bg-gray-100 min-h-screen">
             <Header title={"정보대 소개"} mode={"back"} />
-
+            <div className={"mt-16"}></div>
             <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
 
                 {activeTab === "phoneDirectory" ? (
