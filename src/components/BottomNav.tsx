@@ -1,21 +1,21 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import { FaHome, FaSearch, FaEnvelope, FaUser } from 'react-icons/fa';
 
 interface BottomNavProps {
-    activeIndex: number; // 현재 활성화된 항목의 인덱스
+    activeIndex?: number; // 활성화된 항목의 인덱스, 기본값 설정 가능
 }
 
 // 아이콘 경로 정의
 const navItems = [
-    { name: '메인', href: '/main', icon: '/icons/home.png' },
-    { name: '검색', href: '/search', icon: '/icons/Search.png' },
-    { name: '쪽지', href: '/chat', icon: '/icons/Message.png' },
-    { name: '마이페이지', href: '/mypage', icon: '/icons/User.png' },
+    { name: '메인', href: '/main', icon: FaHome },
+    { name: '검색', href: '/search', icon: FaSearch },
+    { name: '쪽지', href: '/chat', icon: FaEnvelope },
+    { name: '마이페이지', href: '/mypage', icon: FaUser },
 ];
 
-export default function BottomNav({ activeIndex }: BottomNavProps) {
+export default function BottomNav({ activeIndex = 0 }: BottomNavProps) {
     return (
         <nav
             className="fixed bottom-0 left-0 right-0 bg-white border-t"
@@ -26,22 +26,16 @@ export default function BottomNav({ activeIndex }: BottomNavProps) {
         >
             <ul className="flex justify-around items-center h-full">
                 {navItems.map((item, index) => {
-                    const isActive = activeIndex === index; // 인덱스를 비교해 활성화 상태 확인
+                    const isActive = activeIndex === index; // 현재 활성화된 아이템인지 확인
+                    const Icon = item.icon;
                     return (
                         <li key={item.name} className="flex-1 text-center">
-                            <Link href={item.href}>
-                                <div
-                                    className={`flex flex-col items-center ${
+                            <Link href={item.href} className="flex justify-center items-center h-full">
+                                <Icon
+                                    className={`text-2xl transition-all duration-200 ${
                                         isActive ? 'text-sky-500' : 'text-gray-400'
                                     }`}
-                                >
-                                    <Image
-                                        src={item.icon}
-                                        alt={item.name}
-                                        width={24} // 이미지 크기 설정
-                                        height={24}
-                                    />
-                                </div>
+                                />
                             </Link>
                         </li>
                     );
