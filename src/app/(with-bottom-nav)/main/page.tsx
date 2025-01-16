@@ -30,8 +30,8 @@ const menuItems = [
     { label: "비교과", href: "/main/boards/extracurricular", icon: "/icons/extracurricular.png" },
     { label: "정보대 소개", href: "/main/info/department-info", icon: "/icons/info.png" },
     { label: "중고책", href: "/main/boards/used-books", icon: "/icons/used-books.png" },
-    { label: "익명 채팅방", href: "/main/anonymous/anonymous-chat", icon: "/icons/anonymous-chat.png" },
-    { label: "익명 투표", href: "/main/anonymous/anonymous-vote", icon: "/icons/anonymous-vote.png" },
+    { label: "익명 채팅방", href: "/chat", icon: "/icons/anonymous-chat.png" },
+    { label: "익명 투표", href: "/vote", icon: "/icons/anonymous-vote.png" },
     { label: "수강 후기", href: "/main/info/course-reviews", icon: "/icons/course-reviews.png" },
 ];
 

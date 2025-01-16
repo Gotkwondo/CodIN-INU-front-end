@@ -9,20 +9,22 @@ import { GetVoteDetail } from '@/api/getVoteDetail';
 import { useParams } from 'next/navigation';
 import { GetComments } from '@/api/getComments';
 import { PostComments } from '@/api/postComment';
+import { PostLike } from '@/api/postLike';
+
 
 export default function VoteDetail() {
     const router = useRouter();
-    const authContext = useContext(AuthContext);
-    const chatBoxRef = useRef<HTMLDivElement | null>(null);
     const [accessToken, setToken] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [hasMore, setHasMore] = useState<boolean>(true);
     const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: number[] }>({});
     const [vote, setVote] = useState<vote | null>(null);
     const { voteId } = useParams();
     const [checked, setChecked] = useState<boolean>(false);
     const [comment, setComment] = useState<string>("");
     const [commentList, setCommentList] = useState<any>([]);
+    const [isPostLiked, setIsPostLiked] = useState<{ [key: string]: boolean }>({}); // 수정: 객체로 변경    const [isCommentLiked, setIsCommentLiked] = useState<{ [key: string]: boolean }>({});
+    const [likeCount, setLikeCount] = useState<number>(0);
+    const [isCommentLiked, setIsCommentLiked] = useState<{ [key: string]: boolean }>({});
+    
     interface comment{
         anonymous: boolean,
         content : string,
@@ -112,14 +114,25 @@ export default function VoteDetail() {
 
         const getVoteData = async () => {
             try {
-                console.log('토큰:', accessToken);
                 const voteData = await GetVoteDetail(accessToken, voteId);
                 const commentData = await GetComments(accessToken, voteId);
-                console.log(voteData.data);
-                console.log(commentData.dataList);
-                const newCommentData = commentData.dataList || [];
-                setCommentList((prev)=>[...newCommentData, ...prev]);
-                setVote(voteData.data);
+
+                const voteInfo = voteData.data;
+                setLikeCount(voteInfo.likeCount);
+                setVote(voteInfo);
+
+                const initialCommentLikes = commentData.dataList.reduce((acc: { [key: string]: boolean }, comment: comment) => {
+                    acc[comment._id] = comment.userInfo.like;
+                    return acc;
+                }, {});
+                setIsCommentLiked(initialCommentLikes);
+
+                const initialPostLike = {
+                    [voteInfo._id]: voteInfo.userInfo.like, // 게시물에 대한 좋아요 상태 설정
+                };
+                setIsPostLiked(initialPostLike); // 게시물 좋아요 상태 초기화
+
+                setCommentList(commentData.dataList || []);
             } catch (error) {
                 console.log("투표 정보를 불러오지 못했습니다.", error);
             }
@@ -128,6 +141,41 @@ export default function VoteDetail() {
         getVoteData();
     }, [accessToken, voteId]);
 
+    const handleLike = async (e: React.MouseEvent<HTMLDivElement>, likeType: string, id: string) => {
+        e.preventDefault();
+
+        if (likeType === 'POST') {
+            // 게시글 좋아요 상태 반전
+            const newLikeStatus = !isPostLiked[id]; // 해당 게시물의 좋아요 상태를 반전
+            try {
+                await PostLike(accessToken, likeType, id);
+                setIsPostLiked((prevState) => ({ ...prevState, [id]: newLikeStatus })); // 상태 업데이트
+                
+                setLikeCount((prevCount) => newLikeStatus ? prevCount + 1 : prevCount - 1);
+            } catch (error) {
+                console.error("좋아요 처리 실패", error);
+            }
+        } else if (likeType === 'COMMENT') {
+            // 댓글 좋아요 상태 반전
+            const newLikeStatus = !isCommentLiked[id];
+            try {
+                await PostLike(accessToken, likeType, id);
+                setIsCommentLiked((prev) => ({ ...prev, [id]: newLikeStatus }));
+
+                setCommentList((prevComments) => {
+                    return prevComments.map((comment: comment) => {
+                        if (comment._id === id) {
+                            return { ...comment, likeCount: newLikeStatus ? comment.likeCount + 1 : comment.likeCount - 1 };
+                        }
+                        return comment;
+                    });
+                });
+            } catch (error) {
+                console.error("댓글 좋아요 처리 실패", error);
+            }
+        }
+    };
+    
     const CommentList = ({commentList}: CommentListProps) =>{
         return(
             <div id='commentCont'>
@@ -144,7 +192,7 @@ export default function VoteDetail() {
                     </div>
                     </div>
                     <div id='heartCont'>
-                    <div id='likeIcon'></div>
+                    <div id='likeIcon' className={isCommentLiked[comment._id] ? 'liked' : ''} onClick={(e) => handleLike(e, 'COMMENT', comment._id)} ></div>
                     <div id='likeCount'>{comment.likeCount}
 
                     </div>
@@ -211,7 +259,7 @@ export default function VoteDetail() {
     return (
         <div className="vote">
             <div id="topCont">
-                <button id="back_btn" onClick={() => router.push('/main')}>{`<`}</button>
+                <button id="back_btn" onClick={() => router.push('/vote')}>{`<`}</button>
                 <div id="title">{`<게시글/>`}</div>
                 <button id="searchBtn"></button> 
             </div>
@@ -285,7 +333,7 @@ export default function VoteDetail() {
                                 <div id='viewCount'>{vote.hits}</div>
                             </div>
                             <div id='like'>
-                                <div id='likeIcon'></div>
+                            <div id='likeIcon' className={isPostLiked[vote._id] ? 'liked' : ''} onClick={(e) => handleLike(e, 'POST', vote._id)} ></div>
                                 <div id='likeCount'>{vote.likeCount}</div>
                             </div>
                             <div id='comment'>
