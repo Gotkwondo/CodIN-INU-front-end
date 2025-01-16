@@ -62,11 +62,6 @@ const CreatePostPage = () => {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            const files = Array.from(e.target.files);
-            setPostImages(files);
-
-            const previewUrls = files.map((file) => URL.createObjectURL(file));
-            setPreviewImages(previewUrls);
         }
     };
 
@@ -97,11 +92,18 @@ const CreatePostPage = () => {
                     "Content-Type": "multipart/form-data",
                 },
             });
-console.log(response)
-            alert("게시물이 성공적으로 업로드되었습니다!");
+
+            const postId = response?.data?.data?.postId;
+            if (postId) {
+                const newPath = `/main/boards/${boardName}?postId=${postId}`;
+                router.push(newPath); // 생성 성공 후 리다이렉트
+            }
+
             previewImages.forEach((url) => URL.revokeObjectURL(url));
             setPreviewImages([]);
             setPostImages([]);
+            const refreshToken = localStorage.getItem('refresh-token');
+            localStorage.setItem('accessToken', refreshToken);
         } catch (error: any) {
             if (axios.isAxiosError(error)) {
                 const errorMessage = error.response?.data?.message || `HTTP ${error.response?.status}: 응답 없음`;

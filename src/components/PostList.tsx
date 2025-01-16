@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PostItem from "@/components/PostItem";
 import Modal from "@/components/Modal";
 import PostDetailClient from "@/app/(with-bottom-nav)/main/boards/[boardName]/[postId]/PostDetailClient";
@@ -14,6 +14,16 @@ const PostList: React.FC<{ posts: any[]; boardName: string; boardType: string }>
     const router = useRouter();
     const searchParams = useSearchParams();
     const [selectedPost, setSelectedPost] = useState<any | null>(null);
+
+    useEffect(() => {
+        const postId = searchParams.get("postId"); // URL에서 postId 가져오기
+        if (postId) {
+            const post = posts.find((p) => p._id === postId); // postId와 매칭되는 게시물 찾기
+            if (post) {
+                setSelectedPost(post); // 게시물 설정
+            }
+        }
+    }, [searchParams, posts]);
 
     const openModal = (post: any) => {
         setSelectedPost(post);

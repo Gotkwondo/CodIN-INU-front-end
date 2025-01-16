@@ -14,6 +14,7 @@ export interface Board {
 }
 
 export const boardData: Record<string, Board> = {
+
     'need-help': {
         name: '구해요',
         tabs: [
