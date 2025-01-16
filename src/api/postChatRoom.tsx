@@ -52,7 +52,7 @@ export const startChat = async (title, userId) => {
         console.log("채팅방 생성이 완료되었습니다", response);
 
         if (response?.data.data.chatRoomId) {
-            window.location.href = `/chatRoom/${response.id}`;
+            window.location.href = `/chat`;
         } else {
             throw new Error("Chat room ID is missing in the response.");
         }
