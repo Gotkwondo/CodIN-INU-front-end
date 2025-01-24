@@ -1,0 +1,56 @@
+"use client";
+
+import React, { useState, useRef, useEffect } from "react";
+import MenuItem from "./MenuItem";
+
+interface MenuProps {
+    children: React.ReactNode;
+}
+
+const Menu = ({ children }: MenuProps) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const toggleMenu = () => {
+        setIsOpen((prev) => !prev);
+    };
+
+    return (
+        <div className="relative" ref={menuRef}>
+            <button
+                onClick={toggleMenu}
+                className="text-gray-600 hover:text-gray-900 flex items-center"
+                aria-label="메뉴"
+            >
+                <img
+                    src="/icons/menu.svg"
+                    alt="메뉴"
+                    className="w-5 h-5"
+                />
+            </button>
+
+            {isOpen && (
+                <div className="absolute top-8 right-0 bg-white text-gray-800 shadow-lg rounded-lg w-40 z-20">
+                    <ul className="flex flex-col">{children}</ul>
+                </div>
+            )}
+        </div>
+    );
+};
+
+Menu.Item = MenuItem;
+
+export default Menu;

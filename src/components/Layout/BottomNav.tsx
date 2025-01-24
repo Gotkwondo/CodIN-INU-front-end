@@ -18,7 +18,7 @@ const navItems = [
 export default function BottomNav({ activeIndex = 0 }: BottomNavProps) {
     return (
         <nav
-            className="fixed bottom-0 left-0 right-0 bg-white border-t"
+            className="fixed bottom-0  bg-white border-t left-0 right-0 w-full"
             style={{
                 boxShadow: '0 -2px 4px rgba(0, 0, 0, 0.1)', // 얇고 가벼운 그림자
                 height: '60px', // 컴팩트한 높이
