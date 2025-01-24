@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useContext, useState, useEffect, useRef } from 'react';
 import BottomNav from "@/components/BottomNav";
 import { AuthContext } from '@/context/AuthContext';
-import { GetVoteData } from '@/api/getVoteData';
-import { PostVoting } from '@/api/postVoting';
+import { GetVoteData } from '@/api/vote/getVoteData';
+import { PostVoting } from '@/api/vote/postVoting';
 
 export default function Vote() {
     const router = useRouter();

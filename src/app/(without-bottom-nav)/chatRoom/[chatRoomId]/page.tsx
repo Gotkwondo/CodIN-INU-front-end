@@ -4,12 +4,14 @@ import { useRouter, useParams} from 'next/navigation';
 import { useContext, useState, useEffect, useRef, FormEvent } from 'react';
 import BottomNav from "@/components/BottomNav";
 import { AuthContext } from '@/context/AuthContext';
-import { GetChatData } from '@/api/getChatData';
+import { GetChatData } from '@/api/chat/getChatData';
 import * as StompJs from '@stomp/stompjs';
 import { Stomp } from '@stomp/stompjs';
 import  SockJS from 'sockjs-client';
-import { deleteRoom } from '@/api/deleteRoom';
-import { PostChatImage } from '@/api/postChatImage';
+import { deleteRoom } from '@/api/chat/deleteRoom';
+import { PostChatImage } from '@/api/chat/postChatImage';
+import MessageForm from '@/components/MessageForm';
+
 // 메시지 타입 정의
 interface Message {
     id: string;
@@ -38,11 +40,8 @@ export default function ChatRoom() {
     if (!authContext) {
         throw new Error('AuthContext를 사용하려면 AuthProvider로 감싸야 합니다.');
     }
-    const { Auth } = authContext;
-    const [chatList, setChatList] = useState<any[]>([]); // 타입을 더 구체적으로 지정할 수 있음
     const [accessToken, setToken] = useState<string>('');
    const [title, setTitle] = useState<string>('');
-   const [content, setContent] = useState<string>('');
     const [messages, setMessages] = useState<Message[]>([]); // Message 타입 배열
     const [page, setPage] = useState<number>(0);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -248,112 +247,111 @@ const handleScroll = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-    const MessageForm = ({ onMessageSubmit }: MessageFormProps) => {
-        const [messageContent, setMessageContent] = useState<string>('');
-        const [time, setTime] = useState<string>('');
-        const inputRef = useRef<HTMLInputElement | null>(null); 
-        const getCurrentTime = (date:Date) => {
-            const year = date.getFullYear();
-            const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 1을 더해야 함
-            const day = date.getDate().toString().padStart(2, '0');
-            const hours = date.getHours().toString().padStart(2, '0');
-            const minutes = date.getMinutes().toString().padStart(2, '0');
-            const seconds = date.getSeconds().toString().padStart(2, '0');
+    // const MessageForm = ({ onMessageSubmit }: MessageFormProps) => {
+    //     const [messageContent, setMessageContent] = useState<string>('');
+    //     const [time, setTime] = useState<string>('');
+    //     const inputRef = useRef<HTMLInputElement | null>(null); 
+    //     const getCurrentTime = (date:Date) => {
+    //         const year = date.getFullYear();
+    //         const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 1을 더해야 함
+    //         const day = date.getDate().toString().padStart(2, '0');
+    //         const hours = date.getHours().toString().padStart(2, '0');
+    //         const minutes = date.getMinutes().toString().padStart(2, '0');
+    //         const seconds = date.getSeconds().toString().padStart(2, '0');
         
-            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-        };
+    //         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    //     };
 
-        const handleSubmit = (e: FormEvent) => {
-            e.preventDefault();
+    //     const handleSubmit = (e: FormEvent) => {
+    //         e.preventDefault();
 
-            const currentTime = new Date();
-            const formattedTime = getCurrentTime(currentTime)
+    //         const currentTime = new Date();
+    //         const formattedTime = getCurrentTime(currentTime)
             
-            const message: Message = {
-                content: messageContent,
-                me: true,
-                senderId: myId,
-                id: '',
-                createdAt: formattedTime,
-                contentType: 'TEXT',
-            };
-            if (imageFile) {
-                // 이미지가 선택되었으면 Base64로 변환하여 메시지에 포함
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                  const imageBase64 = reader.result as string;
-                  const imageMessage: Message = {
-                    ...message,
-                    content: imageBase64,
-                    contentType: 'IMAGE' // 이미지 URL을 추가
-                  };
-                  onMessageSubmit(imageMessage); // 이미지 메시지 전송
-                  PostChatImage(accessToken, imageFile);
-                  console.log('이미지 파일 보냄');
-                  setImageFile(null); // 이미지 파일 상태 초기화
-                };
-                reader.readAsDataURL(imageFile); // 파일을 Base64로 읽음
-            } else {   
-                setContent(messageContent);
-                 onMessageSubmit(message); // 일반 텍스트 메시지 전송
-            }
+    //         const message: Message = {
+    //             content: messageContent,
+    //             me: true,
+    //             senderId: myId,
+    //             id: '',
+    //             createdAt: formattedTime,
+    //             contentType: 'TEXT',
+    //         };
+    //         if (imageFile) {
+    //             // 이미지가 선택되었으면 Base64로 변환하여 메시지에 포함
+    //             const reader = new FileReader();
+    //             reader.onloadend = () => {
+    //               const imageBase64 = reader.result as string;
+    //               const imageMessage: Message = {
+    //                 ...message,
+    //                 content: imageBase64,
+    //                 contentType: 'IMAGE' // 이미지 URL을 추가
+    //               };
+    //               onMessageSubmit(imageMessage); // 이미지 메시지 전송
+    //               PostChatImage(accessToken, imageFile);
+    //               console.log('이미지 파일 보냄');
+    //               setImageFile(null); // 이미지 파일 상태 초기화
+    //             };
+    //             reader.readAsDataURL(imageFile); // 파일을 Base64로 읽음
+    //         } else {   
+    //              onMessageSubmit(message); // 일반 텍스트 메시지 전송
+    //         }
       
          
            
-        };
+    //     };
 
-        const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-            if (e.target.files) {
-              const file = e.target.files[0]; 
-              setImageFile(file); // 선택한 파일 상태 업데이트
+    //     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //         if (e.target.files) {
+    //           const file = e.target.files[0]; 
+    //           setImageFile(file); // 선택한 파일 상태 업데이트
 
-              // Base64 변환하여 미리보기 설정
-              const reader = new FileReader();
-              reader.onloadend = () => {
-                  setImagePreview(reader.result as string);
-              };
-              reader.readAsDataURL(file);
-            }    
-          };
+    //           // Base64 변환하여 미리보기 설정
+    //           const reader = new FileReader();
+    //           reader.onloadend = () => {
+    //               setImagePreview(reader.result as string);
+    //           };
+    //           reader.readAsDataURL(file);
+    //         }    
+    //       };
 
 
-        return (
-         <div id='imagePrevCont'>
-                    {imagePreview && (   
-            <div className="image-preview">
-                <button id='imgPrevDelete' onClick={() => {setImagePreview(null); setImageFile(null)}}>x</button> {/* 미리보기 제거 버튼 */}
-             <img id='imagePrev' src={imagePreview} alt="미리보기 이미지" />
-             </div>
-    )}
-            <div id='inputCont'>
+    //     return (
+    //      <div id='imagePrevCont'>
+    //                 {imagePreview && (   
+    //         <div className="image-preview">
+    //             <button id='imgPrevDelete' onClick={() => {setImagePreview(null); setImageFile(null)}}>x</button> {/* 미리보기 제거 버튼 */}
+    //          <img id='imagePrev' src={imagePreview} alt="미리보기 이미지" />
+    //          </div>
+    // )}
+    //         <div id='inputCont'>
             
-                 <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          style={{ display: 'none' }}
-          ref={inputRef}
-        />
-        <button
-          id="imageSubmit"
-          onClick={() => inputRef.current?.click()} // 이미지 파일 선택
-        ></button>
-            <form onSubmit={handleSubmit} id='messagesendForm' autoComplete='off'>
-                <input
-                    id='messageInput'
-                    type="text"
-                    value={messageContent}
-                    onChange={(e) => setMessageContent(e.target.value)}
-                    placeholder="메시지를 입력하세요"
-                    autoFocus
+    //              <input
+    //       type="file"
+    //       accept="image/*"
+    //       onChange={handleImageUpload}
+    //       style={{ display: 'none' }}
+    //       ref={inputRef}
+    //     />
+    //     <button
+    //       id="imageSubmit"
+    //       onClick={() => inputRef.current?.click()} // 이미지 파일 선택
+    //     ></button>
+    //         <form onSubmit={handleSubmit} id='messagesendForm' autoComplete='off'>
+    //             <input
+    //                 id='messageInput'
+    //                 type="text"
+    //                 value={messageContent}
+    //                 onChange={(e) => setMessageContent(e.target.value)}
+    //                 placeholder="메시지를 입력하세요"
+    //                 autoFocus
                    
-                />
-                <button type="submit" id='sendBtn'></button>
-            </form>
-            </div>
-            </div>
-        );
-    };
+    //             />
+    //             <button type="submit" id='sendBtn'></button>
+    //         </form>
+    //         </div>
+    //         </div>
+    //     );
+    // };
 
 
     const exitRoom = async(chatRoomId: string | string[] ) => {
@@ -412,7 +410,7 @@ const handleScroll = () => {
                 <MessageList messages={messages} />
             </div>
             <div id='divider'></div>
-            <MessageForm onMessageSubmit={handleMessageSubmit} />
+            <MessageForm onMessageSubmit={handleMessageSubmit} myId={myId} accessToken={accessToken} imageFile={imageFile} setImageFile={setImageFile} />
         </div>
     );
 

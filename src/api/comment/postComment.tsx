@@ -1,16 +1,16 @@
 import axios, {AxiosResponse} from 'axios';
-import { PostReissue } from './postReissue';
+import { PostReissue } from '../user/postReissue';
 
 const BASE_URL = 'https://www.codin.co.kr/api';
 
-export const PostLike = async (accessToken:string, likeType:string, id:string): Promise<any> => {
+export const PostComments = async (accessToken:string, postId:string | string[], content:string, anonymous:boolean): Promise<any> => {
     axios.defaults.withCredentials = true;
     try{
         const response: AxiosResponse<any> = await axios.post(
-            `${BASE_URL}/likes`,
+            `${BASE_URL}/comments/${postId}`,
             {
-                likeType : likeType,
-                id: id
+                content : content,
+                anonymous: anonymous
             },
            { headers: {
              Authorization: ` ${accessToken}`
@@ -27,7 +27,7 @@ export const PostLike = async (accessToken:string, likeType:string, id:string): 
             console.error('401 Unauthorized: 토큰이 유효하지 않거나 만료되었습니다.');
             const refreshToken = localStorage.getItem('refresh-token');
             localStorage.setItem('accessToken', refreshToken);
-            PostLike(refreshToken, likeType, id);
+            PostComments(refreshToken, postId, content, anonymous);
 
           }
         } else if (error.request) {

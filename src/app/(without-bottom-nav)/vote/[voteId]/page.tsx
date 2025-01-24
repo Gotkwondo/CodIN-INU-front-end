@@ -4,12 +4,12 @@ import { useRouter } from 'next/navigation';
 import { useContext, useState, useEffect, useRef } from 'react';
 import BottomNav from "@/components/BottomNav";
 import { AuthContext } from '@/context/AuthContext';
-import { PostVoting } from '@/api/postVoting';
-import { GetVoteDetail } from '@/api/getVoteDetail';
+import { PostVoting } from '@/api/vote/postVoting';
+import { GetVoteDetail } from '@/api/vote/getVoteDetail';
 import { useParams } from 'next/navigation';
-import { GetComments } from '@/api/getComments';
-import { PostComments } from '@/api/postComment';
-import { PostLike } from '@/api/postLike';
+import { GetComments } from '@/api/comment/getComments';
+import { PostComments } from '@/api/comment/postComment';
+import { PostLike } from '@/api/like/postLike';
 
 
 export default function VoteDetail() {

@@ -9,7 +9,7 @@ import { ko } from 'date-fns/locale';  // 한글 로케일 임포트
 import React from 'react';
 import { newDate } from 'react-datepicker/dist/date_utils';
 import TimePicker from 'react-time-picker';
-import { PostVote } from '../../../../api/postVote';
+import { PostVote } from '../../../../api/vote/postVote';
 
 export default function Vote() {
     const router = useRouter();

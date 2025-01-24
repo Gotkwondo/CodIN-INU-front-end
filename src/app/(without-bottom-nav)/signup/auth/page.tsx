@@ -3,7 +3,7 @@
 import '../signup.css';
 import {useState, useEffect} from 'react';
 import { useRouter } from 'next/navigation';
-import { PostMailCheck } from '@/api/postMailCheck';
+import { PostMailCheck } from '@/api/user/postMailCheck';
 import { MdMarkEmailUnread } from 'react-icons/md';
 
 export default function SignupAuth() {

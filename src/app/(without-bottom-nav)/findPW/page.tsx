@@ -1,7 +1,7 @@
 'use client'
 import './findPW.css';
-import { PostMailPW } from '@/api/postMailPW';
-import { PostPwCheck } from '@/api/postPwCheck';
+import { PostMailPW } from '@/api/user/postMailPW';
+import { PostPwCheck } from '@/api/user/postPwCheck';
 import { useRouter } from 'next/navigation';
 import { useContext, useState, useEffect } from 'react';
 

@@ -3,7 +3,7 @@ import '../signup.css';
 import { useRouter } from 'next/navigation';
 import { UserContext } from '@/context/UserContext';
 import { useContext, useState, useEffect } from 'react';
-import { PostSignup } from '@/api/postSignup';
+import { PostSignup } from '@/api/user/postSignup';
 
 export default function SignupProfile() {
   const router = useRouter();

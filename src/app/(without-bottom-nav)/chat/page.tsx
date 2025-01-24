@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useContext, useState, useEffect } from 'react';
 import BottomNav from "@/components/BottomNav";
 import { AuthContext } from '@/context/AuthContext';
-import { GetChatRoomData } from '@/api/getChatRoomData';
+import { GetChatRoomData } from '@/api/chat/getChatRoomData';
 
 export default function Chat() {
     const router = useRouter();

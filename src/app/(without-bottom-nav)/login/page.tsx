@@ -2,7 +2,7 @@
 import './login.css';
 import { useRouter } from 'next/navigation';
 import React, { useState, useContext, useEffect } from 'react';
-import { PostLogin } from '@/api/postLogin';
+import { PostLogin } from '@/api/user/postLogin';
 import { AuthContext } from '@/context/AuthContext';
 
 export default function LoginPage() {

@@ -1,7 +1,7 @@
 'use client';
 import { ReactNode, useEffect, useRef, useState } from "react";
 import ReportModal from "./ReportModal"; // ReportModal 컴포넌트 임포트
-import { PostChatRoom } from "@/api/postChatRoom";
+import { PostChatRoom } from "@/api/chat/postChatRoom";
 import { boardData } from "@/data/boardData"; // ReportModal 컴포넌트 임포트
 
 

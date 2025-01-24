@@ -1,6 +1,6 @@
 'use client'
 import './signup.css';
-import { PostMail } from '@/api/postMail';
+import { PostMail } from '@/api/user/postMail';
 import { useRouter } from 'next/navigation';
 import { UserContext } from '@/context/UserContext';
 import { useContext, useState } from 'react';
