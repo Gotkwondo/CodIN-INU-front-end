@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import BottomNav from "@/components/Layout/BottomNav";
-import Header from "@/components/Layout/Header";
+import Header from "@/components/Layout/header/Header";
 
 export default function MyPage() {
     const [userData, setUserData] = useState(null);
@@ -59,10 +59,20 @@ export default function MyPage() {
             </div>
         );
     }
+    const navigateToMain = () => {
+        console.log("메인 페이지로 이동");
+    };
 
+    const handleMenuClick = (menuName: string) => {
+        alert(`선택: ${menuName}`);
+    };
     return (
         <div className="w-full min-h-screen bg-white p-4 mt-10">
-            <Header title={"마이페이지"} mode = "none"/>
+            <Header>
+                <Header.Title>마이페이지</Header.Title>
+            </Header>
+
+
             {/* 사용자 정보 섹션 */}
             <div className="flex items-center justify-between px-4 py-8">
                 {/* 프로필 이미지 */}

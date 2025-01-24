@@ -1,10 +1,10 @@
 "use client";
 // 정보대 소개 페이지
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Tabs from "@/components/Layout/Tabs";
 import Link from "next/link";
-import Header from "@/components/Layout/Header"; // Link 추가
+import Header from "@/components/Layout/header/Header.tsx"; // Link 추가
 
 export default function DepartmentInfoPage() {
     const [activeTab, setActiveTab] = useState("phoneDirectory");
@@ -76,13 +76,17 @@ export default function DepartmentInfoPage() {
     }, [activeTab]);
 
     return (
-        <div className="p-4 bg-gray-100 min-h-screen">
-            <Header title={"정보대 소개"} mode={"back"} />
+        <div className="bg-gray-100 min-h-screen">
+            <Header>
+                <Header.Title>학과 소개</Header.Title>
+                <Header.BackButton  onClick={navigateToMain} />
+            </Header>
+
             <div className={"mt-16"}></div>
             <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
 
                 {activeTab === "phoneDirectory" ? (
-                    <ul className="grid grid-cols-2 gap-4 mt-4">
+                    <ul className="grid grid-cols-2 gap-4 m-4">
                         {departments.map((department) => (
                             <li key={department.id}>
                                 <Link href={`./department-info/${department.departmentName}`}>
