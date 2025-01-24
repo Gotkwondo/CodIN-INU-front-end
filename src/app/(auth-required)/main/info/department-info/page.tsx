@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Tabs from "@/components/Layout/Tabs";
 import Link from "next/link";
-import Header from "@/components/Layout/header/Header.tsx"; // Link 추가
+import Header from "@/components/Layout/header/Header"; // Link 추가
 
 export default function DepartmentInfoPage() {
     const [activeTab, setActiveTab] = useState("phoneDirectory");
