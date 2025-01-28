@@ -6,7 +6,7 @@ import Link from "next/link";
 import PostList from "@/components/board/PostList";
 import { boardData } from "@/data/boardData";
 import { Post } from "@/interfaces/Post";
-import axios from "axios";
+import apiClient from "@/api/clients/apiClient"; // <-- apiClient import
 
 import BoardLayout from "@/components/Layout/BoardLayout";
 
@@ -39,14 +39,10 @@ const BoardPage: FC = () => {
 
     // 게시물 요청 함수
     const fetchPosts = async (pageNumber: number) => {
+        // 이미 요청 중이면 중복 요청 방지
         if (isFetching.current) return;
 
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) {
-                console.error("토큰이 없습니다. 로그인이 필요합니다. 로그인페이지로");
-            }
-
             const activePostCategory =
                 tabs.find((tab) => tab.value === activeTab)?.postCategory || "";
 
@@ -55,18 +51,13 @@ const BoardPage: FC = () => {
             setIsLoading(true);
             isFetching.current = true;
 
-            const response = await axios.get(
-                "https://www.codin.co.kr/api/posts/category",
-                {
-                    headers: {
-                        Authorization: token,
-                    },
-                    params: {
-                        postCategory: activePostCategory,
-                        page: pageNumber,
-                    },
-                }
-            );
+            // apiClient 사용
+            const response = await apiClient.get("/posts/category", {
+                params: {
+                    postCategory: activePostCategory,
+                    page: pageNumber,
+                },
+            });
 
             if (response.data.success) {
                 const contents = Array.isArray(response.data.data.contents)
@@ -86,9 +77,7 @@ const BoardPage: FC = () => {
             }
         } catch (error: any) {
             console.error("API 호출 오류:", error);
-            if (error.status === 401) {
-                window.location.href = "/login"; // 로그인 페이지로 리다이렉트
-            }
+            // 401 에러 등의 처리는 apiClient 내부 인터셉터에서 처리 가능
         } finally {
             setIsLoading(false);
             isFetching.current = false;
@@ -100,10 +89,10 @@ const BoardPage: FC = () => {
         const initializeBoard = async () => {
             setIsLoading(true);
             try {
-                setPosts([]); // 초기화
+                setPosts([]); // 기존 게시물 목록 초기화
                 setPage(0);
                 setHasMore(true);
-                await fetchPosts(0); // 첫 번째 데이터 로드
+                await fetchPosts(0); // 첫 페이지부터 로드
             } catch (error) {
                 console.error("초기화 실패:", error);
             } finally {
@@ -137,7 +126,7 @@ const BoardPage: FC = () => {
     // page 변경 시 새로운 데이터 요청
     useEffect(() => {
         if (page >= 0) {
-            console.log("페이지 변경: 새 데이터 요청", "페이지:", page);
+            console.log("페이지 변경: 새 데이터 요청 ->", page);
             fetchPosts(page);
         }
     }, [page]);
@@ -151,15 +140,15 @@ const BoardPage: FC = () => {
                 setActiveTab(tab);
             }}
         >
-            {/* children으로 PostList와 기타 UI를 렌더 */}
+            {/* 게시물 리스트 */}
             <PostList posts={posts} boardName={boardName} boardType={boardType} />
 
-            {/* 로딩 표시 */}
+            {/* 로딩 상태 표시 */}
             {isLoading && (
                 <div className="text-center my-4 text-gray-500">로딩 중...</div>
             )}
 
-            {/* 데이터가 없을 때 메시지 */}
+            {/* 데이터가 없을 때 안내 메시지 */}
             {!hasMore && !isLoading && posts.length === 0 && (
                 <div className="text-center my-4 text-gray-500">
                     게시물이 없습니다.
