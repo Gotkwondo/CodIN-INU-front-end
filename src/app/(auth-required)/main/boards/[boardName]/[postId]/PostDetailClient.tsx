@@ -1,13 +1,12 @@
-//D:\IdeaProjects\front-end\src\app\(auth-required)\main\boards\[boardName]\[postId]\page.tsx
+// D:\IdeaProjects\front-end\src\app\(auth-required)\main\boards\[boardName]\[postId]\page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
-import Image from "next/image";
 import { Post } from "@/interfaces/Post";
+import apiClient from "@/api/clients/apiClient"; // 공통 apiClient 불러오기
 import CommentSection from "@/components/board/CommentSection";
-import { FaEye, FaHeart, FaRegCommentDots, FaBookmark } from "react-icons/fa";
 import ZoomableImageModal from "@/components/modals/ZoomableImageModal";
+import { FaEye, FaHeart, FaRegCommentDots, FaBookmark } from "react-icons/fa";
 
 interface PostDetailClientProps {
     postId: string;
@@ -18,27 +17,11 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-
-
+    // 게시물 데이터를 가져오는 함수
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                const token = localStorage.getItem("accessToken");
-                if (!token) {
-                    setError("로그인이 필요합니다.");
-                    window.location.href = "/login";
-                    setLoading(false);
-                    return;
-                }
-
-                const response = await axios.get(`https://www.codin.co.kr/api/posts/${postId}`, {
-                    headers: {
-                        Authorization: token,
-                    },
-                });
-
-                console.log("Response Data:", response.data);
-
+                const response = await apiClient.get(`/posts/${postId}`);
                 if (response.data.success) {
                     setPost(response.data.data);
                 } else {
@@ -55,55 +38,37 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
         fetchPost();
     }, [postId]);
 
-
+    // 좋아요 및 북마크 토글 함수
     const toggleAction = async (action: "like" | "bookmark") => {
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) {
-                console.error("토큰이 없습니다.");
-                return;
-            }
-
-            // API 요청 데이터 및 URL 설정
-            const url =
-                action === "like"
-                    ? "https://www.codin.co.kr/api/likes"
-                    : `https://www.codin.co.kr/api/scraps/${postId}`;
+            // API 요청 URL 및 데이터 설정
+            const url = action === "like" ? "/likes" : `/scraps/${postId}`;
             const requestData =
-                action === "like" ? { likeType: "POST", id: post._id } : undefined;
+                action === "like" ? { likeType: "POST", id: post?._id } : undefined;
 
             // API 호출
-            const response = await axios.post(url, requestData, {
-                headers: {
-                    Authorization: token,
-                    "Content-Type": "application/json",
-                },
-            });
+            const response = await apiClient.post(url, requestData);
 
-            console.log(`${action === "like" ? "좋아요" : "북마크"} 응답:`, response.data);
-
-            if (response.data.success) {
-                if (post) {
-                    setPost({
-                        ...post,
-                        userInfo: {
-                            ...post.userInfo,
-                            [action === "like" ? "like" : "scrap"]: !post.userInfo[action === "like" ? "like" : "scrap"],
-                        },
-                        likeCount:
-                            action === "like"
-                                ? post.userInfo.like
-                                    ? post.likeCount - 1
-                                    : post.likeCount + 1
-                                : post.likeCount,
-                        scrapCount:
-                            action === "bookmark"
-                                ? post.userInfo.scrap
-                                    ? post.scrapCount - 1
-                                    : post.scrapCount + 1
-                                : post.scrapCount,
-                    });
-                }
+            if (response.data.success && post) {
+                setPost({
+                    ...post,
+                    userInfo: {
+                        ...post.userInfo,
+                        [action === "like" ? "like" : "scrap"]: !post.userInfo[action === "like" ? "like" : "scrap"],
+                    },
+                    likeCount:
+                        action === "like"
+                            ? post.userInfo.like
+                                ? post.likeCount - 1
+                                : post.likeCount + 1
+                            : post.likeCount,
+                    scrapCount:
+                        action === "bookmark"
+                            ? post.userInfo.scrap
+                                ? post.scrapCount - 1
+                                : post.scrapCount + 1
+                            : post.scrapCount,
+                });
             } else {
                 console.error(response.data.message || `${action === "like" ? "좋아요" : "북마크"} 실패`);
             }
@@ -112,8 +77,7 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
         }
     };
 
-
-
+    // 로딩 상태 표시
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
@@ -122,6 +86,7 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
         );
     }
 
+    // 에러 상태 표시
     if (error) {
         return (
             <div className="flex items-center justify-center min-h-screen">
@@ -130,6 +95,7 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
         );
     }
 
+    // 게시물이 없는 경우 처리
     if (!post) {
         return (
             <div className="flex items-center justify-center min-h-screen">
@@ -138,6 +104,7 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
         );
     }
 
+    // 렌더링
     return (
         <div className="bg-white min-h-screen p-1">
             <div className="flex items-center space-x-4 mb-4">
@@ -196,7 +163,7 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                 </button>
 
             </div>
-            <CommentSection postId={postId} postName={post.title}/>
+            <CommentSection postId={postId} postName={post.title} />
         </div>
     );
 }
