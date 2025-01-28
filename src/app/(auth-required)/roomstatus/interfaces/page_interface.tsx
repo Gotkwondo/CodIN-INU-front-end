@@ -1,4 +1,4 @@
-interface Lecture {
+export interface Lecture {
     lectureNm: string;   // 강의명
     professor: string;   // 교수님 성함
     roomNum: number;     // 강의실 번호

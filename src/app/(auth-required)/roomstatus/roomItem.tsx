@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { roomItemProps } from "./interface/roomItem_interface";
+import { roomItemProps } from "./interfaces/roomItem_interface";
 
 
 const RoomItem: React.FC<roomItemProps> = ({ RoomName, RoomStatusList }) => {
@@ -13,7 +13,7 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, RoomStatusList }) => {
             <div className="time-table">
                 <div className="flex w-full gap-[4px]">
                     {[9, 10, 11, 12, 1, 2, 3, 4, 5].map((number) => (
-                        <p key={number} className="flex-1 ml-[4px] text-[#808080] font-regular text-[12px]">
+                        <p key={number} className="flex-1 text-[#808080] font-regular text-[12px]">
                             {number}
                         </p>
                     ))}

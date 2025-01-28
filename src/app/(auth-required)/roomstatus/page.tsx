@@ -7,7 +7,7 @@ import { Suspense } from 'react'
 import Header from "@/components/Layout/header/Header";
 import SmRoundedBtn from "@/components/buttons/smRoundedBtn";
 import RoomItem from "./roomItem";
-import { LectureDict } from "./interface/page_interface";
+import { Lecture, LectureDict } from "./interfaces/page_interface";
 
 const RoomStatus: FC = () => {
 
@@ -37,6 +37,7 @@ const RoomStatus: FC = () => {
         if(localStorage.getItem("roomStatusUpdatedAt") === day){
             if(roomStatus[0] === null){
                 const rs = JSON.parse(localStorage.getItem("roomStatus"));
+                console.log(rs);
                 setRoomStatus(rs);
             }
             return;
@@ -103,6 +104,42 @@ const RoomStatus: FC = () => {
         )
     }
 
+
+    const getTimeTableData = (listOfLecture : Lecture[]) => {   
+        let lecture:Lecture;
+        let timeTable = Array.from({ length: 36 }, () => 0)
+        for(lecture of listOfLecture){
+
+            const start = lecture.startTime;
+            const end = lecture.endTime;
+
+            const time = ["09", "10", "11", "12", "13", "14", "15", "16", "17","18"];
+            const startPointer = time.indexOf(start.split(":")[0]);
+            const endPointer = time.indexOf(end.split(":")[0]);
+
+            const startMin = parseInt(start.split(":")[1]);
+            const endMin = parseInt(end.split(":")[1]);
+
+            if( startPointer >= 0 && endPointer < 10){
+                for(let i = startPointer; i <= endPointer; i++){
+                    for(let j = 0 ; j <= 4; j ++){
+                        if(i > startPointer && i< endPointer){
+                            timeTable[i*4+j] = 1;
+                        }
+                        else if(i === startPointer && j*15 >= startMin){
+                            timeTable[i*4+j] = 1;
+                        }else if(i === endPointer && j*15 <= endMin){
+                            timeTable[i*4+j] = 1;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return timeTable;
+    }
+    
+
     return (
         <Suspense>
         <div className={"w-full h-full"}>
@@ -127,22 +164,12 @@ const RoomStatus: FC = () => {
                     Object.entries(roomStatus[floor-1]).map(([roomNum, status]) => {
                         return (
                             <div key={roomNum} className="flex flex-col mx-[20px] my-[24px] gap-[48px]">
-                                <RoomItem RoomName={roomNum+"호"} RoomStatusList={Array.from({ length: 36 }, () => 0)} />
+                                <RoomItem RoomName={roomNum+"호"} RoomStatusList={getTimeTableData(status)} />
                             </div>
                         );
                     })
                 }
-                {/*<div className="flex flex-col mx-[20px] my-[24px] gap-[48px]">
-                    <RoomItem RoomName="101호" RoomStatusList={Array.from({ length: 36 }, () => 0)} />
-                </div>
-
-                <div className="flex flex-col mx-[20px] my-[24px] gap-[48px]">
-                    <RoomItem RoomName="102호" RoomStatusList={Array.from({ length: 36 }, () => 0)} />
-                </div>
-
-                <div className="flex flex-col mx-[20px] my-[24px] gap-[48px]">
-                    <RoomItem RoomName="103호" RoomStatusList={Array.from({ length: 36 }, () => 0)} />
-                </div> */}
+                
             </div>
 
             <BottomNav activeIndex={1} />
