@@ -1,13 +1,10 @@
 "use client";
 
 import React from "react";
+import { roomItemProps } from "./interface/roomItem_interface";
 
-interface RoomItemProps {
-    RoomName: string;
-    RoomStatusList: (0 | 1)[];
-}
 
-const RoomItem: React.FC<RoomItemProps> = ({ RoomName, RoomStatusList }) => {
+const RoomItem: React.FC<roomItemProps> = ({ RoomName, RoomStatusList }) => {
     return (
         <div className="flex flex-col gap-[12px]">
 
