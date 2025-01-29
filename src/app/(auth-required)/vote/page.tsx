@@ -6,6 +6,7 @@ import BottomNav from "@/components/Layout/BottomNav";
 import { AuthContext } from '@/context/AuthContext';
 import { GetVoteData } from '@/api/vote/getVoteData';
 import { PostVoting } from '@/api/vote/postVoting';
+import Header from '@/components/Layout/header/Header';
 
 export default function Vote() {
     const router = useRouter();
@@ -226,11 +227,11 @@ export default function Vote() {
 
     return (
         <div className="vote">
-            <div id="topCont">
-                <button id="back_btn"  onClick={()=> router.push('/main')}>{`<`}</button>
-                <div id="title">{`<익명 투표/>`}</div>
-                <button id="searchBtn"></button>
-            </div>
+            <Header>
+                <Header.BackButton/>
+                <Header.Title>{`<익명 투표/>`}</Header.Title>
+                <Header.SearchButton onClick={() => console.log("검색 버튼 클릭")} />
+            </Header>
             <div id="tag">{`<ul>`}</div>
 
             <div id='VoteListCont' ref={chatBoxRef} onScroll={handleScroll}>

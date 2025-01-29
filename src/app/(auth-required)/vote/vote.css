@@ -143,7 +143,7 @@
     }
     #tag{
         align-self: flex-start;
-        margin-top: 7px;
+        margin-top: 94px;
         margin-left: 23px;
         margin-bottom: 16px ;
         width: 33px;
@@ -272,7 +272,7 @@
         font-weight: 500;
         font-size: 12px;
         line-height: 17px;
-        margin-top: 15px;
+        margin-top: 94px;
 
         color: #666666;
         
@@ -457,7 +457,7 @@
         flex-direction: row;
         align-self: flex-start;
         margin-left: 21px;
-        margin-top: 6px;
+        margin-top: 94px;
         margin-bottom: 0px;
     }
 

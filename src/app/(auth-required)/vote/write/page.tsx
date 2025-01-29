@@ -10,6 +10,7 @@ import React from 'react';
 import { newDate } from 'react-datepicker/dist/date_utils';
 import TimePicker from 'react-time-picker';
 import { PostVote } from '../../../../api/vote/postVote';
+import Header from '@/components/Layout/header/Header';
 
 export default function Vote() {
     const router = useRouter();
@@ -121,12 +122,10 @@ export default function Vote() {
 
      return (
             <div className="vote">
-                <div id="topCont">
-                    <button id="back_btn"  onClick={()=> router.push('/vote')}>{`<`}</button>
-                    <div id="title">{`<글쓰기/>`}</div>
-                    <button id="searchBtn" style={{backgroundImage:'none'}}></button>
-
-                </div>
+                <Header>
+                    <Header.BackButton/>
+                    <Header.Title>{`<글쓰기/>`}</Header.Title>
+                </Header>
                 <input id="write_content" placeholder='내용을 입력하세요' onChange={handleContentChange}></input>
                 <div id='voteCont_write'>
                     <input id="write_title" placeholder='투표 제목' onChange={handletitleChange}></input>

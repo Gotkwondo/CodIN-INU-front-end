@@ -12,7 +12,7 @@ import { deleteRoom } from '@/api/chat/deleteRoom';
 import { PostChatImage } from '@/api/chat/postChatImage';
 import MessageForm from '@/components/chat/MessageForm';
 import MessageList from '@/components/chat/MessageList';
-
+import Header from '@/components/Layout/header/Header';
 // 메시지 타입 정의
 interface Message {
     id: string;
@@ -208,31 +208,15 @@ const handleScroll = () => {
 
     return (
         <div className='chatroom'>
-            <div id='topCont'>
-                <button id='backBtn' onClick={() => router.push('/chat')}>{`<`}</button>
-                <div id='title'>{`<${title}/>`}</div>
-                <button id='ect'  onClick={toggleMenu}>...
-                                       
-                </button> 
-                 {isMenuOpen && (
-                            <div className="menuCont">
-                                   <ul className="listBox">
-                                      {/* 메뉴 아이템 주석 처리 */}
-                                      <li className="btn1" onClick={()=>exitRoom(chatRoomId)}> 
-                                        방 나가기
-                                    </li>
-                                    {/*}
-                                    <li className="btn2">
-                                         차단하기
-                                    </li>
-                                     <li className="btn3">
-                                        알림끄기
-                                       </li>*/}
-                                </ul>
-                               </div>
-                        )}
-            </div>
-           
+            <Header>
+                <Header.BackButton/>
+                <Header.Title> {`<구해요/>`}</Header.Title>
+                <Header.Menu>
+                    <Header.MenuItem onClick={() => exitRoom(chatRoomId)}>
+                        방 나가기
+                    </Header.MenuItem>
+                </Header.Menu>
+            </Header>
             <div id='chatBox' ref={chatBoxRef} onScroll={handleScroll}>
             {isLoading && <div className="loading">Loading...</div>}
                 <MessageList messages={messages} myId={myId} />

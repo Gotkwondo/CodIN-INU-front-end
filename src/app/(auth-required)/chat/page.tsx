@@ -5,6 +5,7 @@ import { useContext, useState, useEffect } from 'react';
 import BottomNav from "@/components/Layout/BottomNav";
 import { AuthContext } from '@/context/AuthContext';
 import { GetChatRoomData } from '@/api/chat/getChatRoomData';
+import Header from '@/components/Layout/header/Header';
 
 export default function Chat() {
     const router = useRouter();
@@ -89,11 +90,11 @@ export default function Chat() {
 
     return (
         <div className='chat'>
-            <div id='topCont'>
-                <button id='back_btn' onClick={() => router.push('/main')}>{`<`}</button>
-                <div id='title'>{`<쪽지/>`}</div>
-                <button id='searchBtn'></button>
-            </div>
+            <Header>
+                <Header.BackButton />
+                <Header.Title>쪽지</Header.Title>
+                <Header.SearchButton onClick={() => console.log("검색 버튼 클릭")} />
+            </Header>
             <div id='tag'>{`<ul>`}</div>
             <ChatList chatList={chatList} />
             <div id='tag1'>{`</ul>`}</div>
