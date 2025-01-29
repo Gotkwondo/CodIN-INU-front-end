@@ -75,15 +75,9 @@ export default function LoginPage() {
             <div id="inputBox">
                 <input
                     id="email"
-<<<<<<< HEAD
-                    placeholder="학번"
-                    value={email}
-                    onChange={handleEmailChange}
-=======
                     placeholder="inu.ac.kr 포탈 아이디"
                     value={studentId}
                     onChange={handleStudentIdChange}
->>>>>>> 3886562cd0ca15cef4ff379255184a76ace3dda2
                 />
                 <input
                     id="password"
