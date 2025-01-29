@@ -7,6 +7,8 @@ interface MessageProps {
     contentType: string;
     myId: string;
   }
+
+  import ZoomableImageModal from "../modals/ZoomableImageModal";
   
   const Message = ({ id, content, createdAt, contentType, myId }: MessageProps) => {
     const messageClass = id !== myId ? 'message-left' : 'message-right';
@@ -21,7 +23,11 @@ interface MessageProps {
         <div id={id} className={`message_${messageClass}`}>
           <div className="message-text">
             {contentType === 'IMAGE' ? (
-              <img src={content} alt="첨부된 이미지" className="message-image" />
+                <section >
+                <ZoomableImageModal
+                    images={content} 
+              />
+              </section>
             ) : (
               content
             )}

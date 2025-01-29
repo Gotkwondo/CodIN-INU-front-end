@@ -75,7 +75,7 @@ export default function Chat() {
                         <div id="profile"></div>
                         <div id="main_cont">
                             <div id="name">{data.roomName}</div>
-                            <div id="ment">{data.message}</div>
+                            <div id="ment"> {data.message.startsWith('data:image') ? ( `( 사진 )`) : ( data.message)}</div>
                         </div>
                         <div id="ect">
                             <div id="time">
@@ -92,7 +92,7 @@ export default function Chat() {
         <div className='chat'>
             <Header>
                 <Header.BackButton />
-                <Header.Title>쪽지</Header.Title>
+                <Header.Title>{`<쪽지/>`}</Header.Title>
                 <Header.SearchButton onClick={() => console.log("검색 버튼 클릭")} />
             </Header>
             <div id='tag'>{`<ul>`}</div>

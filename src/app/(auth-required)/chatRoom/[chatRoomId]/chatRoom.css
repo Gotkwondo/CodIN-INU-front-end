@@ -305,6 +305,9 @@
 
     }
 
+    .message-image{
+        border-radius: 15px;
+    }
     #imageSubmit{
 
 
@@ -448,6 +451,37 @@
             background-repeat: no-repeat;
             background-size: contain;
             margin-right: 12px;
+        }
+
+        #imagePrevCont{
+            width:100% ;
+            height: 200px;
+            display: flex !important;
+            flex-direction: column;
+            position: fixed;
+            bottom: 0px;
+            align-items: center;
+           
+        }
+    
+        .image-preview{
+            width: 100%;
+            height: 120px;
+            position: fixed;
+            bottom: 81px;
+            display: flex !important;
+            flex-direction: column;
+            padding-right: 15px;
+            background-color: #5c5c5c55;
+          
+        }
+        #imagePrev{
+            width: auto;
+            height: 80px;
+            align-self: flex-end;
+            background-size: contain;
+            margin-bottom: 5px;
+           
         }
     }
 }

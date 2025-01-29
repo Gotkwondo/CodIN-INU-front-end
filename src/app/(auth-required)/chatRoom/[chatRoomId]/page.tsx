@@ -50,17 +50,11 @@ export default function ChatRoom() {
     const chatBoxRef = useRef<HTMLDivElement | null >(null);
     const [stompClient, setStompClient] = useState<any>(null);
    const [myId, setMyID] = useState<string>('');
-    const [isMenuOpen, setMenuOpen] = useState(false);
     const [imageFile, setImageFile] = useState<File | null>(null);
-   
     const headers = {
         'Authorization': accessToken
     }
-    const toggleMenu = () => {
-        setMenuOpen((prev) => !prev); // 메뉴 열기/닫기
-    };
-  
-
+   
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
         if (token) {
@@ -217,9 +211,9 @@ const handleScroll = () => {
                     </Header.MenuItem>
                 </Header.Menu>
             </Header>
-            <div id='chatBox' ref={chatBoxRef} onScroll={handleScroll}>
+            <div id='chatBox' ref={chatBoxRef} onScroll={handleScroll} style={{ zIndex: imageFile ? 0 : 3 }}>
             {isLoading && <div className="loading">Loading...</div>}
-                <MessageList messages={messages} myId={myId} />
+                <MessageList messages={messages} myId={myId}  />
             </div>
             <div id='divider'></div>
             <MessageForm onMessageSubmit={handleMessageSubmit} myId={myId} accessToken={accessToken} imageFile={imageFile} setImageFile={setImageFile} />
