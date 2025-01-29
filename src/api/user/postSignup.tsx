@@ -2,40 +2,26 @@ import axios, { AxiosResponse } from 'axios';
 
 const BASE_URL = 'https://www.codin.co.kr/api';
 
-interface UserData {
-  email: string;
-  password: string;
-  studentId: string;
-  name: string;
-  nickname: string;
-  profileImageUrl: string;  // File로 수정
-  department: string;
-}
 
-export const PostSignup = async (userData: UserData): Promise<any> => {
-  console.log("전송 데이터", userData);
+export const PostSignup = async (studentId:string, nickname:string, profileImage:File ): Promise<any> => {
+  console.log("전송 데이터",studentId,nickname );
 
-  try {
+  try { 
 
     const formData = new FormData();
-    const userCreateRequestDto = {
-      email: userData.email,
-      password: userData.password,
-      studentId: userData.studentId,
-      name: userData.name,
-      nickname: userData.nickname,
-      department: userData.department,
-    };
+    const userNicknameRequestDto ={
+      nickname: nickname
+    }
 
-    formData.append('userCreateRequestDto', JSON.stringify(userCreateRequestDto));
+    formData.append('userNicknameRequestDto ', JSON.stringify(userNicknameRequestDto));
 
-    const userImage =  "userData.profileImageUrl";
+    const userImage =  profileImage;
 
     formData.append('userImage', userImage);
 
     // axios 요청 보내기
     const response: AxiosResponse<any> = await axios.post(
-      `${BASE_URL}/users/signup`, 
+      `${BASE_URL}/auth/signup/${studentId}`, 
       formData,  // JSON 문자열로 전송
       {
         headers: {

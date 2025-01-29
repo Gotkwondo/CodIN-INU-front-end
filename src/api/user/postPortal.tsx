@@ -2,12 +2,12 @@ import axios, {AxiosResponse} from 'axios';
 
 const BASE_URL = 'https://www.codin.co.kr/api';
 
-export const PostLogin = async (studentId:string, password:string): Promise<any> => {
+export const PostPortal = async (studentId:string, password:string): Promise<any> => {
     console.log("전송 데이터", studentId, password);
     axios.defaults.withCredentials = true;
     try{
         const response: AxiosResponse<any> = await axios.post(
-            `${BASE_URL}/auth/login`,
+            `${BASE_URL}/auth/portal`,
             {
                 studentId: studentId,
                 password: password
