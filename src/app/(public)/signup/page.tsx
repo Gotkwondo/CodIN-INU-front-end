@@ -32,7 +32,11 @@ export default function SignupPage() {
     const handleNext = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
         e.preventDefault();
         if (!studentId || !password) {
+<<<<<<< HEAD
             alert('학번과 비밀번호를 입력해주세요.');
+=======
+            alert('이메일과 비밀번호를 입력해주세요.');
+>>>>>>> 3886562cd0ca15cef4ff379255184a76ace3dda2
             return;
         }
 
@@ -61,14 +65,22 @@ export default function SignupPage() {
             <div id="inputBox">
                 <input
                     id="email"
+<<<<<<< HEAD
                     placeholder="학번"
+=======
+                    placeholder="inu.ac.kr 포탈 아이디"
+>>>>>>> 3886562cd0ca15cef4ff379255184a76ace3dda2
                     value={studentId}
                     onChange={handleStudentIdChange}
                 />
                 <input
                     id="password"
                     type="password"
+<<<<<<< HEAD
                     placeholder="포탈 비밀번호"
+=======
+                    placeholder="비밀번호"
+>>>>>>> 3886562cd0ca15cef4ff379255184a76ace3dda2
                     value={password}
                     onChange={handlePWChange}
                 />
