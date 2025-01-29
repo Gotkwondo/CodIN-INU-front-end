@@ -1,5 +1,7 @@
 // Message.tsx
 'use client'
+import { useState } from 'react'; 
+import ZoomableImageModal from "../modals/ZoomableImageModal";
 interface MessageProps {
     id: string;
     content: string;
@@ -8,11 +10,13 @@ interface MessageProps {
     myId: string;
   }
 
-  import ZoomableImageModal from "../modals/ZoomableImageModal";
+
   
   const Message = ({ id, content, createdAt, contentType, myId }: MessageProps) => {
     const messageClass = id !== myId ? 'message-left' : 'message-right';
-    
+  
+
+
     return (
       <div className={messageClass}>
         {id !== myId ? (
@@ -24,6 +28,7 @@ interface MessageProps {
           <div className="message-text">
             {contentType === 'IMAGE' ? (
                 <section >
+                    
                 <ZoomableImageModal
                     images={content} 
               />

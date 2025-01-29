@@ -62,6 +62,7 @@ const MessageForm = ({ onMessageSubmit, myId, accessToken, imageFile, setImageFi
                 };
                 onMessageSubmit(imageMessage); // 이미지 메시지 전송
                 setImageFile(null); // 이미지 파일 상태 초기화
+                setImagePreview(null);
             };
             reader.readAsDataURL(imageFile);
         } else {

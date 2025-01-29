@@ -124,13 +124,14 @@ useEffect(() => {
                         content: receivedMessage.body.data.content,
                         createdAt: receivedMessage.body.data.createdAt,
                         me: false,
-                        contentType: receivedMessage.body.data.contentTyp,
+                        contentType: receivedMessage.body.data.contentType,
                     },
                 ]);
             }
         });
     });
 }, [accessToken, stompClient, myId, chatRoomId]);
+
 
 
 const fetchChattingData = async (page: number) => {
@@ -204,7 +205,7 @@ const handleScroll = () => {
         <div className='chatroom'>
             <Header>
                 <Header.BackButton/>
-                <Header.Title> {`<구해요/>`}</Header.Title>
+                <Header.Title> {`<${title}/>`}</Header.Title>
                 <Header.Menu>
                     <Header.MenuItem onClick={() => exitRoom(chatRoomId)}>
                         방 나가기
