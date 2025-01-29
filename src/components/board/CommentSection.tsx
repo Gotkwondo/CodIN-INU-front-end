@@ -10,7 +10,7 @@ import {
 } from "react-icons/fa";
 
 // chat API 불러오기
-import { startChat } from "@/api/postChatRoom";
+import { startChat } from "@/api/chat/postChatRoom";
 
 interface Comment {
     _id: string;

@@ -2,7 +2,7 @@
 
 import { ReactNode, useState } from "react";
 import ReportModal from "../modals/ReportModal";
-import { PostChatRoom } from "@/api/postChatRoom";
+import { PostChatRoom } from "@/api/chat/postChatRoom";
 import { boardData } from "@/data/boardData";
 import Header from "@/components/Layout/header/Header";
 

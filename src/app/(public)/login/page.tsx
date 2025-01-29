@@ -2,12 +2,12 @@
 import './login.css';
 import { useRouter } from 'next/navigation';
 import React, { useState, useContext, useEffect } from 'react';
-import { PostLogin } from '@/api/postLogin';
+import { PostLogin } from '@/api/user/postLogin';
 import { AuthContext } from '@/context/AuthContext';
 
 export default function LoginPage() {
     const router = useRouter();
-    const [email, setEmail] = useState<string>("");
+    const [studentId, setStudentId] = useState<string>("");
     const [rememberMe, setRememberMe] = useState<boolean>(false);
     const [password, setPassword] = useState<string>("");
     const authContext = useContext(AuthContext);
@@ -18,8 +18,8 @@ export default function LoginPage() {
 
     const { Auth, updateAuth } = authContext;
 
-    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setEmail(e.target.value);
+    const handleStudentIdChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        setStudentId(e.target.value);
     };
 
     const handlePWChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -32,13 +32,13 @@ export default function LoginPage() {
 
     const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
         e.preventDefault();
-        if (!email || !password) {
+        if (!studentId || !password) {
             alert('이메일과 비밀번호를 입력해주세요.');
             return;
         }
 
         try {
-            const response = await PostLogin(email, password);
+            const response = await PostLogin(studentId, password);
             console.log(`로그인 결과: ${response}`);
             const token = response.headers['authorization'];
             const refreshToken = response.headers['x-refresh-token']
@@ -75,9 +75,9 @@ export default function LoginPage() {
             <div id="inputBox">
                 <input
                     id="email"
-                    placeholder="이메일"
-                    value={email}
-                    onChange={handleEmailChange}
+                    placeholder="inu.ac.kr 포탈 아이디"
+                    value={studentId}
+                    onChange={handleStudentIdChange}
                 />
                 <input
                     id="password"

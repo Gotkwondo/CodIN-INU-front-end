@@ -33,6 +33,8 @@
             background-size: contain;
             margin-top: 177px;
         }
+
+     
         #inputBox{
             display: flex;
             flex-direction: column;
