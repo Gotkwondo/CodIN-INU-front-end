@@ -9,9 +9,7 @@ export default function SignupProfile() {
   const router = useRouter();
   const [profileImg, setProfileImg] = useState<File | null>(null); // 프로필 이미지 상태 수정
   const [imgPrev, setImgPrev] = useState<string>('');
-  const [name, setName] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
-  const [email, setEmail] = useState<string>('');
   const [studentId, setStudentId] = useState<string>('');
   const userContext = useContext(UserContext);
 
@@ -22,7 +20,7 @@ export default function SignupProfile() {
   const { User, updateUser } = userContext;
 
   const handleImageChange = (e:React.ChangeEvent<HTMLInputElement>):void => {
-    const files = e.target.files;
+   
     if (e.target.files) {
       const file = e.target.files[0]; 
       setProfileImg(file);
