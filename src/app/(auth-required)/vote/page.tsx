@@ -232,14 +232,18 @@ export default function Vote() {
                 <Header.Title>{`<익명 투표/>`}</Header.Title>
                 <Header.SearchButton onClick={() => console.log("검색 버튼 클릭")} />
             </Header>
+
             <div id="tag">{`<ul>`}</div>
 
             <div id='VoteListCont' ref={chatBoxRef} onScroll={handleScroll}>
                 {isLoading && <div className="loading">Loading...</div>}
                 <VoteList voteList={voteList} />
             </div>
+
             <div id="tag1">{`</ul>`}</div>
+
             <button id="writeBtn"  onClick={()=> router.push('/vote/write')}></button>
+            
             <BottomNav activeIndex={0}/>
         </div>
     );
