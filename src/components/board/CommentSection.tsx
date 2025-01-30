@@ -178,29 +178,47 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
 
     //수정된 좋아요 토글 함수
     const [isCommentLiked, setIsCommentLiked] = useState<{ [key: string]: boolean }>({});
+    const [repLikeCount, setRepLikecount] = useState<{ [key: string]: number}>({});
+
      const handleLike = async (e: React.MouseEvent<HTMLButtonElement>, likeType:string, id: string) => {
             e.preventDefault();
            
                 // 댓글 좋아요 상태 반전
                 const newLikeStatus = !isCommentLiked[id];
+            
                 try {
                     await PostLike(likeType , id);
-                    setIsCommentLiked((prev) => ({ ...prev, [id]: newLikeStatus }));
-    
-                    setComments((prevComments) => {
-                        return prevComments.map((Comment: Comment) => {
-                            if (Comment._id === id) {
-                                // 댓글 좋아요 상태 반영
-                                return {
-                                    ...Comment,
-                                    likeCount: newLikeStatus ? Comment.likeCount + 1 : Comment.likeCount - 1,
-                                    userInfo: { like: !Comment.userInfo.like },
-                                };
-                            }
+                   // 상태 변경
+        setIsCommentLiked((prev) => {
+            const updated = { ...prev, [id]: newLikeStatus };
+            console.log('상태 변경', updated);  // 상태 변경 후 로그 출력
+            return updated;
+        });
+
+        setRepLikecount((prev) => {
+            const updatedLikeCount = prev[id] ? prev[id] + (newLikeStatus ? 1 : -1) : (newLikeStatus ? 1 : 0); // likeCount 계산
+            const updated = { ...prev, [id]: updatedLikeCount };
+            console.log('likeCount 변경됨', updated);  // 상태 변경 후 로그 출력
+            return updated;
+        });
+
+        // 댓글 목록 업데이트
+        setComments((prevComments) => {
+            return prevComments.map((Comment: Comment) => {
+                if (Comment._id === id) {
+                    // 댓글 좋아요 상태 반영
+                    console.log('좋아요 수 변경됨',Comment.likeCount)
+                    return {
+                        ...Comment,
+                        likeCount: newLikeStatus ? Comment.likeCount + 1 : Comment.likeCount - 1,
+                        userInfo: { like: !Comment.userInfo.like },
+                    };
+                }
+           
+                return Comment;
+            });
             
-                            return Comment;
-                        });
-                    });
+        });
                 } catch (error) {
                     console.error("댓글 좋아요 처리 실패", error);
                 }
@@ -236,6 +254,17 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
                 }, {});
                 setIsCommentLiked(initialCommentLikes);
                 console.log(initialCommentLikes);
+
+                const initialLikesCount = data.dataList.reduce((acc: { [key: string]: number }, comment: Comment) => {
+                    acc[comment._id] = comment.likeCount;
+
+                    comment.replies?.forEach((subComment) => {
+                        acc[`${subComment._id}`] = subComment.likeCount;
+                    });
+                    return acc;
+                }, {});
+                setRepLikecount(initialLikesCount);
+                console.log(initialLikesCount);
             } else {
                 throw new Error(data.message || "댓글 로드 실패");
             }
@@ -494,7 +523,7 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
                                 <button
                                     onClick={
                                         //async () => {
-                                        // const success = await toggleLike("POST", comment._id);
+                                        // const success = await toggleLike(status, comment._id);
                                         // if (success) {
                                         //     setComments((prevComments) =>
                                         //         prevComments.map((item) =>
@@ -517,11 +546,11 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
                                 >
                                     <FaHeart
                                         className={
-                                            comment.userInfo.like ? "text-red-500 mr-2" : "text-gray-500 mr-2"
+                                            isCommentLiked[comment._id] ? "text-red-500 mr-2" : "text-gray-500 mr-2"
                                         }
                                     />
                                 </button>
-                                {comment.likeCount}
+                                {repLikeCount[comment._id]}
                             </div>
                         </div>
 
