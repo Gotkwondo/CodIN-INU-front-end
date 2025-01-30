@@ -11,6 +11,7 @@ import { GetComments } from '@/api/comment/getComments';
 import { PostComments } from '@/api/comment/postComment';
 import { PostLike } from '@/api/like/postLike';
 import Header from '@/components/Layout/header/Header';
+import CommentSection from '@/components/board/CommentSection';
 
 export default function VoteDetail() {
     const router = useRouter();
@@ -357,7 +358,7 @@ export default function VoteDetail() {
                     </div>
                 )}
             </div>
-                <CommentList commentList={commentList}/>
+                {/* <CommentList commentList={commentList}/>
             <div id='divider_B'></div>
             <div id='inputCont'>
             <div id='anounCont'>
@@ -366,7 +367,9 @@ export default function VoteDetail() {
                     </div>
                 <input id='commentInput' placeholder='댓글을 입력하세요' onChange={handleCommentChange}></input>
                 <button id='commentSend' onClick={handleCommentSend}></button>
-            </div>
+            </div> */}
+
+             <CommentSection postId={voteId.toString()}/>
         </div>
     );
 }

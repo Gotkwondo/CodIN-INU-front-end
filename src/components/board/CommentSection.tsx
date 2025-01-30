@@ -11,7 +11,7 @@ import {
 
 // chat API 불러오기
 import { startChat } from "@/api/chat/postChatRoom";
-
+import { PostLike } from "@/api/like/postLike";
 interface Comment {
     _id: string;
     userId: string;
@@ -20,6 +20,7 @@ interface Comment {
     content: string | null;
     likeCount: number;
     isLiked?: boolean;
+    userInfo : {like: boolean},
     deleted: boolean;
     replies: Comment[];
     createdAt: string;
@@ -173,6 +174,38 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
             return false;
         }
     };
+    
+
+    //수정된 좋아요 토글 함수
+    const [isCommentLiked, setIsCommentLiked] = useState<{ [key: string]: boolean }>({});
+     const handleLike = async (e: React.MouseEvent<HTMLButtonElement>, likeType:string, id: string) => {
+            e.preventDefault();
+           
+                // 댓글 좋아요 상태 반전
+                const newLikeStatus = !isCommentLiked[id];
+                try {
+                    await PostLike(likeType , id);
+                    setIsCommentLiked((prev) => ({ ...prev, [id]: newLikeStatus }));
+    
+                    setComments((prevComments) => {
+                        return prevComments.map((Comment: Comment) => {
+                            if (Comment._id === id) {
+                                // 댓글 좋아요 상태 반영
+                                return {
+                                    ...Comment,
+                                    likeCount: newLikeStatus ? Comment.likeCount + 1 : Comment.likeCount - 1,
+                                    userInfo: { like: !Comment.userInfo.like },
+                                };
+                            }
+            
+                            return Comment;
+                        });
+                    });
+                } catch (error) {
+                    console.error("댓글 좋아요 처리 실패", error);
+                }
+            
+        };
 
     // 댓글 목록 불러오기
     const fetchComments = async () => {
@@ -193,6 +226,16 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
                     content: comment.content || "내용이 없습니다.",
                 }));
                 setComments(validComments);
+                const initialCommentLikes = data.dataList.reduce((acc: { [key: string]: boolean }, comment: Comment) => {
+                    acc[comment._id] = comment.userInfo.like;
+
+                    comment.replies?.forEach((subComment) => {
+                        acc[`${subComment._id}`] = subComment.userInfo.like;
+                    });
+                    return acc;
+                }, {});
+                setIsCommentLiked(initialCommentLikes);
+                console.log(initialCommentLikes);
             } else {
                 throw new Error(data.message || "댓글 로드 실패");
             }
@@ -384,8 +427,8 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
             </div>
         );
 
-    // 댓글(대댓글) 재귀 렌더링
-    const renderComments = (commentList: Comment[], depth = 0) => (
+    //댓글(대댓글) 재귀 렌더링
+    const renderComments = (commentList: Comment[], depth = 0, status:string) => (
         <ul>
             {commentList.map((comment) => (
                 <li
@@ -449,28 +492,32 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
                             {/* 좋아요 수 */}
                             <div className="flex items-center text-xs text-gray-500 mb-2">
                                 <button
-                                    onClick={async () => {
-                                        const success = await toggleLike("POST", comment._id);
-                                        if (success) {
-                                            setComments((prevComments) =>
-                                                prevComments.map((item) =>
-                                                    item._id === comment._id
-                                                        ? {
-                                                            ...item,
-                                                            isLiked: !item.isLiked,
-                                                            likeCount: item.isLiked
-                                                                ? item.likeCount - 1
-                                                                : item.likeCount + 1,
-                                                        }
-                                                        : item
-                                                )
-                                            );
-                                        }
-                                    }}
+                                    onClick={
+                                        //async () => {
+                                        // const success = await toggleLike("POST", comment._id);
+                                        // if (success) {
+                                        //     setComments((prevComments) =>
+                                        //         prevComments.map((item) =>
+                                        //             item._id === comment._id
+                                        //                 ? {
+                                        //                     ...item,
+                                        //                     isLiked: !item.isLiked,
+                                        //                     likeCount: item.isLiked
+                                        //                         ? item.likeCount - 1
+                                        //                         : item.likeCount + 1,
+                                        //                 }
+                                        //                 : item
+                                        //         )
+                                        //     );
+                                        // }
+   
+                                    // }
+                                    //수정된 좋아요 토글
+                                    (e) => handleLike(e, status , comment._id)}
                                 >
                                     <FaHeart
                                         className={
-                                            comment.isLiked ? "text-red-500 mr-2" : "text-gray-500 mr-2"
+                                            comment.userInfo.like ? "text-red-500 mr-2" : "text-gray-500 mr-2"
                                         }
                                     />
                                 </button>
@@ -587,14 +634,16 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
                     )}
 
                     {/* 재귀적으로 대댓글 렌더링 */}
-                    {comment.replies.length > 0 && renderComments(comment.replies, depth + 1)}
+                    {comment.replies.length > 0 && renderComments(comment.replies, depth + 1, 'REPLY')}
                 </li>
             ))}
         </ul>
     );
+   
+    
 
     return (
-        <div className="relative mt-8 mb-28 max-w-2xl mx-auto">
+        <div className="relative mt-8 mb-28 max-w-2xl w-[100%]">
             <h3 className="text-lg font-semibold mb-4 text-gray-800">
                 댓글
                 {/* {postName && <span> - {postName}</span>} */}
@@ -604,7 +653,7 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
             {error && <p className="text-red-500 mb-2">{error}</p>}
 
             {/* 댓글 목록 */}
-            {renderComments(comments)}
+            {renderComments(comments, 0 , 'COMMENT')}
 
             {/* 삭제 모달 */}
             {renderDeleteModal()}
