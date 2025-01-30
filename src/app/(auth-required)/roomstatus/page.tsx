@@ -105,6 +105,7 @@ const RoomStatus: FC = () => {
     const getTimeTableData = (listOfLecture : Lecture[]) => {   
         let lecture:Lecture;
         let timeTable = Array.from({ length: 36 }, () => 0)
+        let boundaryTable = Array.from({ length: 36 }, () => 0)
         for(lecture of listOfLecture){
 
             const start = lecture.startTime;
@@ -117,6 +118,7 @@ const RoomStatus: FC = () => {
             const startMin = parseInt(start.split(":")[1]);
             const endMin = parseInt(end.split(":")[1]);
 
+            let boundary = 0;
             if( startPointer >= 0 && endPointer < 10){
                 for(let i = startPointer; i <= endPointer; i++){
                     for(let j = 0 ; j <= 4; j ++){
@@ -124,16 +126,19 @@ const RoomStatus: FC = () => {
                             timeTable[i*4+j] = 1;
                         }
                         else if(i === startPointer && j*15 >= startMin){
+                            if(boundary === 0){boundaryTable[i*4+j] = 1; boundary = 1;}
                             timeTable[i*4+j] = 1;
                         }else if(i === endPointer && j*15 <= endMin){
                             timeTable[i*4+j] = 1;
+                        }else{
+                            if(boundary===1) {boundaryTable[i*4+j-1] = 1; break;}
                         }
                     }
                 }
             }
         }
         
-        return timeTable;
+        return [timeTable, boundaryTable];
     }
     
 
@@ -146,7 +151,7 @@ const RoomStatus: FC = () => {
                 <Header.Title>강의실 현황</Header.Title>
             </Header>
 
-            <div className="mt-[108px] px-0">
+            <div className="mt-[108px] px-0 overflow-hidden">
 
                 <div className="flex w-full justify-center gap-[7px]">
                     <SmRoundedBtn text="1층" status={floor===1 ? 1: 0} onClick={()=>{ if(floor!==1) setFloor(1) }} />
@@ -159,9 +164,10 @@ const RoomStatus: FC = () => {
                 {
                     roomStatus[floor-1] &&
                     Object.entries(roomStatus[floor-1]).map(([roomNum, status]) => {
+                        const [timeTable, boundaryTable] = getTimeTableData(status);
                         return (
                             <div key={roomNum} className="flex flex-col mx-[20px] my-[24px] gap-[48px]">
-                                <RoomItem RoomName={roomNum+"호"} RoomStatusList={getTimeTableData(status)} />
+                                <RoomItem RoomName={roomNum+"호"} LectureList={status} RoomStatusList={timeTable} BoundaryList={boundaryTable} />
                             </div>
                         );
                     })

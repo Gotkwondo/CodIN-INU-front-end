@@ -2,9 +2,24 @@
 
 import React from "react";
 import { roomItemProps } from "./interfaces/roomItem_interface";
+import RoomItemDetail from "./roomItemDetail";
+import { Lecture } from "./interfaces/page_interface";
 
 
-const RoomItem: React.FC<roomItemProps> = ({ RoomName, RoomStatusList }) => {
+const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusList, BoundaryList }) => {
+
+    const [clicked, setClicked] = React.useState<number>(-1);
+    const [activeIndexList, setActiveIndexList] = React.useState<number[]>([]);
+    const [touchedLecture, setTouchedLecture] = React.useState<Lecture>(null);
+
+    const highlightTouchedLecture = (idx: number) =>{
+        if(idx >= 0){
+            
+        }
+    }
+    const onClickTimeLine = (idx: number) =>{
+        setClicked(idx);
+    }
     return (
         <div className="flex flex-col gap-[12px]">
 
@@ -20,10 +35,13 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, RoomStatusList }) => {
                 </div>
                 <div className="flex gap-[2px] ml-[3px] w-full flex-wrap">
                     {RoomStatusList.map((status, index) => (
-                        <div
+                        <button
                             key={index}
-                            className={`flex-1 h-[12px] ${status ? 'bg-[#0D99FF]' : 'bg-[#EBF0F7]'}`}
-                        ></div>
+                            id={`room-${RoomName}-time-${index}`}  
+                            onTouchStart={()=>onClickTimeLine(index)}
+                            onTouchEnd={()=>onClickTimeLine(-1)}
+                            className={`relative flex-1 h-[12px] ${status ? 'bg-[#0D99FF]' : 'bg-[#EBF0F7]'}`}
+                        ><RoomItemDetail isActive={clicked === index}/></button>
                     ))}
                 </div>
             </div>
