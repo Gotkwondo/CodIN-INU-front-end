@@ -3,14 +3,14 @@ import '../signup.css';
 import { useRouter } from 'next/navigation';
 import { UserContext } from '@/context/UserContext';
 import { useContext, useState, useEffect } from 'react';
-import { PostSignup } from '@/api/postSignup';
+import { PostSignup } from '@/api/user/postSignup';
 
 export default function SignupProfile() {
   const router = useRouter();
-  const [profileImg, setProfileImg] = useState<string>(); // 프로필 이미지 상태 수정
-  const [name, setName] = useState<string>("");
+  const [profileImg, setProfileImg] = useState<File | null>(null); // 프로필 이미지 상태 수정
+  const [imgPrev, setImgPrev] = useState<string>('');
   const [nickname, setNickname] = useState<string>("");
-  const [email, setEmail] = useState<string>('');
+  const [studentId, setStudentId] = useState<string>('');
   const userContext = useContext(UserContext);
 
   if (!userContext) {
@@ -20,17 +20,18 @@ export default function SignupProfile() {
   const { User, updateUser } = userContext;
 
   const handleImageChange = (e:React.ChangeEvent<HTMLInputElement>):void => {
-    const files = e.target.files;
-    if(files && files[0]){
-       const uploadFile = files[0];
+   
+    if (e.target.files) {
+      const file = e.target.files[0]; 
+      setProfileImg(file);
+
        const reader = new FileReader();
-       reader.readAsDataURL(uploadFile);
+       reader.readAsDataURL(file);
        reader.onloadend = () => {
            if (reader.result){
-                setProfileImg(reader.result as string);
+                setImgPrev(reader.result as string);
                 console.log(reader.result as string);
                 console.log(profileImg);
-                updateUser({profileImageUrl : profileImg});
            }
        }
     }
@@ -44,26 +45,20 @@ export default function SignupProfile() {
     updateUser({ nickname: e.target.value });
   };
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setName(e.target.value);
-    updateUser({ name: e.target.value });
-  };
-
   useEffect(() => {
-    const storedEmail = localStorage.getItem("userEmail");
-    if (storedEmail) {
-      setEmail(storedEmail);
-      updateUser({ email: storedEmail });
+    const storedId = User.studentId;
+    if (storedId) {
+      setStudentId(storedId);
     }
   }, []);
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
     e.preventDefault();
 
-    if (nickname && name) {
+    if (nickname) {
       try {
        
-        const response = await PostSignup(User);
+        const response = await PostSignup(studentId, nickname, profileImg);
         console.log('회원가입 결과:', response);
         alert('회원가입 완료! 다시 로그인해주세요');
         router.push('/login');
@@ -77,32 +72,19 @@ export default function SignupProfile() {
     }
   };
 
-  useEffect(() => {
-    if (nickname) {
-      updateUser({ nickname });
-    }
-  }, [nickname]);
-
-  useEffect(() => {
-    if (profileImg) {
-      updateUser({ profileImageUrl: profileImg });
-    }
-  }, [nickname, profileImg]);
-
   return (
     <div className='signup'>
-      <div id='back_btn'  onClick={()=> router.push('/signup/info')}>{`<`}</div>
-      <div id='profile_title'>프로필 생성</div>
+      <div id='back_btn'  onClick={()=> router.push('/signup')}>{`<`}</div>
+      <div id='profile_title'>프로필 등록</div>
       <label htmlFor='profileImgBtn1' id='profileImgBtn'
         style={{
-          backgroundImage: profileImg ? `url(${profileImg})` : undefined,
+          backgroundImage: imgPrev ? `url(${imgPrev})` : undefined,
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover'
         }}>
         <input id='profileImgBtn1' type='file' accept='image/*' onChange={handleImageChange} />
       </label>
       <input id='nickname' placeholder='닉네임' value={nickname} onChange={handleNicknameChange} />
-      <input id='name' placeholder='이름' value={name} onChange={handleNameChange} />
       <button id='submit' onClick={handleSubmit}>회원가입</button>
     </div>
   );

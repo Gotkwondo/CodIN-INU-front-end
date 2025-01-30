@@ -4,7 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useContext, useState, useEffect } from 'react';
 import BottomNav from "@/components/Layout/BottomNav";
 import { AuthContext } from '@/context/AuthContext';
-import { GetChatRoomData } from '@/api/getChatRoomData';
+import { GetChatRoomData } from '@/api/chat/getChatRoomData';
+import Header from '@/components/Layout/header/Header';
 
 export default function Chat() {
     const router = useRouter();
@@ -17,8 +18,7 @@ export default function Chat() {
     const { Auth } = authContext;
     const [chatList, setChatList] = useState<any>([]);
     const [accessToken, setToken] = useState<string>('');
-
-    interface ChatData {
+      interface ChatData {
         chatRoomId: string;
         roomName: string;
         message: string;
@@ -75,11 +75,11 @@ export default function Chat() {
                         <div id="profile"></div>
                         <div id="main_cont">
                             <div id="name">{data.roomName}</div>
-                            <div id="ment">{data.message}</div>
+                            <div id="ment"> {data.message.startsWith('data:image') ? ( `( 사진 )`) : ( data.message)}</div>
                         </div>
                         <div id="ect">
                             <div id="time">
-                                {new Date(data.currentMessageDate).toLocaleDateString('ko-KR', options)}
+                                {data.currentMessageDate !== null ? (new Date(data.currentMessageDate).toLocaleDateString('ko-KR', options) ) : ( new Date().toLocaleDateString('ko-KR', options))}
                             </div>
                         </div>
                     </div>
@@ -90,11 +90,11 @@ export default function Chat() {
 
     return (
         <div className='chat'>
-            <div id='topCont'>
-                <button id='back_btn' onClick={() => router.push('/main')}>{`<`}</button>
-                <div id='title'>{`<쪽지/>`}</div>
-                <button id='searchBtn'></button>
-            </div>
+            <Header>
+                <Header.BackButton />
+                <Header.Title>{`<쪽지/>`}</Header.Title>
+                <Header.SearchButton onClick={() => console.log("검색 버튼 클릭")} />
+            </Header>
             <div id='tag'>{`<ul>`}</div>
             <ChatList chatList={chatList} />
             <div id='tag1'>{`</ul>`}</div>

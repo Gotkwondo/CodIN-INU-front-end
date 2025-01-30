@@ -4,13 +4,13 @@ import { useRouter } from 'next/navigation';
 import { useContext, useState, useEffect, useRef } from 'react';
 import BottomNav from "@/components/Layout/BottomNav";
 import { AuthContext } from '@/context/AuthContext';
-import { PostVoting } from '@/api/postVoting';
-import { GetVoteDetail } from '@/api/getVoteDetail';
+import { PostVoting } from '@/api/vote/postVoting';
+import { GetVoteDetail } from '@/api/vote/getVoteDetail';
 import { useParams } from 'next/navigation';
-import { GetComments } from '@/api/getComments';
-import { PostComments } from '@/api/postComment';
-import { PostLike } from '@/api/postLike';
-
+import { GetComments } from '@/api/comment/getComments';
+import { PostComments } from '@/api/comment/postComment';
+import { PostLike } from '@/api/like/postLike';
+import Header from '@/components/Layout/header/Header';
 
 export default function VoteDetail() {
     const router = useRouter();
@@ -258,11 +258,23 @@ export default function VoteDetail() {
             }
     return (
         <div className="vote">
-            <div id="topCont">
-                <button id="back_btn" onClick={() => router.push('/vote')}>{`<`}</button>
-                <div id="title">{`<게시글/>`}</div>
-                <button id="searchBtn"></button>
-            </div>
+            <Header>
+                <Header.BackButton/>
+                <Header.Title>{`<게시글/>`}</Header.Title>
+                <Header.Menu>
+                    <Header.MenuItem onClick={() => console.log("채팅하기 클릭")}>
+                        채팅하기
+                    </Header.MenuItem>
+
+                    <Header.MenuItem onClick={() => console.log("신고하기 클릭")}>
+                        신고하기
+                    </Header.MenuItem>
+
+                    <Header.MenuItem onClick={() => console.log("차단하기 클릭")}>
+                        차단하기
+                    </Header.MenuItem>
+                </Header.Menu>
+            </Header>
 
             <div id='profileCont'>
                 <div id='profileImg'></div>

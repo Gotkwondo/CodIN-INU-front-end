@@ -44,8 +44,8 @@ const Header = ({ children }: HeaderProps) => {
     return (
         <header
             className="
-                flex items-center justify-between
-                px-4 h-14 bg-white shadow-md fixed top-0
+                flex items-end justify-between
+                px-4 h-[82px] bg-white  fixed top-0
                 left-0 right-0 z-10
             "
         >
@@ -57,7 +57,7 @@ const Header = ({ children }: HeaderProps) => {
             {/* 중앙 영역: Title (항상 중앙 고정) */}
             <div
                 className="
-                absolute inset-0 flex items-center justify-center
+                absolute inset-0 flex items-end justify-center
                 pointer-events-none
             "
             >

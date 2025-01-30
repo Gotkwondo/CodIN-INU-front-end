@@ -2,7 +2,7 @@
 import '@/app/(public)/signup/signup.css';
 import { useRouter } from 'next/navigation';
 import { useState, useContext, useEffect } from 'react';
-import { PutPassword } from '@/api/putPassword';
+import { PutPassword } from '@/api/user/putPassword';
 import { useParams } from 'next/navigation';
 
 
