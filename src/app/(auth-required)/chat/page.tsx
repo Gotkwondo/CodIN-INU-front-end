@@ -75,7 +75,7 @@ export default function Chat() {
                         <div id="profile"></div>
                         <div id="main_cont">
                             <div id="name">{data.roomName}</div>
-                            <div id="ment"> {data.message.startsWith('data:image') ? ( `( 사진 )`) : ( data.message)}</div>
+                            <div id="ment"> {data.message && data.message.startsWith('data:image') ? ( `( 사진 )`) : ( data.message || "(메시지 없음)")}</div>
                         </div>
                         <div id="ect">
                             <div id="time">
