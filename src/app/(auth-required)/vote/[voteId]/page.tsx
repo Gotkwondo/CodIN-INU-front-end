@@ -2,13 +2,10 @@
 import '../vote.css';
 import { useRouter } from 'next/navigation';
 import { useContext, useState, useEffect, useRef } from 'react';
-import BottomNav from "@/components/Layout/BottomNav";
-import { AuthContext } from '@/context/AuthContext';
+
 import { PostVoting } from '@/api/vote/postVoting';
 import { GetVoteDetail } from '@/api/vote/getVoteDetail';
 import { useParams } from 'next/navigation';
-import { GetComments } from '@/api/comment/getComments';
-import { PostComments } from '@/api/comment/postComment';
 import { PostLike } from '@/api/like/postLike';
 import Header from '@/components/Layout/header/Header';
 import CommentSection from '@/components/board/CommentSection';
@@ -19,30 +16,11 @@ export default function VoteDetail() {
     const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: number[] }>({});
     const [vote, setVote] = useState<vote | null>(null);
     const { voteId } = useParams();
-    const [checked, setChecked] = useState<boolean>(false);
-    const [comment, setComment] = useState<string>("");
-    const [commentList, setCommentList] = useState<any>([]);
     const [isPostLiked, setIsPostLiked] = useState<{ [key: string]: boolean }>({}); // 수정: 객체로 변경    const [isCommentLiked, setIsCommentLiked] = useState<{ [key: string]: boolean }>({});
     const [likeCount, setLikeCount] = useState<number>(0);
-    const [isCommentLiked, setIsCommentLiked] = useState<{ [key: string]: boolean }>({});
+   
 
-    interface comment{
-        anonymous: boolean,
-        content : string,
-        createdAt : string,
-        deleted : boolean,
-        likeCount : number,
-        nickname : string,
-        replies :  string[],
-        userId : string,
-        userImageUrl : string,
-        userInfo : {like: boolean},
-        _id : string
-    }
-
-    interface CommentListProps{
-        commentList: comment[];
-    }
+   
 
     interface vote {
 
@@ -76,11 +54,6 @@ export default function VoteDetail() {
             console.error("voteId가 URL에 존재하지 않습니다");
         }
     }, [voteId]);
-
-      const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setComment(e.target.value);
-
-      };
 
 
     const handleCheckboxChange = (voteId: string, index: number, multipleChoice: boolean) => {
@@ -116,24 +89,19 @@ export default function VoteDetail() {
         const getVoteData = async () => {
             try {
                 const voteData = await GetVoteDetail(accessToken, voteId);
-                const commentData = await GetComments(accessToken, voteId);
 
                 const voteInfo = voteData.data;
                 setLikeCount(voteInfo.likeCount);
                 setVote(voteInfo);
 
-                const initialCommentLikes = commentData.dataList.reduce((acc: { [key: string]: boolean }, comment: comment) => {
-                    acc[comment._id] = comment.userInfo.like;
-                    return acc;
-                }, {});
-                setIsCommentLiked(initialCommentLikes);
+               
 
                 const initialPostLike = {
                     [voteInfo._id]: voteInfo.userInfo.like, // 게시물에 대한 좋아요 상태 설정
                 };
                 setIsPostLiked(initialPostLike); // 게시물 좋아요 상태 초기화
 
-                setCommentList(commentData.dataList || []);
+    
             } catch (error) {
                 console.log("투표 정보를 불러오지 못했습니다.", error);
             }
@@ -142,6 +110,8 @@ export default function VoteDetail() {
         getVoteData();
     }, [accessToken, voteId]);
 
+
+    //게시글 좋아요 핸들러
     const handleLike = async (e: React.MouseEvent<HTMLDivElement>, likeType: string, id: string) => {
         e.preventDefault();
 
@@ -156,53 +126,11 @@ export default function VoteDetail() {
             } catch (error) {
                 console.error("좋아요 처리 실패", error);
             }
-        } else if (likeType === 'COMMENT') {
-            // 댓글 좋아요 상태 반전
-            const newLikeStatus = !isCommentLiked[id];
-            try {
-                await PostLike(likeType, id);
-                setIsCommentLiked((prev) => ({ ...prev, [id]: newLikeStatus }));
-
-                setCommentList((prevComments) => {
-                    return prevComments.map((comment: comment) => {
-                        if (comment._id === id) {
-                            return { ...comment, likeCount: newLikeStatus ? comment.likeCount + 1 : comment.likeCount - 1 };
-                        }
-                        return comment;
-                    });
-                });
-            } catch (error) {
-                console.error("댓글 좋아요 처리 실패", error);
-            }
+        
         }
     };
 
-    const CommentList = ({commentList}: CommentListProps) =>{
-        return(
-            <div id='commentCont'>
-               {commentList.map((comment, i) => (
-                <div key={i} id='commentIndex'>
-                    <div id='conT3'>
-                    <div id='Com_profileImg'></div>
-                    <div id='ectCont'>
-                        <div id='firstCont'>
-                        <div id='commentNick'>{comment.anonymous ? '익명' : comment.nickname}</div>                        <div id='createdBefore'> • {comment.createdAt}</div>
-                        </div>
-
-                        <div id='comContent'>{comment.content}</div>
-                    </div>
-                    </div>
-                    <div id='heartCont'>
-                    <div id='likeIcon' className={isCommentLiked[comment._id] ? 'liked' : ''} onClick={(e) => handleLike(e, 'COMMENT', comment._id)} ></div>
-                    <div id='likeCount'>{comment.likeCount}
-
-                    </div>
-                    </div>
-                </div>
-               ))}
-            </div>
-        )
-    }
+    // 종료까지 남은 시간 계산 함수
     const calculateDaysLeft = (endDate: string) => {
         const end = new Date(endDate);  // 투표 종료 시간을 Date 객체로 변환
         const now = new Date();  // 현재 시간
@@ -214,6 +142,7 @@ export default function VoteDetail() {
         return daysLeft;
     };
 
+    //투표 실행 핸들러
     const votingHandler = async (e: React.MouseEvent<HTMLButtonElement>, voteId: string) => {
         e.preventDefault();
         try {
@@ -226,6 +155,8 @@ export default function VoteDetail() {
             alert(message);
         }
     };
+
+    //시간 포맷 함수
     const formatDate = (date: Date) => {
         const options: Intl.DateTimeFormatOptions = {
             month: '2-digit',
@@ -237,26 +168,7 @@ export default function VoteDetail() {
         return new Intl.DateTimeFormat('ko-KR', options).format(date);
     };
 
-     const handleChecked = (e:React.MouseEvent<HTMLInputElement>):void =>{
-            if (checked){setChecked(false);}
-            else {setChecked(true);}
-         }
 
-    const handleCommentSend = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
-                e.preventDefault();
-
-                 try {
-
-                                    const response = await PostComments(accessToken, voteId, comment, checked);
-                                    console.log('결과:', response);
-                                    window.location.reload();
-
-                                  } catch (error) {
-                                    console.error("댓글 작성 실패", error);
-                                    const message = error.response.data.message;
-                                    alert(message);
-                                  }
-            }
     return (
         <div className="vote">
             <Header>
@@ -277,22 +189,27 @@ export default function VoteDetail() {
                 </Header.Menu>
             </Header>
 
+            {/* 프로필 */}
             <div id='profileCont'>
                 <div id='profileImg'></div>
                 <div id='ectCont'>
                     <div id='userName'>익명</div>
                     <div id='createdAt'>{vote ? formatDate(new Date(vote.createdAt)) : ''}</div>
                 </div>
-
             </div>
 
-            <div id="voteCont">
+            {/* 스크롤 되는 부분 */}
+            <div id="voteCont"> 
+                {/* 투표 컨테이너 */}
                 {vote && (
                     <div id='voteIndex'>
+
                         <h3 id='voteTitle'>{vote.title}</h3>
+
                         <p id='voteContent'>{vote.content}</p>
+
                         <div id='voteContainer'>
-                            {calculateDaysLeft(vote.poll.pollEndTime) > 0 && !vote.poll.hasUserVoted ? (
+                            {calculateDaysLeft(vote.poll.pollEndTime) > 0 && !vote.poll.hasUserVoted ? ( //투표 기간이 종료되지 않았거나 유저가 아직 투표를 하지 않았을때
                                 <>
                                     <ul id='ulCont'>
                                         {vote.poll.pollOptions.map((option, i) => (
@@ -311,7 +228,9 @@ export default function VoteDetail() {
                                     </ul>
                                     <button id='voteBtn' disabled={selectedOptions[vote._id]?.length === 0} onClick={(e) => votingHandler(e, vote._id)}>투표하기</button>
                                 </>
-                            ) : (
+                            ) 
+                            
+                            : ( // 투표 기간이 만료되었거나 유저가 투표를 완료하였을 때
                                 <div id='conT'>
                                     {vote.poll.pollOptions.map((option, i) => (
                                         <li key={i} id='pollOpCont'>
@@ -325,12 +244,16 @@ export default function VoteDetail() {
                                     ))}
                                 </div>
                             )}
+
+                             {/* 기타 투표 정보 */}
                             <div id='ect'>
                                 <div id='count'>{vote.poll.totalParticipants}명 참여</div>
                                 {vote.poll.multipleChoice && <div id='ismulti'> • 복수투표</div>}
                             </div>
                         </div>
 
+
+                            {/* n일 후 종료 */}
                         <div id='pollEndTime'>
                             {calculateDaysLeft(vote.poll.pollEndTime) > 0 ? (
                                 <>
@@ -340,6 +263,8 @@ export default function VoteDetail() {
                                 '종료됨'
                             )}
                         </div>
+
+                        {/* 뷰, 좋아요, 댓글 수*/}
                         <div id='viewContainer'>
                             <div id='view'>
                                 <div id='viewIcon'></div>
@@ -347,29 +272,23 @@ export default function VoteDetail() {
                             </div>
                             <div id='like'>
                             <div id='likeIcon' className={isPostLiked[vote._id] ? 'liked' : ''} onClick={(e) => handleLike(e, 'POST', vote._id)} ></div>
-                                <div id='likeCount'>{vote.likeCount}</div>
+                                <div id='likeCount'>{likeCount}</div>
                             </div>
                             <div id='comment'>
                                 <div id='commentIcon'></div>
                                 <div id='commentCount'>{vote.commentCount}</div>
                             </div>
                         </div>
+
+
                         <div id='divider'></div>
+
                     </div>
                 )}
-            </div>
-                {/* <CommentList commentList={commentList}/>
-            <div id='divider_B'></div>
-            <div id='inputCont'>
-            <div id='anounCont'>
-                    <input type="checkbox" id="anounBtn" onClick={handleChecked}></input>
-                        <div id='anounMent'>익명</div>
-                    </div>
-                <input id='commentInput' placeholder='댓글을 입력하세요' onChange={handleCommentChange}></input>
-                <button id='commentSend' onClick={handleCommentSend}></button>
-            </div> */}
 
-             <CommentSection postId={voteId.toString()}/>
+                <CommentSection postId={voteId.toString()}/>
+            </div>
+     
         </div>
     );
 }
