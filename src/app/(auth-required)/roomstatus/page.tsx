@@ -44,7 +44,7 @@ const RoomStatus: FC = () => {
         };
         //오늘 강의실 정보 가져온 적 있으면, localstorage에서 꺼내 씀
 
-        const getRoomStatus = async (floor: number) => {
+        const getRoomStatus = async () => {
 
             setIsLoading(true);
 
@@ -53,15 +53,12 @@ const RoomStatus: FC = () => {
                     headers: {
                         Authorization: accessToken,
                     },
-                    params: {
-                        floor: floor,
-                    }
                 });
-                const la:LectureDict = response.data.data;
-                let newrs = roomStatus; newrs[floor-1]=la;
-                localStorage.setItem("roomStatus", JSON.stringify(newrs));
+                const la:LectureDict[] = response.data.data;
+                //let newrs = roomStatus; newrs[floor-1]=la;
+                localStorage.setItem("roomStatus", JSON.stringify(la));
                 localStorage.setItem("roomStatusUpdatedAt", day);
-                setRoomStatus(newrs);
+                setRoomStatus(la);
             }catch(err){
                 setError(err.message);
             }finally {
@@ -70,7 +67,7 @@ const RoomStatus: FC = () => {
 
         };
 
-        for (let i = 1; i <= 5; i++ ) getRoomStatus(i);
+        getRoomStatus();
 
     }, [accessToken]);
 
