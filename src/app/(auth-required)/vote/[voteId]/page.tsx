@@ -11,6 +11,7 @@ import { GetComments } from '@/api/comment/getComments';
 import { PostComments } from '@/api/comment/postComment';
 import { PostLike } from '@/api/like/postLike';
 import Header from '@/components/Layout/header/Header';
+import CommentSection from '@/components/board/CommentSection';
 
 export default function VoteDetail() {
     const router = useRouter();
@@ -148,7 +149,7 @@ export default function VoteDetail() {
             // 게시글 좋아요 상태 반전
             const newLikeStatus = !isPostLiked[id]; // 해당 게시물의 좋아요 상태를 반전
             try {
-                await PostLike(accessToken, likeType, id);
+                await PostLike( likeType, id);
                 setIsPostLiked((prevState) => ({ ...prevState, [id]: newLikeStatus })); // 상태 업데이트
 
                 setLikeCount((prevCount) => newLikeStatus ? prevCount + 1 : prevCount - 1);
@@ -159,7 +160,7 @@ export default function VoteDetail() {
             // 댓글 좋아요 상태 반전
             const newLikeStatus = !isCommentLiked[id];
             try {
-                await PostLike(accessToken, likeType, id);
+                await PostLike(likeType, id);
                 setIsCommentLiked((prev) => ({ ...prev, [id]: newLikeStatus }));
 
                 setCommentList((prevComments) => {
@@ -357,7 +358,7 @@ export default function VoteDetail() {
                     </div>
                 )}
             </div>
-                <CommentList commentList={commentList}/>
+                {/* <CommentList commentList={commentList}/>
             <div id='divider_B'></div>
             <div id='inputCont'>
             <div id='anounCont'>
@@ -366,7 +367,9 @@ export default function VoteDetail() {
                     </div>
                 <input id='commentInput' placeholder='댓글을 입력하세요' onChange={handleCommentChange}></input>
                 <button id='commentSend' onClick={handleCommentSend}></button>
-            </div>
+            </div> */}
+
+             <CommentSection postId={voteId.toString()}/>
         </div>
     );
 }
