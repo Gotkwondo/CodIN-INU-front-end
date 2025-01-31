@@ -11,11 +11,15 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
     const [clicked, setClicked] = React.useState<number>(-1);
     const [activeIndexList, setActiveIndexList] = React.useState<number[]>(Array.from({ length: 36 }, () => 0));
     const [touchedLecture, setTouchedLecture] = React.useState<Lecture>(null);
-
+    
     const highlightTouchedLecture = (idx: number) =>{
         if(idx >= 0){
+            //수업의 경계를 택할 경우, 둘 중 이전 수업을 선택
+            if ( BoundaryList[idx] === 1 ) idx = idx-1; 
+
             let st = 0;
             let end = 36;
+
             for(let i = idx ; i >= 0 ; i--){
                 if(BoundaryList[i] === 1) { st = i; break; }
             }
@@ -23,11 +27,14 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
                 if(BoundaryList[i] === 1) { end = i; break; }
             }
             let nl = Array.from({ length: 36 }, () => 0);
+
+            //강의중이 아닌 시간을 고를 경우, 수업이 아닌 부분만 선택되도록 설정
+            if ( RoomStatusList[idx]===0) { [st, end] = [ (st===0) ? st : st+1, (end===36)? end: end-1] } else { }
+
             for (let i = st; i <= end; i++) {
                 nl[i] = 1;
             }
             setActiveIndexList(nl);
-            console.log(nl);
         }else{
             const emptyList = Array.from({ length: 36 }, () => 0);
             setActiveIndexList(emptyList);
