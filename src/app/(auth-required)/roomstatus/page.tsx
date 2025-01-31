@@ -111,7 +111,7 @@ const RoomStatus: FC = () => {
             const start = lecture.startTime;
             const end = lecture.endTime;
 
-            const time = ["09", "10", "11", "12", "13", "14", "15", "16", "17","18"];
+            const time = ["09", "10", "11", "12", "13", "14", "15", "16", "17", "18"];
             const startPointer = time.indexOf(start.split(":")[0]);
             const endPointer = time.indexOf(end.split(":")[0]);
 

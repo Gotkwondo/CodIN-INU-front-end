@@ -12,18 +12,56 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
     const [activeIndexList, setActiveIndexList] = React.useState<number[]>(Array.from({ length: 36 }, () => 0));
     const [touchedLecture, setTouchedLecture] = React.useState<Lecture>(null);
     
+
+    const createEmptyLecture = (st:string, et:string) => {
+        const newLecture: Lecture = {
+            lectureNm: "빈 강의실",   
+            professor: "",   
+            roomNum: 0,
+            startTime: st,
+            endTime: et,
+        } 
+        return newLecture;
+    }
+
+    const selectToucedLecture = (idx: number) =>{
+        if(RoomStatusList[idx] === 1) {
+            for ( let lt of LectureList ){
+                const [st, et] = [lt.startTime , lt.endTime];
+                const startPointer = (parseInt(st.split(":")[0])-9)*4+Math.floor(parseInt(st.split(":")[1])/15);
+                const endPointer = (parseInt(et.split(":")[0])-9)*4+Math.ceil(parseInt(et.split(":")[1])/15);
+                if(startPointer <= idx && idx <= endPointer) { setTouchedLecture(lt); return; }
+            }
+        }else{
+            let emptyStartTime = "09:00";
+            let emptyEndTime = "18:00";
+            for ( let lt of LectureList ){
+                const [st, et] = [lt.startTime , lt.endTime];
+                const startPointer = (parseInt(st.split(":")[0])-9)*4 + Math.floor(parseInt(st.split(":")[1])/15);
+    
+                if(idx < startPointer) { 
+                    emptyEndTime = st;
+                    setTouchedLecture(createEmptyLecture(emptyStartTime, emptyEndTime));return;
+                }else{
+                    emptyStartTime = et;
+                }
+            }
+            setTouchedLecture(createEmptyLecture(emptyStartTime, emptyEndTime)); return;
+        }
+
+        setTouchedLecture(null); return;
+
+    }
+
     const highlightTouchedLecture = (idx: number) =>{
         if(idx >= 0){
-            //수업의 경계를 택할 경우, 둘 중 이전 수업을 선택
-            if ( BoundaryList[idx] === 1 ) idx = idx-1; 
-
             let st = 0;
             let end = 36;
 
-            for(let i = idx ; i >= 0 ; i--){
+            for(let i = idx-1 ; i >= 0 ; i--){
                 if(BoundaryList[i] === 1) { st = i; break; }
             }
-            for(let i = idx ; i <= 36 ; i++){
+            for(let i = idx+1 ; i <= 36 ; i++){
                 if(BoundaryList[i] === 1) { end = i; break; }
             }
             let nl = Array.from({ length: 36 }, () => 0);
@@ -40,10 +78,13 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
             setActiveIndexList(emptyList);
         }
     }
+
     const onClickTimeLine = (idx: number) =>{
         setClicked(idx);
         highlightTouchedLecture(idx);
+        selectToucedLecture(idx);
     }
+
     return (
         <div className="flex flex-col gap-[12px]">
 
@@ -65,7 +106,7 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
                             onTouchStart={()=>onClickTimeLine(index)}
                             onTouchEnd={()=>onClickTimeLine(-1)}
                             className={`relative flex-1 h-[12px] ${activeIndexList[index] ? 'bg-[#212121]' : status ? 'bg-[#0D99FF]' : 'bg-[#EBF0F7]'}`}
-                        ><RoomItemDetail isActive={clicked === index}/></button>
+                        ><RoomItemDetail isActive={clicked === index} lecture={touchedLecture} /></button>
                     ))}
                 </div>
             </div>
