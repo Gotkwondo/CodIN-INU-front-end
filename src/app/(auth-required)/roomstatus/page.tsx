@@ -96,7 +96,7 @@ const RoomStatus: FC = () => {
                         <Header.BackButton />
                         <Header.Title>강의실 현황</Header.Title>
                     </Header>
-                    <div className="mt-[132px] px-0 flex justify-center"><p>강의실 정보를 불러오는 중이에요...</p></div>
+                    <div className="mt-[150px] px-0 flex justify-center"><p>강의실 정보를 불러오는 중이에요...</p></div>
                     <BottomNav activeIndex={1} />
                 </div>
             </Suspense>
