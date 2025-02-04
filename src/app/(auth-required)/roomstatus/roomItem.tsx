@@ -26,6 +26,7 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
 
     const selectToucedLecture = (idx: number) =>{
         if(RoomStatusList[idx] === 1) {
+            //강의중인 시간을 선택했을 때
             for ( let lt of LectureList ){
                 const [st, et] = [lt.startTime , lt.endTime];
                 const startPointer = (parseInt(st.split(":")[0])-9)*4+Math.floor(parseInt(st.split(":")[1])/15);
@@ -33,6 +34,7 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
                 if(startPointer <= idx && idx <= endPointer) { setTouchedLecture(lt); return; }
             }
         }else{
+            //강의중이 아닌 시간을 선택했을 때
             let emptyStartTime = "09:00";
             let emptyEndTime = "18:00";
             for ( let lt of LectureList ){
@@ -61,7 +63,7 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
             for(let i = idx-1 ; i >= 0 ; i--){
                 if(BoundaryList[i] === 1) { st = i; break; }
             }
-            for(let i = idx+1 ; i <= 36 ; i++){
+            for(let i = idx ; i <= 36 ; i++){
                 if(BoundaryList[i] === 1) { end = i; break; }
             }
             let nl = Array.from({ length: 36 }, () => 0);

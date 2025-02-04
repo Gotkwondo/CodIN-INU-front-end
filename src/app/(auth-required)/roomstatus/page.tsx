@@ -148,10 +148,11 @@ const RoomStatus: FC = () => {
                         }else if(i === endPointer && j*15 <= endMin){
                             timeTable[i*4+j] = 1;
                         }else{
-                            if(boundary===1) {boundaryTable[i*4+j-1] = 1; break;}
+                            if(boundary===1) {boundaryTable[i*4+j-1] = 1; boundary=0; break;}
                         }
                     }
                 }
+                if(boundary===1){boundaryTable[endPointer*4+4] = 1;}
             }
         }
         
