@@ -1,15 +1,21 @@
 'use client';
-import './login.css';
+//import './login.css';
+import '@/app/globals.css';
 import { useRouter } from 'next/navigation';
 import React, { useState, useContext, useEffect } from 'react';
 import { PostLogin } from '@/api/user/postLogin';
 import { AuthContext } from '@/context/AuthContext';
+import CommonBtn from '@/components/buttons/commonBtn';
+import DefaultBody from '@/components/Layout/Body/defaultBody';
+import { PostPortal } from '@/api/user/postPortal';
+
 
 export default function LoginPage() {
     const router = useRouter();
     const [studentId, setStudentId] = useState<string>("");
     const [rememberMe, setRememberMe] = useState<boolean>(false);
     const [password, setPassword] = useState<string>("");
+    const [schoolLoginExplained, setSchoolLoginExplained] = useState<boolean>(false);
     const authContext = useContext(AuthContext);
 
     if (!authContext) {
@@ -33,7 +39,7 @@ export default function LoginPage() {
     const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
         e.preventDefault();
         if (!studentId || !password) {
-            alert('이메일과 비밀번호를 입력해주세요.');
+            alert('아이디와 비밀번호를 입력해주세요.');
             return;
         }
 
@@ -69,37 +75,62 @@ export default function LoginPage() {
         }
     }, [Auth.accessToken]); // Auth.accessToken의 변경을 감지
 
+    if(!schoolLoginExplained){
+        return (
+            <DefaultBody hasHeader={0}>
+                <div className='absolute bottom-[62px] w-full px-[20px] left-0 flex flex-col items-center justify-center'>
+                    <p className='text-Lm text-normal'>Codin은 <span className='text-active'>학교 계정</span>을 사용해요</p>
+                    <p className='text-Mr text-sub mb-[48px]'>동일한 아이디와 비밀번호를 입력해주세요</p>
+                    <img className="mb-[137px]" width="350" src='/images/schoolLoginExplain.png'/>    
+                    <div className='flex flex-row gap-[6px] mb-[22px]'>
+                        <div className='w-[12px] h-[12px] bg-[#0D99FF] rounded-[12px]'/>
+                        <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
+                        <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
+                    </div>
+                    <CommonBtn id="loginBtn" text="이해했어요" status={1} onClick={()=>{setSchoolLoginExplained(true)}}/>
+                </div>
+            </DefaultBody>
+        );
+    }
     return (
-        <div className="Login">
-            <div id="logo"></div>
-            <div id="inputBox">
-                <input
-                    id="email"
-                    placeholder="inu.ac.kr 포탈 아이디"
-                    value={studentId}
-                    onChange={handleStudentIdChange}
-                />
-                <input
-                    id="password"
-                    type="password"
-                    placeholder="포탈 비밀번호"
-                    value={password}
-                    onChange={handlePWChange}
-                />
+        <DefaultBody hasHeader={0}>
+            <div className='absolute bottom-[62px] w-full px-[20px] left-0 flex flex-col items-center justify-center'>
+                <img className="w-[171.41px] h-[45px] mb-[72px]" src='/images/logo.png'/>
+                <div className='flex flex-col w-full gap-[12px] mb-[169px]'>
+                    <input
+                        className="defaultInput"
+                        id="email"
+                        placeholder="학교 아이디 입력"
+                        value= {studentId}
+                        onChange={handleStudentIdChange}
+                    />
+                    <input
+                        className="defaultInput"
+                        id="password"
+                        type="password"
+                        placeholder="학교 비밀번호 입력"
+                        value={password}
+                        onChange={handlePWChange}
+                    />
+                    <a href="https://portal.inu.ac.kr:444/enview/" className='text-Mr underline text-[#808080] w-full text-right'>비밀번호를 잊으셨나요?</a>
+                </div>
+                {/*
+                <div id="else">
+                
+                    <button id="findPW" onClick={()=> router.push('/findPW')}> 비밀번호 찾기</button>
+                    <div id="divider"> | </div>
+                    <button id="signup" onClick={() => router.push('/signup')}>
+                        회원가입
+                    </button>
+                </div>
+                */}
+                <div className='flex flex-row gap-[6px] mb-[22px]'>
+                    <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
+                    <div className='w-[12px] h-[12px] bg-[#0D99FF] rounded-[12px]'/>
+                    <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
+                </div>
+                <CommonBtn id="loginBtn" text="로그인하기" status={1} onClick={handleLogin}/>
             </div>
-            <div id="else">
-               
-                <button id="findPW" onClick={()=> router.push('/findPW')}> 비밀번호 찾기</button>
-                <div id="divider"> | </div>
-                <button id="signup" onClick={() => router.push('/signup')}>
-                    회원가입
-                </button>
-            </div>
-            <div id="buttonCont">
-                <button id="loginBtn" onClick={handleLogin}>
-                    로그인
-                </button>
-            </div>
-        </div>
+        </DefaultBody>
     );
 }
