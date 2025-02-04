@@ -1,6 +1,7 @@
 "use client";
 
 import { FC, useState, useEffect, useRef } from "react";
+import apiClient from "@/api/clients/apiClient";
 import axios from "axios";
 import BottomNav from "@/components/Layout/BottomNav";
 import { Suspense } from 'react'
@@ -34,7 +35,8 @@ const RoomStatus: FC = () => {
         const date = new Date();
         const day = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 
-        if(localStorage.getItem("roomStatusUpdatedAt") === day){
+        if(localStorage.getItem("roomStatusUpdatedAt") === day){ 
+            //오늘 강의실 정보 가져온 적 있으면, localstorage에서 꺼내 씀
             if(roomStatus[0] === null){
                 const rs = JSON.parse(localStorage.getItem("roomStatus"));
                 console.log(rs);
@@ -42,12 +44,27 @@ const RoomStatus: FC = () => {
             }
             return;
         };
-        //오늘 강의실 정보 가져온 적 있으면, localstorage에서 꺼내 씀
 
         const getRoomStatus = async () => {
 
             setIsLoading(true);
+           
+            apiClient.get("/rooms/empty")
+                .then((response) => {
+                    const la:LectureDict[] = response.data.data;
+                    localStorage.setItem("roomStatus", JSON.stringify(la));
+                    localStorage.setItem("roomStatusUpdatedAt", day);
+                    setRoomStatus(la);
+                    console.log(la);
+                })
+                .catch((err) => {
+                    setError(err.message);
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                });
 
+            /*
             try{
                 const response = await axios.get(`https://www.codin.co.kr/api/rooms/empty`, {
                     headers: {
@@ -63,7 +80,7 @@ const RoomStatus: FC = () => {
                 setError(err.message);
             }finally {
                 setIsLoading(false);
-            }
+            }*/
 
         };
 
