@@ -45,12 +45,12 @@ const Header = ({ children }: HeaderProps) => {
         <header
             className="
                 flex items-end justify-between
-                px-4 h-[82px] bg-white  fixed top-0
+                px-4 h-[108px] bg-white fixed top-0
                 left-0 right-0 z-10
             "
         >
             {/* 왼쪽 영역: BackButton */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 pb-[21px]">
                 {backButton}
             </div>
 
@@ -59,13 +59,14 @@ const Header = ({ children }: HeaderProps) => {
                 className="
                 absolute inset-0 flex items-end justify-center
                 pointer-events-none
+                bottom-[26px]
             "
             >
                 {title}
             </div>
 
             {/* 오른쪽 영역: SearchButton, Menu */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 pb-[23px]">
                 {searchButton}
                 {menu}
             </div>
