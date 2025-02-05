@@ -23,7 +23,7 @@ const BackButton: React.FC<BackProps> = ({ onClick }) => {
             <img
                 src="/icons/back.svg"
                 alt="뒤로가기"
-                className="w-8 h-8"
+                className="w-[32px] h-[32px]"
             />
         </button>
     );

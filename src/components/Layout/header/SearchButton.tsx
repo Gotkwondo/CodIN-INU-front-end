@@ -16,7 +16,7 @@ const SearchButton: React.FC<SearchButtonProps> = ({ onClick }) => {
             <img
                 src="/icons/search.svg"
                 alt="검색"
-                className="w-6 h-6"
+                className="w-[25px] h-[25px]"
             />
         </button>
     );
