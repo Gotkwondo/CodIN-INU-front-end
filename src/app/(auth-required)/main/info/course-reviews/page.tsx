@@ -8,6 +8,7 @@ import { useMemo, useState } from 'react';
 import { Input } from '@/components/input/Input';
 import { debounce } from 'lodash';
 import { UnderbarBtn } from '@/components/buttons/underbarBtn';
+import { RateBar } from '@/components/common/Review/RateBar';
 
 const courseReviewPage = () => {
   const token = localStorage.getItem("accessToken");
@@ -93,6 +94,7 @@ const courseReviewPage = () => {
                 })
               }
             </div>
+            
           </div>
         </div>
       </div>
