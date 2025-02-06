@@ -205,7 +205,7 @@ const handleScroll = () => {
         <div className='chatroom'>
             <Header>
                 <Header.BackButton/>
-                <Header.Title> {`<${title}/>`}</Header.Title>
+                <Header.Title> {`${title}`}</Header.Title>
                 <Header.Menu>
                     <Header.MenuItem onClick={() => exitRoom(chatRoomId)}>
                         방 나가기

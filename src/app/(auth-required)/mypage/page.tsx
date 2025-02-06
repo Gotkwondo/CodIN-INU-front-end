@@ -1,8 +1,9 @@
 'use client';
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import Header from "@/components/Layout/header/Header";
+import DefaultBody from "@/components/Layout/Body/defaultBody";
 
 export default function MyPage() {
     const [userData, setUserData] = useState(null);
@@ -67,14 +68,15 @@ export default function MyPage() {
         alert(`선택: ${menuName}`);
     };
     return (
-        <div className="w-full min-h-screen bg-white p-4 mt-10">
+        <Suspense>
             <Header>
                 <Header.Title>마이페이지</Header.Title>
             </Header>
 
+            <DefaultBody hasHeader={1}>
 
             {/* 사용자 정보 섹션 */}
-            <div className="flex items-center justify-between px-4 py-8">
+            <div className="flex items-center justify-between px-4 py-8 pt-[12px]">
                 {/* 프로필 이미지 */}
                 <div className="flex items-center space-x-4">
                     <div
@@ -118,7 +120,10 @@ export default function MyPage() {
                     </li>
                 ))}
             </ul>
+            
+            </DefaultBody>
+
             <BottomNav activeIndex={0}/>
-        </div>
+        </Suspense>
     );
 }

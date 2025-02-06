@@ -7,6 +7,7 @@ import { AuthContext } from '@/context/AuthContext';
 import { GetVoteData } from '@/api/vote/getVoteData';
 import { PostVoting } from '@/api/vote/postVoting';
 import Header from '@/components/Layout/header/Header';
+import DefaultBody from '@/components/Layout/Body/defaultBody';
 
 export default function Vote() {
     const router = useRouter();
@@ -229,10 +230,10 @@ export default function Vote() {
         <div className="vote">
             <Header>
                 <Header.BackButton/>
-                <Header.Title>{`<익명 투표/>`}</Header.Title>
+                <Header.Title>{`익명 투표`}</Header.Title>
                 <Header.SearchButton onClick={() => console.log("검색 버튼 클릭")} />
             </Header>
-
+            <DefaultBody hasHeader={1}>
             <div id="tag">{`<ul>`}</div>
 
             <div id='VoteListCont' ref={chatBoxRef} onScroll={handleScroll}>
@@ -243,7 +244,7 @@ export default function Vote() {
             <div id="tag1">{`</ul>`}</div>
 
             <button id="writeBtn"  onClick={()=> router.push('/vote/write')}></button>
-            
+            </DefaultBody>
             <BottomNav activeIndex={0}/>
         </div>
     );
