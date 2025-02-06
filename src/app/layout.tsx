@@ -6,17 +6,19 @@ import { AuthProvider } from '@/context/AuthContext';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
     return (
-        <html lang="ko">
-        <head>
-            <title>인천대학교 정보대 SNS</title>
-        </head>
-        <AuthProvider>
-        <UserProvider>
-        <body className="pb-16 bg-white"> {/* 바텀 네비게이션 높이만큼 패딩 추가 */}
-        {children}
-        </body>
-        </UserProvider>
-        </AuthProvider>
+        <html lang="ko" className="w-full h-full relative">
+            <head>
+                <title>인천대학교 정보대 SNS</title>
+            </head>
+            <AuthProvider>
+            <UserProvider>
+            <body className="bg-slate-800 max-w-full min-h-full relative flex justify-center"> {/* 바텀 네비게이션 높이만큼 패딩 추가 */}
+                <div className='bg-white w-full min-h-full max-w-[500px] relative'>
+                    {children}
+                </div>
+            </body>
+            </UserProvider>
+            </AuthProvider>
         </html>
     );
 }

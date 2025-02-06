@@ -14,7 +14,7 @@ const DefaultBody: React.FC<DefaultBodyProps> = ({ hasHeader, children }) => {
     const pt = hasHeader? "pt-[108px]" : "";
 
     return (
-        <div className={ "w-full h-full flex flex-col px-[20px]"+ pt }>
+        <div className={ "bg-white w-full flex flex-col px-[20px]"+ pt }>
             {children}
         </div>
     );
