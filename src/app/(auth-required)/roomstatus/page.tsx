@@ -9,6 +9,7 @@ import Header from "@/components/Layout/header/Header";
 import SmRoundedBtn from "@/components/buttons/smRoundedBtn";
 import RoomItem from "./roomItem";
 import { Lecture, LectureDict } from "./interfaces/page_interface";
+import DefaultBody from "@/components/Layout/Body/defaultBody";
 
 const RoomStatus: FC = () => {
 
@@ -169,7 +170,8 @@ const RoomStatus: FC = () => {
                 <Header.Title>강의실 현황</Header.Title>
             </Header>
 
-            <div className="mt-[108px] px-0 overflow-hidden">
+            <DefaultBody hasHeader={1}>
+            <div className="px-0 pt-[18px] overflow-hidden">
 
                 <div className="flex w-full justify-center gap-[7px]">
                     <SmRoundedBtn text="1층" status={floor===1 ? 1: 0} onClick={()=>{ if(floor!==1) setFloor(1) }} />
@@ -192,6 +194,7 @@ const RoomStatus: FC = () => {
                 }
                 
             </div>
+            </DefaultBody>
 
             <BottomNav activeIndex={1} />
 

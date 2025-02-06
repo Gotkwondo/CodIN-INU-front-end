@@ -11,10 +11,13 @@ interface DefaultBodyProps {
 const DefaultBody: React.FC<DefaultBodyProps> = ({ hasHeader, children }) => {
     
     
-    const pt = hasHeader? "pt-[108px]" : "";
+    const pt = hasHeader? " pt-[108px]" : "";
 
     return (
-        <div className={ "bg-white w-full flex flex-col px-[20px]"+ pt }>
+       
+        <div 
+            id="scrollbar-hidden"
+            className={ "bg-white w-full flex flex-col px-[20px] mb-[110px] "+ pt }>
             {children}
         </div>
     );

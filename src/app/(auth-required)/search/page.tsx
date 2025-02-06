@@ -7,6 +7,8 @@ import { Post } from "@/interfaces/Post";
 import { FaSearch } from "react-icons/fa";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { Suspense } from 'react'
+import Header from "@/components/Layout/header/Header";
+import DefaultBody from "@/components/Layout/Body/defaultBody";
 const SearchPage: FC = () => {
     // 검색어
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -115,12 +117,11 @@ const SearchPage: FC = () => {
         <Suspense>
         <div className={"w-full h-full"}>
             {/* 상단 헤더 */}
-            <header className="flex items-center justify-center h-14 border-b">
-                <h1 className="text-lg font-semibold">{`<검색/>`}</h1>
-            </header>
-
+            <Header>
+                <Header.Title>검색</Header.Title>
+            </Header>
             {/* 본문 영역 */}
-            <main className="mt-4 px-0">
+            <DefaultBody hasHeader={1}>
                 {/* 검색창 */}
                 <div className="relative mx-4 mb-4">
                     <input
@@ -154,7 +155,7 @@ const SearchPage: FC = () => {
                         검색 결과가 없습니다.
                     </div>
                 )}
-            </main>
+            </DefaultBody>
 
             <BottomNav activeIndex={1} />
         </div>
