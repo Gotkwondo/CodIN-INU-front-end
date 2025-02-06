@@ -5,7 +5,7 @@ import axios from "axios";
 import PostList from "@/components/board/PostList";
 import { Post } from "@/interfaces/Post";
 import { FaSearch } from "react-icons/fa";
-import BottomNav from "@/components/Layout/BottomNav";
+import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { Suspense } from 'react'
 const SearchPage: FC = () => {
     // 검색어

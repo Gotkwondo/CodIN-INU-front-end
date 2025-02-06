@@ -2,7 +2,7 @@
 import './chat.css';
 import { useRouter } from 'next/navigation';
 import { useContext, useState, useEffect } from 'react';
-import BottomNav from "@/components/Layout/BottomNav";
+import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { AuthContext } from '@/context/AuthContext';
 import { GetChatRoomData } from '@/api/chat/getChatRoomData';
 import Header from '@/components/Layout/header/Header';

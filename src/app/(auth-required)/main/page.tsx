@@ -2,7 +2,7 @@
 import {FC, useEffect, useState} from "react";
 import Link from "next/link";
 import Image from "next/image";
-import BottomNav from "@/components/Layout/BottomNav";
+import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import {FaBell, FaEye, FaHeart, FaRegCommentDots,FaRegBell} from "react-icons/fa";
 import ZoomableImageModal from "../../../components/modals/ZoomableImageModal";
 import {boardData} from "@/data/boardData";

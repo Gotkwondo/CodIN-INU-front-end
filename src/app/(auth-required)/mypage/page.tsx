@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import BottomNav from "@/components/Layout/BottomNav";
+import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import Header from "@/components/Layout/header/Header";
 
 export default function MyPage() {

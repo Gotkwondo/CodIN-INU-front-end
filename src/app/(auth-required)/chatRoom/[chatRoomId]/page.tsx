@@ -2,7 +2,7 @@
 import './chatRoom.css';
 import { useRouter, useParams} from 'next/navigation';
 import { useContext, useState, useEffect, useRef, FormEvent } from 'react';
-import BottomNav from "@/components/Layout/BottomNav";
+import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { AuthContext } from '@/context/AuthContext';
 import { GetChatData } from '@/api/chat/getChatData';
 import * as StompJs from '@stomp/stompjs';

@@ -3,7 +3,7 @@
 import { FC, useState, useEffect, useRef } from "react";
 import apiClient from "@/api/clients/apiClient";
 import axios from "axios";
-import BottomNav from "@/components/Layout/BottomNav";
+import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { Suspense } from 'react'
 import Header from "@/components/Layout/header/Header";
 import SmRoundedBtn from "@/components/buttons/smRoundedBtn";
