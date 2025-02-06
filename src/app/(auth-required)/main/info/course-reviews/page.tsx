@@ -2,11 +2,12 @@
 
 import SmRoundedBtn from '@/components/buttons/smRoundedBtn';
 import Header from '@/components/Layout/header/Header';
-import { DEPARTMENTS } from './constants';
-import { labelType } from './types';
+import { DEPARTMENTS, SEARCHTYPES } from './constants';
+import { labelType, searchTypesType } from './types';
 import { useMemo, useState } from 'react';
 import { Input } from '@/components/input/Input';
 import { debounce } from 'lodash';
+import { UnderbarBtn } from '@/components/buttons/underbarBtn';
 
 const courseReviewPage = () => {
   const token = localStorage.getItem("accessToken");
@@ -14,6 +15,11 @@ const courseReviewPage = () => {
     label: "",
     value: "",
   });
+  const [searchType, setSearchType] = useState<searchTypesType>({
+    label: "",
+    value: "",
+  });
+  console.log(searchType);
   const [query, setQuery] = useState<string>(""); // 입력값 즉시 반영
   const [searchKeyword, setSearchKeyword] = useState<string>(""); // 디바운스된 값
 
@@ -39,8 +45,13 @@ const courseReviewPage = () => {
     debouncedSearch(keyword); // 디바운스 적용된 값 업데이트
   };
 
-  // console.log("실시간 입력값:", query);
-  console.log("디바운스된 검색어:", searchKeyword);
+  const onSearchTypeChange = ({label, value}: searchTypesType) => {
+    if (value === searchType.value) {
+      setSearchType({ label: '', value: '' });
+    } else {
+      setSearchType({ label: label, value: value });
+    }
+  };
 
   return (
     <div className="bg-white min-h-screen overflow-x-hidden w-full relative">
@@ -67,6 +78,21 @@ const courseReviewPage = () => {
               value={query}
               onChange={(e) => onSearchKeywordChange(e.target.value)}
             />
+            <div className="flex mt-4">
+              {
+                SEARCHTYPES.map(({ label, value }: searchTypesType) => {
+                  return (
+                    <UnderbarBtn
+                      key={`searchType_${value}`}
+                      text={label}
+                      inverted={value === searchType.value}
+                      className="font-semibold"
+                      onClick={() => onSearchTypeChange({ label, value })}
+                    />
+                  );
+                })
+              }
+            </div>
           </div>
         </div>
       </div>
