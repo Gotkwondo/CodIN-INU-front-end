@@ -19,7 +19,7 @@ const courseReviewPage = () => {
     label: "",
     value: "",
   });
-  console.log(searchType);
+
   const [query, setQuery] = useState<string>(""); // 입력값 즉시 반영
   const [searchKeyword, setSearchKeyword] = useState<string>(""); // 디바운스된 값
 
