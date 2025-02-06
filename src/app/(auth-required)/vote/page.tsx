@@ -2,7 +2,7 @@
 import './vote.css';
 import { useRouter } from 'next/navigation';
 import { useContext, useState, useEffect, useRef } from 'react';
-import BottomNav from "@/components/Layout/BottomNav";
+import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { AuthContext } from '@/context/AuthContext';
 import { GetVoteData } from '@/api/vote/getVoteData';
 import { PostVoting } from '@/api/vote/postVoting';

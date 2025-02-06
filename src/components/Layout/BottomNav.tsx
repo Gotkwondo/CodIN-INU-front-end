@@ -18,10 +18,10 @@ const navItems = [
 export default function BottomNav({ activeIndex = 0 }: BottomNavProps) {
     return (
         <nav
-            className="fixed bottom-0  bg-white border-t left-0 right-0 w-full"
+            className="fixed bottom-0  bg-white border-t right-0 w-full left-1/2 -translate-x-1/2 max-w-[500px]"
             style={{
                 boxShadow: '0 -2px 4px rgba(0, 0, 0, 0.1)', // 얇고 가벼운 그림자
-                height: '60px', // 컴팩트한 높이
+                height: '82px', // 컴팩트한 높이
             }}
         >
             <ul className="flex justify-around items-center h-full">
