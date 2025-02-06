@@ -8,10 +8,35 @@ import { useMemo, useState } from 'react';
 import { Input } from '@/components/input/Input';
 import { debounce } from 'lodash';
 import { UnderbarBtn } from '@/components/buttons/underbarBtn';
-import { RateBar } from '@/components/common/Review/RateBar';
+import { Subject } from '@/components/common/Review/Subject';
+import Link from 'next/link';
+
+const DummyData = [
+  {
+    subjectName: "C++",
+    subjectCode: "0011233001",
+    score: 4.5,
+    professor: "박경완",
+    rateCnt: 30,
+  },
+  {
+    subjectName: "AL",
+    subjectCode: "0011224511",
+    score: 4.0,
+    professor: "오주현",
+    rateCnt: 6,
+  },
+  {
+    subjectName: "상담",
+    subjectCode: "1511233001",
+    score: 5.0,
+    professor: "박경완",
+    rateCnt: 123,
+  },
+];
 
 const courseReviewPage = () => {
-  const token = localStorage.getItem("accessToken");
+  // const token = localStorage.getItem("accessToken");
   const [selectedDepartment, setSelectedDepartment] = useState<labelType>({
     label: "",
     value: "",
@@ -55,12 +80,12 @@ const courseReviewPage = () => {
   };
 
   return (
-    <div className="bg-white min-h-screen overflow-x-hidden w-full relative">
+    <div className="bg-white min-h-screen w-full relative flex flex-row justify-center">
       <Header>
         <Header.Title>수강 후기</Header.Title>
         <Header.BackButton />
       </Header>
-      <div className="mt-28">
+      <div className="mt-28 w-11/12">
         <div className="flex flex-col w-full">
           <div className="w-full flex justify-between">
             {DEPARTMENTS.map(({ label, value }: labelType) => (
@@ -72,31 +97,46 @@ const courseReviewPage = () => {
               />
             ))}
           </div>
-          <div className="mt-4 w-full">
-            <Input
-              className="w-full"
-              placeholder="과목명, 교수명 입력"
-              value={query}
-              onChange={(e) => onSearchKeywordChange(e.target.value)}
-            />
-            <div className="flex mt-4">
-              {
-                SEARCHTYPES.map(({ label, value }: searchTypesType) => {
-                  return (
-                    <UnderbarBtn
-                      key={`searchType_${value}`}
-                      text={label}
-                      inverted={value === searchType.value}
-                      className="font-semibold"
-                      onClick={() => onSearchTypeChange({ label, value })}
-                    />
-                  );
-                })
-              }
-            </div>
-            
+        </div>
+        <div className="mt-4 w-full">
+          <Input
+            className="w-full"
+            placeholder="과목명, 교수명 입력"
+            value={query}
+            onChange={(e) => onSearchKeywordChange(e.target.value)}
+          />
+          <div className="flex mt-4">
+            {SEARCHTYPES.map(({ label, value }: searchTypesType) => {
+              return (
+                <UnderbarBtn
+                  key={`searchType_${value}`}
+                  text={label}
+                  inverted={value === searchType.value}
+                  className="font-semibold"
+                  onClick={() => onSearchTypeChange({ label, value })}
+                />
+              );
+            })}
           </div>
         </div>
+        {
+          DummyData.map(({ subjectName, subjectCode, score, professor, rateCnt }) => {
+            return (
+              <Link
+                href={`/`}
+                key={`subject_${subjectCode}_${subjectName}`}
+              >
+                <Subject
+                  subjectName={subjectName}
+                  subjectCode={subjectCode}
+                  score={score}
+                  professor={professor}
+                  rateCnt={rateCnt}
+                />
+              </Link>
+            );
+          })
+        }
       </div>
     </div>
   );

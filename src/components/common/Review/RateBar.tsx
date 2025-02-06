@@ -1,6 +1,8 @@
+import { ComponentProps } from 'react';
+
 type RateBarType = {
   score: number;
-}
+} & ComponentProps<'div'>;
 
 const generateBars = (coloredBarCnt: number) => {
   const bars = [];
@@ -24,11 +26,11 @@ const generateBars = (coloredBarCnt: number) => {
   return bars;
 };
 
-const RateBar = ({score}: RateBarType) => {
+const RateBar = ({score, className = ''}: RateBarType) => {
   const coloredBarCnt = score / 0.25;
   const barAry = generateBars(coloredBarCnt);
   return (
-    <div className='flex content-center'>
+    <div className={`flex content-center ${className}`}>
       {
         barAry.map(bar => {
           return bar
