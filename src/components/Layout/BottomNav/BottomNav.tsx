@@ -34,12 +34,12 @@ export default function BottomNav({ activeIndex = 0 }: BottomNavProps) {
                 </li>
                 <li className="flex-1 text-center">
                     <Link href='/search' className="flex justify-center items-center h-full">
-                    <img src={ activeIndex==1 ? ActiveMessageIconPath : MessageIconPath} width={30} height={30}  />
+                    <img src={ activeIndex==1 ? ActiveSearchIconPath : SearchIconPath} width={30} height={30}  />
                     </Link>
                 </li>
                 <li className="flex-1 text-center">
                     <Link href='/chat' className="flex justify-center items-center h-full">
-                    <img src={ activeIndex==2 ? ActiveSearchIconPath : SearchIconPath} width={30} height={30}  />
+                    <img src={ activeIndex==2 ? ActiveMessageIconPath : MessageIconPath} width={30} height={30}  />
                     </Link>
                 </li>
                 <li className="flex-1 text-center">

@@ -1,12 +1,13 @@
 'use client';
-import './chat.css';
+//import './chat.css';
 import { useRouter } from 'next/navigation';
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, Suspense } from 'react';
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { AuthContext } from '@/context/AuthContext';
 import { GetChatRoomData } from '@/api/chat/getChatRoomData';
 import Header from '@/components/Layout/header/Header';
 import DefaultBody from '@/components/Layout/Body/defaultBody';
+import Image from 'next/image';
 
 export default function Chat() {
     const router = useRouter();
@@ -66,21 +67,24 @@ export default function Chat() {
     const ChatList = ({ chatList }: ChatListProps) => {
         const options: Intl.DateTimeFormatOptions = { month: 'long', day: 'numeric' };
         return (
-            <div className="ChatListCont">
+            <div className="flex flex-col w-full gap-[24px] relative mt-[47px]">
                 {chatList.map((data, index) => (
                     <div
                         key={data.chatRoomId} // 여기서 고유한 key를 설정
-                        id='chatCont'
+                        className="flex flex-row w-full gap-[13px] relative"
                         onClick={() => handleGoChatRoom(data.chatRoomId, data.roomName)}
                     >
-                        <div id="profile"></div>
-                        <div id="main_cont">
-                            <div id="name">{data.roomName}</div>
-                            <div id="ment"> {data.message && data.message.startsWith('data:image') ? ( `( 사진 )`) : ( data.message || "(메시지 없음)")}</div>
+                        <Image src="/icons/chat/deafultProfile.png" width="49" height="49" alt=""/>
+                        <div className="flex flex-col gap-[4px]">
+                            <div id="name" className="text-Lm" >{data.roomName}</div>
+                            <div id="ment" className='text-Mr text-[#808080]'> {data.message && data.message.startsWith('data:image') ? ( `( 사진 )`) : ( data.message || "(메시지 없음)")}</div>
                         </div>
                         <div id="ect">
-                            <div id="time">
+                            <div className="absolute right-0 top-0 text-sr text-[#808080]">
                                 {data.currentMessageDate !== null ? (new Date(data.currentMessageDate).toLocaleDateString('ko-KR', options) ) : ( new Date().toLocaleDateString('ko-KR', options))}
+                            </div>
+                            <div className="absolute right-0 bottom-0 text-sr rounded-[44px] bg-[#0D99FF] w-[22px] h-[22px] flex justify-center items-center text-[#FFFFFF]">
+                                {3}
                             </div>
                         </div>
                     </div>
@@ -90,18 +94,16 @@ export default function Chat() {
     };
 
     return (
-        <div className='chat'>
+        <Suspense>
             <Header>
                 <Header.BackButton />
                 <Header.Title>{`쪽지`}</Header.Title>
                 <Header.SearchButton onClick={() => console.log("검색 버튼 클릭")} />
             </Header>
             <DefaultBody hasHeader={1}>
-                <div id='tag'>{`<ul>`}</div>
                 <ChatList chatList={chatList} />
-                <div id='tag1'>{`</ul>`}</div>
             </DefaultBody>
             <BottomNav activeIndex={2}/>
-        </div>
+        </Suspense>
     );
 }
