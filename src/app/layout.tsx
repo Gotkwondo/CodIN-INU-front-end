@@ -3,6 +3,15 @@ import { ReactNode } from 'react';
 import { UserProvider } from '@/context/UserContext';
 import BottomNav from '../components/Layout/BottomNav';
 import { AuthProvider } from '@/context/AuthContext';
+import type { Viewport } from 'next'
+ 
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
 
 export default function RootLayout({ children }: { children: ReactNode }) {
     return (
