@@ -1,7 +1,16 @@
 
-![스크린샷 2025-02-03 오후 9 27 05 1](https://github.com/user-attachments/assets/eb0eb25f-b23e-4992-a4f5-62199b1a27f2)
 
-# FrontEnd \<\/Codin\>
+# ![스크린샷 2025-02-03 오후 9 27 05 1](https://github.com/user-attachments/assets/eb0eb25f-b23e-4992-a4f5-62199b1a27f2) _ FrontEnd 
+
+
+## 👀 주요 화면
+
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/ad94223a-dcb7-469a-ad29-42b3974c02ec" width="20%" />
+  <img src="https://github.com/user-attachments/assets/a919c059-9d1d-4e67-9e98-cdf5002fc0a4" width="20%" />
+  <img src="https://github.com/user-attachments/assets/0cf7aefb-2ddc-4299-bd50-213ae643f4ab" width="20%" />
+</p>
+
 
 ## 🕰️ 개발 기간
 * 24.11.06 ~ 진행 중
