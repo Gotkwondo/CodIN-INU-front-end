@@ -4,6 +4,9 @@ import { useRouter } from 'next/navigation';
 import { UserContext } from '@/context/UserContext';
 import { useContext, useState, useEffect } from 'react';
 import { PostSignup } from '@/api/user/postSignup';
+import Header from '@/components/Layout/header/Header';
+import DefaultBody from '@/components/Layout/Body/defaultBody';
+import CommonBtn from '@/components/buttons/commonBtn';
 
 export default function SignupProfile() {
   const router = useRouter();
@@ -74,18 +77,27 @@ export default function SignupProfile() {
 
   return (
     <div className='signup'>
-      <div id='back_btn'  onClick={()=> router.push('/signup')}>{`<`}</div>
-      <div id='profile_title'>프로필 등록</div>
+     <Header>
+        <Header.BackButton/>
+        <Header.Title>프로필 설정</Header.Title>
+     </Header>
+     <DefaultBody hasHeader={1}>
+     
       <label htmlFor='profileImgBtn1' id='profileImgBtn'
         style={{
           backgroundImage: imgPrev ? `url(${imgPrev})` : undefined,
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover'
-        }}>
+        }}
+        className=" w-[87px] h-[87px] border-r-[50%] bg-no-repeat bg-contain mt-[86px] ml-[24px]"
+        >
         <input id='profileImgBtn1' type='file' accept='image/*' onChange={handleImageChange} />
       </label>
-      <input id='nickname' placeholder='닉네임' value={nickname} onChange={handleNicknameChange} />
-      <button id='submit' onClick={handleSubmit}>회원가입</button>
+      <input id='nickname' placeholder='닉네임' value={nickname} onChange={handleNicknameChange}/>
+     <div className="absolute bottom-[62px] w-full px-[20px] left-0 flex flex-col items-center justify-center">
+      <CommonBtn id='signupBtn' text='회원가입' status={1} onClick={handleSubmit}></CommonBtn>
+      </div>
+      </DefaultBody>
     </div>
   );
 }
