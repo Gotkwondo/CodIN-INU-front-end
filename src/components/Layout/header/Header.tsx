@@ -6,6 +6,8 @@ import Title from "./Title";
 import SearchButton from "./SearchButton";
 import Menu from "../../common/Menu";
 import MenuItem from "@/components/common/Menu/MenuItem";
+import Logo from "./Logo";
+import Notice from "./Notice";
 
 /** Header의 자식 요소 타입 */
 interface HeaderProps {
@@ -24,6 +26,8 @@ const Header = ({ children }: HeaderProps) => {
     let title: ReactNode = null;
     let searchButton: ReactNode = null;
     let menu: ReactNode = null;
+    let logo: ReactNode = null;
+    let notice: ReactNode = null;
     const others: ReactNode[] = [];
 
     // children 순회하면서 원하는 컴포넌트를 찾아서 할당
@@ -36,6 +40,10 @@ const Header = ({ children }: HeaderProps) => {
             searchButton = child;
         } else if (isElementType(child, Header.Menu)) {
             menu = child;
+        } else if (isElementType(child, Header.Logo)) {
+            logo = child;
+        } else if (isElementType(child, Header.Notice)) {
+            notice = child;
         } else {
             others.push(child);
         }
@@ -45,7 +53,7 @@ const Header = ({ children }: HeaderProps) => {
         <header
             className="
                 flex items-end justify-between
-                px-[24px] h-[108px] bg-white fixed top-0
+                px-[20px] h-[108px] bg-white fixed top-0
                 left-1/2 -translate-x-1/2 right-0 z-10
                 w-full
                 max-w-[500px] 
@@ -54,6 +62,7 @@ const Header = ({ children }: HeaderProps) => {
             {/* 왼쪽 영역: BackButton */}
             <div className="flex items-center gap-2 pb-[21px]">
                 {backButton}
+                {logo}
             </div>
 
             {/* 중앙 영역: Title (항상 중앙 고정) */}
@@ -71,6 +80,7 @@ const Header = ({ children }: HeaderProps) => {
             <div className="flex items-center gap-2 pb-[23px]">
                 {searchButton}
                 {menu}
+                {notice}
             </div>
         </header>
     );
@@ -82,5 +92,7 @@ Header.Title = Title;
 Header.SearchButton = SearchButton;
 Header.Menu = Menu;
 Header.MenuItem = MenuItem;
+Header.Logo = Logo;
+Header.Notice = Notice;
 
 export default Header;
