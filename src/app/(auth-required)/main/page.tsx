@@ -44,7 +44,7 @@ const Calendar = () => {
     const month = String(today.getMonth() + 1).padStart(2, "0");
 
     return (
-        <div className="relative w-full mt-[24px]">
+        <div className="relative w-full mt-[18px]">
             <ZoomableImageModal
                 images={`/images/calendar/calendar_2024_12.jpg`}
             />
@@ -134,17 +134,17 @@ const MainPage: FC = () => {
                                 key={index}
                                 className="flex flex-col justify-start items-center text-center text-Mm"
                             >
-                                <div className="w-[56px] h-[56px] bg-[#EBF0F7] flex items-center justify-center rounded-full shadow-md">
+                                <div className="w-[56px] h-[56px] bg-[#EBF0F7] flex items-center justify-center rounded-full">
                                     <Image src={menu.icon} alt={menu.label} width={28} height={28} />
                                 </div>
                                 {/* 텍스트 줄바꿈 */}
                                 <span className="text-sm font-medium mt-2 break-words leading-tight">
-                        {menu.label.split(" ").map((word, i) => (
-                            <span key={i} className="block">
-                                {word}
-                            </span>
-                        ))}
-                    </span>
+                                    {menu.label.split(" ").map((word, i) => (
+                                        <span key={i} className="block">
+                                            {word}
+                                        </span>
+                                    ))}
+                                </span>
                             </Link>
                         ))}
                     </div>
@@ -155,7 +155,7 @@ const MainPage: FC = () => {
                 <section className="mt-[48px]">
                     
                     <h2 className="text-XLm">{"게시물 랭킹"}</h2>
-                    <div className="pt-[26px]">
+                    <div className="pt-[26px] mb-[18px]">
                         {loading ? (
                             <p className="text-center text-sub">랭킹 데이터를 불러오는 중입니다...</p>
                         ) : error ? (
@@ -169,50 +169,41 @@ const MainPage: FC = () => {
                                         href={`/main/boards/${boardPath}?postId=${post._id}`}
                                         className="block"
                                     >
-                                        <div className="flex items-start px-3 py-1 bg-white border rounded-lg hover:shadow-md">
-                                            <div className="flex-1">
-                                                <p className="text-[10px] text-gray-500 mb-2 bg-gray-200 inline p-0.5 rounded-sm leading-tight">
-                                                    {boardData[boardPath]?.name || "알 수 없음"}
-                                                </p>
-                                                <h3 className="font-semibold text-gray-800 mb-0.5">
+                                        <div className="flex flex-col gap-[27px] bg-white">
+                                            <div className="flex-1 w-full flex flex-col gap-[8px]">
+                                                <div>
+                                                    <p className="text-sr text-sub px-[4px] py-[2px] bg-[#F2F2F2] rounded-[3px] inline">
+                                                        {boardData[boardPath]?.name || "알 수 없음"}
+                                                    </p>
+                                                </div>
+                                                <h3 className="text-Lm">
                                                     {post.title}
                                                 </h3>
-                                                <p className="text-gray-600 text-sm mb-1 line-clamp-2">
+                                                <p className="text-Mr text-sub">
                                                     {post.content}
                                                 </p>
-                                                <div className="flex justify-between items-center text-xs text-gray-500 py-1">
-                                                    <div className="flex space-x-4">
-                                                        <span className="flex items-center">
-                                                            <FaEye className="mr-1" />
+                                                <div className="flex justify-between items-center text-sr text-sub">
+                                                    <div className="flex space-x-[6px]">
+                                                        <span className="flex items-center gap-[4.33px]">
+                                                            <img src="/icons/board/viewIcon.svg" width={16} height={16}/>
                                                             {post.hits || 0}
                                                         </span>
-                                                        <span className="flex items-center">
-                                                            <FaHeart className="mr-1" />
+                                                        <span className="flex items-center gap-[4.33px]">
+                                                            <img src="/icons/board/heartIcon.svg" width={16} height={16}/>
                                                             {post.likeCount || 0}
                                                         </span>
-                                                        <span className="flex items-center">
-                                                            <FaRegCommentDots className="mr-1" />
+                                                        <span className="flex items-center gap-[4.33px]">
+                                                            <img src="/icons/board/commentIcon.svg" width={16} height={16}/>
                                                             {post.commentCount || 0}
                                                         </span>
                                                     </div>
-                                                    <div className="flex items-center space-x-2">
+                                                    <div className="flex items-centertext-sub space-x-1 text-sr">
                                                         <span>{post.anonymous ? "익명" : post.nickname}</span>
-                                                        <span>|</span>
+                                                        <span> · </span>
                                                         <span>{timeAgo(post.createdAt)}</span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            {post.imageUrl && (
-                                                <div className="ml-4 w-16 h-16 overflow-hidden rounded-lg">
-                                                    <Image
-                                                        src={post.imageUrl}
-                                                        alt={post.title}
-                                                        width={64}
-                                                        height={64}
-                                                        className="object-cover w-full h-full"
-                                                    />
-                                                </div>
-                                            )}
                                         </div>
                                     </Link>
                                 ) : null;
