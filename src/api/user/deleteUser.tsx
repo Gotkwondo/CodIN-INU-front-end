@@ -2,8 +2,8 @@ import axios, { AxiosResponse } from 'axios';
 
 const BASE_URL = 'https://www.codin.co.kr/api';
 
-export const DeleteUser = async (email: string): Promise<any> => {
-  console.log("전송 데이터", email);
+export const DeleteUser = async (): Promise<any> => {
+  console.log("전송 데이터");
   const token = localStorage.getItem("accessToken");
 
   try {
@@ -11,8 +11,8 @@ export const DeleteUser = async (email: string): Promise<any> => {
       `${BASE_URL}/users`,
       {
         headers: {
-          Authorization: `Bearer ${token}`, // Bearer 토큰으로 인증
-        },
+          Authorization: `${token}`, // Bearer 토큰으로 인증
+        }
     
       }
     );

@@ -45,8 +45,9 @@ export default function UserDeletePage() {
             e.preventDefault();
     
             try {
-                const response = await DeleteUser(userData.email);
+                const response = await DeleteUser();
                 console.log(`탈퇴 결과: ${response}`);
+                alert("회원 탈퇴를 완료하였습니다.")
                
                     router.push('/login');
                 
@@ -56,11 +57,17 @@ export default function UserDeletePage() {
             }
         };
     
+        const handleBack =(e: React.MouseEvent<HTMLButtonElement>): void => {
+            e.preventDefault();
+            router.push('/mypage');
+        };
 
     
     return (
         <DefaultBody hasHeader={0}>
-          <div id='title'> 회원 탈퇴를 하시겠습니까? </div>
+          <div id='title' className="flex mt-[40vh] mb-[30vh] font-sans font-"> 회원 탈퇴를 진행하시겠습니까? </div>
+          <CommonBtn id='backBtn' text='돌아가기' status={0} onClick={handleBack}></CommonBtn>
+          <div className="mt-5"></div>
           <CommonBtn id="deleteBtn" text="탈퇴하기" status={1} onClick={handleDelete}></CommonBtn>
         </DefaultBody>
     );
