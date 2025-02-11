@@ -155,7 +155,7 @@ const MainPage: FC = () => {
                 <section className="mt-[48px]">
                     
                     <h2 className="text-XLm">{"게시물 랭킹"}</h2>
-                    <div className="pt-[26px] mb-[18px]">
+                    <div className="pt-[26px] mb-[18px] flex flex-col gap-[27px]">
                         {loading ? (
                             <p className="text-center text-sub">랭킹 데이터를 불러오는 중입니다...</p>
                         ) : error ? (
@@ -169,8 +169,8 @@ const MainPage: FC = () => {
                                         href={`/main/boards/${boardPath}?postId=${post._id}`}
                                         className="block"
                                     >
-                                        <div className="flex flex-col gap-[27px] bg-white">
-                                            <div className="flex-1 w-full flex flex-col gap-[8px]">
+                                        <div className="flex flex-col gap-[8px] bg-white">
+                                            <div className="flex-1 w-full">
                                                 <div>
                                                     <p className="text-sr text-sub px-[4px] py-[2px] bg-[#F2F2F2] rounded-[3px] inline">
                                                         {boardData[boardPath]?.name || "알 수 없음"}
