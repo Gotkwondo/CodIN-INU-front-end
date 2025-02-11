@@ -4,6 +4,7 @@ import Link from "next/link";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import Header from "@/components/Layout/header/Header";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
+import { PostLogout } from "@/api/user/postLogout";
 
 export default function MyPage() {
     const [userData, setUserData] = useState(null);
@@ -36,7 +37,20 @@ export default function MyPage() {
 
         fetchUserData();
     }, []);
-
+    const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        try {
+            const response = await PostLogout();
+            console.log('결과:', response);
+            localStorage.clear();
+            alert("로그아웃 완료하였습니다.")
+            window.location.href = "/login";
+        } catch (error) {
+            console.error("로그아웃 실패", error);
+            const message = error.response.data.message;
+            alert(message);
+        }
+    };
     const menuItems = [
         { label: "프로필 편집", href: "/mypage/edit" },
         { label: "게시글", href: "/mypage/board/posts" },
@@ -45,7 +59,7 @@ export default function MyPage() {
         { label: "스크랩", href: "/mypage/board/scraps", isSpacer: true },
         { label: "알림 설정", href: "/mypage/notifications" },
         { label: "차단 관리", href: "/mypage/settings/block", isSpacer: true },
-        { label: "로그아웃", href: "/mypage/logout" },
+        { label: "로그아웃", onclick: handleLogout },
         { label: "회원 탈퇴", href: "/mypage/delete-account" },
     ];
 
@@ -60,6 +74,7 @@ export default function MyPage() {
             </div>
         );
     }
+   
     const navigateToMain = () => {
         console.log("메인 페이지로 이동");
     };
@@ -113,9 +128,15 @@ export default function MyPage() {
                             item.isSpacer ? "mb-4" : ""
                         }`}
                     >
-                        <Link href={item.href} className="text-gray-800">
-                            {item.label}
-                        </Link>
+                        {item.onclick ? (
+                                <button onClick={(e)=> item.onclick(e)} className="text-gray-800">
+                                    {item.label}
+                                </button>
+                            ) : (
+                                <Link href={item.href} className="text-gray-800">
+                                    {item.label}
+                                </Link>
+                            )}
                         <span className="text-gray-500">&gt;</span>
                     </li>
                 ))}

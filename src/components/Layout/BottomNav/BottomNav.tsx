@@ -29,22 +29,22 @@ export default function BottomNav({ activeIndex = 0 }: BottomNavProps) {
                 
                 <li className="flex-1 text-center">
                     <Link href='/main' className="flex justify-center items-center h-full">
-                        <img src={ activeIndex==0 ? ActiveHomeIconPath : HomeIconPath} width={30} height={30} className='stroke-red-500' />
+                        <img src={ activeIndex===0 ? ActiveHomeIconPath : HomeIconPath} width={30} height={30} className="stroke-red-500" />
                     </Link>
                 </li>
                 <li className="flex-1 text-center">
                     <Link href='/search' className="flex justify-center items-center h-full">
-                    <img src={ activeIndex==1 ? ActiveSearchIconPath : SearchIconPath} width={30} height={30}  />
+                    <img src={ activeIndex===1 ? ActiveSearchIconPath : SearchIconPath} width={30} height={30}  />
                     </Link>
                 </li>
                 <li className="flex-1 text-center">
                     <Link href='/chat' className="flex justify-center items-center h-full">
-                    <img src={ activeIndex==2 ? ActiveMessageIconPath : MessageIconPath} width={30} height={30}  />
+                    <img src={ activeIndex===2 ? ActiveMessageIconPath : MessageIconPath} width={30} height={30}  />
                     </Link>
                 </li>
                 <li className="flex-1 text-center">
                     <Link href='/mypage' className="flex justify-center items-center h-full">
-                    <img src={ activeIndex==3 ? ActiveUserIconPath : UserIconPath} width={30} height={30}  />
+                    <img src={ activeIndex===3 ? ActiveUserIconPath : UserIconPath} width={30} height={30}  />
                     </Link>
                 </li>
             </ul>
