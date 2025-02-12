@@ -1,8 +1,11 @@
 'use client'
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Header from "@/components/Layout/header/Header";
+import DefaultBody from "@/components/Layout/Body/defaultBody";
+import CommonBtn from "@/components/buttons/commonBtn";
 
 const UserInfoEditPage = () => {
     const [userInfo, setUserInfo] = useState({
@@ -133,23 +136,16 @@ const UserInfoEditPage = () => {
     };
 
     return (
-        <div className="bg-white min-h-screen px-4 py-6 flex flex-col items-center">
-            {/* 헤더 */}
-            <header className="flex items-center justify-between w-full p-4 bg-white shadow-sm mb-6">
-                <button onClick={handleBack} className="text-gray-400 hover:text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
-                <h1 className="text-2xl font-bold text-gray-800">유저 정보 수정</h1>
-                <div className="w-5 h-5"></div> {/* 빈 공간 */}
-            </header>
-
-            {message && <p className="text-center text-gray-600">{message}</p>}
+        <Suspense>
+            <Header>
+                <Header.BackButton/>
+                <Header.Title>유저 정보 수정</Header.Title>
+            </Header>
+            <DefaultBody hasHeader={1}>
 
             {/* 프로필 사진 수정 */}
-            <div className="flex flex-col items-center mb-6">
-                <div className="w-24 h-24 bg-gray-200 rounded-full overflow-hidden">
+            <div className="flex flex-col items-center mt-[18px]">
+                <div className="w-[60px] h-[60px]">
                     {userInfo.profileImageUrl ? (
                         <img
                             src={userInfo.profileImageUrl}
@@ -157,14 +153,14 @@ const UserInfoEditPage = () => {
                             className="w-full h-full object-cover"
                         />
                     ) : (
-                        <span className="text-gray-600">No Image</span>
+                        <span className="flex w-full h-full items-center justify-center text-sub text-sr">로딩 중</span>
                     )}
                 </div>
                 <label
                     htmlFor="profileImage"
-                    className="mt-2 cursor-pointer text-blue-500 text-sm"
+                    className="mt-[12px] cursor-pointer text-active text-sr font-medium"
                 >
-                    사진 변경
+                    프로필 사진 변경
                 </label>
                 <input
                     type="file"
@@ -175,83 +171,80 @@ const UserInfoEditPage = () => {
             </div>
 
             {/* 이름, 닉네임, 학과 수정 박스 */}
-            <form onSubmit={handleSubmit} className="w-full max-w-md">
+            <form onSubmit={handleSubmit} className="w-full mt-[24px] flex flex-col gap-[24px]">
                 {/* 이름 */}
-                <div className="mb-4">
+                <div>
                     <label className="block text-sm font-medium text-gray-600 mb-2">이름</label>
                     <input
                         type="text"
                         name="name"
                         value={userInfo.name}
                         onChange={handleInputChange}
-                        className="w-full border border-gray-300 py-2 text-sm placeholder-gray-400 focus:outline-none focus:border-gray-600"
+                        className="defaultInput"
                         disabled={!editing}
                     />
                 </div>
 
                 {/* 닉네임 */}
-                <div className="mb-4">
+                <div>
                     <label className="block text-sm font-medium text-gray-600 mb-2">닉네임</label>
                     <input
                         type="text"
                         name="nickname"
                         value={userInfo.nickname}
                         onChange={handleInputChange}
-                        className="w-full border border-gray-300 py-2 text-sm placeholder-gray-400 focus:outline-none focus:border-gray-600"
+                        className="defaultInput"
                         disabled={!editing}
                     />
                 </div>
 
                 {/* 학과 */}
-                <div className="mb-6">
+                <div>
                     <label className="block text-sm font-medium text-gray-600 mb-2">학과</label>
                     <input
                         type="text"
                         name="department"
                         value={userInfo.department}
                         onChange={handleInputChange}
-                        className="w-full border border-gray-300 py-2 text-sm placeholder-gray-400 focus:outline-none focus:border-gray-600"
+                        className="defaultInput"
                         disabled={!editing}
                     />
                 </div>
 
                 {/* 이메일 */}
-                <div className="mb-6">
+                <div>
                     <label className="block text-sm font-medium text-gray-600 mb-2">이메일</label>
                     <input
                         type="text"
                         name="email"
                         value={userInfo.email}
                         onChange={handleInputChange}
-                        className="w-full border border-gray-300 py-2 text-sm placeholder-gray-400 focus:outline-none focus:border-gray-600"
+                        className="defaultInput"
                         disabled={!editing}
                     />
                 </div>
 
                 {/* 수정 모드로 전환 */}
                 {editing ? (
-                    <div className="flex justify-end">
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="py-2 px-4 bg-blue-500 text-white text-sm font-bold rounded-full hover:bg-blue-600"
-                        >
-                            저장
-                        </button>
-                    </div>
+                    <button type="submit" className="fixed translate-x-[-20px] px-[20px] bottom-[32px] flex flex-col w-full items-start gap-[8px]">
+                        <CommonBtn
+                            text="수정완료"
+                            status={1}
+                        />
+                    </button>
                 ) : (
-                    <div className="flex justify-end">
-                        <button
-                            type="button"
+                    <div className="fixed translate-x-[-20px] px-[20px] bottom-[32px] flex flex-col w-full items-start gap-[8px]">
+                        {message && <p className="text-Mm text-active">{message}</p>}
+                        <CommonBtn
+                            text="수정하기"
+                            status={0}
                             onClick={() => setEditing(true)}
-                            className="text-sm text-blue-500"
-                        >
-                            수정하기
-                        </button>
+                        />
                     </div>
                 )}
             </form>
-        </div>
+            </DefaultBody>
+        </Suspense>
     );
 };
 
