@@ -138,7 +138,7 @@ export default function MyPage() {
             
             </DefaultBody>
 
-            <BottomNav activeIndex={0}/>
+            <BottomNav activeIndex={3}/>
         </Suspense>
     );
 }
