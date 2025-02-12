@@ -4,6 +4,7 @@ import React from "react";
 import '@/app/globals.css';
 
 interface CommonBtnProps {
+    id: string;
     text: string;
     status: number; // 0:비활성화, 1:활성화
     onClick?: (...args: any[]) => any;
