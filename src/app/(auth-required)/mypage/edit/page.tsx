@@ -226,12 +226,12 @@ const UserInfoEditPage = () => {
 
                 {/* 수정 모드로 전환 */}
                 {editing ? (
-                    <button type="submit" className="fixed translate-x-[-20px] px-[20px] bottom-[32px] flex flex-col w-full items-start gap-[8px]">
-                        <CommonBtn
-                            text="수정완료"
-                            status={1}
-                        />
-                    </button>
+                    <CommonBtn
+                        text="수정완료"
+                        status={1}
+                        type="submit"
+                    />
+                    
                 ) : (
                     <div className="fixed translate-x-[-20px] px-[20px] bottom-[32px] flex flex-col w-full items-start gap-[8px]">
                         {message && <p className="text-Mm text-active">{message}</p>}
