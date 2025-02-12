@@ -9,6 +9,7 @@ import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { Suspense } from 'react'
 import Header from "@/components/Layout/header/Header";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
+import CommonBtn from "@/components/buttons/commonBtn";
 const SearchPage: FC = () => {
     // 검색어
     const [searchQuery, setSearchQuery] = useState<string>("");
@@ -123,35 +124,29 @@ const SearchPage: FC = () => {
             {/* 본문 영역 */}
             <DefaultBody hasHeader={1}>
                 {/* 검색창 */}
-                <div className="relative mx-4 mb-4">
+                <div className="relative mt-[18px] mb-4">
                     <input
+                        className="defaultInput mb-[8px]"
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="검색어를 입력하세요"
-                        className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                     />
-                    <button
-                        onClick={handleSearch}
-                        className="absolute inset-y-0 right-0 flex items-center justify-center w-10 h-full text-white bg-blue-500 rounded-xl hover:bg-blue-600 transition"
-                    >
-                        <FaSearch />
-                    </button>
+                    <CommonBtn status={1} text="검색하기" onClick={handleSearch} />
                 </div>
 
                 {/* 검색 결과 목록 */}
-                <div className="mx-4">
-                    <PostList posts={posts} boardName="search" boardType="search" />
-                </div>
+                <PostList posts={posts} boardName="search" boardType="search" />
+                
 
                 {/* 로딩 상태 표시 */}
                 {isLoading && (
-                    <div className="text-center my-6 text-gray-500">로딩 중...</div>
+                    <div className="text-center my-[18px] text-sub text-Lm">검색 중...</div>
                 )}
 
                 {/* 검색 결과가 없을 때 표시 */}
                 {!hasMore && !isLoading && posts.length === 0 && (
-                    <div className="text-center my-6 text-gray-500">
+                    <div className="text-center my-[18px] text-sub text-Lm">
                         검색 결과가 없습니다.
                     </div>
                 )}

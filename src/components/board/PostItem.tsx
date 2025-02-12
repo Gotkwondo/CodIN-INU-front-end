@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { FaEye, FaHeart, FaRegCommentDots, FaBookmark } from "react-icons/fa";
 import { Post } from "@/interfaces/Post";
+import { boardData } from "@/data/boardData";
 
 interface PostItemProps {
     post: Post;
@@ -9,42 +10,53 @@ interface PostItemProps {
     onOpenModal: (post: Post) => void; // 모달 열기 핸들러
 }
 
-// 아이콘 + 텍스트 렌더링 컴포넌트
-const PostStat = ({
-                      icon: Icon,
-                      count,
-                      isActive,
-                      activeColor,
-                  }: {
-    icon: React.ElementType;
-    count: number;
-    isActive: boolean;
-    activeColor: string;
-}) => {
-    const colorClass = isActive ? activeColor : "text-gray-400";
-    return (
-        <span className="flex items-center space-x-1">
-            <Icon className={colorClass} />
-            <span>{count}</span>
-        </span>
-    );
-};
 
 const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenModal }) => {
-    const imageUrl = post.postImageUrl.length > 0 ? post.postImageUrl[0] : null;
+    const imageUrl = post.postImageUrl?.length > 0 ? post.postImageUrl[0] : null;
 
     const handleClick = (e: React.MouseEvent) => {
         e.preventDefault(); // 기본 Link 동작 방지
         onOpenModal(post); // 모달 열기
     };
-
+    const timeAgo = (timestamp: string): string => {
+        const now = new Date();
+        const createdAt = new Date(timestamp);
+        const diffInSeconds = Math.floor((now.getTime() - createdAt.getTime()) / 1000);
+    
+        if (diffInSeconds < 60) {
+            return "방금 전";
+        } else if (diffInSeconds < 3600) {
+            return `${Math.floor(diffInSeconds / 60)}분 전`;
+        } else if (diffInSeconds < 86400) {
+            return `${Math.floor(diffInSeconds / 3600)}시간 전`;
+        } else {
+            return `${Math.floor(diffInSeconds / 86400)}일 전`;
+        }
+    };
     const postStats = (
-        <div className="flex items-center text-xs text-gray-500 mt-2 space-x-4">
-            <PostStat icon={FaEye} count={post.hits || 0} isActive={false} activeColor="text-gray-400" />
-            <PostStat icon={FaRegCommentDots} count={post.commentCount} isActive={false} activeColor="text-gray-400" />
-            <PostStat icon={FaHeart} count={post.likeCount} isActive={post.userInfo.like} activeColor="text-red-500" />
-            <PostStat icon={FaBookmark} count={post.scrapCount} isActive={post.userInfo.scrap} activeColor="text-yellow-500" />
+        
+        <div className="flex justify-between items-center text-sr text-sub">
+            <div className="flex space-x-[6px]">
+                <span className="flex items-center gap-[4.33px]">
+                    <img src="/icons/board/viewIcon.svg" width={16} height={16}/>
+                    {post.hits || 0}
+                </span>
+                <span className="flex items-center gap-[4.33px]">
+                    <img src="/icons/board/heartIcon.svg" width={16} height={16}/>
+                    {post.likeCount || 0}
+                </span>
+                <span className="flex items-center gap-[4.33px]">
+                    <img src="/icons/board/commentIcon.svg" width={16} height={16}/>
+                    {post.commentCount || 0}
+                </span>
+            </div>
+            <div className="flex items-centertext-sub space-x-1 text-sr">
+                <span>{post.anonymous ? "익명" : post.nickname}</span>
+                <span> · </span>
+                <span>{timeAgo(post.createdAt)}</span>
+            </div>
         </div>
+
     );
 
     if (boardType === "gallery") {
@@ -95,11 +107,28 @@ const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenM
         );
     } else {
         // 리스트형 디자인
+
+        const mapPostCategoryToBoardPath = (postCategory: string): string | null => {
+            for (const boardKey in boardData) {
+                const board = boardData[boardKey];
+                const tab = board.tabs.find((tab) => tab.postCategory === postCategory);
+                if (tab) return boardKey; // 해당 게시판 경로 반환
+            }
+            return null; // 매칭되는 게시판이 없을 경우
+        };
+
+        const boardPath = mapPostCategoryToBoardPath(post.postCategory);
+
         return (
-            <li className="flex items-start justify-between bg-white p-2 border-b">
+            <li className="flex items-start justify-between">
                 <a href="#" onClick={handleClick} className="flex-1">
-                    <h3 className="text-sm font-semibold text-gray-800">{post.title}</h3>
-                    <p className="text-xs text-gray-600 line-clamp-2">{post.content}</p>
+                    <div>
+                        <p className="text-sr text-sub px-[4px] py-[2px] bg-[#F2F2F2] rounded-[3px] inline">
+                            {boardData[boardPath]?.name || "알 수 없음"}
+                        </p>
+                    </div>
+                    <h3 className="text-Lm mt-[8px]">{post.title}</h3>
+                    <p className="text-Mm text-sub line-clamp-2 mt-[4px] mb-[8px]">{post.content}</p>
                     {postStats}
                 </a>
                 {imageUrl && (
