@@ -176,10 +176,10 @@ const MainPage: FC = () => {
                                                         {boardData[boardPath]?.name || "알 수 없음"}
                                                     </p>
                                                 </div>
-                                                <h3 className="text-Lm">
+                                                <h3 className="text-Lm mt-[8px]">
                                                     {post.title}
                                                 </h3>
-                                                <p className="text-Mr text-sub">
+                                                <p className="text-Mr text-sub mt-[4px] mb-[8px]">
                                                     {post.content}
                                                 </p>
                                                 <div className="flex justify-between items-center text-sr text-sub">
