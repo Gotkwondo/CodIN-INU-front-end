@@ -52,10 +52,9 @@ export default function MyPage() {
         }
     };
     const menuItems = [
-        { label: "프로필 편집", href: "/mypage/edit" },
+        { label: "프로필 편집", href: "/mypage/edit"},
         { label: "게시글", href: "/mypage/board/posts" },
-        { label: "좋아요", href: "/mypage/board/likes" },
-        { label: "댓글", href: "/mypage/board/comments" },
+        { label: "좋아요", href: "/mypage/board/likes", isSpacer: true},
         { label: "스크랩", href: "/mypage/board/scraps", isSpacer: true },
         { label: "알림 설정", href: "/mypage/notifications" },
         { label: "차단 관리", href: "/mypage/settings/block", isSpacer: true },
@@ -91,60 +90,55 @@ export default function MyPage() {
             <DefaultBody hasHeader={1}>
 
             {/* 사용자 정보 섹션 */}
-            <div className="flex items-center justify-between px-4 py-8 pt-[12px]">
+            <div className="flex items-center justify-between pt-[18px]">
+                
                 {/* 프로필 이미지 */}
-                <div className="flex items-center space-x-4">
-                    <div
-                        className="w-12 h-12 rounded-full bg-gray-200"
-                        style={{
-                            backgroundImage: `url(${userData.profileImageUrl || ""})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                        }}
+                <div className="flex items-center space-x-[12px]">
+                    <img 
+                        src="/icons/chat/deafultProfile.png"
+                        width={49} height={49}
                     />
                     <div>
                         {/* 사용자 이름 */}
-                        <h2 className="text-base font-semibold text-gray-800">{userData.name}</h2>
+                        <h2 className="text-main text-Mm">{userData.name}</h2>
                         {/* 이메일 */}
-                        <p className="text-sm text-gray-500">{userData.email}</p>
+                        <p className="text-sub text-sr">{userData.email}</p>
                     </div>
                 </div>
-                {/* 포인트 */}
-                <span className="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-full">
-                    20P
-                </span>
+                <p className="text-Mm text-[#fff] bg-main px-[8px] py-[2px] rounded-[50px] flex justify-center items-center">
+                    인증됨
+                </p>
             </div>
-            {/* 관심사 */}
-            <p className="text-sm text-blue-500 text-start ml-4 mt-2 mb-4">
-                관심사 · 코딩 · 프론트 · 디자인
-            </p>
 
             {/* 메뉴 리스트 */}
-            <ul className="text-sm">
+            <ul className="mt-[45px] text-Mm ">
                 {menuItems.map((item, index) => (
                     <li
                         key={index}
-                        className={`flex justify-between items-center px-4 py-2 ${
-                            item.isSpacer ? "mb-4" : ""
-                        }`}
+                        className={`flex justify-between items-center w-full
+                            ${ item.isSpacer ? "mb-[48px] " : "mb-[24px] "}
+                        `}
                     >
                         {item.onclick ? (
-                                <button onClick={(e)=> item.onclick(e)} className="text-gray-800">
+                                <button onClick={(e)=> item.onclick(e)} >
                                     {item.label}
                                 </button>
                             ) : (
-                                <Link href={item.href} className="text-gray-800">
+                                <Link href={item.href} 
+                                    className={`
+                                        ${ item.label === "프로필 편집" ? " text-active" : "text-main"}
+                                    `}>
                                     {item.label}
                                 </Link>
                             )}
-                        <span className="text-gray-500">&gt;</span>
+                        <img src="/icons/mypage/rightArrow.svg" width={20} height={20}/>
                     </li>
                 ))}
             </ul>
             
             </DefaultBody>
 
-            <BottomNav activeIndex={0}/>
+            <BottomNav activeIndex={3}/>
         </Suspense>
     );
 }
