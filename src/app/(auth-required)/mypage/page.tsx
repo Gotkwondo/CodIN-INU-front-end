@@ -115,7 +115,8 @@ export default function MyPage() {
                 {/* 프로필 이미지 */}
                 <div className="flex items-center space-x-[12px]">
                     <img 
-                        src="/icons/chat/deafultProfile.png"
+                        className="rounded-full"
+                        src={userData.profileImageUrl}
                         width={49} height={49}
                     />
                     <div>
