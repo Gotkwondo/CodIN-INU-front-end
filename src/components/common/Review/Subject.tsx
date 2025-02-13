@@ -1,5 +1,6 @@
 import { ComponentProps } from 'react';
 import { RateBar } from './RateBar';
+import Link from 'next/link';
 
 type SubjectType = {
   subjectName: string;
@@ -15,7 +16,9 @@ const Subject = ({ subjectName, subjectCode, professor, score, rateCnt, ...rest 
       <p className="text-[#D4D4D4]">{`<li>`}</p>
       <div className="w-full flex flex-row justify-between">
         <div className="w-1/2 text-xl">
-          <p className="mb-2">{subjectName}</p>
+          <Link href={`/`}>
+            <p className="mb-2">{subjectName}</p>
+          </Link>
           <div className="w-full text-sm flex font-semibold">
             <div className="w-[4.5rem] text-start text-[#808080] font-normal">
               교수명
@@ -26,12 +29,15 @@ const Subject = ({ subjectName, subjectCode, professor, score, rateCnt, ...rest 
             <div className="w-[4.5rem] text-start text-[#808080] font-normal">
               과목 코드
             </div>
-            {subjectCode}
+            <div className="w-[6rem] text-wrap break-all">{subjectCode}</div>
           </div>
         </div>
         <div className="w-1/2 text-end">
           <p className="text-xl">
-            <span className="text-[#0D99FF]">{`${score % 1 ? score : score + ".0"}`}</span> / 5.0
+            <span className="text-[#0D99FF]">{`${
+              score % 1 ? score : score + ".0"
+            }`}</span>{" "}
+            / 5.0
           </p>
           <RateBar score={score} className="mt-6" />
           <p className="mt-2 text-xs text-[#808080]">{`${rateCnt} 명의 학생이 평가했어요`}</p>

@@ -4,6 +4,14 @@ export type labelType = {
 }
 
 export type searchTypesType = {
-  label: '과목명' | '교수명' | '';
-  value: 'class' | 'professor' | '';
-}
+  label: "과목명" | "교수명";
+  value: "LEC" | "PROF";
+};
+
+export type reviewContentType = {
+  _id: string;
+  lectureNm: string;
+  professor: string;
+  starRating: number;
+  participants: number;
+};
