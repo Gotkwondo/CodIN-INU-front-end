@@ -5,6 +5,7 @@ import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import Header from "@/components/Layout/header/Header";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
 import { PostLogout } from "@/api/user/postLogout";
+import { DeleteUser } from "@/api/user/deleteUser";
 
 export default function MyPage() {
     const [userData, setUserData] = useState(null);
@@ -40,17 +41,36 @@ export default function MyPage() {
     const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         try {
-            const response = await PostLogout();
-            console.log('결과:', response);
-            localStorage.clear();
-            alert("로그아웃 완료하였습니다.")
-            window.location.href = "/login";
+            if (confirm("로그아웃 할까요?")) {
+                const response = await PostLogout();
+                console.log('결과:', response);
+                localStorage.clear();
+                alert("성공적으로 로그아웃하였습니다.")
+                window.location.href = "/login";
+            } 
         } catch (error) {
             console.error("로그아웃 실패", error);
             const message = error.response.data.message;
             alert(message);
         }
     };
+    const handleDeleteAccount = async(e: React.MouseEvent<HTMLButtonElement>) =>{
+        e.preventDefault();
+        try{
+
+            if (confirm("정말로 탈퇴하시겠어요?")) {
+                const response = await DeleteUser();
+                console.log('결과:', response);
+                localStorage.clear();
+                alert("성공적으로 탈퇴하였습니다.")
+                window.location.href = "/login";
+            } 
+        } catch (error) {
+            console.error("탈퇴 실패",error);
+            const message = error.response.data.message;
+            alert(message);
+        }
+    }
     const menuItems = [
         { label: "프로필 편집", href: "/mypage/edit"},
         { label: "게시글", href: "/mypage/board/posts" },
@@ -59,7 +79,7 @@ export default function MyPage() {
         { label: "알림 설정", href: "/mypage/notifications" },
         { label: "차단 관리", href: "/mypage/settings/block", isSpacer: true },
         { label: "로그아웃", onclick: handleLogout },
-        { label: "회원 탈퇴", href: "/mypage/delete-account" },
+        { label: "회원 탈퇴", onclick: handleDeleteAccount },
     ];
 
     if (isLoading) {
