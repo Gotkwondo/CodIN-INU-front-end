@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useState, useEffect, useRef } from "react";
+import { FC, useState, useEffect, useRef, Suspense } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
@@ -8,6 +8,8 @@ import axios from "axios";
 import BoardLayout from "@/components/Layout/BoardLayout"; // 기존에 만든 공용 컴포넌트
 import PostList from "@/components/board/PostList";
 import { Post } from "@/interfaces/Post";
+import Header from "@/components/Layout/header/Header";
+import DefaultBody from "@/components/Layout/Body/defaultBody";
 
 // board 파라미터와 실제 엔드포인트 매핑
 const endpointMap: Record<string, string> = {
@@ -136,32 +138,23 @@ const MyBoardPage: FC = () => {
 
     return (
         <>
+            <Header>
+                <Header.BackButton/>
+                <Header.Title>{headerTitle}</Header.Title>
+            </Header>
 
-
-            <BoardLayout
-                board={{
-                    name: headerTitle,
-                    icon: "📋",
-                    tabs: [],
-                    type: "myboard",
-                }}
-                activeTab=""
-                onTabChange={() => {}}
-            >
+            <DefaultBody hasHeader={1}>
                 <PostList posts={posts} boardName={board} boardType="myboard" />
 
                 {isLoading && (
-                    <div className="text-center my-4 text-gray-500">로딩 중...</div>
+                    <div className="text-center mt-[24px] text-Mm text-sub">로딩 중...</div>
                 )}
 
                 {!hasMore && !isLoading && posts.length === 0 && (
-                    <div className="text-center my-4 text-gray-500">게시물이 없습니다.</div>
+                    <div className="text-center mt-[24px] text-Mm text-sub">게시물이 없습니다.</div>
                 )}
-
-                {!hasMore && !isLoading && posts.length > 0 && (
-                    <div className="text-center my-4 text-gray-500">마지막 게시물입니다.</div>
-                )}
-            </BoardLayout>
+            </DefaultBody>
+            
         </>
     );
 };
