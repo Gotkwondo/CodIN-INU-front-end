@@ -8,7 +8,7 @@ import { AuthContext } from '@/context/AuthContext';
 import CommonBtn from '@/components/buttons/commonBtn';
 import DefaultBody from '@/components/Layout/Body/defaultBody';
 import { PostPortal } from '@/api/user/postPortal';
-
+import { UserContext } from '@/context/UserContext';
 
 export default function LoginPage() {
     const router = useRouter();
@@ -17,6 +17,14 @@ export default function LoginPage() {
     const [password, setPassword] = useState<string>("");
     const [schoolLoginExplained, setSchoolLoginExplained] = useState<boolean>(false);
     const authContext = useContext(AuthContext);
+
+    const userContext = useContext(UserContext);
+
+    if (!userContext) {
+      throw new Error('MyConsumer must be used within a MyProvider');
+    }
+  
+    const { User, updateUser } = userContext;
 
     if (!authContext) {
         throw new Error('AuthContext를 사용하려면 AuthProvider로 감싸야 합니다.');
@@ -44,10 +52,13 @@ export default function LoginPage() {
         }
 
         try {
-            const response = await PostLogin(studentId, password);
+            updateUser({ studentId: studentId});
+            console.log(`학번 업데이트: ${studentId}`);
+            const response = await PostPortal(studentId, password);
             console.log(`로그인 결과: ${response}`);
             const token = response.headers['authorization'];
             const refreshToken = response.headers['x-refresh-token']
+            const code = response.status
             if (token) {
                 console.log('Authorization 토큰:', token);
                 console.log('리프레시:', refreshToken);
@@ -60,12 +71,14 @@ export default function LoginPage() {
 
                 // 로그인 성공 후 메인 페이지로 이동
                 router.push('/main');
-            } else {
-                console.warn('Authorization 토큰이 응답에 없습니다.');
+            } else if (code === 201 ){
+                alert("처음 로그인 하셨군요! 프로필 설정을 해주세요")
+                router.push('/signup/profile');
             }
         } catch (error) {
             console.error("로그인 실패", error);
-            alert('이메일 혹은 비밀번호가 틀립니다. 다시 시도해주세요.');
+            alert(error);
+            //alert('이메일 혹은 비밀번호가 틀립니다. 다시 시도해주세요.');
         }
     };
 

@@ -1,8 +1,10 @@
 'use client';
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import BottomNav from "@/components/Layout/BottomNav";
+import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import Header from "@/components/Layout/header/Header";
+import DefaultBody from "@/components/Layout/Body/defaultBody";
+import { PostLogout } from "@/api/user/postLogout";
 
 export default function MyPage() {
     const [userData, setUserData] = useState(null);
@@ -35,16 +37,28 @@ export default function MyPage() {
 
         fetchUserData();
     }, []);
-
+    const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        try {
+            const response = await PostLogout();
+            console.log('결과:', response);
+            localStorage.clear();
+            alert("로그아웃 완료하였습니다.")
+            window.location.href = "/login";
+        } catch (error) {
+            console.error("로그아웃 실패", error);
+            const message = error.response.data.message;
+            alert(message);
+        }
+    };
     const menuItems = [
-        { label: "프로필 편집", href: "/mypage/edit" },
+        { label: "프로필 편집", href: "/mypage/edit"},
         { label: "게시글", href: "/mypage/board/posts" },
-        { label: "좋아요", href: "/mypage/board/likes" },
-        { label: "댓글", href: "/mypage/board/comments" },
+        { label: "좋아요", href: "/mypage/board/likes", isSpacer: true},
         { label: "스크랩", href: "/mypage/board/scraps", isSpacer: true },
         { label: "알림 설정", href: "/mypage/notifications" },
         { label: "차단 관리", href: "/mypage/settings/block", isSpacer: true },
-        { label: "로그아웃", href: "/mypage/logout" },
+        { label: "로그아웃", onclick: handleLogout },
         { label: "회원 탈퇴", href: "/mypage/delete-account" },
     ];
 
@@ -59,6 +73,7 @@ export default function MyPage() {
             </div>
         );
     }
+   
     const navigateToMain = () => {
         console.log("메인 페이지로 이동");
     };
@@ -67,58 +82,63 @@ export default function MyPage() {
         alert(`선택: ${menuName}`);
     };
     return (
-        <div className="w-full min-h-screen bg-white p-4 mt-10">
+        <Suspense>
             <Header>
                 <Header.Title>마이페이지</Header.Title>
             </Header>
 
+            <DefaultBody hasHeader={1}>
 
             {/* 사용자 정보 섹션 */}
-            <div className="flex items-center justify-between px-4 py-8">
+            <div className="flex items-center justify-between pt-[18px]">
+                
                 {/* 프로필 이미지 */}
-                <div className="flex items-center space-x-4">
-                    <div
-                        className="w-12 h-12 rounded-full bg-gray-200"
-                        style={{
-                            backgroundImage: `url(${userData.profileImageUrl || ""})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
-                        }}
+                <div className="flex items-center space-x-[12px]">
+                    <img 
+                        src="/icons/chat/deafultProfile.png"
+                        width={49} height={49}
                     />
                     <div>
                         {/* 사용자 이름 */}
-                        <h2 className="text-base font-semibold text-gray-800">{userData.name}</h2>
+                        <h2 className="text-main text-Mm">{userData.name}</h2>
                         {/* 이메일 */}
-                        <p className="text-sm text-gray-500">{userData.email}</p>
+                        <p className="text-sub text-sr">{userData.email}</p>
                     </div>
                 </div>
-                {/* 포인트 */}
-                <span className="bg-blue-500 text-white text-sm font-bold py-1 px-3 rounded-full">
-                    20P
-                </span>
+                <p className="text-Mm text-[#fff] bg-main px-[8px] py-[2px] rounded-[50px] flex justify-center items-center">
+                    인증됨
+                </p>
             </div>
-            {/* 관심사 */}
-            <p className="text-sm text-blue-500 text-start ml-4 mt-2 mb-4">
-                관심사 · 코딩 · 프론트 · 디자인
-            </p>
 
             {/* 메뉴 리스트 */}
-            <ul className="text-sm">
+            <ul className="mt-[45px] text-Mm ">
                 {menuItems.map((item, index) => (
                     <li
                         key={index}
-                        className={`flex justify-between items-center px-4 py-2 ${
-                            item.isSpacer ? "mb-4" : ""
-                        }`}
+                        className={`flex justify-between items-center w-full
+                            ${ item.isSpacer ? "mb-[48px] " : "mb-[24px] "}
+                        `}
                     >
-                        <Link href={item.href} className="text-gray-800">
-                            {item.label}
-                        </Link>
-                        <span className="text-gray-500">&gt;</span>
+                        {item.onclick ? (
+                                <button onClick={(e)=> item.onclick(e)} >
+                                    {item.label}
+                                </button>
+                            ) : (
+                                <Link href={item.href} 
+                                    className={`
+                                        ${ item.label === "프로필 편집" ? " text-active" : "text-main"}
+                                    `}>
+                                    {item.label}
+                                </Link>
+                            )}
+                        <img src="/icons/mypage/rightArrow.svg" width={20} height={20}/>
                     </li>
                 ))}
             </ul>
-            <BottomNav activeIndex={0}/>
-        </div>
+            
+            </DefaultBody>
+
+            <BottomNav activeIndex={3}/>
+        </Suspense>
     );
 }

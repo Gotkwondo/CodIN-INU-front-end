@@ -2,7 +2,7 @@
 import './chatRoom.css';
 import { useRouter, useParams} from 'next/navigation';
 import { useContext, useState, useEffect, useRef, FormEvent } from 'react';
-import BottomNav from "@/components/Layout/BottomNav";
+import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { AuthContext } from '@/context/AuthContext';
 import { GetChatData } from '@/api/chat/getChatData';
 import * as StompJs from '@stomp/stompjs';
@@ -205,7 +205,7 @@ const handleScroll = () => {
         <div className='chatroom'>
             <Header>
                 <Header.BackButton/>
-                <Header.Title> {`<${title}/>`}</Header.Title>
+                <Header.Title> {`${title}`}</Header.Title>
                 <Header.Menu>
                     <Header.MenuItem onClick={() => exitRoom(chatRoomId)}>
                         방 나가기
