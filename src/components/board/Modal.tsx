@@ -54,6 +54,10 @@ const Modal = ({
         }
     };
 
+    const blockUser = async () => {
+      
+    };
+
     const handleMenuAction = (action: string) => {
         if (action === "chat") {
             alert("채팅하기 클릭됨");
@@ -62,6 +66,7 @@ const Modal = ({
             setIsReportModalOpen(true); // 신고 모달 열기
         } else if (action === "block") {
             alert("차단하기 클릭됨");
+            blockUser();
         }
         setMenuOpen(false); // 메뉴 닫기
     };

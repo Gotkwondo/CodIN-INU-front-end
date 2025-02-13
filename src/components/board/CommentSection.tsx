@@ -672,7 +672,7 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
     
 
     return (
-        <div className="relative mt-8 mb-28 max-w-2xl w-[100%]">
+        <div className="relative mt-8 mb-28 ml-4 max-w-2xl w-[86%]">
             <h3 className="text-lg font-semibold mb-4 text-gray-800">
                 댓글
                 {/* {postName && <span> - {postName}</span>} */}

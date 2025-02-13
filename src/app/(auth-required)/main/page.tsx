@@ -1,12 +1,15 @@
 'use client'
-import {FC, useEffect, useState} from "react";
+import {FC, Suspense, useEffect, useState} from "react";
 import Link from "next/link";
 import Image from "next/image";
-import BottomNav from "@/components/Layout/BottomNav";
+import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import {FaBell, FaEye, FaHeart, FaRegCommentDots,FaRegBell} from "react-icons/fa";
 import ZoomableImageModal from "../../../components/modals/ZoomableImageModal";
 import {boardData} from "@/data/boardData";
 import AlarmModal from "@/components/modals/AlarmModal"; // 알림 아이콘 추가
+import Header from "@/components/Layout/header/Header";
+import Logo from "@/components/Layout/header/Logo";
+import DefaultBody from "@/components/Layout/Body/defaultBody";
 const timeAgo = (timestamp: string): string => {
     const now = new Date();
     const createdAt = new Date(timestamp);
@@ -30,7 +33,7 @@ const menuItems = [
     { label: "비교과", href: "/main/boards/extracurricular", icon: "/icons/extracurricular.png" },
     { label: "정보대 소개", href: "/main/info/department-info", icon: "/icons/info.png" },
     { label: "중고책", href: "/main/boards/used-books", icon: "/icons/used-books.png" },
-    { label: "익명 채팅방", href: "/chat", icon: "/icons/anonymous-chat.png" },
+    { label: "강의실 현황", href: "/roomstatus", icon: "/icons/anonymous-chat.png" },
     { label: "익명 투표", href: "/vote", icon: "/icons/anonymous-vote.png" },
     { label: "수강 후기", href: "/main/info/course-reviews", icon: "/icons/course-reviews.png" },
 ];
@@ -41,13 +44,11 @@ const Calendar = () => {
     const month = String(today.getMonth() + 1).padStart(2, "0");
 
     return (
-        <section className="my-6">
-            <div className="relative w-full mt-4">
-                <ZoomableImageModal
-                    images={`/images/calendar/calendar_2024_12.jpg`}
-                />
-            </div>
-        </section>
+        <div className="relative w-full mt-[18px]">
+            <ZoomableImageModal
+                images={`/images/calendar/calendar_2024_12.jpg`}
+            />
+        </div>
     );
 };
 
@@ -110,148 +111,116 @@ const MainPage: FC = () => {
 
 
     return (
-        <div className="bg-white min-h-screen overflow-x-hidden">
+        <Suspense>
             {/* 헤더 */}
-            <header className="flex items-center justify-between p-4 bg-white shadow-sm">
-                <div className="flex items-center">
-                    <Image src="/images/codinlogo.png" alt="CodIN Logo" width={160} height={60} />
-                </div>
-                <div className="relative">
-                    {/* 알림 아이콘 */}
-                    <button onClick={handleOpenModal} className="text-gray-600 text-2xl">
-                        {hasNewAlarm ? (
-                            <FaBell className="text-red-500" /> // 새 알람이 있을 때
-                        ) : (
-                            <FaRegBell /> // 새 알람이 없을 때
-                        )}
-                    </button>
-                </div>
-            </header>
+            <Header>
+                <Header.Logo/>
+                <Header.Notice/>
+            </Header>
 
-            {/* 캘린더 */}
-            <section className="p-3">
+            <DefaultBody hasHeader={1} >
+                {/* 캘린더 */}
                 <Calendar />
-            </section>
 
-            {/* 메뉴 섹션 */}
-            <section className="my-6  mx-4 relative flex flex-col">
-                {/* 왼쪽 위에 <div> 텍스트 추가 (메뉴 외부, 왼쪽 정렬) */}
-                <div className="self-start p-2 text-sm text-gray-700">
-                    <span>&lt;div&gt;</span>
-                </div>
+                {/* 메뉴 섹션 */}
+                <section className="mt-[63px] relative flex flex-col">
+                    {/* 왼쪽 위에 <div> 텍스트 추가 (메뉴 외부, 왼쪽 정렬) */}
 
-                {/* 메뉴 아이템 */}
-                <div className="grid grid-cols-4 gap-4  bg-[#ebf0f7] p-4 rounded-lg">
-                    {menuItems.map((menu, index) => (
-                        <Link
-                            href={menu.href}
-                            key={index}
-                            className="flex flex-col items-center text-center text-gray-700"
-                        >
-                            <div className="bg-white p-4 rounded-full shadow-md">
-                                <Image src={menu.icon} alt={menu.label} width={48} height={48} />
-                            </div>
-                            {/* 텍스트 줄바꿈 */}
-                            <span className="text-sm font-medium mt-2 break-words leading-tight">
-                    {menu.label.split(" ").map((word, i) => (
-                        <span key={i} className="block">
-                            {word}
-                        </span>
-                    ))}
-                </span>
-                        </Link>
-                    ))}
-                </div>
-
-                {/* 오른쪽 아래에 <div> 텍스트 추가 (메뉴 외부, 오른쪽 정렬) */}
-                <div className="self-end p-2 text-sm text-gray-700">
-                    <span>&lt;/div&gt;</span>
-                </div>
-            </section>
+                    {/* 메뉴 아이템 */}
+                    <div className="grid grid-cols-4 justify-between gap-y-[24px]">
+                        {menuItems.map((menu, index) => (
+                            <Link
+                                href={menu.href}
+                                key={index}
+                                className="flex flex-col justify-start items-center text-center text-Mm"
+                            >
+                                <div className="w-[56px] h-[56px] bg-[#EBF0F7] flex items-center justify-center rounded-full">
+                                    <Image src={menu.icon} alt={menu.label} width={28} height={28} />
+                                </div>
+                                {/* 텍스트 줄바꿈 */}
+                                <span className="text-sm font-medium mt-2 break-words leading-tight">
+                                    {menu.label.split(" ").map((word, i) => (
+                                        <span key={i} className="block">
+                                            {word}
+                                        </span>
+                                    ))}
+                                </span>
+                            </Link>
+                        ))}
+                    </div>
+                </section>
 
 
-
-
-
-
-            {/* 게시물 랭킹 */}
-            <section className="my-6">
-                <h2 className="text-center text-gray-700 text-lg font-semibold">
-                    <span className="text-lg font-light">&lt;best&gt;</span> 게시물 랭킹 <span className="text-lg font-light">&lt;/best&gt;</span>
-                </h2>
-                <div className="bg-white rounded-lg p-4 shadow-md space-y-1 pb-32">
-                    {loading ? (
-                        <p className="text-center text-gray-500">랭킹 데이터를 불러오는 중입니다...</p>
-                    ) : error ? (
-                        <p className="text-center text-red-500">에러: {error}</p>
-                    ) : rankingPosts.length > 0 ? (
-                        rankingPosts.map((post, index) => {
-                            const boardPath = mapPostCategoryToBoardPath(post.postCategory);
-                            return boardPath ? (
-                                <Link
-                                    key={index}
-                                    href={`/main/boards/${boardPath}?postId=${post._id}`}
-                                    className="block"
-                                >
-                                    <div className="flex items-start px-3 py-1 bg-white border rounded-lg hover:shadow-md">
-                                        <div className="flex-1">
-                                            <p className="text-[10px] text-gray-500 mb-2 bg-gray-200 inline p-0.5 rounded-sm leading-tight">
-                                                {boardData[boardPath]?.name || "알 수 없음"}
-                                            </p>
-                                            <h3 className="font-semibold text-gray-800 mb-0.5">
-                                                {post.title}
-                                            </h3>
-                                            <p className="text-gray-600 text-sm mb-1 line-clamp-2">
-                                                {post.content}
-                                            </p>
-                                            <div className="flex justify-between items-center text-xs text-gray-500 py-1">
-                                                <div className="flex space-x-4">
-                                                    <span className="flex items-center">
-                                                        <FaEye className="mr-1" />
-                                                        {post.hits || 0}
-                                                    </span>
-                                                    <span className="flex items-center">
-                                                        <FaHeart className="mr-1" />
-                                                        {post.likeCount || 0}
-                                                    </span>
-                                                    <span className="flex items-center">
-                                                        <FaRegCommentDots className="mr-1" />
-                                                        {post.commentCount || 0}
-                                                    </span>
+                {/* 게시물 랭킹 */}
+                <section className="mt-[48px]">
+                    
+                    <h2 className="text-XLm">{"게시물 랭킹"}</h2>
+                    <div className="pt-[26px] mb-[18px] flex flex-col gap-[27px]">
+                        {loading ? (
+                            <p className="text-center text-sub">랭킹 데이터를 불러오는 중입니다...</p>
+                        ) : error ? (
+                            <p className="text-center text-sub">{error}</p>
+                        ) : rankingPosts.length > 0 ? (
+                            rankingPosts.map((post, index) => {
+                                const boardPath = mapPostCategoryToBoardPath(post.postCategory);
+                                return boardPath ? (
+                                    <Link
+                                        key={index}
+                                        href={`/main/boards/${boardPath}?postId=${post._id}`}
+                                        className="block"
+                                    >
+                                        <div className="flex flex-col gap-[8px] bg-white">
+                                            <div className="flex-1 w-full">
+                                                <div>
+                                                    <p className="text-sr text-sub px-[4px] py-[2px] bg-[#F2F2F2] rounded-[3px] inline">
+                                                        {boardData[boardPath]?.name || "알 수 없음"}
+                                                    </p>
                                                 </div>
-                                                <div className="flex items-center space-x-2">
-                                                    <span>{post.anonymous ? "익명" : post.nickname}</span>
-                                                    <span>|</span>
-                                                    <span>{timeAgo(post.createdAt)}</span>
+                                                <h3 className="text-Lm mt-[8px]">
+                                                    {post.title}
+                                                </h3>
+                                                <p className="text-Mr text-sub mt-[4px] mb-[8px]">
+                                                    {post.content}
+                                                </p>
+                                                <div className="flex justify-between items-center text-sr text-sub">
+                                                    <div className="flex space-x-[6px]">
+                                                        <span className="flex items-center gap-[4.33px]">
+                                                            <img src="/icons/board/viewIcon.svg" width={16} height={16}/>
+                                                            {post.hits || 0}
+                                                        </span>
+                                                        <span className="flex items-center gap-[4.33px]">
+                                                            <img src="/icons/board/heartIcon.svg" width={16} height={16}/>
+                                                            {post.likeCount || 0}
+                                                        </span>
+                                                        <span className="flex items-center gap-[4.33px]">
+                                                            <img src="/icons/board/commentIcon.svg" width={16} height={16}/>
+                                                            {post.commentCount || 0}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex items-centertext-sub space-x-1 text-sr">
+                                                        <span>{post.anonymous ? "익명" : post.nickname}</span>
+                                                        <span> · </span>
+                                                        <span>{timeAgo(post.createdAt)}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        {post.imageUrl && (
-                                            <div className="ml-4 w-16 h-16 overflow-hidden rounded-lg">
-                                                <Image
-                                                    src={post.imageUrl}
-                                                    alt={post.title}
-                                                    width={64}
-                                                    height={64}
-                                                    className="object-cover w-full h-full"
-                                                />
-                                            </div>
-                                        )}
-                                    </div>
-                                </Link>
-                            ) : null;
-                        })
-                    ) : (
-                        <p className="text-center text-gray-500">게시물이 없습니다.</p>
-                    )}
-                </div>
-            </section>
+                                    </Link>
+                                ) : null;
+                            })
+                        ) : (
+                            <p className="text-center text-gray-500">게시물이 없습니다.</p>
+                        )}
+                    </div>
+                </section>
 
-            {isModalOpen && <AlarmModal onClose={handleCloseModal} />}
+                {isModalOpen && <AlarmModal onClose={handleCloseModal} />}
+
+            </DefaultBody>
             {/* 하단 네비게이션 */}
             <BottomNav activeIndex={0}/>
 
-        </div>
+        </Suspense>
     );
 };
 

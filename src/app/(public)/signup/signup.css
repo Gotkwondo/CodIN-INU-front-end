@@ -1,16 +1,6 @@
-.pb-16{
-    display: flex;
-    justify-content: center;
-   height: 100vh;
-}
+
 .signup{
-    display: flex !important;
-    flex-direction: column;
-    background-color: #ffffff;
-    justify-content: flex-start;
-    align-items: center;
-    width: 390px;
-    height: 100vh;
+  
 
     #back_btn{
         margin-top: 55px;
@@ -313,15 +303,9 @@
       }
       #profileImgBtn{
 
-        width: 87px;
-        height: 87px;
-        border-radius: 50%;
+       
         background-image: url('../../../../public/icons/profile.png');
-        background-repeat: no-repeat;
-        background-size: contain;
-        align-self: flex-start;
-        margin-top: 24px;
-        margin-left: 24px;
+       
 
       }
       #nickname{
