@@ -1,5 +1,4 @@
 'use client';
-import '../signup.css';
 import { useRouter } from 'next/navigation';
 import { UserContext } from '@/context/UserContext';
 import { useContext, useState, useEffect } from 'react';
@@ -27,21 +26,22 @@ export default function SignupProfile() {
     if (e.target.files) {
       const file = e.target.files[0]; 
       setProfileImg(file);
-
-       const reader = new FileReader();
-       reader.readAsDataURL(file);
-       reader.onloadend = () => {
-           if (reader.result){
-                setImgPrev(reader.result as string);
-                console.log(reader.result as string);
-                console.log(profileImg);
-           }
-       }
+      if (imgPrev) {
+        URL.revokeObjectURL(imgPrev);
+      }
+      setImgPrev(URL.createObjectURL(file));
+      console.log(URL.createObjectURL(file));
     }
 
 }
 
-
+  useEffect(() => {
+    return () => {
+      if (imgPrev) {
+        URL.revokeObjectURL(imgPrev);
+      }
+    };
+  }, [imgPrev]);
 
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setNickname(e.target.value);
@@ -71,32 +71,32 @@ export default function SignupProfile() {
         alert(message);
       }
     }else{
-      alert("모든 정보를 입력해주세요.")
+      alert("닉네임은 반드시 입력해야 합니다!")
     }
   };
 
   return (
     <div className='signup'>
-     <Header>
-        <Header.BackButton/>
-        <Header.Title>프로필 설정</Header.Title>
-     </Header>
      <DefaultBody hasHeader={1}>
-     
-      <label htmlFor='profileImgBtn1' id='profileImgBtn'
-        style={{
-          backgroundImage: imgPrev ? `url(${imgPrev})` : undefined,
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover'
-        }}
-        className=" w-[87px] h-[87px] border-r-[50%] bg-no-repeat bg-contain mt-[86px] ml-[24px]"
-        >
-        <input id='profileImgBtn1' type='file' accept='image/*' onChange={handleImageChange} />
-      </label>
-      <input id='nickname' placeholder='닉네임' value={nickname} onChange={handleNicknameChange}/>
-     <div className="absolute bottom-[62px] w-full px-[20px] left-0 flex flex-col items-center justify-center">
-      <CommonBtn id='signupBtn' text='회원가입' status={1} onClick={handleSubmit}></CommonBtn>
-      </div>
+      <div className='absolute bottom-[62px] w-full px-[20px] left-0 flex flex-col items-center justify-center'>   
+          <p className='text-Lm'><span className='text-active'>환영합니다!</span> 처음 로그인하셨어요</p>
+          <p className='text-Mm text-sub mb-[48px]'>닉네임과 프로필 사진을 등록해주세요</p>
+          <label htmlFor='profileImgBtn1' className='flex flex-col items-center justify-center gap-[24px]'>
+            <img className='w-[87px] h-[87px] rounded-full' src={imgPrev ? imgPrev : "/icons/chat/deafultProfile.png"}/>
+            <p className='text-sub text-Mr underline'>프로필 사진 등록 (선택)</p>
+            <input id='profileImgBtn1' type='file' className="hidden" accept='image/*' onChange={handleImageChange} />
+          </label>
+
+          <input className="defaultInput mt-[33px]  mb-[169px]"  placeholder='닉네임을 입력해주세요' value={nickname} onChange={handleNicknameChange}/>
+
+          
+          <div className='flex flex-row gap-[6px] mb-[22px]'>
+              <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
+              <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
+              <div className='w-[12px] h-[12px] bg-[#0D99FF] rounded-[12px]'/>
+          </div>
+          <CommonBtn id='signupBtn' text='계정 등록하기' status={1} onClick={handleSubmit} />
+        </div>
       </DefaultBody>
     </div>
   );
