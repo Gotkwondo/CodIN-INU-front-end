@@ -8,7 +8,7 @@ export const PostBlockUser = async (blockedUserId:string): Promise<any> => {
 
   try {
     const response: AxiosResponse<any> = await axios.post(
-      `${BASE_URL}/block/${blockedUserId}`,
+      `${BASE_URL}/block/${blockedUserId}`,{},
         { headers: {
             Authorization: ` ${token}`
          }}

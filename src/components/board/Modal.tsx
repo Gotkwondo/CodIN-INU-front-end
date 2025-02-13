@@ -56,12 +56,12 @@ const Modal = ({
 
     const blockUser = async () => {
         
-        try {
-            const token = localStorage.getItem("accessToken");
+        try {if (confirm("해당 유저의 게시물이 목록에 노출되지 않으며, 다시 해제하실 수 없습니다.")) {
+           
 
             await PostBlockUser(post.userId);
             alert("유저를 차단하였습니다");
-           
+        }
         } catch (error) {
             console.log("유저 차단에 실패하였습니다.", error);
             const message = error.response.data.message;
