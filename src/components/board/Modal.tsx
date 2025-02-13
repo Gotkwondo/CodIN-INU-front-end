@@ -3,7 +3,7 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 import ReportModal from "../modals/ReportModal"; // ReportModal 컴포넌트 임포트
 import { PostChatRoom } from "@/api/chat/postChatRoom";
 import { boardData } from "@/data/boardData"; // ReportModal 컴포넌트 임포트
-
+import { PostBlockUser } from "@/api/user/postBlockUser";
 
 
 type Post = {
@@ -55,7 +55,18 @@ const Modal = ({
     };
 
     const blockUser = async () => {
-      
+        
+        try {if (confirm("해당 유저의 게시물이 목록에 노출되지 않으며, 다시 해제하실 수 없습니다.")) {
+           
+
+            await PostBlockUser(post.userId);
+            alert("유저를 차단하였습니다");
+        }
+        } catch (error) {
+            console.log("유저 차단에 실패하였습니다.", error);
+            const message = error.response.data.message;
+            alert(message);
+        }
     };
 
     const handleMenuAction = (action: string) => {
@@ -65,7 +76,6 @@ const Modal = ({
         } else if (action === "report") {
             setIsReportModalOpen(true); // 신고 모달 열기
         } else if (action === "block") {
-            alert("차단하기 클릭됨");
             blockUser();
         }
         setMenuOpen(false); // 메뉴 닫기
