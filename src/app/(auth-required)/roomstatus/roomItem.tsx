@@ -92,7 +92,7 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
 
             <h3 className="text-[#212121] text-[14px] font-medium">{RoomName}</h3>
 
-            <div className="time-table">
+            <div className="time-table select-none">
                 <div className="flex w-full gap-[4px]">
                     {[9, 10, 11, 12, 1, 2, 3, 4, 5].map((number) => (
                         <p key={number} className="flex-1 text-[#808080] font-regular text-[12px]">
