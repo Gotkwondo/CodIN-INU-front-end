@@ -6,6 +6,7 @@ import Tabs from "@/components/Layout/Tabs";
 import Link from "next/link";
 import Header from "@/components/Layout/header/Header"; // Link 추가
 import DefaultBody from "@/components/Layout/Body/defaultBody";
+import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 
 export default function DepartmentInfoPage() {
     const [activeTab, setActiveTab] = useState("phoneDirectory");
@@ -132,6 +133,7 @@ export default function DepartmentInfoPage() {
                     </div>
                 )}
             </DefaultBody>
+            <BottomNav/>
         </>
     );
 }

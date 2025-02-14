@@ -8,6 +8,7 @@ import Tabs from "@/components/Layout/Tabs";
 import { boardData } from "@/data/boardData"; // boardData의 타입(alias) 직접 정의하시면 됩니다.
 import Header from "./header/Header";
 import DefaultBody from "./Body/defaultBody";
+import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 
 interface BoardLayoutProps extends PropsWithChildren {
     board: any;
@@ -35,19 +36,22 @@ const BoardLayout: FC<BoardLayoutProps> = ({
             </Header>
             {/* Tabs Section */}
             <DefaultBody hasHeader={1}>
-                {hasTabs && (
-                    <div className="mt-[18px]">
-                        <Tabs
-                            tabs={tabs}
-                            activeTab={activeTab}
-                            onTabChange={onTabChange}
-                        />
-                    </div>
-                )}
+                    {hasTabs && (
+                        <div className="pt-[60px]">
+                            <div className="fixed translate-y-[-42px] bg-white z-50">
+                                <Tabs
+                                    tabs={tabs}
+                                    activeTab={activeTab}
+                                    onTabChange={onTabChange}
+                                />
+                            </div>
+                        </div>
+                    )}
 
                 {/* children 영역: 게시물 리스트, 로딩, 페이지네이션, 글쓰기 버튼 등 */}
                 {children}
             </DefaultBody>
+            <BottomNav/>
         </>
     );
 };

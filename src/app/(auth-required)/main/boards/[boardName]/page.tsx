@@ -158,28 +158,13 @@ const BoardPage: FC = () => {
             {/* 글쓰기 버튼 */}
             <Link
                 href={`/main/boards/${boardName}/create`}
-                className="fixed bottom-16 right-8 bg-blue-500 text-white rounded-full shadow-lg p-4 hover:bg-blue-600 transition duration-300"
+                className="fixed bottom-[108px] right-[17px] bg-main text-white rounded-full shadow-lg p-4 hover:bg-blue-600 transition duration-300"
                 aria-label="글쓰기"
             >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                    className="w-6 h-6"
-                >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M16.862 3.487a2.25 2.25 0 0 1 3.182 3.182l-9.193 9.193a4.5 4.5 0 0 1-1.591 1.033l-3.588 1.196 1.196-3.588a4.5 4.5 0 0 1-1.033-1.591l9.193-9.193z"
-                    />
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19.5 19.5h-6m-7.5 0a4.5 4.5 0 0 0 4.5-4.5v-3"
-                    />
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3.80002 14.5999L8.00002 18.1999M3.20002 14.5999L15.0314 2.35533C16.3053 1.08143 18.3707 1.08143 19.6446 2.35533C20.9185 3.62923 20.9185 5.69463 19.6446 6.96853L7.40002 18.7999L1.40002 20.5999L3.20002 14.5999Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
+
             </Link>
         </BoardLayout>
     );
