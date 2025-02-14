@@ -1,3 +1,5 @@
+'use client'
+
 import { ComponentProps } from 'react';
 import { RateBar } from './RateBar';
 import Link from 'next/link';
@@ -16,7 +18,7 @@ const Subject = ({ subjectName, subjectCode, professor, score, rateCnt, ...rest 
       <p className="text-[#D4D4D4]">{`<li>`}</p>
       <div className="w-full flex flex-row justify-between">
         <div className="w-1/2 text-xl">
-          <Link href={`/`}>
+          <Link href={`./course-reviews/${encodeURIComponent(subjectCode)}`}>
             <p className="mb-2">{subjectName}</p>
           </Link>
           <div className="w-full text-sm flex font-semibold">
@@ -39,7 +41,7 @@ const Subject = ({ subjectName, subjectCode, professor, score, rateCnt, ...rest 
             }`}</span>{" "}
             / 5.0
           </p>
-          <RateBar score={score} className="mt-6" />
+          <RateBar score={score} barWidth={2} className="mt-6" />
           <p className="mt-2 text-xs text-[#808080]">{`${rateCnt} 명의 학생이 평가했어요`}</p>
         </div>
       </div>

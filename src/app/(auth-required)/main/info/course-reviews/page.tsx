@@ -14,30 +14,6 @@ import DefaultBody from '@/components/Layout/Body/defaultBody';
 import BottomNav from '@/components/Layout/BottomNav/BottomNav';
 import { useReviewsContext } from '@/api/review/getReviewsContext';
 
-const DummyData = [
-  {
-    subjectName: "C++",
-    subjectCode: "0011233001",
-    score: 4.5,
-    professor: "박경완",
-    rateCnt: 30,
-  },
-  {
-    subjectName: "AL",
-    subjectCode: "0011224511",
-    score: 4.0,
-    professor: "오주현",
-    rateCnt: 6,
-  },
-  {
-    subjectName: "상담",
-    subjectCode: "1511233001",
-    score: 5.0,
-    professor: "박경완",
-    rateCnt: 123,
-  },
-];
-
 const courseReviewPage = () => {
   const token = localStorage.getItem("accessToken");
   if (!token) {
@@ -153,7 +129,6 @@ const courseReviewPage = () => {
             reviewContents.map(
               ({ lectureNm, _id, starRating, professor, participants }) => {
                 return (
-                  // <Link href={`/`} key={`subject_${_id}_${lectureNm}`}>
                   <Subject
                     key={`subject_${_id}_${lectureNm}`}
                     subjectName={lectureNm}
@@ -162,7 +137,6 @@ const courseReviewPage = () => {
                     professor={professor}
                     rateCnt={participants}
                   />
-                  // </Link>
                 );
               }
             )}
