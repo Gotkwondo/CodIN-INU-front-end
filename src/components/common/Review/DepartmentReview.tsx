@@ -2,7 +2,6 @@
 
 import { ComponentProps } from "react";
 import { RateBar } from "./RateBar";
-import Link from "next/link";
 
 type SubjectType = {
   subjectName: string;

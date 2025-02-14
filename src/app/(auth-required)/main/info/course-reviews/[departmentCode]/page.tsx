@@ -1,28 +1,44 @@
 'use client'
 
 import { useParams } from "next/navigation";
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Header from "@/components/Layout/header/Header";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
-import { RateBar } from '@/components/common/Review/RateBar';
 import { DepartmentReviewComponent } from '@/components/common/Review/DepartmentReview';
+import { useDepartmentRatingInfoContext } from '@/api/review/useDepartmentRatingInfoContext';
 
 const DepartmentReview = () => {
   const { departmentCode } = useParams();
-  const score = 3;
-  const dummy = {
-    _id: "6793bd700a55321a455f207e",
-    lectureNm: "C++언어",
-    professor: "박기석",
-    starRating: 0,
-    participants: 0,
-    emotion: {
-      ok: 1.6,
-      best: 1.5,
-      hard: 0.3
+
+  const [lectureInfo, setLectureInfo] = useState<lectureInfoType | null>(null);
+  const [emotion, setEmotion] = useState<emotionType | null>(null);
+  useDepartmentRatingInfoContext({ departmentId: `${departmentCode}` });
+
+  const getDepartMentRateInfo = async () => {
+    try {
+      const response = await useDepartmentRatingInfoContext({ departmentId: `${departmentCode}` });
+      const data = response.data;
+      setLectureInfo({
+        _id: data._id,
+        lectureNm: data.lectureNm,
+        professor: data.professor,
+        starRating: data.starRating,
+        participants: data.participants,
+      });
+      setEmotion(data.emotion);
+    } catch (error) {
+      console.error("과목 �� 후기 조회 실��", error);
+      alert("과목 �� 후기 조회 실��");
+    } finally {
+      return;
     }
-  };
+  }
+
+  useEffect(() => {
+    getDepartMentRateInfo();
+  }, []);
+
   return (
     <Suspense>
       <Header>
@@ -30,13 +46,15 @@ const DepartmentReview = () => {
         <Header.Title>과목 별 후기</Header.Title>
       </Header>
       <DefaultBody hasHeader={1}>
-        <DepartmentReviewComponent
-          subjectName={dummy.lectureNm}
-          subjectCode={dummy._id}
-          professor={dummy.professor}
-          score={dummy.emotion}
-          rateCnt={dummy.participants}
-        />
+        {lectureInfo && emotion && (
+          <DepartmentReviewComponent
+            subjectName={lectureInfo.lectureNm}
+            subjectCode={lectureInfo._id}
+            professor={lectureInfo.professor}
+            score={emotion}
+            rateCnt={lectureInfo.participants}
+          />
+        )}
       </DefaultBody>
       <BottomNav activeIndex={3} />
     </Suspense>
