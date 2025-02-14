@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation"; // useRouter 추가
 import axios from "axios";
+import Header from "@/components/Layout/header/Header";
+import DefaultBody from "@/components/Layout/Body/defaultBody";
 
 export default function DepartmentPage() {
     const params = useParams(); // URL의 파라미터 가져오기
@@ -55,60 +57,67 @@ export default function DepartmentPage() {
     }, [departmentName]);
 
     return (
-        <div className="bg-gray-50 min-h-screen">
-            <div className="relative mb-6">
-                <div className="flex items-center bg-gray-100 py-4 px-6 shadow-md rounded">
-                    <button
-                        onClick={() => router.replace("/main/info/department-info")}
-                        className="text-gray-600 hover:text-gray-800 focus:outline-none"
-                    >
-                        <span className="text-2xl font-bold">&lt;</span>
-                    </button>
-                    <h1 className="text-3xl font-extrabold text-center flex-grow text-gray-800">
-                        {departmentName ? `${departmentNamesMap[departmentName] || departmentName} 정보` : "로딩 중..."}
-                    </h1>
-                </div>
-            </div>
+        <div className="bg-white min-h-screen min-w-full">
 
-            {loading ? (
-                <p className="text-center text-gray-500 text-lg">로딩 중...</p>
-            ) : error ? (
-                <p className="text-center text-red-500 text-lg">{error}</p>
-            ) : info ? (
-                <div className="p-6 bg-white rounded-lg">
-                    <div className="mb-8">
-                        <img
-                            src={info.data.img}
-                            alt={`${departmentNamesMap[departmentName] || departmentName} 이미지`}
-                            className="w-full h-72 object-contain rounded-lg"
-                        />
-                    </div>
-                    <div className="text-gray-800">
-                        <h2 className="text-2xl font-bold mb-4">{departmentNamesMap[departmentName] || departmentName}</h2>
-                        <p className="mb-2"><strong>위치:</strong> {info.data.location}</p>
-                        <p className="mb-2"><strong>전화번호:</strong> {info.data.officeNumber}</p>
-                        <p className="mb-2"><strong>팩스:</strong> {info.data.fax}</p>
-                        <p className="mb-2"><strong>운영 시간:</strong> {info.data.open}</p>
-                        <p className="mb-2"><strong>방학 중 운영 시간:</strong> {info.data.vacation}</p>
-                    </div>
-                    <div className="mt-8">
-                        <h3 className="text-xl font-bold mb-4">사무실 구성원</h3>
-                        <div className="space-y-4">
-                            {info.data.officeMember.map((member, index) => (
-                                <div key={index} className="border-b pb-4 mb-4">
-                                    <p><strong>이름:</strong> {member.name}</p>
-                                    <p><strong>직책:</strong> {member.position}</p>
-                                    <p><strong>역할:</strong> {member.role}</p>
-                                    <p><strong>전화번호:</strong> {member.number}</p>
-                                    <p><strong>이메일:</strong> <a href={`mailto:${member.email}`} className="text-blue-500 underline">{member.email}</a></p>
-                                </div>
-                            ))}
+            <Header>
+                <Header.BackButton/>
+                <Header.Title>{departmentName ? `${departmentNamesMap[departmentName] || departmentName} 정보` : "로딩 중..."}</Header.Title>
+            </Header>
+
+            <DefaultBody hasHeader={1}>
+                <div className="mt-[18px]"/>
+                {loading ? (
+                    <p className="text-center text-gray-500 text-lg">로딩 중...</p>
+                ) : error ? (
+                    <p className="text-center text-red-500 text-lg">{error}</p>
+                ) : info ? (
+                    <div className=" bg-white rounded-lg w-full">
+                        <div className="mb-[32px]">
+                            <img
+                                src={info.data.img}
+                                alt={`${departmentNamesMap[departmentName] || departmentName} 이미지`}
+                                className="object-contain w-full"
+                            />
+                        </div>
+                        <div className="flex gap-[12px]">
+                            <div>
+                                <p className="mb-[2px] text-Mm">전화번호</p>
+                                <p className="mb-[2px] text-Mm">fax</p>
+                                <p className="mb-[2px] text-Mm">위치</p>
+                                <div className="mt-[12px] text-Mm"/>
+                                <p className="mb-[2px] text-sr">open</p>
+                                <p className="mb-[2px] text-sr">vacation</p>
+                            </div>
+                            <div>
+                                <p className="mb-[2px] text-Mr">{info.data.officeNumber}</p>
+                                <p className="mb-[2px] text-Mr">{info.data.fax}</p>
+                                <p className="mb-[2px] text-Mr">{info.data.location}</p>
+                                <div className="mt-[12px] text-Mr"/>
+                                <p className="mb-[2px] text-sr">{info.data.open}</p>
+                                <p className="mb-[2px] text-sr">{info.data.vacation}</p>
+                            </div>
+                        </div>
+                        <div className="mt-[32px]">
+                            <div className="flex flex-col gap-[24px]">
+                                {info.data.officeMember.map((member, index) => (
+                                    <div key={index} className="flex gap-[20px]">
+                                        <img src="/icons/chat/deafultProfile.png" className="w-[50px] h-[50px]" width={50} height={50}/>
+                                        <div className="text-Mr text-[#404040]">
+                                            <p className="text-Lm text-black">{member.name}</p>
+                                            <p >{member.position}</p>
+                                            <p>{member.role}</p>
+                                            <p>{member.number}</p>
+                                            <p><a href={`mailto:${member.email}`} className="">{member.email}</a></p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
-                </div>
-            ) : (
-                <p className="text-center text-gray-500">데이터가 없습니다.</p>
-            )}
+                ) : (
+                    <p className="text-center text-gray-500">데이터가 없습니다.</p>
+                )}
+            </DefaultBody>
         </div>
     );
 }

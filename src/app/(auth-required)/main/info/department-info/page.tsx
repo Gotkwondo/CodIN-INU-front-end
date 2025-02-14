@@ -5,6 +5,7 @@ import axios from "axios";
 import Tabs from "@/components/Layout/Tabs";
 import Link from "next/link";
 import Header from "@/components/Layout/header/Header"; // Link 추가
+import DefaultBody from "@/components/Layout/Body/defaultBody";
 
 export default function DepartmentInfoPage() {
     const [activeTab, setActiveTab] = useState("phoneDirectory");
@@ -76,39 +77,41 @@ export default function DepartmentInfoPage() {
     }, [activeTab]);
 
     return (
-        <div className="bg-gray-100 min-h-screen">
+        <>
             <Header>
-                <Header.Title>학과 소개</Header.Title>
                 <Header.BackButton  onClick={navigateToMain} />
+                <Header.Title>학과 소개</Header.Title>
             </Header>
 
-            <div className={"mt-16"}></div>
-            <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
+            <DefaultBody hasHeader={1}>
+
+                <div className="mt-[18px]"/>
+                <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
+                <div className="mt-[18px]"/>
 
                 {activeTab === "phoneDirectory" ? (
-                    <ul className="grid grid-cols-2 gap-4 m-4">
+                    <ul className="grid grid-cols-2 gap-[18px] w-full">
                         {departments.map((department) => (
                             <li key={department.id}>
                                 <Link href={`./department-info/${department.departmentName}`}>
-                                    <div className="block p-4 border rounded-lg shadow bg-white cursor-pointer hover:shadow-lg">
-                                        <div className="aspect-square flex items-center justify-center bg-gray-50 rounded mb-2">
+                                    <div className="block border flex-1 rounded-[15px] cursor-pointer">
+                                        <div className="aspect-square flex flex-col items-center justify-center ">
                                             <img
                                                 src={department.image.replace('/public', '')}
                                                 alt={department.name}
-                                                width={80}
-                                                height={80}
+                                                className="min-h-[98px] max-h-[98px]"
                                             />
+                                            <p className="text-center text-Lm">
+                                                {department.name}
+                                            </p>
                                         </div>
-                                        <p className="text-center font-medium text-gray-800">
-                                            {department.name}
-                                        </p>
                                     </div>
                                 </Link>
                             </li>
                         ))}
                     </ul>
                 ) : (
-                    <div className="mt-4">
+                    <div>
                         {loading ? (
                             <p className="text-center text-gray-500">로딩 중...</p>
                         ) : error ? (
@@ -128,6 +131,7 @@ export default function DepartmentInfoPage() {
                         )}
                     </div>
                 )}
-        </div>
+            </DefaultBody>
+        </>
     );
 }
