@@ -106,9 +106,9 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
 
     // 렌더링
     return (
-        <div className="bg-white min-h-screen p-1">
-            <div className="flex items-center space-x-4 mb-4">
-                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+        <div className="bg-white min-h-screen">
+            <div className="flex items-center space-x-[12px] mb-[20px]">
+                <div className="w-[36px] h-[36px] bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
                     {post.anonymous ? (
                         <img
                             src="/images/anonymousUserImage.png" // 정적 경로의 익명 이미지
@@ -127,41 +127,41 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                 </div>
 
                 <div>
-                    <h4 className="text-sm font-semibold text-gray-800">
+                    <h4 className="text-sm">
                         {post.anonymous ? "익명" : post.nickname || "익명"}
                     </h4>
-                    <p className="text-xs text-gray-500">{post.createdAt}</p>
+                    <p className="text-sr text-sub">{post.createdAt}</p>
                 </div>
             </div>
 
-            <div className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-800 pb-3">{post.title}</h3>
-                <p className="text-gray-800 text-base">{post.content}</p>
+            <div>
+                <h3 className="text-Lm mb-[12px]">{post.title}</h3>
+                <p className="text-Mr mb-[24px]">{post.content}</p>
             </div>
+
             {post.postImageUrl && post.postImageUrl.length > 0 && (
                 <ZoomableImageModal images={post.postImageUrl} />
             )}
-            <div className="flex items-center justify-between text-gray-500 text-sm border-t border-b py-2 mb-4">
-                <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-1">
-                        <FaEye className="w-5 h-5" />
-                        <span>{post.viewCount || 0}</span>
-                    </div>
-                    <button onClick={() => toggleAction("like")} className="flex items-center space-x-1">
-                        <FaHeart className={`w-5 h-5 ${post.userInfo.like ? "text-red-500" : "text-gray-500"}`} />
-                        <span>{post.likeCount}</span>
+            <div className="flex justify-between items-center text-sr text-sub">
+                <div className="flex space-x-[12px]">
+                    <span className="flex items-center gap-[4.33px]">
+                        <img src={"/icons/board/viewIcon.svg"} width={16} height={16}/>
+                        {post.hits || 0}
+                    </span>
+                    <button onClick={() => toggleAction("like")} className="flex items-center gap-[4.33px]">
+                        <img src={post.userInfo.like ? "/icons/board/active_heartIcon.svg": "/icons/board/heartIcon.svg"} width={16} height={16}/>
+                        {post.likeCount || 0}
                     </button>
-
-                    <div className="flex items-center space-x-1">
-                        <FaRegCommentDots className="w-5 h-5" />
-                        <span>{post.commentCount}</span>
-                    </div>
+                    <span className="flex items-center gap-[4.33px]">
+                        <img src="/icons/board/commentIcon.svg" width={16} height={16}/>
+                        {post.commentCount || 0}
+                    </span>
                 </div>
-                <button onClick={() => toggleAction("bookmark")} className="flex items-center space-x-1">
-                    <FaBookmark className={`w-5 h-5 ${post.userInfo.scrap ? "text-yellow-300" : "text-gray-500"}`} />
+
+                <button onClick={() => toggleAction("bookmark")} className="flex items-centertext-sub gap-[4.33px]">
+                    <img src={post.userInfo.scrap ? "/icons/board/active_BookmarkIcon.svg": "/icons/board/BookmarkIcon.svg"} width={16} height={16} className={`w-[16px] h-[16px] ${post.userInfo.scrap ? "text-yellow-300" : "text-gray-500"}`} />
                     <span>{post.scrapCount}</span>
                 </button>
-
             </div>
             <CommentSection postId={postId} postName={post.title} />
         </div>
