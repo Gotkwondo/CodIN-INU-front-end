@@ -107,7 +107,7 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
                             id={`room-${RoomName}-time-${index}`}  
                             onTouchStart={()=>onClickTimeLine(index)}
                             onTouchEnd={()=>onClickTimeLine(-1)}
-                            className={`relative flex-1 h-[12px] ${activeIndexList[index] ? 'bg-[#212121]' : status ? 'bg-[#0D99FF]' : 'bg-[#EBF0F7]'}`}
+                            className={`relative flex-1 h-[12px] ${activeIndexList[index] ? RoomStatusList[index] === 1 ? 'bg-[#17659c]' : 'bg-[#212121]' : status ? 'bg-[#0D99FF]' : 'bg-[#EBF0F7]'}`}
                         ><RoomItemDetail isActive={clicked === index} lecture={touchedLecture} /></button>
                     ))}
                 </div>
