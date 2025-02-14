@@ -112,7 +112,7 @@ export default function DepartmentInfoPage() {
                         ))}
                     </ul>
                 ) : (
-                    <div className="mt-4">
+                    <div>
                         {loading ? (
                             <p className="text-center text-gray-500">로딩 중...</p>
                         ) : error ? (
