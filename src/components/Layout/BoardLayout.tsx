@@ -8,6 +8,7 @@ import Tabs from "@/components/Layout/Tabs";
 import { boardData } from "@/data/boardData"; // boardData의 타입(alias) 직접 정의하시면 됩니다.
 import Header from "./header/Header";
 import DefaultBody from "./Body/defaultBody";
+import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 
 interface BoardLayoutProps extends PropsWithChildren {
     board: any;
@@ -48,6 +49,7 @@ const BoardLayout: FC<BoardLayoutProps> = ({
                 {/* children 영역: 게시물 리스트, 로딩, 페이지네이션, 글쓰기 버튼 등 */}
                 {children}
             </DefaultBody>
+            <BottomNav/>
         </>
     );
 };
