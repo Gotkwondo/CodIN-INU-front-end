@@ -7,6 +7,7 @@ import DefaultBody from "@/components/Layout/Body/defaultBody";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { DepartmentReviewComponent } from '@/components/common/Review/DepartmentReview';
 import { useDepartmentRatingInfoContext } from '@/api/review/useDepartmentRatingInfoContext';
+import { ReviewComment } from '@/components/common/Review/ReviewComment';
 
 const DepartmentReview = () => {
   const { departmentCode } = useParams();
@@ -55,6 +56,7 @@ const DepartmentReview = () => {
             rateCnt={lectureInfo.participants}
           />
         )}
+        <ReviewComment></ReviewComment>
       </DefaultBody>
       <BottomNav activeIndex={3} />
     </Suspense>

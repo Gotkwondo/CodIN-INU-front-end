@@ -29,7 +29,7 @@ const DepartmentReviewComponent = ({
     return Math.floor((rate / total) * 100);
   }
   return (
-    <div className="w-full h-80 mb-4">
+    <div className="w-full h-64 mb-4">
       <div className="w-full flex flex-row justify-between">
         <div className="w-full text-xl">
           <div className="w-full mb-2 flex justify-start">
