@@ -77,7 +77,17 @@ export default function Chat() {
                         <Image src="/icons/chat/deafultProfile.png" width="49" height="49" alt=""/>
                         <div className="flex flex-col gap-[4px]">
                             <div id="name" className="text-Lm" >{data.roomName}</div>
-                            <div id="ment" className='text-Mr text-[#808080]'> {data.message && data.message.startsWith('data:image') ? ( `( 사진 )`) : ( data.message || "(메시지 없음)")}</div>
+                            <div id="ment" className="text-Mr text-[#808080]">
+                                {data.message && data.message.startsWith("data:image") ? (
+                                    "( 사진 )"
+                                ) : (
+                                    data.message
+                                    ? data.message.length > 16
+                                        ? `${data.message.slice(0, 16)}..`
+                                        : data.message
+                                    : "(메시지 없음)"
+                                )}
+                            </div>
                         </div>
                         <div id="ect">
                             <div className="absolute right-0 top-0 text-sr text-[#808080]">
@@ -96,7 +106,6 @@ export default function Chat() {
     return (
         <Suspense>
             <Header>
-                <Header.BackButton />
                 <Header.Title>{`쪽지`}</Header.Title>
                 <Header.SearchButton onClick={() => console.log("검색 버튼 클릭")} />
             </Header>
