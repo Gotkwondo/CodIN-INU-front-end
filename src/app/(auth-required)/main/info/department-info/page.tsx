@@ -99,8 +99,7 @@ export default function DepartmentInfoPage() {
                                             <img
                                                 src={department.image.replace('/public', '')}
                                                 alt={department.name}
-                                                width={76}
-                                                height={98}
+                                                className="min-h-[98px] max-h-[98px]"
                                             />
                                             <p className="text-center text-Lm">
                                                 {department.name}
