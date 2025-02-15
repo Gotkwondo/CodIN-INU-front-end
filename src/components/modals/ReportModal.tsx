@@ -47,7 +47,7 @@ const ReportModal: React.FC<ReportModalProps> = ({ onClose, postId }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center  bg-opacity-50">
             <div className="bg-white rounded-lg shadow-lg w-full max-w-md mx-4">
                 <header className="px-6 py-4 border-b">
                     <h2 className="text-lg font-bold text-gray-800">신고하기</h2>
