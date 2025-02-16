@@ -2,7 +2,7 @@
 
 import React from "react";
 // import { useReportModal } from "@/hooks/useAlarmModal";  // 파일명에 따라 import 경로 조정
-import { useReportModal } from "@/hooks/useAlarmModal";
+import { useReportModal } from "@/hooks/useReportModal";
 
 export default function AdminPage() {
     // openModal("타입", "ID");

@@ -15,11 +15,11 @@ interface UseReportModal {
  */
 export const useReportModal = (): UseReportModal => {
     const [isOpen, setIsOpen] = useState(false);
-    // 예: 'USER' | 'POST' | 'COMMENT' | 'REPLY'
+    // 예) 'USER' | 'POST' | 'COMMENT' | 'REPLY'
     const [reportTargetType, setReportTargetType] = useState<string>("");
     const [reportTargetId, setReportTargetId] = useState<string>("");
 
-    // 모달 열기: 신고 대상(타입, id)을 같이 세팅
+    // 모달 열기
     const openModal = useCallback((targetType: string, targetId: string) => {
         setReportTargetType(targetType);
         setReportTargetId(targetId);
@@ -33,7 +33,7 @@ export const useReportModal = (): UseReportModal => {
         setReportTargetId("");
     }, []);
 
-    // 모달 컴포넌트를 꺼내 쓰기 위한 함수
+    // 모달 컴포넌트 가져오기
     const getModalComponent = () => {
         if (!isOpen) return null;
         return (

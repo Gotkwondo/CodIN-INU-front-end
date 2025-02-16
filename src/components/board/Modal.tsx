@@ -1,28 +1,35 @@
-'use client';
+"use client";
 import { ReactNode, useEffect, useRef, useState } from "react";
-import ReportModal from "../modals/ReportModal"; // ReportModal 컴포넌트 임포트
+// 1) 기존 ReportModal 직접 임포트 제거 (useReportModal 내부에서 처리할 것이므로 필요 없다면 주석 처리)
+// import ReportModal from "../modals/ReportModal";
 import { PostChatRoom } from "@/api/chat/postChatRoom";
-import { boardData } from "@/data/boardData"; // ReportModal 컴포넌트 임포트
+import { boardData } from "@/data/boardData";
 import { PostBlockUser } from "@/api/user/postBlockUser";
 
+// 2) useReportModal 훅 임포트
+import { useReportModal } from "@/hooks/useReportModal";
 
-type Post = {
-    id: string;
-    title: string;
-    content: string;
-    author: string;
-    createdAt: string;
-    [key: string]: any; // 추가 데이터 허용
-};
+import { Post } from "@/interfaces/Post";
 
 const Modal = ({
                    children,
                    onClose,
-                   post = { id: '', title: '', content: '', author: '', createdAt: '' },
-               }: { children: ReactNode; onClose: () => void; post?: Post }) => {
+                   post = { id: "", title: "", content: "", author: "", createdAt: "" },
+               }: {
+    children: ReactNode;
+    onClose: () => void;
+    post?: Post;
+}) => {
     const [menuOpen, setMenuOpen] = useState(false);
-    const [isReportModalOpen, setIsReportModalOpen] = useState(false); // 신고 모달 상태
-    const menuRef = useRef<HTMLDivElement | null>(null); // 메뉴 영역 감지용 useRef
+    const menuRef = useRef<HTMLDivElement | null>(null);
+
+    // 3) useReportModal 훅 사용 (기존 isReportModalOpen, setIsReportModalOpen 제거)
+    const {
+        isOpen: isReportModalOpen,
+        openModal: openReportModal,
+        closeModal: closeReportModal,
+        getModalComponent: getReportModalComponent,
+    } = useReportModal();
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -32,7 +39,6 @@ const Modal = ({
         };
 
         document.addEventListener("mousedown", handleClickOutside);
-
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
@@ -55,45 +61,49 @@ const Modal = ({
     };
 
     const blockUser = async () => {
-        
-        try {if (confirm("해당 유저의 게시물이 목록에 노출되지 않으며, 다시 해제하실 수 없습니다.")) {
-           
-
-            await PostBlockUser(post.userId);
-            alert("유저를 차단하였습니다");
-        }
-        } catch (error) {
+        try {
+            if (
+                confirm(
+                    "해당 유저의 게시물이 목록에 노출되지 않으며, 다시 해제하실 수 없습니다."
+                )
+            ) {
+                await PostBlockUser(post.userId);
+                alert("유저를 차단하였습니다");
+            }
+        } catch (error: any) {
             console.log("유저 차단에 실패하였습니다.", error);
-            const message = error.response.data.message;
+            const message = error.response?.data?.message;
             alert(message);
         }
     };
 
     const handleMenuAction = (action: string) => {
         if (action === "chat") {
-            alert("채팅하기 클릭됨");
             startChat();
         } else if (action === "report") {
-            setIsReportModalOpen(true); // 신고 모달 열기
+            // 4) 기존 setIsReportModalOpen(true)를 훅의 openModal로 교체
+            //    targetType="POST", targetId = post.id 형태로 신고 모달 열기
+            openReportModal("POST", post._id);
         } else if (action === "block") {
             blockUser();
         }
         setMenuOpen(false); // 메뉴 닫기
     };
 
-    const closeReportModal = () => {
-        setIsReportModalOpen(false); // 신고 모달 닫기
-    };
+    // 기존 closeReportModal 함수는 제거하고, 훅에서 closeModal 사용
+    // const closeReportModal = () => { ... } // 필요 시 남겨두고 내부에서 closeModal() 호출
 
     const getBoardNameByPostCategory = (category: string): string | null => {
         for (const key in boardData) {
             const board = boardData[key];
-            const matchingTab = board.tabs.find((tab) => tab.postCategory === category);
+            const matchingTab = board.tabs.find(
+                (tab) => tab.postCategory === category
+            );
             if (matchingTab) {
-                return board.name; // 상위 Board 이름 반환
+                return board.name;
             }
         }
-        return null; // 일치하는 항목이 없는 경우
+        return null;
     };
 
     return (
@@ -174,10 +184,8 @@ const Modal = ({
                 <div className="p-4 overflow-y-auto flex-grow">{children}</div>
             </div>
 
-            {/* 신고 모달 */}
-            {isReportModalOpen && (
-                <ReportModal onClose={closeReportModal} postId={post.id} />
-            )}
+            {/* 5) isReportModalOpen이면 useReportModal이 반환하는 모달 컴포넌트 렌더링 */}
+            {isReportModalOpen && getReportModalComponent()}
         </div>
     );
 };
