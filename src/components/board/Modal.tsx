@@ -1,20 +1,37 @@
 "use client";
 import { ReactNode, useEffect, useRef, useState } from "react";
-// 1) 기존 ReportModal 직접 임포트 제거 (useReportModal 내부에서 처리할 것이므로 필요 없다면 주석 처리)
-// import ReportModal from "../modals/ReportModal";
 import { PostChatRoom } from "@/api/chat/postChatRoom";
 import { boardData } from "@/data/boardData";
 import { PostBlockUser } from "@/api/user/postBlockUser";
-
-// 2) useReportModal 훅 임포트
 import { useReportModal } from "@/hooks/useReportModal";
-
-import { Post } from "@/interfaces/Post";
+import { Post } from "@/interfaces/Post"; // Post 인터페이스 가져오기
 
 const Modal = ({
                    children,
                    onClose,
-                   post = { id: "", title: "", content: "", author: "", createdAt: "" },
+                   // ✅ `Post` 인터페이스에 정의된 필드만 포함하여 기본값 설정
+                   post = {
+                       _id: "", // postId 대신 사용됨
+                       title: "",
+                       content: "",
+                       postCategory: "",
+                       createdAt: "",
+                       anonymous: false,
+                       commentCount: 0,
+                       likeCount: 0,
+                       scrapCount: 0,
+                       postImageUrl: [], // 이미지 URL 배열
+                       userId: "",
+                       nickname: "", // 닉네임 (익명 여부와 상관없이)
+                       userImageUrl: "", // 사용자 프로필 이미지 (옵션)
+                       authorName: "", // 작성자 이름 (익명일 경우 빈 문자열)
+                       viewCount: 0, // 조회수
+                       hits: 0, // 조회수 (대체 가능)
+                       userInfo: {
+                           like: false, // 사용자가 좋아요를 눌렀는지 여부
+                           scrap: false, // 사용자가 북마크했는지 여부
+                       },
+                   },
                }: {
     children: ReactNode;
     onClose: () => void;
@@ -23,7 +40,6 @@ const Modal = ({
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement | null>(null);
 
-    // 3) useReportModal 훅 사용 (기존 isReportModalOpen, setIsReportModalOpen 제거)
     const {
         isOpen: isReportModalOpen,
         openModal: openReportModal,
@@ -34,7 +50,7 @@ const Modal = ({
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-                setMenuOpen(false); // 외부 클릭 시 메뉴 닫기
+                setMenuOpen(false);
             }
         };
 
@@ -81,17 +97,12 @@ const Modal = ({
         if (action === "chat") {
             startChat();
         } else if (action === "report") {
-            // 4) 기존 setIsReportModalOpen(true)를 훅의 openModal로 교체
-            //    targetType="POST", targetId = post.id 형태로 신고 모달 열기
             openReportModal("POST", post._id);
         } else if (action === "block") {
             blockUser();
         }
-        setMenuOpen(false); // 메뉴 닫기
+        setMenuOpen(false);
     };
-
-    // 기존 closeReportModal 함수는 제거하고, 훅에서 closeModal 사용
-    // const closeReportModal = () => { ... } // 필요 시 남겨두고 내부에서 closeModal() 호출
 
     const getBoardNameByPostCategory = (category: string): string | null => {
         for (const key in boardData) {
@@ -184,7 +195,7 @@ const Modal = ({
                 <div className="p-4 overflow-y-auto flex-grow">{children}</div>
             </div>
 
-            {/* 5) isReportModalOpen이면 useReportModal이 반환하는 모달 컴포넌트 렌더링 */}
+            {/* 신고 모달 */}
             {isReportModalOpen && getReportModalComponent()}
         </div>
     );
