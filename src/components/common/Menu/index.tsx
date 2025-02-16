@@ -32,13 +32,13 @@ const Menu = ({ children }: MenuProps) => {
         <div className="relative" ref={menuRef}>
             <button
                 onClick={toggleMenu}
-                className="text-gray-600 hover:text-gray-900 flex items-center"
                 aria-label="메뉴"
             >
                 <img
-                    src="/icons/menu.svg"
+                    src="/icons/header/ddaeng.png"
                     alt="메뉴"
-                    className="w-5 h-5"
+                    width={6.5}
+                    height={5}
                 />
             </button>
 

@@ -173,7 +173,7 @@ const RoomStatus: FC = () => {
             <DefaultBody hasHeader={1}>
             <div className="px-0 pt-[18px] overflow-hidden">
 
-                <div className="flex w-full justify-center gap-[7px]">
+                <div id="scrollbar-hidden" className="flex w-full justify-start overflow-x-scroll gap-[7px]">
                     <SmRoundedBtn text="1층" status={floor===1 ? 1: 0} onClick={()=>{ if(floor!==1) setFloor(1) }} />
                     <SmRoundedBtn text="2층" status={floor===2 ? 1: 0} onClick={()=>{ if(floor!==2) setFloor(2) }} />
                     <SmRoundedBtn text="3층" status={floor===3 ? 1: 0} onClick={()=>{ if(floor!==3) setFloor(3) }} />
@@ -186,7 +186,7 @@ const RoomStatus: FC = () => {
                     Object.entries(roomStatus[floor-1]).map(([roomNum, status]) => {
                         const [timeTable, boundaryTable] = getTimeTableData(status);
                         return (
-                            <div key={roomNum} className="flex flex-col mx-[20px] my-[24px] gap-[48px]">
+                            <div key={roomNum} className="flex flex-col my-[24px] gap-[48px]">
                                 <RoomItem RoomName={roomNum+"호"} LectureList={status} RoomStatusList={timeTable} BoundaryList={boundaryTable} />
                             </div>
                         );

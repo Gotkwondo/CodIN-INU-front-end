@@ -1,6 +1,7 @@
 'use client';
 
 import { FC } from 'react';
+import SmRoundedBtn from '../buttons/smRoundedBtn';
 
 interface TabsProps<T> {
     tabs: { label: string; value: T }[]; // 탭 목록
@@ -14,21 +15,15 @@ function classNames(...classes: string[]) {
 
 const Tabs: FC<TabsProps<any>> = ({ tabs, activeTab, onTabChange }) => {
     return (
-        <nav className="flex overflow-x-auto no-scrollbar space-x-4 mt-2 text-gray-500">
+        <nav id="scrollbar-hidden" className="flex overflow-x-auto no-scrollbar gap-[8px]">
             {tabs.map((tab) => (
-                <button
-                    key={tab.value}
-                    onClick={() => onTabChange(tab.value)}
-                    className={classNames(
-                        'hover:text-gray-800 px-4 py-2 rounded whitespace-nowrap transition',
-                        activeTab === tab.value ? 'text-gray-800 font-semibold' : 'text-sm sm:text-base lg:text-lg'
-                    )}
-                >
-                    {tab.label}
-                </button>
+                <div key={tab.value}>
+                    <SmRoundedBtn text={tab.label} status={activeTab === tab.value ? 1 : 0} onClick={() => onTabChange(tab.value)}/>
+                </div>
             ))}
         </nav>
     );
 };
 
 export default Tabs;
+
