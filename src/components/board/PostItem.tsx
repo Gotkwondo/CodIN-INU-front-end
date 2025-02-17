@@ -122,11 +122,13 @@ const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenM
         return (
             <li className="flex items-start justify-between">
                 <a href="#" onClick={handleClick} className="flex-1">
+                    {/*
                     <div>
                         <p className="text-sr text-sub px-[4px] py-[2px] bg-[#F2F2F2] rounded-[3px] inline">
                             {boardData[boardPath]?.name || "알 수 없음"}
                         </p>
                     </div>
+                    */}
                     <h3 className="text-Lm mt-[8px]">{post.title}</h3>
                     <p className="text-Mm text-sub line-clamp-2 mt-[4px] mb-[8px]">{post.content}</p>
                     {postStats}
