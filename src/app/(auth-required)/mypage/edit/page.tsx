@@ -145,12 +145,13 @@ const UserInfoEditPage = () => {
 
             {/* 프로필 사진 수정 */}
             <div className="flex flex-col items-center mt-[18px]">
-                <div className="w-[60px] h-[60px]">
+
+                <div className="w-[96px] h-[96px]">
                     {userInfo.profileImageUrl ? (
                         <img
                             src={userInfo.profileImageUrl}
                             alt="Profile Image"
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover rounded-full"
                         />
                     ) : (
                         <span className="flex w-full h-full items-center justify-center text-sub text-sr">로딩 중</span>
@@ -174,20 +175,20 @@ const UserInfoEditPage = () => {
             <form onSubmit={handleSubmit} className="w-full mt-[24px] flex flex-col gap-[24px]">
                 {/* 이름 */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-2">이름</label>
+                    <label className="block text-sm font-medium text-gray-600 mb-[8px]">이름</label>
                     <input
                         type="text"
                         name="name"
                         value={userInfo.name}
                         onChange={handleInputChange}
                         className="defaultInput"
-                        disabled={!editing}
+                        disabled={true}
                     />
                 </div>
 
                 {/* 닉네임 */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-2">닉네임</label>
+                    <label className="block text-sm font-medium text-gray-600 mb-[8px]">닉네임</label>
                     <input
                         type="text"
                         name="nickname"
@@ -200,29 +201,30 @@ const UserInfoEditPage = () => {
 
                 {/* 학과 */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-2">학과</label>
+                    <label className="block text-sm font-medium text-gray-600 mb-[8px]">학과</label>
                     <input
                         type="text"
                         name="department"
                         value={userInfo.department}
                         onChange={handleInputChange}
                         className="defaultInput"
-                        disabled={!editing}
+                        disabled={true}
                     />
                 </div>
 
                 {/* 이메일 */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-600 mb-2">이메일</label>
+                    <label className="block text-sm font-medium text-gray-600 mb-[8px]">이메일</label>
                     <input
                         type="text"
                         name="email"
                         value={userInfo.email}
                         onChange={handleInputChange}
                         className="defaultInput"
-                        disabled={!editing}
+                        disabled={true}
                     />
                 </div>
+                
 
                 {/* 수정 모드로 전환 */}
                 {editing ? (
@@ -233,11 +235,11 @@ const UserInfoEditPage = () => {
                     />
                     
                 ) : (
-                    <div className="fixed translate-x-[-20px] px-[20px] bottom-[32px] flex flex-col w-full items-start gap-[8px]">
+                    <div className="flex flex-col w-full items-start gap-[8px]">
                         {message && <p className="text-Mm text-active">{message}</p>}
                         <CommonBtn
                             text="수정하기"
-                            status={0}
+                            status={1}
                             onClick={() => setEditing(true)}
                         />
                     </div>

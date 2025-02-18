@@ -72,7 +72,6 @@ export default function LoginPage() {
                 // 로그인 성공 후 메인 페이지로 이동
                 router.push('/main');
             } else if (code === 201 ){
-                alert("처음 로그인 하셨군요! 프로필 설정을 해주세요")
                 router.push('/signup/profile');
             }
         } catch (error) {
