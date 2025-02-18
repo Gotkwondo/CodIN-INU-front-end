@@ -14,12 +14,6 @@ import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { useReviewsContext } from "@/api/review/getReviewsContext";
 
 const courseReviewPage = () => {
-  const token = localStorage.getItem("accessToken");
-  if (!token) {
-    alert("로그인이 필요합니다. 다시 로그인해주세요.");
-
-    return;
-  }
   const [selectedDepartment, setSelectedDepartment] = useState<labelType>({
     label: "컴공",
     value: "COMPUTER_SCI",
