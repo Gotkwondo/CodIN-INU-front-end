@@ -39,7 +39,7 @@ const BoardLayout: FC<BoardLayoutProps> = ({
             <DefaultBody hasHeader={1}>
                 {/* Tabs Section */}
                 {hasTabs && (
-                    <div className="w-full transform -translate-x-[20px] pl-[20px] pr-[20px] z-50 overflow-x-scroll fixed pb-[8px] bg-white">
+                    <div id="scrollbar-hidden" className="w-full bg-white z-50 overflow-x-scroll fixed pb-[8px] pr-[40px]">
                         <Tabs
                             tabs={tabs}
                             activeTab={activeTab}
