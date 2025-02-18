@@ -8,6 +8,7 @@ import { GetVoteData } from '@/api/vote/getVoteData';
 import { PostVoting } from '@/api/vote/postVoting';
 import Header from '@/components/Layout/header/Header';
 import DefaultBody from '@/components/Layout/Body/defaultBody';
+import Link from 'next/link';
 
 export default function Vote() {
     const router = useRouter();
@@ -144,8 +145,8 @@ export default function Vote() {
             <div id="voteCont" className='w-full'>
                 {voteList.map((vote) => (
                     <div key={vote._id} id='voteIndex' className='my-[18px] flex flex-col gap-[4px]'>
-                        <h3 id='voteTitle' className='text-[16px] font-medium'  onClick={()=> router.push(`/vote/${vote._id}`)}>{vote.title}</h3>
-                        <p id='voteContent' className='text-[14px] font-normal'>{vote.content}</p>
+                        <h3 id='voteTitle' className='text-[16px] font-medium' onClick={()=> router.push(`/vote/${vote._id}`)} >{vote.title}</h3>
+                        <p id='voteContent' className='text-[14px] font-normal' >{vote.content}</p>
                         <div id='voteContainer' className='mt-[8px] rounded-[15px] border-[1px] flex flex-col px-[24px] py-[16px]'>
                         {calculateDaysLeft(vote.poll.pollEndTime) > 0 && vote.poll.hasUserVoted === false ?  (
                             <div className='flex flex-col gap-[12px]'>
@@ -203,15 +204,7 @@ export default function Vote() {
                         </div>
                         </div>
 
-                        <div id='pollEndTime' className='hidden'>
-                        {calculateDaysLeft(vote.poll.pollEndTime) > 0 ?  (
-                            <>
-                                {calculateDaysLeft(vote.poll.pollEndTime)}일 후 종료
-                            </>
-                        ) : (
-                            '종료됨'
-                        )}
-                        </div>
+                       
                         <div className="mb-[18px] flex justify-between items-center text-sr text-sub mt-[8px]">
                             <div className="flex space-x-[6px]">
                                 <span className="flex items-center gap-[4.33px]">
@@ -226,6 +219,15 @@ export default function Vote() {
                                     <img src="/icons/board/commentIcon.svg" width={16} height={16}/>
                                     {vote.commentCount || 0}
                                 </span>
+                            </div>
+                            <div id='pollEndTime' className='text-sr text-sub mr-[8px]'>
+                                {calculateDaysLeft(vote.poll.pollEndTime) > 0 ?  (
+                                    <>
+                                        {calculateDaysLeft(vote.poll.pollEndTime)}일 후 종료
+                                    </>
+                                ) : (
+                                    '종료됨'
+                                )}
                             </div>
                         </div>
 
@@ -247,8 +249,16 @@ export default function Vote() {
                     {isLoading && <div className="loading">Loading...</div>}
                     <VoteList voteList={voteList} />
                 </div>
-                <button id="writeBtn"  onClick={()=> router.push('/vote/write')}></button>
+                <Link
+                href={`/vote/write`}
+                className="fixed bottom-[108px] right-[17px] bg-main text-white rounded-full shadow-lg p-4 hover:bg-blue-600 transition duration-300"
+                aria-label="글쓰기"
+                >
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3.80002 14.5999L8.00002 18.1999M3.20002 14.5999L15.0314 2.35533C16.3053 1.08143 18.3707 1.08143 19.6446 2.35533C20.9185 3.62923 20.9185 5.69463 19.6446 6.96853L7.40002 18.7999L1.40002 20.5999L3.20002 14.5999Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
 
+                </Link>
             </DefaultBody>
                 
             <BottomNav activeIndex={0}/>
