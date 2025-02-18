@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </head>
             <AuthProvider>
             <UserProvider>
-            <body id="scrollbar-hidden" className="bg-slate-800 max-w-full min-h-full relative flex justify-center"> {/* 바텀 네비게이션 높이만큼 패딩 추가 */}
+            <body id="scrollbar-hidden" className="bg-white max-w-full min-h-full relative flex justify-center"> {/* 바텀 네비게이션 높이만큼 패딩 추가 */}
                 <div className='bg-white w-full min-h-full max-w-[500px] relative'>
                     {children}
                 </div>

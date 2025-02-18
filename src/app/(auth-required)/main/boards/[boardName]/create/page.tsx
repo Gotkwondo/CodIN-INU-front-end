@@ -4,6 +4,10 @@ import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { boardData } from "@/data/boardData";
 import axios from "axios";
+import Header from "@/components/Layout/header/Header";
+import DefaultBody from "@/components/Layout/Body/defaultBody";
+import Tabs from "@/components/Layout/Tabs";
+import SmRoundedBtn from "@/components/buttons/smRoundedBtn";
 
 const CreatePostPage = () => {
     const params = useParams();
@@ -117,129 +121,111 @@ const CreatePostPage = () => {
     };
 
     return (
-        <div className="bg-white w-full min-h-screen px-4 py-6 flex flex-col">
+        <div className="w-full h-full">
             {/* 페이지 헤더 */}
-            <header className="flex items-center justify-between h-12 px-4 mb-4 border-gray-300">
-                {/* 뒤로 가기 버튼 */}
-                <button onClick={handleBack} className="text-gray-400 hover:text-gray-600">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                    >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
+            <Header>
+                <Header.BackButton onClick={handleBack}/>
+                <Header.Title>글 작성하기</Header.Title>
+            </Header>
+            <DefaultBody hasHeader={1}>
+                <div className="flex flex-col gap-[18px] pt-[18px]">
+                    {/* 탭 선택 */}
+                    {hasTabs && (
+                        <div id="scrollbar-hidden" className="flex gap-[8px] overflow-x-scroll">
+                            {tabs.map((tab) =>
+                                tab.value === "all" ? null : (
+                                    <div key={tab.postCategory}>
+                                        <SmRoundedBtn text={tab.label} onClick={() => setActiveTab(tab.postCategory)} status={activeTab === tab.postCategory ? 1 : 0}  />
+                                    </div>
+                                )
+                            )}
+                        </div>
+                    )}
 
-                {/* 헤더 제목 */}
-                <h1 className="text-base font-bold text-gray-800">&lt;글쓰기/&gt;</h1>
-                <div className="w-5 h-5"></div>
-            </header>
+                    {/* 제목 입력 */}
+                    <input
+                        type="text"
+                        name="title"
+                        placeholder="제목을 입력하세요"
+                        value={formData.title}
+                        onChange={handleChange}
+                        className="defaultInput"
+                    />
+                    <div className="flex flex-col gap-[12px]">
+                        <h3 className="text-XLm">사진을 추가하세요</h3>
+                        {/* 사진 첨부 */}
+                        <div className="flex items-center gap-2 w-[52px] h-[52px]">
+                            {previewImages.map((url, index) => (
+                                <img key={index} src={url} alt={`preview-${index}`} className="w-[52px] h-[52px] object-cover rounded-[5px]" />
+                            ))}
+                            <label className="w-[52px] h-[52px] border border-gray-300 rounded-md flex flex-col text-sub  items-center justify-center cursor-pointer">
+                                <img src="/icons/board/camera.png" width={18} height={15}/> <span className="text-sr text-[12px]">{postImages.length}/10</span>
+                                <input type="file" multiple accept="image/*" onChange={handleFileChange} className="hidden" />
+                            </label>
+                        </div>
+                    </div>
 
-            {/* 사진 첨부 */}
-            <div className="flex items-center gap-2 mb-6">
-                {previewImages.map((url, index) => (
-                    <img key={index} src={url} alt={`preview-${index}`} className="w-16 h-16 object-cover rounded-md" />
-                ))}
-                <label className="w-16 h-16 border border-gray-300 rounded-md flex items-center justify-center cursor-pointer">
-                    <span className="text-gray-500 text-sm">+</span>
-                    <input type="file" multiple accept="image/*" onChange={handleFileChange} className="hidden" />
-                </label>
-            </div>
+                    {/* 상세 내용 입력 */}
+                    <textarea
+                        name="content"
+                        placeholder="내용을 입력하세요"
+                        value={formData.content}
+                        onChange={handleChange}
+                        className="w-full h-[143px] border border-gray-300 rounded-[5px] p-[16px] text-sm placeholder-gray-400 focus:outline-none focus:border-gray-600 mb-4"
+                    ></textarea>
 
-            {/* 제목 입력 */}
-            <input
-                type="text"
-                name="title"
-                placeholder="제목"
-                value={formData.title}
-                onChange={handleChange}
-                className="w-full border-b border-gray-300 py-2 text-sm placeholder-gray-400 focus:outline-none focus:border-gray-600 mb-4"
-            />
-
-            {/* 탭 선택 */}
-            {hasTabs && (
-                <div className="flex gap-2 mb-4 overflow-x-auto no-scrollbar">
-                    {tabs.map((tab) =>
-                        tab.value === "all" ? null : (
-                            <button
-                                key={tab.postCategory}
-                                onClick={() => setActiveTab(tab.postCategory)}
-                                className={`px-3 py-1 text-xs rounded-full whitespace-nowrap ${
-                                    activeTab === tab.postCategory
-                                        ? "bg-blue-500 text-white"
-                                        : "bg-gray-200 text-gray-500"
+                    {/* 하단 작성 완료 및 익명 */}
+                    <div className="fixed bottom-0 left-0 w-full bg-white p-4 flex flex-col items-center">
+                        {/* 익명 여부 */}
+                        <div className="flex items-center justify-end w-full mb-4">
+                            <input
+                                type="checkbox"
+                                name="anonymous"
+                                checked={formData.anonymous}
+                                onChange={(e) =>
+                                    setFormData((prevData) => ({
+                                        ...prevData,
+                                        anonymous: e.target.checked,
+                                    }))
+                                }
+                                id="anonymous"
+                                className="hidden"
+                            />
+                            <label
+                                htmlFor="anonymous"
+                                className={`w-[17px] h-[17px] border-2 rounded-full flex items-center justify-center cursor-pointer transition ${
+                                    formData.anonymous
+                                        ? "bg-[#0d99ff] border-[#0d99ff]"
+                                        : "bg-white border-gray-400"
                                 }`}
                             >
-                                {tab.label}
-                            </button>
-                        )
-                    )}
+                                {formData.anonymous && (
+                                    <svg
+                                        className="w-4 h-4 text-white"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth={2}
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                )}
+                            </label>
+                            <span className="ml-[5px] text-Mr text-gray-600">익명</span>
+                        </div>
+
+                        {/* 작성 완료 버튼 */}
+                        <button
+                            type="submit"
+                            onClick={handleSubmit}
+                            disabled={isLoading}
+                            className="w-full py-[12px] bg-[#0d99ff] text-white text-sm font-bold rounded-[5px] hover:bg-blue-600"
+                        >
+                            {isLoading ? "업로드 중..." : "작성 완료"}
+                        </button>
+                    </div>
                 </div>
-            )}
-
-            {/* 상세 내용 입력 */}
-            <textarea
-                name="content"
-                placeholder="상세 내용을 입력하세요"
-                value={formData.content}
-                onChange={handleChange}
-                className="w-full h-32 border border-gray-300 rounded-md p-2 text-sm placeholder-gray-400 focus:outline-none focus:border-gray-600 mb-4"
-            ></textarea>
-
-            {/* 하단 작성 완료 및 익명 */}
-            <div className="fixed bottom-0 left-0 w-full bg-white p-4 flex flex-col items-center">
-                {/* 익명 여부 */}
-                <div className="flex items-center justify-end w-full mb-4">
-                    <input
-                        type="checkbox"
-                        name="anonymous"
-                        checked={formData.anonymous}
-                        onChange={(e) =>
-                            setFormData((prevData) => ({
-                                ...prevData,
-                                anonymous: e.target.checked,
-                            }))
-                        }
-                        id="anonymous"
-                        className="hidden"
-                    />
-                    <label
-                        htmlFor="anonymous"
-                        className={`w-7 h-7 border-2 rounded-full flex items-center justify-center cursor-pointer transition ${
-                            formData.anonymous
-                                ? "bg-[#0d99ff] border-[#0d99ff]"
-                                : "bg-white border-gray-400"
-                        }`}
-                    >
-                        {formData.anonymous && (
-                            <svg
-                                className="w-4 h-4 text-white"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth={2}
-                                viewBox="0 0 24 24"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                            </svg>
-                        )}
-                    </label>
-                    <span className="ml-2 text-sm text-gray-600">익명</span>
-                </div>
-
-                {/* 작성 완료 버튼 */}
-                <button
-                    type="submit"
-                    onClick={handleSubmit}
-                    disabled={isLoading}
-                    className="w-full py-3 bg-[#0d99ff] text-white text-sm font-bold rounded-full hover:bg-blue-600"
-                >
-                    {isLoading ? "업로드 중..." : "작성 완료"}
-                </button>
-            </div>
+            </DefaultBody>
         </div>
     );
 };
