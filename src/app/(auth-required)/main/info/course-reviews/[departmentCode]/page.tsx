@@ -8,13 +8,14 @@ import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { DepartmentReviewComponent } from '@/components/common/Review/DepartmentReview';
 import { useDepartmentRatingInfoContext } from '@/api/review/useDepartmentRatingInfoContext';
 import { ReviewComment } from '@/components/common/Review/ReviewComment';
+import { useLectureReviewsContext } from '@/api/review/useLectureReviewsContext';
 
 const DepartmentReview = () => {
   const { departmentCode } = useParams();
 
   const [lectureInfo, setLectureInfo] = useState<lectureInfoType | null>(null);
   const [emotion, setEmotion] = useState<emotionType | null>(null);
-  useDepartmentRatingInfoContext({ departmentId: `${departmentCode}` });
+  const [reviewList, setReviewList] = useState<reviewType[]>([]);
 
   const getDepartMentRateInfo = async () => {
     try {
@@ -36,9 +37,29 @@ const DepartmentReview = () => {
     }
   }
 
+  const getReviewList = async () => { 
+    try {
+      const response = await useLectureReviewsContext({
+        lectureId: `${departmentCode}`,
+      });
+      const data = response.data;
+      console.log(data.contents);
+      setReviewList(data.contents);
+    } catch (error) {
+      console.error("과목 �� 후기 조회 실��", error);
+      alert("과목 �� 후기 조회 실��");
+    } finally {
+      return;
+    }
+  }
+
   useEffect(() => {
     getDepartMentRateInfo();
   }, []);
+
+  useEffect(() => {
+    getReviewList();
+  }, [lectureInfo]);
 
   return (
     <Suspense>
@@ -54,9 +75,23 @@ const DepartmentReview = () => {
             professor={lectureInfo.professor}
             score={emotion}
             rateCnt={lectureInfo.participants}
-          />
-        )}
-        <ReviewComment></ReviewComment>
+          />)
+        }
+        {
+          reviewList.length > 0 &&
+          reviewList.map(({ _id, content, starRating, likes, isLiked, semester }) => {
+            return (
+              <ReviewComment
+                starRating={starRating}
+                content={content}
+                likes={likes}
+                isLiked={isLiked}
+                semester={semester}
+                _id={_id}
+              />
+            )
+          })
+        }
       </DefaultBody>
       <BottomNav activeIndex={3} />
     </Suspense>
