@@ -1,5 +1,5 @@
 'use client';
-import './vote.css';
+//import './vote.css';
 import { useRouter } from 'next/navigation';
 import { useContext, useState, useEffect, useRef } from 'react';
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
@@ -141,59 +141,69 @@ export default function Vote() {
     // VoteList 컴포넌트: voteList를 받아서 렌더링하는 컴포넌트
     const VoteList = ({ voteList }: VoteListProps) => {
         return (
-            <div id="voteCont">
+            <div id="voteCont" className='w-full'>
                 {voteList.map((vote) => (
-                    <div key={vote._id} id='voteIndex'>
-                        <h3 id='voteTitle'  onClick={()=> router.push(`/vote/${vote._id}`)}>{vote.title}</h3>
-                        <p id='voteContent'>{vote.content}</p>
-                        <div id='voteContainer'>
+                    <div key={vote._id} id='voteIndex' className='my-[18px] flex flex-col gap-[4px]'>
+                        <h3 id='voteTitle' className='text-[16px] font-medium'  onClick={()=> router.push(`/vote/${vote._id}`)}>{vote.title}</h3>
+                        <p id='voteContent' className='text-[14px] font-normal'>{vote.content}</p>
+                        <div id='voteContainer' className='mt-[8px] rounded-[15px] border-[1px] flex flex-col px-[24px] py-[16px]'>
                         {calculateDaysLeft(vote.poll.pollEndTime) > 0 && vote.poll.hasUserVoted === false ?  (
-                            <>
-                        <ul id='ulCont'>
-                            {vote.poll.pollOptions.map((option, i) => (
-                                <li id='pollCont'  key={i}>
-                                    <input
-                                        type='checkBox'
-                                        key={i}
-                                        className='voteOption'
-                                        id={`pollOptionCheckBox-${vote._id}-${i}`}
-                                        onChange={() => handleCheckboxChange(vote._id, i, vote.poll.multipleChoice)}
-                                        checked={selectedOptions[vote._id]?.includes(i) || false}
-                                        disabled={vote.poll.pollFinished}
-                                        >
+                            <div className='flex flex-col gap-[12px]'>
+                                <ul id='ulCont'>
+                                    {vote.poll.pollOptions.map((option, i) => (
+                                        <li id='pollCont' className='flex gap-[16px] items-center justify-start' key={i}>
+                                            <input
+                                                type='checkBox'
+                                                key={i}
+                                                className='hidden peer'
+                                                id={`pollOptionCheckBox-${vote._id}-${i}`}
+                                                onChange={() => handleCheckboxChange(vote._id, i, vote.poll.multipleChoice)}
+                                                checked={selectedOptions[vote._id]?.includes(i) || false}
+                                                disabled={vote.poll.pollFinished}
+                                                >
 
-                                        </input>
-                                    <p id='optionText1'>{option}</p>
-                                </li>
+                                            </input>
+                                            <label
+                                                htmlFor={`pollOptionCheckBox-${vote._id}-${i}`}
+                                                className='w-[17px] h-[17px] rounded-full border border-gray-400 flex items-center justify-center cursor-pointer transition-all duration-300 peer-checked:bg-[#0D99FF] peer-checked:border-[#0D99FF] relative'
+                                                >
+                                                <img src="/icons/board/check.svg" className="w-[9px] text-white text-[10px] transition-opacity duration-300"/>
+                                            </label>
+                                            <p id='optionText1' className='text-Mr'>{option}</p>
+                                        </li>
 
-                            ))}
-                        </ul>
-                        <button id='voteBtn'  disabled={selectedOptions[vote._id]?.length === 0} onClick={(e) => votingHandler(e, vote._id)}>투표하기</button>
-                        </>
+                                    ))}
+                                </ul>
+                                <button id='voteBtn' className={selectedOptions[vote._id]?.length !== 0? 'w-full rounded-[5px] bg-[#0D99FF] py-[8px] text-Mm text-white' : 'w-full rounded-[5px] bg-sub py-[8px] text-Mm text-sub' }  disabled={selectedOptions[vote._id]?.length === 0} onClick={(e) => votingHandler(e, vote._id)}>투표하기</button>
+                            </div>
                         ) : (
                            <div id='conT'>
                               {vote.poll.pollOptions.map((option, i) => (
-                                <li  key={i} id='pollOpCont'>
-                                <div id='cont1'>
-                                    <p id='optionText'>{option}</p>
-                                    <div id='optionCount'>{vote.poll.pollVotesCounts[i]}명</div>
+                                <li  key={i} id='pollOpCont' className='list-none flex-col'>
+                                    <div id='cont1' className='flex justify-between'>
+                                        <p id='optionText' className='text-Mr' >{option}</p>
+                                        <div id='optionCount' className='text-sr text-sub'>{vote.poll.pollVotesCounts[i]}명</div>
                                     </div>
 
-                                    <div id='statusbar'></div>
-                                    <div id="pollOptionBar"style={{ width: `${(vote.poll.pollVotesCounts[i] / vote.poll.totalParticipants) * 100}%`, }}></div>
-                                    <div id='pollOptionCount'></div>
+                                    <div id='statusbar' className='w-full bg-gray h-[4px] rounded-full mb-[12px] mt-[8px]' >
+                                        <div id="pollOptionBar" className="bg-main h-full rounded-full" 
+                                            style={{
+                                                width: `${Math.floor((vote.poll.pollVotesCounts[i] / vote.poll.totalParticipants) * 100)}%`
+                                            }}
+                                        />
+                                    </div>
                                 </li>
 
                             ))}
                            </div>
                         )}
-                        <div id='ect'>
+                        <div id='ect' className='text-Mr text-[#404040] flex gap-[4px] mt-[8px]'>
                             <div id='count'>{vote.poll.totalParticipants}명 참여</div>
                             {vote.poll.multipleChoice && <div id='ismulti'> • 복수투표</div>}
                         </div>
                         </div>
 
-                        <div id='pollEndTime'>
+                        <div id='pollEndTime' className='hidden'>
                         {calculateDaysLeft(vote.poll.pollEndTime) > 0 ?  (
                             <>
                                 {calculateDaysLeft(vote.poll.pollEndTime)}일 후 종료
@@ -202,23 +212,22 @@ export default function Vote() {
                             '종료됨'
                         )}
                         </div>
-                        <div id='viewContainer'>
-                            <div id='view'>
-                                <div id='viewIcon'></div>
-                                <div id='viewCount'>{vote.hits}</div>
+                        <div className="mb-[18px] flex justify-between items-center text-sr text-sub mt-[8px]">
+                            <div className="flex space-x-[6px]">
+                                <span className="flex items-center gap-[4.33px]">
+                                    <img src="/icons/board/viewIcon.svg" width={16} height={16}/>
+                                    {vote.hits || 0}
+                                </span>
+                                <span className="flex items-center gap-[4.33px]">
+                                    <img src="/icons/board/heartIcon.svg" width={16} height={16}/>
+                                    {vote.likeCount || 0}
+                                </span>
+                                <span className="flex items-center gap-[4.33px]">
+                                    <img src="/icons/board/commentIcon.svg" width={16} height={16}/>
+                                    {vote.commentCount || 0}
+                                </span>
                             </div>
-                            <div id='like'>
-                                <div id='likeIcon'></div>
-                                <div id='likeCount'>{vote.likeCount}</div>
-                            </div>
-                            <div id='comment'>
-                                <div id='commentIcon'></div>
-                                <div id='commentCount'>{vote.commentCount}</div>
-                            </div>
-
-
                         </div>
-                        <div id='divider'></div>
 
                     </div>
                 ))}
@@ -227,24 +236,21 @@ export default function Vote() {
     };
 
     return (
-        <div className="vote">
+        <div className="w-full">
             <Header>
                 <Header.BackButton/>
                 <Header.Title>{`익명 투표`}</Header.Title>
                 <Header.SearchButton onClick={() => console.log("검색 버튼 클릭")} />
             </Header>
             <DefaultBody hasHeader={1}>
-            <div id="tag">{`<ul>`}</div>
+                <div id='VoteListCont' className='w-full' ref={chatBoxRef} onScroll={handleScroll}>
+                    {isLoading && <div className="loading">Loading...</div>}
+                    <VoteList voteList={voteList} />
+                </div>
+                <button id="writeBtn"  onClick={()=> router.push('/vote/write')}></button>
 
-            <div id='VoteListCont' ref={chatBoxRef} onScroll={handleScroll}>
-                {isLoading && <div className="loading">Loading...</div>}
-                <VoteList voteList={voteList} />
-            </div>
-
-            <div id="tag1">{`</ul>`}</div>
-
-            <button id="writeBtn"  onClick={()=> router.push('/vote/write')}></button>
             </DefaultBody>
+                
             <BottomNav activeIndex={0}/>
         </div>
     );
