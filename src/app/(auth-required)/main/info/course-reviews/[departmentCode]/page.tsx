@@ -1,14 +1,14 @@
-'use client'
+"use client";
 
 import { useParams } from "next/navigation";
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from "react";
 import Header from "@/components/Layout/header/Header";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
-import { DepartmentReviewComponent } from '@/components/common/Review/DepartmentReview';
-import { useDepartmentRatingInfoContext } from '@/api/review/useDepartmentRatingInfoContext';
-import { ReviewComment } from '@/components/common/Review/ReviewComment';
-import { useLectureReviewsContext } from '@/api/review/useLectureReviewsContext';
+import { DepartmentReviewComponent } from "@/components/Review/DepartmentReview";
+import { useDepartmentRatingInfoContext } from "@/api/review/useDepartmentRatingInfoContext";
+import { ReviewComment } from "@/components/Review/ReviewComment";
+import { useLectureReviewsContext } from "@/api/review/useLectureReviewsContext";
 
 const DepartmentReview = () => {
   const { departmentCode } = useParams();
@@ -19,7 +19,9 @@ const DepartmentReview = () => {
 
   const getDepartMentRateInfo = async () => {
     try {
-      const response = await useDepartmentRatingInfoContext({ departmentId: `${departmentCode}` });
+      const response = await useDepartmentRatingInfoContext({
+        departmentId: `${departmentCode}`,
+      });
       const data = response.data;
       setLectureInfo({
         _id: data._id,
@@ -35,9 +37,9 @@ const DepartmentReview = () => {
     } finally {
       return;
     }
-  }
+  };
 
-  const getReviewList = async () => { 
+  const getReviewList = async () => {
     try {
       const response = await useLectureReviewsContext({
         lectureId: `${departmentCode}`,
@@ -51,7 +53,7 @@ const DepartmentReview = () => {
     } finally {
       return;
     }
-  }
+  };
 
   useEffect(() => {
     getDepartMentRateInfo();
@@ -75,23 +77,23 @@ const DepartmentReview = () => {
             professor={lectureInfo.professor}
             score={emotion}
             rateCnt={lectureInfo.participants}
-          />)
-        }
-        {
-          reviewList.length > 0 &&
-          reviewList.map(({ _id, content, starRating, likes, isLiked, semester }) => {
-            return (
-              <ReviewComment
-                starRating={starRating}
-                content={content}
-                likes={likes}
-                isLiked={isLiked}
-                semester={semester}
-                _id={_id}
-              />
-            )
-          })
-        }
+          />
+        )}
+        {reviewList.length > 0 &&
+          reviewList.map(
+            ({ _id, content, starRating, likes, isLiked, semester }) => {
+              return (
+                <ReviewComment
+                  starRating={starRating}
+                  content={content}
+                  likes={likes}
+                  isLiked={isLiked}
+                  semester={semester}
+                  _id={_id}
+                />
+              );
+            }
+          )}
       </DefaultBody>
       <BottomNav activeIndex={3} />
     </Suspense>

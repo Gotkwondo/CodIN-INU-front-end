@@ -1,24 +1,23 @@
-'use client'
+"use client";
 
-import SmRoundedBtn from '@/components/buttons/smRoundedBtn';
-import { DEPARTMENTS, SEARCHTYPES } from './constants';
-import { labelType, reviewContentType, searchTypesType } from './types';
-import { Suspense, useEffect, useMemo, useState } from 'react';
-import { Input } from '@/components/input/Input';
-import { debounce } from 'lodash';
-import { UnderbarBtn } from '@/components/buttons/underbarBtn';
-import { Subject } from '@/components/common/Review/Subject';
-import Link from 'next/link';
+import SmRoundedBtn from "@/components/buttons/smRoundedBtn";
+import { DEPARTMENTS, SEARCHTYPES } from "./constants";
+import { labelType, reviewContentType, searchTypesType } from "./types";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { Input } from "@/components/input/Input";
+import { debounce } from "lodash";
+import { UnderbarBtn } from "@/components/buttons/underbarBtn";
+import { Subject } from "@/components/Review/Subject";
 import Header from "@/components/Layout/header/Header";
-import DefaultBody from '@/components/Layout/Body/defaultBody';
-import BottomNav from '@/components/Layout/BottomNav/BottomNav';
-import { useReviewsContext } from '@/api/review/getReviewsContext';
+import DefaultBody from "@/components/Layout/Body/defaultBody";
+import BottomNav from "@/components/Layout/BottomNav/BottomNav";
+import { useReviewsContext } from "@/api/review/getReviewsContext";
 
 const courseReviewPage = () => {
   const token = localStorage.getItem("accessToken");
   if (!token) {
     alert("로그인이 필요합니다. 다시 로그인해주세요.");
-    
+
     return;
   }
   const [selectedDepartment, setSelectedDepartment] = useState<labelType>({
@@ -56,32 +55,31 @@ const courseReviewPage = () => {
     debouncedSearch(keyword); // 디바운스 적용된 값 업데이트
   };
 
-  const onSearchTypeChange = ({label, value}: searchTypesType) => {
-      setSearchType({ label: label, value: value });
+  const onSearchTypeChange = ({ label, value }: searchTypesType) => {
+    setSearchType({ label: label, value: value });
   };
 
   const getReviewsContent = async () => {
     try {
       const data = await useReviewsContext({
-      department: selectedDepartment.value,
-      option: searchType.value,
-      page: 0,
-    });
-    setReviewContents(data.data.contents)
-    } catch(err) {
-      alert('데이터를 불러오지 못했습니다');
+        department: selectedDepartment.value,
+        option: searchType.value,
+        page: 0,
+      });
+      setReviewContents(data.data.contents);
+    } catch (err) {
+      alert("데이터를 불러오지 못했습니다");
       setReviewContents([]);
       console.log(err);
     }
-  }
+  };
 
   const filterContent = () => {
-    console.log('dd')
-  }
+    console.log("dd");
+  };
 
   useEffect(() => {
-      getReviewsContent();
-    
+    getReviewsContent();
   }, [selectedDepartment]);
 
   return (
