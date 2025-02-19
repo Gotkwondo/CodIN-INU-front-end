@@ -4,9 +4,10 @@ type useReviewContextType = {
   department: string;
   option: string;
   page: number;
+  keyword?: string;
 };
 
-const useReviewsContext = async ({ department, option, page }: useReviewContextType) => {
+const useReviewsContext = async ({ department, option, page, keyword='' }: useReviewContextType) => {
   const token = localStorage.getItem("accessToken");
   if (!token) {
     alert("로그인이 필요합니다. 다시 로그인해주세요.");
@@ -15,8 +16,8 @@ const useReviewsContext = async ({ department, option, page }: useReviewContextT
 
   try {
     const parameters = new URLSearchParams({
-      // lectureId: lectureId,
       department: department,
+      keyword: keyword,
       option: option,
       page: `${page}`,
     });
