@@ -11,6 +11,8 @@ import { newDate } from 'react-datepicker/dist/date_utils';
 import TimePicker from 'react-time-picker';
 import { PostVote } from '../../../../api/vote/postVote';
 import Header from '@/components/Layout/header/Header';
+import DefaultBody from '@/components/Layout/Body/defaultBody';
+import CommonBtn from '@/components/buttons/commonBtn';
 
 export default function Vote() {
     const router = useRouter();
@@ -52,7 +54,7 @@ export default function Vote() {
 
   };
 
-  const handleContentChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
     setContent(e.target.value);
 
   };
@@ -121,63 +123,98 @@ export default function Vote() {
 
 
      return (
-            <div className="vote">
+            <div className="vote w-full">
                 <Header>
                     <Header.BackButton/>
-                    <Header.Title>{`<글쓰기/>`}</Header.Title>
+                    <Header.Title>{`글쓰기`}</Header.Title>
                 </Header>
-                <input id="write_content" placeholder='내용을 입력하세요' onChange={handleContentChange}></input>
-                <div id='voteCont_write'>
-                    <input id="write_title" placeholder='투표 제목' onChange={handletitleChange}></input>
-                   {options.map((option, index) => (
-                    <input
-                        key={index}
-                        className="option"
-                        value={option}
-                        placeholder='항목 입력'
-                        onChange={(e) => handleOptionChange(index, e.target.value)}
-                    />
-                ))}
-                    <button id='addOption'  onClick={addOption}>+ 항목 추가</button>
-                    <div id='multipleCont'>
-                    <input type="checkbox" id="multipleBtn" onClick={handleChecked}></input>
-                        <div id='multipleMent'>복수선택</div>
+                <DefaultBody hasHeader={1}>
+                <input className="defaultInput mt-[18px]" id="write_title" placeholder='제목' onChange={handletitleChange}></input>
+                    <div id='voteCont_write'>
+                        <h3 className='text-XLm my-[24px]'>투표</h3>
+                        
+                        
+                        {options.map((option, index) => (
+                            <input
+                                key={index}
+                                className="defaultInput mt-[12px]"
+                                value={option}
+                                placeholder='항목 입력'
+                                onChange={(e) => handleOptionChange(index, e.target.value)}
+                            />
+                        ))}
+
+                        <button id='addOption' className='text-Mm flex w-full align-center justify-center py-[14px] bg-sub rounded-[5px] mt-[12px] text-sub' onClick={addOption}>항목 추가</button>
+
+
+
+                    </div>
+                    <div id='endTimeCont'>
+                        <div className='flex justify-between items-center'>
+                            <h3 className='text-XLm my-[24px]'>종료시간 설정</h3>
+
+                            <TimePicker
+                                            id='write_time'
+                                            value={selectedTime}
+                                            format="hh:mm a"
+                                            onChange={handleTimeChange}
+                                            clearIcon
+                                            clockIcon
+                                            locale="ko-KR"
+                                            hourAriaLabel='false'
+                                            className="transform translate-y-[20%] z-50"
+                            />
+                        </div>
+                        <div id='dateCont' className='relative max-h-[50px] border-[1px] rounded-[5px] p-[16px] flex flex-start justify-start items-center'>
+                            <img src='/icons/board/clock.svg' className='w-[16px] h-[16px] mr-[12px]'/>
+                            
+                            <div className='flex-1'>
+                                <DatePicker
+                                    selected={selectedDate}
+                                    onChange={handleDateChange}
+                                    dateFormat="yyyy-MM-dd (E)"
+                                    id="write_date"
+                                    locale={ko}
+                                />
+                            </div>
+
+                        </div>
+
                     </div>
 
-                </div>
-                <div id='endTimeCont'>
-                    <div id='endTimeTitle'>투표 종료시간 설정</div>
-                    <div id='dateCont'>
-                        <div id='clockIcon'></div>
-                        <DatePicker
-                        selected={selectedDate}
-                        onChange={handleDateChange}
-                        dateFormat="yyyy-MM-dd (E)"
-                        id="write_date"
-                        locale={ko}
-                         />
-                         <TimePicker
-                          id='write_time'
-                          value={selectedTime}
-                          format="hh:mm a"
-                          onChange={handleTimeChange}
-                          clearIcon
-                          clockIcon
-                          locale="ko-KR"
-                          hourAriaLabel='false'
+                    <textarea
+                        className="text-Mm mt-[24px] min-h-[143px] resize-none p-[16px] border rounded box-border focus:border-black "
+                        id="write_content"
+                        placeholder="내용을 입력하세요"
+                        onChange={handleContentChange}
+                    />
 
-                         />
-                </div>
-                </div>
+                    <div className='w-full flex justify-end items-center gap-[12px] my-[16px]' >
+                        <div id='multipleCont' className='flex items-center gap-[5px]'>
+                            <input type="checkbox" className='hidden peer' id="multipleBtn" onClick={handleChecked}></input>
+                            <label
+                                htmlFor="multipleBtn"
+                                className='w-[17px] h-[17px] rounded-full border border-gray-400 flex items-center justify-center cursor-pointer transition-all duration-300 peer-checked:bg-[#0D99FF] peer-checked:border-[#0D99FF] relative'
+                                >
+                                <img src="/icons/board/check.svg" className="w-[9px] text-white text-[10px] transition-opacity duration-300"/>
+                            </label>
+                            <div id='multipleMent' className='text-Mr'>복수선택</div>
+                        </div>
 
-              {/*}  <div id='anonymityCont'>
-                    <input type="checkbox" id="anonymityBtn" onClick={handleAnonymity}></input>
-                        <div id='anonymityMent'>익명</div>
-                </div>*/}
+                        <div id='anonymityCont' className='flex items-center gap-[5px]'>
+                            <input type="checkbox" className='hidden peer' id="anonymityBtn" onClick={handleAnonymity}></input>
+                            <label
+                                htmlFor="anonymityBtn"
+                                className='w-[17px] h-[17px] rounded-full border border-gray-400 flex items-center justify-center cursor-pointer transition-all duration-300 peer-checked:bg-[#0D99FF] peer-checked:border-[#0D99FF] relative'
+                                >
+                                <img src="/icons/board/check.svg" className="w-[9px] text-white text-[10px] transition-opacity duration-300"/>
+                            </label>
+                            <div id='anonymityMent'className='text-Mr' >익명</div>
+                        </div>
+                    </div>
+                    <CommonBtn status={1} type="submit" text="작성 완료" onClick={handleSubmit}/>
 
-                <button id='submit' onClick={handleSubmit}>작성 완료</button>
-
-
+                </DefaultBody>
             </div>
         );
 
