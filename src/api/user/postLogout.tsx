@@ -5,7 +5,7 @@ const BASE_URL = 'https://www.codin.co.kr/api';
 export const PostLogout = async (): Promise<any> => {
   console.log("전송 데이터");
   const token = localStorage.getItem("accessToken");
-
+  axios.defaults.withCredentials = true;
   try {
     const response: AxiosResponse<any> = await axios.post(
       `${BASE_URL}/auth/logout`,
