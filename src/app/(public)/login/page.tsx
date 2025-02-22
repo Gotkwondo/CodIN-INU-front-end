@@ -120,52 +120,7 @@ export default function LoginPage() {
             alert('로그인 오류');
         }
     };
-    const searchParams = useSearchParams(); 
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [responseData, setResponseData] = useState(null);
-    useEffect(() => {
-        // URL 파라미터 추출
-        const state = searchParams.get('state');
-    const code = searchParams.get('code');
-    
-        if (state && code) {
-          // 추출한 state와 code를 포함한 URL로 GET 요청을 보냅니다.
-          const getRequest = async () => {
-            try {
-              setIsLoading(true);
-              const url = `https://www.codin.co.kr/api/login/oauth2/code/google?state=${state}&code=${code}`;
-              
-              // GET 요청 보내기
-              const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              });
-    
-              if (!response.ok) {
-                throw new Error('서버 요청에 실패했습니다.');
-              }
-    
-              const data = await response.json();  // 서버에서 JSON 응답 받기
-              setResponseData(data);  // 응답 데이터를 상태에 저장
-    
-              // 응답 처리 후 페이지 이동 등 필요한 작업 수행
-              console.log('서버 응답 데이터:', data);
-              // 예시: 로그인 후 특정 페이지로 이동
-              router.push('/dashboard');
-            } catch (err) {
-              console.error('요청 실패', err);
-              setError(err.message);
-            } finally {
-              setIsLoading(false);
-            }
-          };
-    
-          getRequest();
-        }
-      }, [searchParams]);  // 쿼리 파라미터가 변경될 때마다 실행
+   
     
     return (
         <DefaultBody hasHeader={0}>
