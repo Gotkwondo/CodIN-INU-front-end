@@ -48,6 +48,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, myId }) => {
                     createdAt={formatCustomDate(message.createdAt)}
                     contentType={message.contentType}
                     myId={myId}
+                    unread={1}
                 />
             );
         });

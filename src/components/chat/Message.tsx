@@ -8,11 +8,12 @@ interface MessageProps {
     createdAt: string;
     contentType: string;
     myId: string;
+    unread: number;
   }
 
 
   
-  const Message = ({ id, content, createdAt, contentType, myId }: MessageProps) => {
+  const Message = ({ id, content, createdAt, contentType, myId, unread}: MessageProps) => {
     const messageClass = id !== myId ? 'message-left' : 'message-right';
   
 
@@ -39,6 +40,7 @@ interface MessageProps {
           </div>
         </div>
         <div id="time">{createdAt}</div>
+        <div id='isRead' className="text-[#0D99FF] text-[10px] w-3 z-3">{unread}</div>
       </div>
     );
   };

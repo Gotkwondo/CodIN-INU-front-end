@@ -22,6 +22,7 @@ interface Message {
     me: boolean;
     imageUrl?: string;
     contentType: string;
+    unread: number;
 }
 
 interface MessageListProps {
@@ -52,7 +53,8 @@ export default function ChatRoom() {
    const [myId, setMyID] = useState<string>('');
     const [imageFile, setImageFile] = useState<File | null>(null);
     const headers = {
-        'Authorization': accessToken
+        'Authorization': accessToken,
+        'chatRoomId': chatRoomId
     }
    
     useEffect(() => {
@@ -125,6 +127,7 @@ useEffect(() => {
                         createdAt: receivedMessage.body.data.createdAt,
                         me: false,
                         contentType: receivedMessage.body.data.contentType,
+                        unread:receivedMessage.body.data.unread
                     },
                 ]);
             }

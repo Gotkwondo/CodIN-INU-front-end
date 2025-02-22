@@ -5,7 +5,7 @@ const BASE_URL = 'https://www.codin.co.kr/api';
 
 export const PostSignup = async (studentId:string, nickname:string, profileImage:File ): Promise<any> => {
   console.log("전송 데이터",studentId,nickname );
-
+  axios.defaults.withCredentials = true;
   try { 
 
     const formData = new FormData();
