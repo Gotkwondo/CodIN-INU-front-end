@@ -21,6 +21,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Verify Dockerfile exists
+        run: ls -l Dockerfile  # Dockerfile이 있는지 확인 (Linux 기준)
+
       - name: Build Docker image And Push
         run: docker buildx build --platform linux/amd64,linux/arm64 -t inucodin/codin-frontend:latest --push -f Dockerfile .
 
