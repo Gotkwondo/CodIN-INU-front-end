@@ -7,10 +7,13 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+        
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: '20.17.0'
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
@@ -19,7 +22,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build Docker image And Push
-        run: docker buildx build -t ${{ secrets.DOCKERHUB_USERNAME }}/codin-frontend:latest --push -f ./docker/Dockerfile .
+        run: docker buildx build -t ${{ secrets.DOCKERHUB_USERNAME }}/codin-frontend:latest --push .
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
