@@ -4,6 +4,7 @@ import axios, { AxiosInstance } from "axios";
 const BASE_URL = "https://www.codin.co.kr/api";
 
 function createAPIClient(): AxiosInstance {
+    axios.defaults.withCredentials = true;
     const client = axios.create({
         baseURL: BASE_URL,
     });
