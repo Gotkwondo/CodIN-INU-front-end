@@ -87,28 +87,45 @@ export default function LoginPage() {
         }
     }, [Auth.accessToken]); // Auth.accessToken의 변경을 감지
 
-    if(!schoolLoginExplained){
-        return (
-            <DefaultBody hasHeader={0}>
-                <div className='absolute bottom-[62px] w-full px-[20px] left-0 flex flex-col items-center justify-center'>
-                    <p className='text-Lm text-normal'>Codin은 <span className='text-active'>학교 계정</span>을 사용해요</p>
-                    <p className='text-Mr text-sub mb-[48px]'>동일한 아이디와 비밀번호를 입력해주세요</p>
-                    <img className="mb-[137px]" width="350" src='/images/schoolLoginExplain.png'/>    
-                    <div className='flex flex-row gap-[6px] mb-[22px]'>
-                        <div className='w-[12px] h-[12px] bg-[#0D99FF] rounded-[12px]'/>
-                        <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
-                        <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
-                    </div>
-                    <CommonBtn id="loginBtn" text="이해했어요" status={1} onClick={()=>{setSchoolLoginExplained(true)}}/>
-                </div>
-            </DefaultBody>
-        );
-    }
+    // if(!schoolLoginExplained){
+    //     return (
+    //         <DefaultBody hasHeader={0}>
+    //             <div className='absolute bottom-[62px] w-full px-[20px] left-0 flex flex-col items-center justify-center'>
+    //                 <p className='text-Lm text-normal'>Codin은 <span className='text-active'>학교 계정</span>을 사용해요</p>
+    //                 <p className='text-Mr text-sub mb-[48px]'>동일한 아이디와 비밀번호를 입력해주세요</p>
+    //                 <img className="mb-[137px]" width="350" src='/images/schoolLoginExplain.png'/>    
+    //                 <div className='flex flex-row gap-[6px] mb-[22px]'>
+    //                     <div className='w-[12px] h-[12px] bg-[#0D99FF] rounded-[12px]'/>
+    //                     <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
+    //                     <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
+    //                 </div>
+    //                 <CommonBtn id="loginBtn" text="이해했어요" status={1} onClick={()=>{setSchoolLoginExplained(true)}}/>
+    //             </div>
+    //         </DefaultBody>
+    //     );
+    // }
+
+   
+
+    // 구글 로그인 버튼 클릭 시 구글 로그인 페이지로 리디렉션
+    const handleGoogleLogin = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
+        e.preventDefault();
+        try {
+            // 구글 로그인 URL로 리디렉션
+            window.location.href = 'https://www.codin.co.kr/api/auth/google';
+            router.push('/signup/profile');
+           
+        } catch (error) {
+            console.error('로그인 실패', error);
+            alert('로그인 오류');
+        }
+    };
+
     return (
         <DefaultBody hasHeader={0}>
-            <div className='absolute bottom-[62px] w-full px-[20px] left-0 flex flex-col items-center justify-center'>
+            <div className='absolute bottom-[35%] w-full px-[20px] left-0 flex flex-col items-center justify-center'>
                 <img className="w-[171.41px] h-[45px] mb-[72px]" src='/images/logo.png'/>
-                <div className='flex flex-col w-full gap-[12px] mb-[169px]'>
+                {/* <div className='flex flex-col w-full gap-[12px] mb-[169px]'>
                     <input
                         className="defaultInput"
                         id="email"
@@ -125,7 +142,7 @@ export default function LoginPage() {
                         onChange={handlePWChange}
                     />
                     <a href="https://portal.inu.ac.kr:444/enview/" className='text-Mr underline text-[#808080] w-full text-right'>비밀번호를 잊으셨나요?</a>
-                </div>
+                </div> */}
                 {/*
                 <div id="else">
                 
@@ -136,12 +153,17 @@ export default function LoginPage() {
                     </button>
                 </div>
                 */}
-                <div className='flex flex-row gap-[6px] mb-[22px]'>
+                {/* <div className='flex flex-row gap-[6px] mb-[22px]'>
                     <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
                     <div className='w-[12px] h-[12px] bg-[#0D99FF] rounded-[12px]'/>
                     <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
                 </div>
-                <CommonBtn id="loginBtn" text="로그인하기" status={1} onClick={handleLogin}/>
+                <CommonBtn id="loginBtn" text="로그인하기" status={1} onClick={handleLogin}/> */}
+                <div className=" w-[120px] h-[24px] font-noto-sans-kr font-bold text-[20px] leading-[24px] text-center text-[#212121]">CodIN 로그인</div>
+                <p className=' w-[221px] h-[17px]  font-noto-sans-kr font-normal text-[13px] mt-[15px] mb-[73px] leading-[17px] text-center text-[#808080]'>CodIN은 <span className='text-active'>학교 이메일 계정</span>을 사용해요</p>
+                <button onClick={handleGoogleLogin}>
+                    <img src='/images/google.png'></img>
+                </button>
             </div>
         </DefaultBody>
     );

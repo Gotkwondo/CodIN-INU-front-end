@@ -22,6 +22,7 @@ interface Message {
     me: boolean;
     imageUrl?: string;
     contentType: string;
+    unread: number;
 }
 
 interface MessageListProps {
@@ -126,6 +127,7 @@ useEffect(() => {
                         createdAt: receivedMessage.body.data.createdAt,
                         me: false,
                         contentType: receivedMessage.body.data.contentType,
+                        unread:receivedMessage.body.data.unread
                     },
                 ]);
             }
