@@ -1,5 +1,5 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { UserContext } from '@/context/UserContext';
 import { useContext, useState, useEffect } from 'react';
 import { PostSignup } from '@/api/user/postSignup';
@@ -14,6 +14,9 @@ export default function SignupProfile() {
   const [nickname, setNickname] = useState<string>("");
   const [studentId, setStudentId] = useState<string>('');
   const userContext = useContext(UserContext);
+  const searchParams = useSearchParams();
+  const email = searchParams.get('email'); // URL에서 email 파라미터를 가져옴
+
 
   if (!userContext) {
     throw new Error('MyConsumer must be used within a MyProvider');
@@ -61,7 +64,7 @@ export default function SignupProfile() {
     if (nickname) {
       try {
        
-        const response = await PostSignup(studentId, nickname, profileImg);
+        const response = await PostSignup(email , nickname, profileImg);
         console.log('회원가입 결과:', response);
         alert('회원가입 완료! 다시 로그인해주세요');
         router.push('/login');
