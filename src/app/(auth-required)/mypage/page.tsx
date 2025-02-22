@@ -63,6 +63,12 @@ export default function MyPage() {
                 console.log('결과:', response);
                 localStorage.clear();
                 alert("성공적으로 탈퇴하였습니다.")
+
+                document.cookie.split(";").forEach((cookie) => {
+                    const cookieName = cookie.split("=")[0].trim();
+                    document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+                });
+
                 window.location.href = "/login";
             } 
         } catch (error) {
