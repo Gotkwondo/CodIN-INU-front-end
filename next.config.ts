@@ -9,6 +9,7 @@ const nextConfig = {
             "ese.inu.ac.kr"// S3 버킷 도메인 추가
         ],
     },
+    output : 'standalone',
 };
 
 module.exports = nextConfig;
