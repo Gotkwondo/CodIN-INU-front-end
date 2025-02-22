@@ -52,7 +52,8 @@ export default function ChatRoom() {
    const [myId, setMyID] = useState<string>('');
     const [imageFile, setImageFile] = useState<File | null>(null);
     const headers = {
-        'Authorization': accessToken
+        'Authorization': accessToken,
+        'chatRoomId': chatRoomId
     }
    
     useEffect(() => {
