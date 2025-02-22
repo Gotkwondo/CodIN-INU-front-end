@@ -4,7 +4,7 @@ const BASE_URL = 'https://www.codin.co.kr/api';
 
 export const PostVoting = async (accessToken:string, postId: string, selectedOptions:number[]): Promise<any> => {
     console.log("전송 데이터", );
-
+    axios.defaults.withCredentials = true;
     try{
         await axios.post(
             `${BASE_URL}/polls/voting/${postId}`, 

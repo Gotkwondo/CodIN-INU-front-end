@@ -4,7 +4,7 @@ const BASE_URL = 'https://www.codin.co.kr/api';
 
 export const PostPwCheck = async (email:string, code:string): Promise<any> => {
     console.log("전송 데이터", email, code);
-
+    axios.defaults.withCredentials = true;
     try{
         const response: AxiosResponse<any> = await axios.post(
             `${BASE_URL}/email/auth/password/check`, 
