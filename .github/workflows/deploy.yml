@@ -25,7 +25,7 @@ jobs:
         run: pwd
 
       - name: Build Docker image And Push
-        run: docker buildx build -t inucodin/codin-frontend:latest --push ../ .
+        run: docker buildx build -t inucodin/codin-frontend:latest ../ --push .
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
