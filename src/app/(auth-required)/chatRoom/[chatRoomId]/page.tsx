@@ -59,7 +59,7 @@ export default function ChatRoom() {
 
     useEffect(()=>{
       
-        if (stompClient || connected) {
+        if (!chatRoomId) {
             return; // 이미 연결되었으면 연결을 다시 시도하지 않습니다.
         }
         
@@ -67,7 +67,7 @@ export default function ChatRoom() {
         const stomp = Stomp.over(socket);
 
         setStompClient(stomp);
-    });
+    },[chatRoomId]);
 
 useEffect(() => {
     console.log('Messages updated:', messages);  // 상태 업데이트 후 메시지 확인
