@@ -238,6 +238,7 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
                     ...comment,
                     content: comment.content || "내용이 없습니다.",
                 }));
+                console.log('응답',data);
                 setComments(validComments);
                 const initialCommentLikes = data.dataList.reduce((acc: { [key: string]: boolean }, comment: Comment) => {
                     acc[comment._id] = comment.userInfo.like;
@@ -461,7 +462,7 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
                                 {/* 닉네임 & 작성 시간 */}
                                 <div className="flex items-center mb-1">
                     <span className="text-sr font-medium">
-                    {comment.anonymous ? "익명" : comment.nickname}
+                    {comment.nickname}
                     </span>
                     <span className="text-sr text-[#bfbfbf] ml-[8px]">
                     {timeAgo(comment.createdAt)}
