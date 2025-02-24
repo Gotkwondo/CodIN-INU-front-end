@@ -14,12 +14,11 @@ interface Message {
 interface MessageFormProps {
     onMessageSubmit: (message: Message) => void;
     myId: string;
-    accessToken: string;
     imageFile: File | null;
     setImageFile: React.Dispatch<React.SetStateAction<File | null>>;
 }
 
-const MessageForm = ({ onMessageSubmit, myId, accessToken, imageFile, setImageFile }: MessageFormProps) => {
+const MessageForm = ({ onMessageSubmit, myId, imageFile, setImageFile }: MessageFormProps) => {
     const [messageContent, setMessageContent] = useState<string>('');
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);

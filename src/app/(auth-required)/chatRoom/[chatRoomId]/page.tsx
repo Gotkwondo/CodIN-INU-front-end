@@ -42,7 +42,6 @@ export default function ChatRoom() {
     if (!authContext) {
         throw new Error('AuthContext를 사용하려면 AuthProvider로 감싸야 합니다.');
     }
-    const [accessToken, setToken] = useState<string>('');
    const [title, setTitle] = useState<string>('');
     const [messages, setMessages] = useState<Message[]>([]); // Message 타입 배열
     const [page, setPage] = useState<number>(0);
@@ -53,25 +52,19 @@ export default function ChatRoom() {
    const [myId, setMyID] = useState<string>('');
     const [imageFile, setImageFile] = useState<File | null>(null);
     const headers = {
-        'Authorization': accessToken,
         'chatRoomId': chatRoomId
     }
    
-    useEffect(() => {
-        const token = localStorage.getItem("accessToken");
-        if (token) {
-            setToken(token);
-        }
-    }, []);
+   
 
     useEffect(()=>{
-        if (!accessToken) return;
+      
 
         const socket = new SockJS('https://www.codin.co.kr/api/ws-stomp');
         const stomp = Stomp.over(socket);
 
         setStompClient(stomp);
-    },[accessToken]);
+    });
 
 useEffect(() => {
     console.log('Messages updated:', messages);  // 상태 업데이트 후 메시지 확인
@@ -82,12 +75,12 @@ useEffect(() => {
     const fetchChatRoomData = async() => {
        
         try {
-            console.log('토큰:', accessToken);
+           
             const title = localStorage.getItem('roomName');
             setTitle(title);
 
             console.log('전송데이터:', chatRoomId);
-            const data = await GetChatData(accessToken, chatRoomId as string, 0);
+            const data = await GetChatData(chatRoomId as string, 0);
             console.log(data);
 
             setMessages((data.data.data.chatting || []).slice().reverse());
@@ -100,13 +93,13 @@ useEffect(() => {
 
     };
 
-    if (accessToken) {
+    
         fetchChatRoomData();
-    }
-}, [accessToken, chatRoomId]);
+    
+}, [ chatRoomId]);
 
 useEffect(() => {
-    if (!accessToken || !stompClient || !myId) return;
+    if ( !stompClient || !myId) return;
 
     console.log('전송 헤더', headers);
 
@@ -133,7 +126,7 @@ useEffect(() => {
             }
         });
     });
-}, [accessToken, stompClient, myId, chatRoomId]);
+}, [stompClient, myId, chatRoomId]);
 
 
 
@@ -143,7 +136,7 @@ const fetchChattingData = async (page: number) => {
 
     
     try {
-        const data = await GetChatData(accessToken, chatRoomId as string, page);
+        const data = await GetChatData(chatRoomId as string, page);
         const newMessages = data.data.data.chatting || [];
         if (newMessages.length === 0) {
             setHasMore(false); // 더 이상 불러올 데이터가 없음
@@ -183,8 +176,7 @@ const handleScroll = () => {
     const exitRoom = async(chatRoomId: string | string[] ) => {
 
             try {
-                console.log('토큰:', accessToken);
-                const response = await deleteRoom(accessToken, chatRoomId);
+                const response = await deleteRoom(chatRoomId);
                 console.log(response);
                 router.push('/chat')
 
@@ -220,7 +212,7 @@ const handleScroll = () => {
                 <MessageList messages={messages} myId={myId}  />
             </div>
             <div id='divider'></div>
-            <MessageForm onMessageSubmit={handleMessageSubmit} myId={myId} accessToken={accessToken} imageFile={imageFile} setImageFile={setImageFile} />
+            <MessageForm onMessageSubmit={handleMessageSubmit} myId={myId} imageFile={imageFile} setImageFile={setImageFile} />
         </div>
     );
 

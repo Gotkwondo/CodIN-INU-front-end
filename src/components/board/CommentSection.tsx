@@ -6,16 +6,12 @@ import {
     FaHeart,
     FaCheckCircle,
     FaPaperPlane,
-    FaTimes,
+    FaTimes, // 닫기(X) 아이콘
 } from "react-icons/fa";
 
-// chat API
+// chat API 불러오기
 import { startChat } from "@/api/chat/postChatRoom";
 import { PostLike } from "@/api/like/postLike";
-
-// 기존에 없던 부분: 신고 모달 훅 임포트
-import { useReportModal } from "@/hooks/useReportModal";
-
 interface Comment {
     _id: string;
     userId: string;
@@ -24,7 +20,7 @@ interface Comment {
     content: string | null;
     likeCount: number;
     isLiked?: boolean;
-    userInfo : {like: boolean};
+    userInfo : {like: boolean},
     deleted: boolean;
     replies: Comment[];
     createdAt: string;
@@ -90,8 +86,8 @@ const CommentInput = ({
                     anonymous ? "text-active" : "text-sub"
                 }`}
             >
-                익명
-            </span>
+        익명
+      </span>
         </button>
 
         {/* 입력창 */}
@@ -147,68 +143,94 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
     // (추가) 댓글 입력창 열림/닫힘 상태
     const [showCommentInput, setShowCommentInput] = useState<boolean>(true);
 
-    // 좋아요 토글 관련
+    // 좋아요 토글 함수
+    const toggleLike = async (likeType: string, id: string) => {
+        try {
+          
+            // 요청 데이터
+            const requestData = {
+                likeType, // 예: "POST", "COMMENT", "REPLY" 등
+                id,       // 댓글 또는 대댓글의 고유 ID
+            };
+
+            const { data } = await axios.post(
+                "https://www.codin.co.kr/api/likes",
+                requestData,
+               
+            );
+
+            if (data.success) {
+                console.log("좋아요 토글 성공:", data);
+                return true;
+            } else {
+                throw new Error(data.message || "좋아요 토글 실패");
+            }
+        } catch (error: any) {
+            console.error("좋아요 토글 오류:", error.message);
+            console.error("전송한 데이터:", { likeType, id });
+            return false;
+        }
+    };
+    
+
+    //수정된 좋아요 토글 함수
     const [isCommentLiked, setIsCommentLiked] = useState<{ [key: string]: boolean }>({});
     const [repLikeCount, setRepLikecount] = useState<{ [key: string]: number}>({});
 
-    // (추가) 신고 모달 훅 사용
-    const { openModal: openReportModal, getModalComponent } = useReportModal();
+     const handleLike = async (e: React.MouseEvent<HTMLButtonElement>, likeType:string, id: string) => {
+            e.preventDefault();
+           
+                // 댓글 좋아요 상태 반전
+                const newLikeStatus = !isCommentLiked[id];
+            
+                try {
+                    await PostLike(likeType , id);
+                   // 상태 변경
+        setIsCommentLiked((prev) => {
+            const updated = { ...prev, [id]: newLikeStatus };
+            console.log('상태 변경', updated);  // 상태 변경 후 로그 출력
+            return updated;
+        });
 
-    // 좋아요 토글 함수
-    const handleLike = async (
-        e: React.MouseEvent<HTMLButtonElement>,
-        likeType: string,
-        id: string
-    ) => {
-        e.preventDefault();
-        const newLikeStatus = !isCommentLiked[id];
+        setRepLikecount((prev) => {
+            const updatedLikeCount = prev[id] ? prev[id] + (newLikeStatus ? 1 : -1) : (newLikeStatus ? 1 : 0); // likeCount 계산
+            const updated = { ...prev, [id]: updatedLikeCount };
+            console.log('likeCount 변경됨', updated);  // 상태 변경 후 로그 출력
+            return updated;
+        });
 
-        try {
-            await PostLike(likeType, id);
-            // 상태 변경
-            setIsCommentLiked((prev) => {
-                const updated = { ...prev, [id]: newLikeStatus };
-                return updated;
+        // 댓글 목록 업데이트
+        setComments((prevComments) => {
+            return prevComments.map((Comment: Comment) => {
+                if (Comment._id === id) {
+                    // 댓글 좋아요 상태 반영
+                    console.log('좋아요 수 변경됨',Comment.likeCount)
+                    return {
+                        ...Comment,
+                        likeCount: newLikeStatus ? Comment.likeCount + 1 : Comment.likeCount - 1,
+                        userInfo: { like: !Comment.userInfo.like },
+                    };
+                }
+           
+                return Comment;
             });
-
-            setRepLikecount((prev) => {
-                const updatedLikeCount = prev[id]
-                    ? prev[id] + (newLikeStatus ? 1 : -1)
-                    : newLikeStatus ? 1 : 0;
-                return { ...prev, [id]: updatedLikeCount };
-            });
-
-            // 댓글 목록 업데이트
-            setComments((prevComments) => {
-                return prevComments.map((comment) => {
-                    if (comment._id === id) {
-                        return {
-                            ...comment,
-                            likeCount: newLikeStatus
-                                ? comment.likeCount + 1
-                                : comment.likeCount - 1,
-                            userInfo: { like: !comment.userInfo.like },
-                        };
-                    }
-                    return comment;
-                });
-            });
-        } catch (error) {
-            console.error("댓글 좋아요 처리 실패", error);
-        }
-    };
+            
+        });
+                } catch (error) {
+                    console.error("댓글 좋아요 처리 실패", error);
+                }
+            
+        };
 
     // 댓글 목록 불러오기
     const fetchComments = async () => {
         setLoading(true);
         setError(null);
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) throw new Error("로그인이 필요합니다.");
-
+           
             const { data } = await axios.get<ApiResponse>(
                 `https://www.codin.co.kr/api/comments/post/${postId}`,
-                { headers: { Authorization: token } }
+              
             );
 
             if (data.success) {
@@ -217,32 +239,27 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
                     content: comment.content || "내용이 없습니다.",
                 }));
                 setComments(validComments);
+                const initialCommentLikes = data.dataList.reduce((acc: { [key: string]: boolean }, comment: Comment) => {
+                    acc[comment._id] = comment.userInfo.like;
 
-                // 초기 좋아요 상태
-                const initialCommentLikes = data.dataList.reduce(
-                    (acc: { [key: string]: boolean }, comment: Comment) => {
-                        acc[comment._id] = comment.userInfo.like;
-                        comment.replies?.forEach((subComment) => {
-                            acc[subComment._id] = subComment.userInfo.like;
-                        });
-                        return acc;
-                    },
-                    {}
-                );
+                    comment.replies?.forEach((subComment) => {
+                        acc[`${subComment._id}`] = subComment.userInfo.like;
+                    });
+                    return acc;
+                }, {});
                 setIsCommentLiked(initialCommentLikes);
+                console.log(initialCommentLikes);
 
-                // 초기 좋아요 개수
-                const initialLikesCount = data.dataList.reduce(
-                    (acc: { [key: string]: number }, comment: Comment) => {
-                        acc[comment._id] = comment.likeCount;
-                        comment.replies?.forEach((subComment) => {
-                            acc[subComment._id] = subComment.likeCount;
-                        });
-                        return acc;
-                    },
-                    {}
-                );
+                const initialLikesCount = data.dataList.reduce((acc: { [key: string]: number }, comment: Comment) => {
+                    acc[comment._id] = comment.likeCount;
+
+                    comment.replies?.forEach((subComment) => {
+                        acc[`${subComment._id}`] = subComment.likeCount;
+                    });
+                    return acc;
+                }, {});
                 setRepLikecount(initialLikesCount);
+                console.log(initialLikesCount);
             } else {
                 throw new Error(data.message || "댓글 로드 실패");
             }
@@ -256,11 +273,10 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
     // 현재 사용자 정보 불러오기
     const fetchCurrentUser = async () => {
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) throw new Error("로그인이 필요합니다.");
+           
 
             const { data } = await axios.get("https://www.codin.co.kr/api/users", {
-                headers: { Authorization: token },
+             
             });
 
             if (data.success) {
@@ -276,14 +292,13 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
     // 댓글 작성
     const submitComment = async (content: string) => {
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) throw new Error("로그인이 필요합니다.");
+           
 
             setSubmitLoading(true);
             const { data } = await axios.post(
                 `https://www.codin.co.kr/api/comments/${postId}`,
                 { content, anonymous },
-                { headers: { Authorization: token } }
+              
             );
 
             if (data.success) {
@@ -304,13 +319,12 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
     // 댓글 수정
     const updateComment = async (commentId: string, content: string) => {
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) throw new Error("로그인이 필요합니다.");
+          
 
             const { data } = await axios.patch(
                 `https://www.codin.co.kr/api/comments/${commentId}`,
                 { content },
-                { headers: { Authorization: token } }
+               
             );
 
             if (data.success) {
@@ -330,12 +344,11 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
     // 댓글 삭제
     const deleteComment = async (commentId: string) => {
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) throw new Error("로그인이 필요합니다.");
+         
 
             const { data } = await axios.delete(
                 `https://www.codin.co.kr/api/comments/${commentId}`,
-                { headers: { Authorization: token } }
+               
             );
 
             if (data.success) {
@@ -353,14 +366,12 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
     // 대댓글 작성
     const submitReply = async (content: string, commentId: string) => {
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) throw new Error("로그인이 필요합니다.");
-
+            
             setSubmitLoading(true);
             const { data } = await axios.post(
                 `https://www.codin.co.kr/api/replies/${commentId}`,
                 { content, anonymous },
-                { headers: { Authorization: token } }
+               
             );
 
             if (data.success) {
@@ -434,8 +445,8 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
             </div>
         );
 
-    // 댓글(대댓글) 재귀 렌더링
-    const renderComments = (commentList: Comment[], depth = 0, status: string) => (
+    //댓글(대댓글) 재귀 렌더링
+    const renderComments = (commentList: Comment[], depth = 0, status:string) => (
         <ul>
             {commentList.map((comment) => (
                 <div className="flex flex-row gap-[8px] pt-[24px]">
@@ -515,7 +526,7 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
                                             //         )
                                             //     );
                                             // }
-
+    
                                         // }
                                         //수정된 좋아요 토글
                                         (e) => handleLike(e, status , comment._id)}
@@ -584,7 +595,6 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
                                                     </button>
                                                 </>
                                             ) : (
-                                                <>
                                                 /* 2) 내 댓글이 아니라면 채팅하기 버튼 */
                                                 <button
                                                     className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-gray-700"
@@ -600,19 +610,6 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
                                                 >
                                                     채팅하기
                                                 </button>
-                                                <button
-                                                className="block w-full text-left px-4 py-2 text-red-500 hover:bg-red-50 text-sm"
-                                                onClick={() => {
-                                                // 여기서 신고 모달 열기 (COMMENT 혹은 REPLY)
-                                                openReportModal(status, comment._id);
-                                                console.log("신고하기 클릭");
-                                                console.log("status", status,"comment._id", comment._id);
-                                                setMenuOpenId(null);
-                                            }}
-                                        >
-                                            신고하기
-                                        </button>
-                                                </>
                                             )}
                                         </div>
                                     )}
@@ -648,14 +645,15 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
                             </div>
                         )}
 
-                    {/* 재귀적으로 대댓글 렌더링 */}
-                    {comment.replies.length > 0 && renderComments(comment.replies, depth + 1, "REPLY")}
-                </li>
+                        {/* 재귀적으로 대댓글 렌더링 */}
+                        {comment.replies.length > 0 && renderComments(comment.replies, depth + 1, 'REPLY')}
+                    </li>
+                </div>
             ))}
         </ul>
     );
-
-
+   
+    
 
     return (
         <div className="relative w-full">
@@ -665,7 +663,7 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
             {error && <p className="text-red-500 mb-2">{error}</p>}
 
             {/* 댓글 목록 */}
-            {renderComments(comments, 0, "COMMENT")}
+            {renderComments(comments, 0 , 'COMMENT')}
 
             {/* 삭제 모달 */}
             {renderDeleteModal()}
@@ -692,9 +690,6 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
                     </div>
                 </div>
             )}
-
-            {/* (신고 모달 컴포넌트 렌더링) */}
-            {getModalComponent()}
         </div>
     );
 }

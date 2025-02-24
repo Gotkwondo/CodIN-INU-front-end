@@ -2,7 +2,7 @@ import axios, {AxiosResponse} from 'axios';
 
 const BASE_URL = 'https://www.codin.co.kr/api';
 
-export const PostChatRoom = async (accessToken:string, roomName:string, receiverId:string): Promise<any> => {
+export const PostChatRoom = async ( roomName:string, receiverId:string): Promise<any> => {
     console.log("전송 데이터", roomName, receiverId);
     axios.defaults.withCredentials = true;
     try{
@@ -13,9 +13,7 @@ export const PostChatRoom = async (accessToken:string, roomName:string, receiver
                 roomName: roomName,
                 receiverId:receiverId
                         },
-            { headers: {
-                Authorization: ` ${accessToken}`
-             }},
+          
         );
 
         console.log(response.data);
@@ -43,12 +41,8 @@ export const PostChatRoom = async (accessToken:string, roomName:string, receiver
  */
 export const startChat = async (title, userId) => {
     try {
-        const accessToken = localStorage.getItem("accessToken");
-        if (!accessToken) {
-            throw new Error("Access token is missing. Please login again.");
-        }
 
-        const response = await PostChatRoom(accessToken, title, userId);
+        const response = await PostChatRoom( title, userId);
         console.log("채팅방 생성이 완료되었습니다", response);
 
         if (response?.data.data.chatRoomId) {

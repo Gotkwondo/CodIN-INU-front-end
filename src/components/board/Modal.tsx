@@ -6,6 +6,8 @@ import { boardData } from "@/data/boardData";
 import { PostBlockUser } from "@/api/user/postBlockUser";
 import { useReportModal } from "@/hooks/useReportModal";
 import { Post } from "@/interfaces/Post"; // Post 인터페이스 가져오기
+import Header from "../Layout/header/Header";
+import DefaultBody from "../Layout/Body/defaultBody";
 
 const Modal = ({
                    children,
@@ -65,7 +67,7 @@ const Modal = ({
     const startChat = async () => {
         try {
             const accessToken = localStorage.getItem("accessToken");
-            const response = await PostChatRoom(accessToken, post.title, post.userId);
+            const response = await PostChatRoom( post.title, post.userId);
 
             console.log("채팅방 생성이 완료되었습니다");
             if (response?.data.data.chatRoomId) {
@@ -137,11 +139,12 @@ const Modal = ({
             </Header>
             <DefaultBody hasHeader={1}>
                 {/* 본문 컨텐츠 */}
-                <div className="p-4 overflow-y-auto flex-grow">{children}</div>
-            </div>
-
-            {/* 신고 모달 */}
-            {isReportModalOpen && getReportModalComponent()}
+                <div className="pt-[18px] overflow-y-auto">{children}</div>
+                {/* 신고 모달 */}
+                {isReportModalOpen && (
+                    <ReportModal onClose={closeReportModal} reportTargetType='USER' reportTargetId={ post.userId} />
+                )}
+            </DefaultBody>
         </div>
     );
 };
