@@ -2,7 +2,7 @@ import axios, {AxiosResponse} from 'axios';
 
 const BASE_URL = 'https://www.codin.co.kr/api';
 
-export const PostChatImage = async (accessToken: string, chatImages: File): Promise<any> => {
+export const PostChatImage = async ( chatImages: File): Promise<any> => {
     console.log("전송 데이터", chatImages);
     axios.defaults.withCredentials = true;
     try{
@@ -18,7 +18,7 @@ export const PostChatImage = async (accessToken: string, chatImages: File): Prom
             {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    Authorization: ` ${accessToken}`
+                   
                    
                 }
             }

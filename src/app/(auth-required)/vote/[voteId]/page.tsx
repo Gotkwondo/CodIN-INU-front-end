@@ -13,7 +13,6 @@ import DefaultBody from '@/components/Layout/Body/defaultBody';
 
 export default function VoteDetail() {
     const router = useRouter();
-    const [accessToken, setToken] = useState<string>('');
     const [selectedOptions, setSelectedOptions] = useState<{ [key: string]: number[] }>({});
     const [vote, setVote] = useState<vote | null>(null);
     const { voteId } = useParams();
@@ -79,19 +78,14 @@ export default function VoteDetail() {
         });
     };
 
-    useEffect(() => {
-        const token = localStorage.getItem("accessToken");
-        if (token) {
-            setToken(token);
-        }
-    }, []);
+   
 
     useEffect(() => {
-        if (!accessToken || !voteId) return;
+        if (!voteId) return;
 
         const getVoteData = async () => {
             try {
-                const voteData = await GetVoteDetail(accessToken, voteId);
+                const voteData = await GetVoteDetail(voteId);
 
                 const voteInfo = voteData.data;
                 setVote(voteInfo);
@@ -110,7 +104,7 @@ export default function VoteDetail() {
         };
 
         getVoteData();
-    }, [accessToken, voteId]);
+    }, [ voteId]);
 
 
     //게시글 좋아요 핸들러
@@ -148,7 +142,7 @@ export default function VoteDetail() {
     const votingHandler = async (e: React.MouseEvent<HTMLButtonElement>, voteId: string) => {
         e.preventDefault();
         try {
-            const response = await PostVoting(accessToken, voteId, selectedOptions[voteId] || []);
+            const response = await PostVoting(voteId, selectedOptions[voteId] || []);
             console.log('결과:', response);
             window.location.reload();
         } catch (error) {
