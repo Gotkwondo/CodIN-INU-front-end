@@ -54,12 +54,15 @@ export default function ChatRoom() {
     const headers = {
         'chatRoomId': chatRoomId
     }
-   
+    const [connected, setConnected] = useState(false); // 연결 상태 추적
    
 
     useEffect(()=>{
       
-
+        if (stompClient || connected) {
+            return; // 이미 연결되었으면 연결을 다시 시도하지 않습니다.
+        }
+        
         const socket = new SockJS('https://www.codin.co.kr/api/ws-stomp');
         const stomp = Stomp.over(socket);
 
@@ -105,7 +108,7 @@ useEffect(() => {
 
     stompClient.connect(headers, (frame) => {
         console.log('connected:', frame);
-
+        setConnected(true); 
         stompClient.subscribe(`/queue/`+chatRoomId, (message) => {
             const receivedMessage = JSON.parse(message.body);
             console.log('Received message:', receivedMessage);
