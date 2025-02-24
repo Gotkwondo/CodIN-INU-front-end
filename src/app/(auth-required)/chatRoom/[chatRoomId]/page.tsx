@@ -60,10 +60,10 @@ export default function ChatRoom() {
     useEffect(()=>{
       
         if (!chatRoomId) {
-            return; // 이미 연결되었으면 연결을 다시 시도하지 않습니다.
+            return; 
         }
         
-        const socket = new SockJS('https://www.codin.co.kr/ws-stomp');
+        const socket = new SockJS('https://www.codin.co.kr/api/ws-stomp');
         const stomp = Stomp.over(socket);
 
         setStompClient(stomp);
