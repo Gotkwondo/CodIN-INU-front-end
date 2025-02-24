@@ -3,11 +3,10 @@
 import '@/app/globals.css';
 import { useRouter } from 'next/navigation';
 import React, { useState, useContext, useEffect } from 'react';
-import { PostLogin } from '@/api/user/postLogin';
 import { AuthContext } from '@/context/AuthContext';
 import CommonBtn from '@/components/buttons/commonBtn';
 import DefaultBody from '@/components/Layout/Body/defaultBody';
-import { PostPortal } from '@/api/user/postPortal';
+import { PostLogin } from '@/api/user/postLogin';
 import { UserContext } from '@/context/UserContext';
 
 export default function LoginPage() {
@@ -54,38 +53,17 @@ export default function LoginPage() {
         try {
             updateUser({ studentId: studentId});
             console.log(`학번 업데이트: ${studentId}`);
-            const response = await PostPortal(studentId, password);
+            const response = await PostLogin(studentId, password);
             console.log(`로그인 결과: ${response}`);
-            const token = response.headers['authorization'];
-            const refreshToken = response.headers['x-refresh-token']
             const code = response.status
-            if (token) {
-                console.log('Authorization 토큰:', token);
-                console.log('리프레시:', refreshToken);
-
-                // 토큰 저장 (localStorage 또는 sessionStorage)
-                localStorage.setItem('accessToken', token);
-                localStorage.setItem('refresh-token', `Bearer ${refreshToken}`);
-                // AuthContext 업데이트
-                updateAuth({ accessToken: token });
-
-                // 로그인 성공 후 메인 페이지로 이동
-                router.push('/main');
-            } else if (code === 201 ){
-                router.push('/signup/profile');
-            }
+            router.push('/main');
+           
         } catch (error) {
             console.error("로그인 실패", error);
             alert(error);
             //alert('이메일 혹은 비밀번호가 틀립니다. 다시 시도해주세요.');
         }
     };
-
-    useEffect(() => {
-        if (Auth.accessToken) {
-            console.log('새로운 토큰이 설정되었습니다:', Auth.accessToken);
-        }
-    }, [Auth.accessToken]); // Auth.accessToken의 변경을 감지
 
     
     return (
@@ -108,7 +86,6 @@ export default function LoginPage() {
                         value={password}
                         onChange={handlePWChange}
                     />
-                    <a href="https://portal.inu.ac.kr:444/enview/" className='text-Mr underline text-[#808080] w-full text-right'>비밀번호를 잊으셨나요?</a>
                 </div>
                 {/*
                 <div id="else">
