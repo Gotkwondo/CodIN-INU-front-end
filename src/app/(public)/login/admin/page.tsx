@@ -1,7 +1,7 @@
 'use client';
 //import './login.css';
 import '@/app/globals.css';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useState, useContext, useEffect } from 'react';
 import { PostLogin } from '@/api/user/postLogin';
 import { AuthContext } from '@/context/AuthContext';
@@ -87,36 +87,16 @@ export default function LoginPage() {
         }
     }, [Auth.accessToken]); // Auth.accessToken의 변경을 감지
 
-  if(!schoolLoginExplained){
-        return (
-            <DefaultBody hasHeader={0}>
-                <div className='absolute bottom-[62px] w-full px-[20px] left-0 flex flex-col items-center justify-center'>
-                    <p className='text-Lm text-normal'>Codin은 <span className='text-active'>학교 계정</span>을 사용해요</p>
-                    <p className='text-Mr text-sub mb-[48px]'>동일한 아이디와 비밀번호를 입력해주세요</p>
-                    <img className="mb-[137px]" width="350" src='/images/schoolLoginExplain.png'/>    
-                    <div className='flex flex-row gap-[6px] mb-[22px]'>
-                        <div className='w-[12px] h-[12px] bg-[#0D99FF] rounded-[12px]'/>
-                        <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
-                        <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
-                    </div>
-                    <CommonBtn id="loginBtn" text="이해했어요" status={1} onClick={()=>{setSchoolLoginExplained(true)}}/>
-                </div>
-            </DefaultBody>
-        );
-    }
-
-   
-   
     
     return (
         <DefaultBody hasHeader={0}>
-            <div className='absolute bottom-[35%] w-full px-[20px] left-0 flex flex-col items-center justify-center'>
+            <div className='absolute bottom-[62px] w-full px-[20px] left-0 flex flex-col items-center justify-center'>
                 <img className="w-[171.41px] h-[45px] mb-[72px]" src='/images/logo.png'/>
-                 <div className='flex flex-col w-full gap-[12px] mb-[169px]'>
+                <div className='flex flex-col w-full gap-[12px] mb-[169px]'>
                     <input
                         className="defaultInput"
                         id="email"
-                        placeholder="학교 아이디 입력"
+                        placeholder="아이디 입력"
                         value= {studentId}
                         onChange={handleStudentIdChange}
                     />
@@ -124,13 +104,13 @@ export default function LoginPage() {
                         className="defaultInput"
                         id="password"
                         type="password"
-                        placeholder="학교 비밀번호 입력"
+                        placeholder="비밀번호 입력"
                         value={password}
                         onChange={handlePWChange}
                     />
                     <a href="https://portal.inu.ac.kr:444/enview/" className='text-Mr underline text-[#808080] w-full text-right'>비밀번호를 잊으셨나요?</a>
                 </div>
-               
+                {/*
                 <div id="else">
                 
                     <button id="findPW" onClick={()=> router.push('/findPW')}> 비밀번호 찾기</button>
@@ -139,13 +119,13 @@ export default function LoginPage() {
                         회원가입
                     </button>
                 </div>
-                * <div className='flex flex-row gap-[6px] mb-[22px]'>
+                */}
+                <div className='flex flex-row gap-[6px] mb-[22px]'>
                     <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
                     <div className='w-[12px] h-[12px] bg-[#0D99FF] rounded-[12px]'/>
                     <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
                 </div>
-                <CommonBtn id="loginBtn" text="로그인하기" status={1} onClick={handleLogin}/> 
-                
+                <CommonBtn id="loginBtn" text="로그인하기" status={1} onClick={handleLogin}/>
             </div>
         </DefaultBody>
     );
