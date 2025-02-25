@@ -27,7 +27,7 @@ export default function AdminPage() {
                     onClick={() => openModal("COMMENT", "123")}
                     className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
                 >
-                    댓글(123번) 신고하기
+                    asssssssssssss
                 </button>
 
                 {/* 모달 렌더링 */}
