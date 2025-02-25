@@ -23,9 +23,10 @@ export default function Chat() {
       interface ChatData {
         chatRoomId: string;
         roomName: string;
-        message: string;
+        lastMessage: string;
         currentMessageDate: string;
         notificationEnabled: boolean;
+        unread: number;
     }
 
     interface ChatListProps {
@@ -78,13 +79,13 @@ export default function Chat() {
                         <div className="flex flex-col gap-[4px]">
                             <div id="name" className="text-Lm" >{data.roomName}</div>
                             <div id="ment" className="text-Mr text-[#808080]">
-                                {data.message && data.message.startsWith("data:image") ? (
+                                {data.lastMessage && data.lastMessage.startsWith("data:image") ? (
                                     "( 사진 )"
                                 ) : (
-                                    data.message
-                                    ? data.message.length > 16
-                                        ? `${data.message.slice(0, 16)}..`
-                                        : data.message
+                                    data.lastMessage
+                                    ? data.lastMessage.length > 16
+                                        ? `${data.lastMessage.slice(0, 16)}..`
+                                        : data.lastMessage
                                     : "(메시지 없음)"
                                 )}
                             </div>
@@ -93,9 +94,11 @@ export default function Chat() {
                             <div className="absolute right-0 top-0 text-sr text-[#808080]">
                                 {data.currentMessageDate !== null ? (new Date(data.currentMessageDate).toLocaleDateString('ko-KR', options) ) : ( new Date().toLocaleDateString('ko-KR', options))}
                             </div>
-                            <div className="absolute right-0 bottom-0 text-sr rounded-[44px] bg-[#0D99FF] w-[22px] h-[22px] flex justify-center items-center text-[#FFFFFF]">
-                                {3}
-                            </div>
+                            {data.unread > 0 && (
+                                <div className="absolute right-0 bottom-0 text-sr rounded-[44px] bg-[#0D99FF] w-[22px] h-[22px] flex justify-center items-center text-[#FFFFFF]">
+                                    {data.unread}
+                                </div>
+                            )}
                         </div>
                     </div>
                 ))}

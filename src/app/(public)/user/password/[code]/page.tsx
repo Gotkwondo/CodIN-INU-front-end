@@ -1,5 +1,5 @@
 'use client';
-import '@/app/(public)/signup/signup.css';
+import '@/app/(public)/auth/signup.css';
 import { useRouter } from 'next/navigation';
 import { useState, useContext, useEffect } from 'react';
 import { PutPassword } from '@/api/user/putPassword';

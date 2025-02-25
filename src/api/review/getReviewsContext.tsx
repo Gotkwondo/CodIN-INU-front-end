@@ -9,6 +9,7 @@ type useReviewContextType = {
 
 const useReviewsContext = async ({ department, option, page, keyword='' }: useReviewContextType) => {
   const token = localStorage.getItem("accessToken");
+  axios.defaults.withCredentials = true;
   if (!token) {
     alert("로그인이 필요합니다. 다시 로그인해주세요.");
     return;
