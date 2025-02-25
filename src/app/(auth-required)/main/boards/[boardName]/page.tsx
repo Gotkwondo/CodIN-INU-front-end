@@ -84,6 +84,7 @@ const BoardPage: FC = () => {
         }
     };
 
+
     // 게시판 초기화
     useEffect(() => {
         const initializeBoard = async () => {
@@ -140,6 +141,7 @@ const BoardPage: FC = () => {
                 setActiveTab(tab);
             }}
         >
+
             {/* 게시물 리스트 */}
             <PostList posts={posts} boardName={boardName} boardType={boardType} />
 

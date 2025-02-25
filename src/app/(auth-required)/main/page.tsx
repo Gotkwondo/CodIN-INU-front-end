@@ -153,7 +153,7 @@ const MainPage: FC = () => {
 
                 {/* 게시물 랭킹 */}
                 <section className="mt-[48px]">
-                    
+
                     <h2 className="text-XLm">{"게시물 랭킹"}</h2>
                     <div className="pt-[26px] mb-[18px] flex flex-col gap-[27px]">
                         {loading ? (
