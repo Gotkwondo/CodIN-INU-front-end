@@ -11,12 +11,13 @@ export interface Board {
     icon?: string;
     tabs: Tab[];
     type: 'list' | 'gallery'; // 게시판 유형: 'list' 또는 'gallery'
+    backLink?: string; // 뒤로가기 URL (옵션)
 }
 
 export const boardData: Record<string, Board> = {
-
     'need-help': {
         name: '구해요',
+        backLink: '/main', // 뒤로가기 시 이동할 URL
         tabs: [
             { label: '전체', value: 'all', postCategory: 'REQUEST' },
             { label: '스터디', value: 'study', postCategory: 'REQUEST_STUDY' },
@@ -24,39 +25,43 @@ export const boardData: Record<string, Board> = {
             { label: '공모전/대회', value: 'competition', postCategory: 'REQUEST_COMPETITION' },
             { label: '소모임', value: 'gathering', postCategory: 'REQUEST_GROUP' },
         ],
-        type: 'list', // 리스트형
+        type: 'list',
     },
     'communicate': {
         name: '소통해요',
+        backLink: '/main',
         tabs: [
             { label: '전체', value: 'all', postCategory: 'COMMUNICATION' },
             { label: '질문', value: 'question', postCategory: 'COMMUNICATION_QUESTION' },
             { label: '취업수기', value: 'job-experience', postCategory: 'COMMUNICATION_JOB' },
             { label: '꿀팁공유', value: 'tips', postCategory: 'COMMUNICATION_TIP' },
         ],
-        type: 'list', // 리스트형
+        type: 'list',
     },
     'extracurricular': {
         name: '비교과',
+        backLink: '/main',
         tabs: [
             { label: '전체', value: 'all', postCategory: 'EXTRACURRICULAR' },
             { label: '정보대', value: 'question', postCategory: 'EXTRACURRICULAR_INNER' },
             { label: 'StarINU', value: 'job-experience', postCategory: 'EXTRACURRICULAR_STARINU' },
             { label: '교외', value: 'tips', postCategory: 'EXTRACURRICULAR_OUTER' },
         ],
-        type: 'gallery', // 리스트형
+        type: 'gallery',
     },
     'best': {
         name: '베스트 게시물',
-        tabs: [], // 베스트 게시물은 탭이 없음
-        type: 'list', // 리스트형
+        backLink: '/main',
+        tabs: [],
+        type: 'list',
     },
     'used-books': {
         name: '중고 서적',
+        backLink: '/main',
         tabs: [
             { label: '판매중', value: 'selling', postCategory: 'BOOKS_SELL' },
             { label: '구매중', value: 'buying', postCategory: 'BOOKS_BUY' },
         ],
-        type: 'gallery', // 갤러리형
+        type: 'gallery',
     },
 };

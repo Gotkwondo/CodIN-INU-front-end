@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import PostItem from "@/components/board/PostItem";
-import Modal from "@/components/board/Modal";
+import PageHeaderModal from "@/components/board/pageHeaderModal";
 import PostDetailClient from "@/app/(auth-required)/main/boards/[boardName]/[postId]/PostDetailClient";
 
 const PostList: React.FC<{ posts: any[]; boardName: string; boardType: string }> = ({
@@ -65,9 +65,9 @@ const PostList: React.FC<{ posts: any[]; boardName: string; boardType: string }>
 
             {/* 모달 */}
             {selectedPost && (
-                <Modal onClose={closeModal} post={selectedPost}>
+                <PageHeaderModal onClose={closeModal} post={selectedPost}>
                     <PostDetailClient postId={selectedPost._id} />
-                </Modal>
+                </PageHeaderModal>
             )}
         </div>
     );
