@@ -9,7 +9,7 @@ import { Post } from "@/interfaces/Post"; // Post 인터페이스 가져오기
 import Header from "../Layout/header/Header";
 import DefaultBody from "../Layout/Body/defaultBody";
 
-const Modal = ({
+const PageHeaderModal = ({
                    children,
                    onClose,
                    // ✅ `Post` 인터페이스에 정의된 필드만 포함하여 기본값 설정
@@ -149,4 +149,4 @@ const Modal = ({
     );
 };
 
-export default Modal;
+export default PageHeaderModal;

@@ -93,7 +93,7 @@ export default function SignupProfile() {
             <p className='text-Lm'><span className='text-active'>환영합니다!</span> 처음 로그인하셨어요</p>
             <p className='text-Mm text-sub mb-[48px]'>닉네임과 프로필 사진을 등록해주세요</p>
             <label htmlFor='profileImgBtn1' className='flex flex-col items-center justify-center gap-[24px]'>
-              <img className='w-[87px] h-[87px] rounded-full' src={imgPrev ? imgPrev : "/icons/chat/deafultProfile.png"} />
+              <img className='w-[87px] h-[87px] rounded-full' src={imgPrev ? imgPrev : "/icons/chat/DeafultProfile.png"} />
               <p className='text-sub text-Mr underline'>프로필 사진 등록 (선택)</p>
               <input id='profileImgBtn1' type='file' className="hidden" accept='image/*' onChange={handleImageChange} />
             </label>

@@ -168,7 +168,7 @@ const CreatePostPage = () => {
                     {/* 상세 내용 입력 */}
                     <textarea
                         name="content"
-                        placeholder="내용을 입력하세요"
+                        placeholder="부적절하거나 불쾌감을 줄 수 있는 컨텐츠는 제재를 받을 수 있습니다"
                         value={formData.content}
                         onChange={handleChange}
                         className="w-full h-[143px] border border-gray-300 rounded-[5px] p-[16px] text-sm placeholder-gray-400 focus:outline-none focus:border-gray-600 mb-4"

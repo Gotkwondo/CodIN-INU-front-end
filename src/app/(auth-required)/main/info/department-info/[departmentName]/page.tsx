@@ -101,7 +101,7 @@ export default function DepartmentPage() {
                             <div className="flex flex-col gap-[24px]">
                                 {info.data.officeMember.map((member, index) => (
                                     <div key={index} className="flex gap-[20px]">
-                                        <img src="/icons/chat/deafultProfile.png" className="w-[50px] h-[50px]" width={50} height={50}/>
+                                        <img src="/icons/chat/DeafultProfile.png" className="w-[50px] h-[50px]" width={50} height={50}/>
                                         <div className="text-Mr text-[#404040]">
                                             <p className="text-Lm text-black">{member.name}</p>
                                             <p >{member.position}</p>
