@@ -179,9 +179,9 @@ const CourseReviewPage = () => {
           {/* 리뷰 리스트 */}
           {reviewContents.length > 0 ? (
             reviewContents.map(
-              ({ lectureNm, _id, starRating, professor, participants }) => (
+              ({ lectureNm, _id, starRating, professor, participants }, idx) => (
                 <Subject
-                  key={`subject_${_id}_${lectureNm}`}
+                  key={`subject_${_id}_${lectureNm}_${idx}`}
                   subjectName={lectureNm}
                   subjectCode={_id}
                   score={starRating}
