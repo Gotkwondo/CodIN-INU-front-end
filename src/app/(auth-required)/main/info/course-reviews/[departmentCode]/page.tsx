@@ -9,6 +9,7 @@ import { DepartmentReviewComponent } from "@/components/Review/DepartmentReview"
 import { useDepartmentRatingInfoContext } from "@/api/review/useDepartmentRatingInfoContext";
 import { ReviewComment } from "@/components/Review/ReviewComment";
 import { useLectureReviewsContext } from "@/api/review/useLectureReviewsContext";
+import { ReviewBtn } from '@/components/Review/ReviewBtn';
 
 const DepartmentReview = () => {
   const { departmentCode } = useParams();
@@ -94,6 +95,7 @@ const DepartmentReview = () => {
               );
             }
           )}
+        <ReviewBtn />
       </DefaultBody>
       <BottomNav activeIndex={3} />
     </Suspense>

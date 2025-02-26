@@ -25,19 +25,23 @@ const WriteReview = () => {
         {/* 수업 후기 점수 평가  */}
         <div className="w-full mt-2">
           {/* 1-5점  해당 바를 눌러 점수를 정할 수 있도록 기능 구현 필요*/}
-          <p className='text-xl'>
+          <p className="text-xl">
             <span className="text-[#0D99FF]">{`${
               rating % 1 ? rating : rating + ".0"
             }`}</span>{" "}
             / 5.0
           </p>
-          <RateBar score={3} barWidth={1} className='mt-1' />
-          <p className='text-base mt-3'>위 그래프를 누른 상태로 조절해주세요</p>
+          <RateBar
+            score={rating}
+            barWidth={1}
+            clickable={true}
+            clickFn={setRating}
+            className="mt-1"
+          />
+          <p className="text-base mt-3">위 그래프를 눌러 조절해주세요</p>
         </div>
         {/* 후기 입력 공간 */}
-        <div>
-
-        </div>
+        <div></div>
       </DefaultBody>
       <BottomNav activeIndex={3} />
     </Suspense>
