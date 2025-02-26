@@ -4,12 +4,37 @@ import DefaultBody from "@/components/Layout/Body/defaultBody";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import Header from "@/components/Layout/header/Header";
 import { RateBar } from '@/components/Review/RateBar';
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { selectType } from './type';
+import Select from 'react-select';
+import { DEPARTMENT, GRADE, SEMESTER } from './constants';
+import { CustomSelect } from '@/components/Review/CustomSelect';
+
+
 
 const WriteReview = () => {
+  const [isClient, setIsClient] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [lecture, setLecture] = useState<selectType>({
+    label: "학과",
+    value: "null",
+  });
+  const [grade, setGrade] = useState<selectType>({
+    label: "학년",
+    value: "null",
+  });
+  const [semester, setSemester] = useState<selectType>({
+    label: "수강 학기",
+    value: "null",
+  });
+  console.log(lecture);
+  
 
-  const [rating, setRating] = useState(0)
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
+  if (!isClient) return null; // 서버에서는 렌더링하지 않음
   return (
     <Suspense>
       <Header>
@@ -17,7 +42,30 @@ const WriteReview = () => {
         <Header.Title>후기 작성하기</Header.Title>
       </Header>
       <DefaultBody hasHeader={1}>
-        <div className="mt-28 w-11/12">{/* 학과 학년 수강학기 선택 */}</div>
+        <div className="mt-28 w-11/12 flex">
+          {/* 학과 학년 수강학기 선택 */}
+          <CustomSelect
+            options={DEPARTMENT}
+            onChange={(selected) => setLecture(selected)}
+            value={lecture}
+            isSearchable={false}
+            minWidth={4}
+          />
+          <CustomSelect
+            options={GRADE}
+            onChange={(selected) => setGrade(selected)}
+            value={grade}
+            isSearchable={false}
+            minWidth={4}
+          />
+          <CustomSelect
+            options={SEMESTER}
+            onChange={(selected) => setSemester(selected)}
+            value={semester}
+            isSearchable={false}
+            minWidth={8}
+          />
+        </div>
         {/* 수강 강의 선택 */}
         <div className="mt-5"></div>
 

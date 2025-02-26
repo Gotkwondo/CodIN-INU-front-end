@@ -1,6 +1,6 @@
 export const DEPARTMENTS = [
   { label: "컴공", value: "COMPUTER_SCI" },
-  { label: "정통", value: " INFO_COMM" },
+  { label: "정통", value: "INFO_COMM" },
   { label: "임베", value: "EMBEDDED" },
   { label: "공통", value: "OTHERS" },
 ];
