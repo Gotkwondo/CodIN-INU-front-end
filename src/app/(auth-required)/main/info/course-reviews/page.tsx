@@ -19,6 +19,7 @@ import Header from "@/components/Layout/header/Header";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { useReviewsContext } from "@/api/review/getReviewsContext";
+import { ReviewBtn } from '@/components/Review/ReviewBtn';
 
 const CourseReviewPage = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<labelType>({
@@ -179,7 +180,10 @@ const CourseReviewPage = () => {
           {/* 리뷰 리스트 */}
           {reviewContents.length > 0 ? (
             reviewContents.map(
-              ({ lectureNm, _id, starRating, professor, participants }, idx) => (
+              (
+                { lectureNm, _id, starRating, professor, participants },
+                idx
+              ) => (
                 <Subject
                   key={`subject_${_id}_${lectureNm}_${idx}`}
                   subjectName={lectureNm}
@@ -191,9 +195,11 @@ const CourseReviewPage = () => {
               )
             )
           ) : (
-            <p className="text-center mt-6 text-gray-500">데이터가 없습니다.</p>
+            <p className="text-center mt-6 text-gray-500">
+              데이터가 없습니다.
+            </p>
           )}
-
+          <ReviewBtn />
           {/* 마지막 요소 감지 */}
           {hasMore && <div className="h-10" ref={lastElementRef}></div>}
 

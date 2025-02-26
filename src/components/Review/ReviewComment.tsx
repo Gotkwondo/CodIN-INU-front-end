@@ -20,7 +20,6 @@ const ReviewComment = ({
   semester = "test",
   _id,
 }: ReviewCommentType) => {
-    "BlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlank";
   const [heartClick, setHeartClick] = useState(isLiked);
   
   const handleHeartClick = () => {
