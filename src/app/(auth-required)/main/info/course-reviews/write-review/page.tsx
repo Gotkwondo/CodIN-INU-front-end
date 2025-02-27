@@ -9,6 +9,7 @@ import { selectType } from './type';
 import Select from 'react-select';
 import { DEPARTMENT, GRADE, SEMESTER } from './constants';
 import { CustomSelect } from '@/components/Review/CustomSelect';
+import { useSearchedReviewContext } from '@/api/review/useSearchedReviewContext';
 
 
 
@@ -29,13 +30,31 @@ const WriteReview = () => {
   });
   const [departmentList, setDepartmentList] = useState([]);
   
+  const getReviewList = async () => {
+    try {
+      const response = await useSearchedReviewContext({
+        department: lecture.value,
+        grade: grade.value,
+        semester: semester.value,
+      });
+      const data = response.data;
+      console.log(response);
+      // TODO: reviewList에 data를 ��어야함
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   useEffect(() => {
     setIsClient(true);
-    setDepartmentList([
-      
-    ]);
-  }, []);
+    if (
+      lecture.value !== "null" &&
+      grade.value !== "null" &&
+      semester.value !== "null"
+    ) {
+      getReviewList();
+    }
+  }, [lecture, grade, semester]);
 
   if (!isClient) return null; // 서버에서는 렌더링하지 않음
   return (

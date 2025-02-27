@@ -8,7 +8,7 @@ const useLectureReviewsContext = async ({
   lectureId,
 }: useLectureReviewsContextType) => {
   axios.defaults.withCredentials = true;
- 
+
   try {
     const params = new URLSearchParams({
       page: '0'

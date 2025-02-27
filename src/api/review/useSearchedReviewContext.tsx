@@ -2,34 +2,38 @@ import axios from 'axios';
 
 type useSearchedReviewContextType = {
   department?: string;
-  grade?: number;
+  grade?: string;
   semester?: string;
 }
 
-const useSearchedReviewContext = ({ department, grade, semester }: useSearchedReviewContextType) => {
-  const token = localStorage.getItem("accessToken");
+const useSearchedReviewContext = async ({ department, grade, semester }: useSearchedReviewContextType) => {
   axios.defaults.withCredentials = true;
-  if (!token) { 
-    alert("로그인이 필요합니다. 다시 로그인해주세요.");
-    return null;
-  }
+
   try {
     const params = new URLSearchParams({
-      department: department ?? '',
-      grade: grade ? `${grade}` : '',
-      semester: semester ?? '',
-      page: "0",
+      department: department,
+      grade: `${grade}`,
+      semester: semester,
     });
 
-    // const result = axios.get(
-    //   `${process.env.NEXT_PUBLIC_API_URL}/lectures/search-review`,
-    //   {
-
-    //   }
-    // );
-  } catch (err) {
-    console.error(err);
-    return null;
+    const result = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}lectures/search-review?${params}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return result.data;
+  } catch (error) {
+    if (error.response) {
+      const { status, data } = error.response;
+      console.error("Error response:", status, data);
+    } else if (error.request) {
+      console.error("No response received:", error.request);
+    } else {
+      console.error("Error setting up request:", error.message);
+    }
   }
 }
 

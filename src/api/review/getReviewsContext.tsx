@@ -10,7 +10,6 @@ type useReviewContextType = {
 const useReviewsContext = async ({ department, option, page, keyword='' }: useReviewContextType) => {
   const token = localStorage.getItem("accessToken");
   axios.defaults.withCredentials = true;
-  
 
   try {
     const parameters = new URLSearchParams({
