@@ -4,31 +4,33 @@ import DefaultBody from "@/components/Layout/Body/defaultBody";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import Header from "@/components/Layout/header/Header";
 import { RateBar } from '@/components/Review/RateBar';
-import { Suspense, useEffect, useState } from "react";
-import { selectType } from './type';
-import Select from 'react-select';
+import { SetStateAction, Suspense, useEffect, useState } from "react";
+import { departMentType, selectType } from './type';
 import { DEPARTMENT, GRADE, SEMESTER } from './constants';
 import { CustomSelect } from '@/components/Review/CustomSelect';
 import { useSearchedReviewContext } from '@/api/review/useSearchedReviewContext';
-
-
 
 const WriteReview = () => {
   const [isClient, setIsClient] = useState(false);
   const [rating, setRating] = useState(0);
   const [lecture, setLecture] = useState<selectType>({
     label: "학과",
-    value: "null",
+    value: "",
   });
   const [grade, setGrade] = useState<selectType>({
     label: "학년",
-    value: "null",
+    value: "",
   });
   const [semester, setSemester] = useState<selectType>({
-    label: "수강 학기",
-    value: "null",
+    label: "학기",
+    value: "",
   });
   const [departmentList, setDepartmentList] = useState([]);
+  const [department, setDepartment] = useState<selectType>({
+    label: "학과, 학년, 학기를 선택해주세요",
+    value: "",
+  });
+  const [reviewContents, setReviewContents] = useState<string>('');
   
   const getReviewList = async () => {
     try {
@@ -37,9 +39,13 @@ const WriteReview = () => {
         grade: grade.value,
         semester: semester.value,
       });
-      const data = response.data;
-      console.log(response);
-      // TODO: reviewList에 data를 ��어야함
+      const data = response.dataList.map((e: departMentType) => {
+        return {
+          label: `(${semester.value})(${e.professor}) ${e.lectureNm}`,
+          value: e._id
+        };
+      });
+      setDepartmentList(data);
     } catch (error) {
       console.error(error);
     }
@@ -53,6 +59,7 @@ const WriteReview = () => {
       semester.value !== "null"
     ) {
       getReviewList();
+      setDepartment({ label: "학과, 학년, 학기를 선택해주세요", value: "" });
     }
   }, [lecture, grade, semester]);
 
@@ -68,32 +75,51 @@ const WriteReview = () => {
           {/* 학과 학년 수강학기 선택 */}
           <CustomSelect
             options={DEPARTMENT}
-            onChange={(selected) => setLecture(selected)}
+            onChange={(selected: SetStateAction<selectType>) =>
+              setLecture(selected)
+            }
             value={lecture}
             isSearchable={false}
-            minWidth={6.1}
+            minWidth={6.2}
+            inverted
+            rounded
           />
           <CustomSelect
             options={GRADE}
-            onChange={(selected) => setGrade(selected)}
+            onChange={(selected: SetStateAction<selectType>) =>
+              setGrade(selected)
+            }
             value={grade}
             isSearchable={false}
             minWidth={6.7}
+            inverted
+            rounded
           />
           <CustomSelect
             options={SEMESTER}
-            onChange={(selected) => setSemester(selected)}
+            onChange={(selected: SetStateAction<selectType>) =>
+              setSemester(selected)
+            }
             value={semester}
             isSearchable={false}
-            minWidth={9}
+            minWidth={7}
+            inverted
+            rounded
           />
         </div>
         {/* 수강 강의 선택 */}
         <div className="mt-5">
-
+          <CustomSelect
+            options={departmentList}
+            onChange={(selected: SetStateAction<selectType>) =>
+              setDepartment(selected)
+            }
+            value={department}
+            isSearchable={false}
+          />
         </div>
 
-        <p className="text-2xl">전반적인 수업 경험은 어땠나요?</p>
+        <p className="text-2xl mt-8">전반적인 수업 경험은 어땠나요?</p>
         {/* 수업 후기 점수 평가  */}
         <div className="w-full mt-2">
           {/* 1-5점  해당 바를 눌러 점수를 정할 수 있도록 기능 구현 필요*/}
@@ -110,11 +136,36 @@ const WriteReview = () => {
             clickFn={setRating}
             className="mt-1"
           />
-          <p className="text-base mt-3">위 그래프를 눌러 조절해주세요</p>
+          <p className="text-base mt-3 text-[#808080]">
+            위 그래프를 눌러 조절해주세요
+          </p>
         </div>
         {/* 후기 입력 공간 */}
-        <div></div>
+        <div className="mt-5">
+          {/* 후기 내용 */}
+          <textarea
+            className="border-2 border-gray-200 rounded-md p-3 mt-5 w-full h-60 resize-none"
+            placeholder="상세한 후기를 작성해주세요"
+            onChange={(e) => setReviewContents(e.target.value)}
+            value={reviewContents}
+          ></textarea>
+        </div>
+        <div className="w-full flex justify-end mt-3">
+          <button
+            className="bg-[#0D99FF] text-white rounded-full px-4 py-2"
+            onClick={() => console.log("템플릿 사용 버튼 클릭")}
+          >
+            템플릿 사용하기
+          </button>
+        </div>
+        <button
+          className="h-[50px] bg-[#EBF0F7] mt-4 rounded-md"
+          onClick={() => console.log('작성 버튼 클릭')}
+        >
+          후기 작성하기
+        </button>
       </DefaultBody>
+
       <BottomNav activeIndex={3} />
     </Suspense>
   );
