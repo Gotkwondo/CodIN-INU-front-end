@@ -25,6 +25,7 @@ const CustomSelect = ({options, onChange, value, isSearchable, minWidth}:CustomS
       minHeight: "40px",
       boxShadow: state.isFocused ? "rgba(13, 153, 255)" : "none",
       minWidth: `${minWidth}rem`,
+      maxWidth: `${minWidth}rem`,
       marginRight: "5px",
     }),
     singleValue: (provided: any) => ({

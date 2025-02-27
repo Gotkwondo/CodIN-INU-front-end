@@ -27,11 +27,14 @@ const WriteReview = () => {
     label: "수강 학기",
     value: "null",
   });
-  console.log(lecture);
+  const [departmentList, setDepartmentList] = useState([]);
   
 
   useEffect(() => {
     setIsClient(true);
+    setDepartmentList([
+      
+    ]);
   }, []);
 
   if (!isClient) return null; // 서버에서는 렌더링하지 않음
@@ -49,25 +52,27 @@ const WriteReview = () => {
             onChange={(selected) => setLecture(selected)}
             value={lecture}
             isSearchable={false}
-            minWidth={4}
+            minWidth={6.1}
           />
           <CustomSelect
             options={GRADE}
             onChange={(selected) => setGrade(selected)}
             value={grade}
             isSearchable={false}
-            minWidth={4}
+            minWidth={6.7}
           />
           <CustomSelect
             options={SEMESTER}
             onChange={(selected) => setSemester(selected)}
             value={semester}
             isSearchable={false}
-            minWidth={8}
+            minWidth={9}
           />
         </div>
         {/* 수강 강의 선택 */}
-        <div className="mt-5"></div>
+        <div className="mt-5">
+
+        </div>
 
         <p className="text-2xl">전반적인 수업 경험은 어땠나요?</p>
         {/* 수업 후기 점수 평가  */}

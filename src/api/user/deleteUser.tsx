@@ -1,14 +1,13 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from "axios";
 
-const BASE_URL = 'https://www.codin.co.kr/api';
+const BASE_URL = "https://codin.inu.ac.kr/api";
 
 export const DeleteUser = async (): Promise<any> => {
   console.log("전송 데이터");
   axios.defaults.withCredentials = true;
   try {
     const response: AxiosResponse<any> = await axios.delete(
-      `${BASE_URL}/users`,
-   
+      `${BASE_URL}/users`
     );
 
     console.log(response.data);
@@ -16,13 +15,13 @@ export const DeleteUser = async (): Promise<any> => {
   } catch (error: any) {
     if (error.response) {
       const { status, data } = error.response;
-      console.error('Error response:', status, data);
+      console.error("Error response:", status, data);
     } else if (error.request) {
-      console.error('No response received:', error.request);
+      console.error("No response received:", error.request);
     } else {
-      console.error('Error setting up request:', error.message);
+      console.error("Error setting up request:", error.message);
     }
 
     throw error;
   }
-}
+};
