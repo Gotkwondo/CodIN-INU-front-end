@@ -146,9 +146,7 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
     // 좋아요 토글 함수
     const toggleLike = async (likeType: string, id: string) => {
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) throw new Error("로그인이 필요합니다.");
-
+          
             // 요청 데이터
             const requestData = {
                 likeType, // 예: "POST", "COMMENT", "REPLY" 등
@@ -158,7 +156,7 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
             const { data } = await axios.post(
                 "https://www.codin.co.kr/api/likes",
                 requestData,
-                { headers: { Authorization: token } }
+               
             );
 
             if (data.success) {
@@ -229,12 +227,10 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
         setLoading(true);
         setError(null);
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) throw new Error("로그인이 필요합니다.");
-
+           
             const { data } = await axios.get<ApiResponse>(
                 `https://www.codin.co.kr/api/comments/post/${postId}`,
-                { headers: { Authorization: token } }
+              
             );
 
             if (data.success) {
@@ -242,6 +238,7 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
                     ...comment,
                     content: comment.content || "내용이 없습니다.",
                 }));
+                console.log('응답',data);
                 setComments(validComments);
                 const initialCommentLikes = data.dataList.reduce((acc: { [key: string]: boolean }, comment: Comment) => {
                     acc[comment._id] = comment.userInfo.like;
@@ -277,11 +274,10 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
     // 현재 사용자 정보 불러오기
     const fetchCurrentUser = async () => {
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) throw new Error("로그인이 필요합니다.");
+           
 
             const { data } = await axios.get("https://www.codin.co.kr/api/users", {
-                headers: { Authorization: token },
+             
             });
 
             if (data.success) {
@@ -297,14 +293,13 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
     // 댓글 작성
     const submitComment = async (content: string) => {
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) throw new Error("로그인이 필요합니다.");
+           
 
             setSubmitLoading(true);
             const { data } = await axios.post(
                 `https://www.codin.co.kr/api/comments/${postId}`,
                 { content, anonymous },
-                { headers: { Authorization: token } }
+              
             );
 
             if (data.success) {
@@ -325,13 +320,12 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
     // 댓글 수정
     const updateComment = async (commentId: string, content: string) => {
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) throw new Error("로그인이 필요합니다.");
+          
 
             const { data } = await axios.patch(
                 `https://www.codin.co.kr/api/comments/${commentId}`,
                 { content },
-                { headers: { Authorization: token } }
+               
             );
 
             if (data.success) {
@@ -351,12 +345,11 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
     // 댓글 삭제
     const deleteComment = async (commentId: string) => {
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) throw new Error("로그인이 필요합니다.");
+         
 
             const { data } = await axios.delete(
                 `https://www.codin.co.kr/api/comments/${commentId}`,
-                { headers: { Authorization: token } }
+               
             );
 
             if (data.success) {
@@ -374,14 +367,12 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
     // 대댓글 작성
     const submitReply = async (content: string, commentId: string) => {
         try {
-            const token = localStorage.getItem("accessToken");
-            if (!token) throw new Error("로그인이 필요합니다.");
-
+            
             setSubmitLoading(true);
             const { data } = await axios.post(
                 `https://www.codin.co.kr/api/replies/${commentId}`,
                 { content, anonymous },
-                { headers: { Authorization: token } }
+               
             );
 
             if (data.success) {
@@ -471,7 +462,7 @@ export default function CommentSection({ postId, postName }: CommentSectionProps
                                 {/* 닉네임 & 작성 시간 */}
                                 <div className="flex items-center mb-1">
                     <span className="text-sr font-medium">
-                    {comment.anonymous ? "익명" : comment.nickname}
+                    {comment.nickname}
                     </span>
                     <span className="text-sr text-[#bfbfbf] ml-[8px]">
                     {timeAgo(comment.createdAt)}

@@ -16,7 +16,6 @@ import CommonBtn from '@/components/buttons/commonBtn';
 
 export default function Vote() {
     const router = useRouter();
-    const [accessToken, setToken] = useState<string>('');
     const [checked, setChecked] = useState<boolean>(false);
     const [anonymity, setAnonymity] = useState<boolean>(false);
     const [options, setOptions] = useState<string[]>(['', '']);
@@ -28,12 +27,7 @@ export default function Vote() {
     const handleDateChange = (date: Date): void => {
          setSelectedDate(date);
     }
-    useEffect(() => {
-        const token = localStorage.getItem("accessToken");
-        if (token) {
-            setToken(token);
-        }
-    }, []);
+   
     const convertTo24Hour = (time12h: string) => {
         const [time, modifier] = time12h.split(' ');
         if (!time || !modifier) return time12h; // 예외 처리
@@ -110,7 +104,7 @@ export default function Vote() {
 
              try {
 
-                    const response = await PostVote(accessToken, title, content, options, checked, formattedDate, anonymity);
+                    const response = await PostVote( title, content, options, checked, formattedDate, anonymity);
                     console.log('결과:', response);
                     router.push('/vote');
                   } catch (error) {

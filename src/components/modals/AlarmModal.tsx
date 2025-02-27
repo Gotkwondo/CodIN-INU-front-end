@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+// Header 컴포넌트 임포트
+import Header from "@/components/Layout/header/Header";
 
 interface ModalProps {
     onClose: () => void; // 모달 닫기 핸들러
@@ -8,30 +10,16 @@ interface ModalProps {
 
 const AlarmModal: React.FC<ModalProps> = ({ onClose }) => {
     return (
-        <div className="fixed inset-0 bg-white flex flex-col">
-            {/* 헤더 */}
-            <header className="flex items-center justify-between h-12 px-4 border-b border-gray-300">
-                <button
-                    onClick={onClose}
-                    className="text-gray-600 hover:text-gray-800"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                    >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
-                <h1 className="text-lg font-bold text-gray-800">&lt; 알람 &gt;</h1>
-                <div className="w-5"></div> {/* 오른쪽 여백 */}
-            </header>
+        <div className="fixed inset-0 bg-white flex flex-col h-screen">
+            {/* Header로 대체 */}
+            <Header>
+                <Header.BackButton onClick={onClose} />
+                <Header.Title>&lt; 알람 &gt;</Header.Title>
+                {/* 필요하다면 SearchButton, Menu 등을 추가할 수 있습니다. */}
+            </Header>
 
-            {/* 내용 */}
-            <main className="flex-1 flex items-center justify-center">
+            {/* Header가 fixed 레이아웃이므로 메인 콘텐츠에 상단 여백 추가 */}
+            <main className="flex-1 flex items-center justify-center mt-12">
                 <p className="text-gray-500 text-base">알람이 없습니다.</p>
             </main>
         </div>

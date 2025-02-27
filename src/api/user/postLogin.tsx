@@ -9,7 +9,7 @@ export const PostLogin = async (studentId:string, password:string): Promise<any>
         const response: AxiosResponse<any> = await axios.post(
             `${BASE_URL}/auth/login`,
             {
-                studentId: studentId,
+                email: studentId,
                 password: password
             },
             {withCredentials: true}

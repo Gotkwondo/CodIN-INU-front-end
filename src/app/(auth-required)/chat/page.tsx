@@ -11,15 +11,9 @@ import Image from 'next/image';
 
 export default function Chat() {
     const router = useRouter();
-    const authContext = useContext(AuthContext);
 
-    if (!authContext) {
-        throw new Error('AuthContext를 사용하려면 AuthProvider로 감싸야 합니다.');
-    }
-
-    const { Auth } = authContext;
+  
     const [chatList, setChatList] = useState<any>([]);
-    const [accessToken, setToken] = useState<string>('');
       interface ChatData {
         chatRoomId: string;
         roomName: string;
@@ -33,20 +27,13 @@ export default function Chat() {
         chatList: ChatData[];
     }
 
-    useEffect(() => {
-        const token = localStorage.getItem("accessToken");
-        if (token) {
-            setToken(token);
-        }
-    }, []);
+    
 
     useEffect(() => {
-        if (!accessToken) return;
-
         const getChatRoomData = async () => {
+            console.log('실행행')
             try {
-                console.log('토큰:', accessToken);
-                const chatRoomData = await GetChatRoomData(accessToken);
+                const chatRoomData = await GetChatRoomData();
                 console.log(chatRoomData.data.dataList);
                 setChatList(chatRoomData.data.dataList || []);
             } catch (error) {
@@ -54,9 +41,8 @@ export default function Chat() {
                 setChatList([]);
             }
         };
-
         getChatRoomData();
-    }, [accessToken]);
+    },[]);
 
     const handleGoChatRoom = (chatRoomID: string, roomName: string) => {
         // roomName을 state로 넘기는 방법 (localStorage는 사용하지 않음)

@@ -160,7 +160,7 @@ export default function LoginPage() {
                     <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
                 </div>
                 <CommonBtn id="loginBtn" text="로그인하기" status={1} onClick={handleLogin}/> */}
-                <div className=" w-[120px] h-[24px] font-noto-sans-kr font-bold text-[20px] leading-[24px] text-center text-[#212121]">CodIN 로그인</div>
+                <div className=" w-[160px] h-[24px] font-noto-sans-kr font-bold text-[20px] leading-[24px] text-center text-[#212121]">CodIN 로그인</div>
                 <p className=' w-[221px] h-[17px]  font-noto-sans-kr font-normal text-[13px] mt-[15px] mb-[73px] leading-[17px] text-center text-[#808080]'>CodIN은 <span className='text-active'>학교 이메일 계정</span>을 사용해요</p>
                 <button onClick={handleGoogleLogin}>
                     <img src='/images/google.png'></img>

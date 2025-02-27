@@ -16,7 +16,6 @@ export default function Vote() {
     const chatBoxRef = useRef<HTMLDivElement | null >(null);
     const { Auth } = authContext;
     const [voteList, setVoteList] = useState<any>([]); // 초기값은 any로 두었지만 나중에 타입을 정의할 수 있음
-    const [accessToken, setToken] = useState<string>('');
     const [page, setPage] = useState<number>(0);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [hasMore, setHasMore] = useState<boolean>(true);
@@ -71,15 +70,10 @@ export default function Vote() {
         });
     };
 
-    useEffect(() => {
-        const token = localStorage.getItem("accessToken");
-        if (token) {
-            setToken(token);
-        }
-    }, []);
+ 
 
     useEffect(() => {
-        if (!accessToken) return;
+       
 
         const getVoteData = async (page: number) => {
 
@@ -87,8 +81,7 @@ export default function Vote() {
 
             setIsLoading(true);
             try {
-                console.log('토큰:', accessToken);
-                const voteData = await GetVoteData(accessToken, page);
+                const voteData = await GetVoteData( page);
                 const newVoteData = voteData.data.contents || [];
                 console.log(voteData.data);
                 if (newVoteData.length === 0) {
@@ -104,7 +97,7 @@ export default function Vote() {
         };
 
         getVoteData(page);
-    }, [accessToken]);
+    }, []);
 
 
     const handleScroll = () => {
@@ -129,7 +122,7 @@ export default function Vote() {
     const votingHandler = async (e: React.MouseEvent<HTMLButtonElement>, voteId: string) => {
         e.preventDefault();
         try {
-            const response = await PostVoting(accessToken, voteId, selectedOptions[voteId] || []);
+            const response = await PostVoting(voteId, selectedOptions[voteId] || []);
             console.log('결과:', response);
             window.location.reload();
         } catch (error) {
