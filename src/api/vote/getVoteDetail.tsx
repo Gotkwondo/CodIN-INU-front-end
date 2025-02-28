@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { PostReissue } from "../user/postReissue";
 
-const BASE_URL = "https://codin.inu.ac.kr/api";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const GetVoteDetail = async (
   postId: string | string[]
@@ -9,7 +9,7 @@ export const GetVoteDetail = async (
   axios.defaults.withCredentials = true;
   try {
     const response: AxiosResponse<any> = await axios.get(
-      `${BASE_URL}/posts/${postId}`
+      `${apiUrl}/posts/${postId}`
     );
     console.log(response.data);
     return response.data;

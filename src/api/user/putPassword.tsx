@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const BASE_URL = "https://codin.inu.ac.kr/api";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const PutPassword = async (
   code: string | string[],
@@ -10,7 +10,7 @@ export const PutPassword = async (
   axios.defaults.withCredentials = true;
   try {
     const response: AxiosResponse<any> = await axios.put(
-      `${BASE_URL}/users/password/${code}`,
+      `${apiUrl}/users/password/${code}`,
       {
         password: password,
       }

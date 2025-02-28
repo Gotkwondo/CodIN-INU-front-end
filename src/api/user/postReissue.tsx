@@ -1,12 +1,12 @@
 import axios, { AxiosResponse } from "axios";
 
-const BASE_URL = "https://codin.inu.ac.kr/api";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const PostReissue = async (): Promise<any> => {
   axios.defaults.withCredentials = true;
   try {
     const response: AxiosResponse<any> = await axios.post(
-      `${BASE_URL}/auth/reissue`
+      `${apiUrl}/auth/reissue`
     );
 
     console.log(response.data);

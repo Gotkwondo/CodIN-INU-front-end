@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const BASE_URL = "https://codin.inu.ac.kr/api";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const PostVoting = async (
   postId: string,
@@ -9,7 +9,7 @@ export const PostVoting = async (
   console.log("전송 데이터");
   axios.defaults.withCredentials = true;
   try {
-    await axios.post(`${BASE_URL}/polls/voting/${postId}`, {
+    await axios.post(`${apiUrl}/polls/voting/${postId}`, {
       selectedOptions: selectedOptions,
     });
   } catch (error: any) {

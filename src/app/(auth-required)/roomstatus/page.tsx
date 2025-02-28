@@ -12,7 +12,7 @@ import { Lecture, LectureDict } from "./interfaces/page_interface";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
 
 const RoomStatus: FC = () => {
-  const [accessToken, setAccessToken] = useState<string>("");
+  // const [accessToken, setAccessToken] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>(null);
   const [floor, setFloor] = useState<number>(1);
@@ -24,20 +24,13 @@ const RoomStatus: FC = () => {
     null,
   ]);
 
-  useEffect(() => {
-    const atk = localStorage.getItem("accessToken");
-    if (atk) {
-      setAccessToken(atk);
-    } else {
-      setError("로그인이 필요합니다.");
-    }
-  }, []);
 
-  useEffect(() => {
-    if (!accessToken) {
-      return;
-    }
-    //로그인 안되어 있으면 실행 안함
+
+   useEffect(() => {
+  //   if (!accessToken) {
+  //     return;
+  //   }
+  //   //로그인 안되어 있으면 실행 안함
 
     const date = new Date();
     const day = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
@@ -91,7 +84,7 @@ const RoomStatus: FC = () => {
     };
 
     getRoomStatus();
-  }, [accessToken]);
+  }, []);
 
   if (isLoading) {
     return (

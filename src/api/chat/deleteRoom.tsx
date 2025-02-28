@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const BASE_URL = "https://codin.inu.ac.kr/api";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const deleteRoom = async (
   chatRoomId: string | string[]
@@ -9,7 +9,7 @@ export const deleteRoom = async (
   axios.defaults.withCredentials = true;
   try {
     const response: AxiosResponse<any> = await axios.delete(
-      `${BASE_URL}/chatroom/${chatRoomId}`
+      `${apiUrl}/chatroom/${chatRoomId}`
     );
 
     console.log(response.data);

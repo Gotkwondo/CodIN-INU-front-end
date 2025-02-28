@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const BASE_URL = "https://codin.inu.ac.kr/api";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const PostLogin = async (
   studentId: string,
@@ -8,9 +8,10 @@ export const PostLogin = async (
 ): Promise<any> => {
   console.log("전송 데이터", studentId, password);
   axios.defaults.withCredentials = true;
+  
   try {
     const response: AxiosResponse<any> = await axios.post(
-      `${BASE_URL}/auth/login`,
+      `${apiUrl}/auth/login`,
       {
         email: studentId,
         password: password,

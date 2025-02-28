@@ -1,13 +1,13 @@
 import axios, { AxiosResponse } from "axios";
 import { PostReissue } from "../user/postReissue";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-const BASE_URL = "https://codin.inu.ac.kr/api";
 
 export const GetVoteData = async (page: number): Promise<any> => {
   axios.defaults.withCredentials = true;
   try {
     const response: AxiosResponse<any> = await axios.get(
-      `${BASE_URL}/posts/category?postCategory=POLL&page=${page}`
+      `${apiUrl}/posts/category?postCategory=POLL&page=${page}`
     );
     console.log(response.data);
     return response.data;

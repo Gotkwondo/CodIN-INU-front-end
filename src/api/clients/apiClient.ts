@@ -1,12 +1,12 @@
 // src/api/clients/apiClient.ts
 import axios, { AxiosInstance } from "axios";
 
-const BASE_URL = "https://www.codin.inu.ac.kr/api";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 function createAPIClient(): AxiosInstance {
   axios.defaults.withCredentials = true;
   const client = axios.create({
-    baseURL: BASE_URL,
+    baseURL: apiUrl,
   });
 
   // 요청 인터셉터
@@ -29,7 +29,7 @@ function createAPIClient(): AxiosInstance {
         try {
           const refreshToken = localStorage.getItem("refresh-token");
           if (refreshToken) {
-            const { data } = await axios.post(`${BASE_URL}/auth/refresh`, {
+            const { data } = await axios.post(`${apiUrl}/auth/refresh`, {
               refreshToken,
             });
             if (data?.success) {
