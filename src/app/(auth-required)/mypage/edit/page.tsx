@@ -26,15 +26,11 @@ const UserInfoEditPage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
-          setMessage("로그인이 필요합니다.");
-          return;
-        }
+       
 
         const response = await axios.get("https://codin.inu.ac.kr/api/users", {
           headers: {
-            Authorization: token,
+           
           },
         });
 
@@ -76,18 +72,13 @@ const UserInfoEditPage = () => {
 
     // 유저 정보 수정
     try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        setMessage("로그인이 필요합니다.");
-        return;
-      }
+      
 
       const userResponse = await axios.put(
         "https://codin.inu.ac.kr/api/users",
         userInfo,
         {
           headers: {
-            Authorization: token,
             "Content-Type": "application/json",
           },
         }
@@ -104,16 +95,13 @@ const UserInfoEditPage = () => {
       formData.append("postImages", profileImage);
 
       try {
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
-          console.error("토큰이 없습니다. 로그인이 필요합니다. 로그인페이지로");
-        }
+       
         const imageResponse = await axios.put(
           "https://codin.inu.ac.kr/api/users/profile",
           formData,
           {
             headers: {
-              Authorization: token,
+            
               "Content-Type": "multipart/form-data",
             },
           }

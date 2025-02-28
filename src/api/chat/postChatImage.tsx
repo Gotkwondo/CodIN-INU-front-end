@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const BASE_URL = "https://codin.inu.ac.kr/api";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const PostChatImage = async (chatImages: File): Promise<any> => {
   console.log("전송 데이터", chatImages);
@@ -10,7 +10,7 @@ export const PostChatImage = async (chatImages: File): Promise<any> => {
 
     formData.append("chatImages", chatImages);
 
-    const response = await axios.post(`${BASE_URL}/chats/image`, formData, {
+    const response = await axios.post(`${apiUrl}/chats/image`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

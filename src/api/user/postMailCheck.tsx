@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const BASE_URL = "https://codin.inu.ac.kr/api";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const PostMailCheck = async (
   email: string,
@@ -9,7 +9,7 @@ export const PostMailCheck = async (
   console.log("전송 데이터", email, code);
 
   try {
-    await axios.post(`${BASE_URL}/email/auth/check`, {
+    await axios.post(`${apiUrl}/email/auth/check`, {
       email: email,
       authNum: code,
     });

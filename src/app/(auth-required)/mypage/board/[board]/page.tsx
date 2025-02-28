@@ -56,11 +56,7 @@ const MyBoardPage: FC = () => {
     if (isFetching.current) return;
 
     try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        console.error("토큰이 없습니다. 로그인이 필요합니다.");
-        return;
-      }
+     
 
       setIsLoading(true);
       isFetching.current = true;
@@ -75,9 +71,7 @@ const MyBoardPage: FC = () => {
       const response = await axios.get(
         `https://codin.inu.ac.kr/api${selectedEndpoint}`,
         {
-          headers: {
-            Authorization: token,
-          },
+         
           params: {
             page: pageNumber,
           },

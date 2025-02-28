@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const BASE_URL = "https://codin.inu.ac.kr/api";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const PostChatRoom = async (
   roomName: string,
@@ -10,7 +10,7 @@ export const PostChatRoom = async (
   axios.defaults.withCredentials = true;
   try {
     const response: AxiosResponse<any> = await axios.post(
-      `${BASE_URL}/chatroom`,
+      `${apiUrl}/chatroom`,
 
       {
         roomName: roomName,

@@ -15,11 +15,11 @@ export default function MyPage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem("accessToken"); // 토큰 가져오기
+       
         const response = await fetch("https://codin.inu.ac.kr/api/users", {
           method: "GET",
           headers: {
-            Authorization: `${token}`, // Authorization 헤더 추가
+          
             "Content-Type": "application/json",
           },
         });

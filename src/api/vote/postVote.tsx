@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const BASE_URL = "https://codin.inu.ac.kr/api";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const PostVote = async (
   title: string,
@@ -21,7 +21,7 @@ export const PostVote = async (
   );
   axios.defaults.withCredentials = true;
   try {
-    await axios.post(`${BASE_URL}/polls`, {
+    await axios.post(`${apiUrl}/polls`, {
       title: title,
       content: content,
       pollOptions: pollOptions,

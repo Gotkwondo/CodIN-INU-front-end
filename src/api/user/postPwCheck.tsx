@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const BASE_URL = "https://codin.inu.ac.kr/api";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const PostPwCheck = async (
   email: string,
@@ -10,7 +10,7 @@ export const PostPwCheck = async (
   axios.defaults.withCredentials = true;
   try {
     const response: AxiosResponse<any> = await axios.post(
-      `${BASE_URL}/email/auth/password/check`,
+      `${apiUrl}/email/auth/password/check`,
       {
         email: email,
         authNum: code,

@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const BASE_URL = "https://codin.inu.ac.kr/api";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const PostSignup = async (
   email: string | string[],
@@ -27,7 +27,7 @@ export const PostSignup = async (
 
     // axios 요청 보내기
     const response: AxiosResponse<any> = await axios.post(
-      `${BASE_URL}/auth/signup`,
+      `${apiUrl}/auth/signup`,
       formData, // JSON 문자열로 전송
       {
         headers: {
