@@ -90,18 +90,13 @@ const CreatePostPage = () => {
     setIsLoading(true);
 
     try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        alert("로그인이 필요합니다. 다시 로그인해주세요.");
-        return;
-      }
+     
 
       const response = await axios.post(
         "https://codin.inu.ac.kr/api/posts",
         data,
         {
           headers: {
-            Authorization: token,
             "Content-Type": "multipart/form-data",
           },
         }
@@ -116,8 +111,7 @@ const CreatePostPage = () => {
       previewImages.forEach((url) => URL.revokeObjectURL(url));
       setPreviewImages([]);
       setPostImages([]);
-      const refreshToken = localStorage.getItem("refresh-token");
-      localStorage.setItem("accessToken", refreshToken);
+      
     } catch (error: any) {
       if (axios.isAxiosError(error)) {
         const errorMessage =
