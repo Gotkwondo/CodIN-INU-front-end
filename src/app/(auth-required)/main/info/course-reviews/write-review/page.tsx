@@ -3,15 +3,21 @@
 import DefaultBody from "@/components/Layout/Body/defaultBody";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import Header from "@/components/Layout/header/Header";
-import { RateBar } from '@/components/Review/RateBar';
+import { RateBar } from "@/components/Review/RateBar";
 import { SetStateAction, Suspense, useEffect, useState } from "react";
-import { departMentType, selectType } from './type';
-import { DEPARTMENT, GRADE, SEMESTER, ALERTMESSAGE, TEMPLATETEXT } from "./constants";
-import { CustomSelect } from '@/components/Review/CustomSelect';
-import { useSearchedReviewContext } from '@/api/review/useSearchedReviewContext';
-import { AlertModal } from '@/components/modals/AlertModal';
-import { submitReview } from '@/api/review/submitReview';
-import { useRouter } from 'next/navigation';
+import { departMentType, selectType } from "./type";
+import {
+  DEPARTMENT,
+  GRADE,
+  SEMESTER,
+  ALERTMESSAGE,
+  TEMPLATETEXT,
+} from "./constants";
+import { CustomSelect } from "@/components/Review/CustomSelect";
+import { useSearchedReviewContext } from "@/api/review/useSearchedReviewContext";
+import { AlertModal } from "@/components/modals/AlertModal";
+import { submitReview } from "@/api/review/submitReview";
+import { useRouter } from "next/navigation";
 
 const WriteReview = () => {
   const router = useRouter();
@@ -34,9 +40,9 @@ const WriteReview = () => {
     label: "학과, 학년, 학기를 선택해주세요",
     value: "",
   });
-  const [reviewContents, setReviewContents] = useState<string>('');
+  const [reviewContents, setReviewContents] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  
+
   const getReviewList = async () => {
     try {
       const response = await useSearchedReviewContext({
@@ -47,17 +53,17 @@ const WriteReview = () => {
       const data = response.dataList.map((e: departMentType) => {
         return {
           label: `(${semester.value})(${e.professor}) ${e.lectureNm}`,
-          value: e._id
+          value: e._id,
         };
       });
       setDepartmentList(data);
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   const onSummitReview = async () => {
-    if (department.value === '') return;
+    if (department.value === "") return;
     else {
       const response = await submitReview({
         lectureId: department.value,
@@ -69,7 +75,7 @@ const WriteReview = () => {
       alert(message);
       router.back();
     }
-  }
+  };
 
   useEffect(() => {
     setIsClient(true);

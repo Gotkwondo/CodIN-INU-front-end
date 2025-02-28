@@ -9,7 +9,7 @@ import { DepartmentReviewComponent } from "@/components/Review/DepartmentReview"
 import { useDepartmentRatingInfoContext } from "@/api/review/useDepartmentRatingInfoContext";
 import { ReviewComment } from "@/components/Review/ReviewComment";
 import { useLectureReviewsContext } from "@/api/review/useLectureReviewsContext";
-import { ReviewBtn } from '@/components/Review/ReviewBtn';
+import { ReviewBtn } from "@/components/Review/ReviewBtn";
 
 const DepartmentReview = () => {
   const { departmentCode } = useParams();
@@ -46,7 +46,6 @@ const DepartmentReview = () => {
         lectureId: `${departmentCode}`,
       });
       const data = response.data;
-      console.log(data.contents);
       setReviewList(data.contents);
     } catch (error) {
       console.error("과목 �� 후기 조회 실��", error);
@@ -82,9 +81,10 @@ const DepartmentReview = () => {
         )}
         {reviewList.length > 0 &&
           reviewList.map(
-            ({ _id, content, starRating, likes, isLiked, semester }) => {
+            ({ _id, content, starRating, likes, isLiked, semester }, idx) => {
               return (
                 <ReviewComment
+                  key={`${_id}_${idx}`}
                   starRating={starRating}
                   content={content}
                   likes={likes}
