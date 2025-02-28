@@ -21,13 +21,13 @@ const DepartmentReviewComponent = ({
   professor,
   score,
   rateCnt,
-  // ...rest
-}: SubjectType) => {
+}: // ...rest
+SubjectType) => {
   const totalScore = Math.floor((score.hard + score.ok + score.best) * 10) / 10;
 
-  const calcPercents = (rate: number, total: number) => {
-    return Math.floor((rate / total) * 100);
-  }
+  // const calcPercents = (rate: number, total: number) => {
+  //   return Math.floor((rate / total) * 100);
+  // };
   return (
     <div className="w-full h-64 mb-4">
       <div className="w-full flex flex-row justify-between">
@@ -62,7 +62,9 @@ const DepartmentReviewComponent = ({
                 barWidth={0.25}
                 className="mr-3"
               />
-              <span className="text-base text-[#808080]">{`${calcPercents(score.hard, 1) + "%"}`}</span>
+              <span className="text-base text-[#808080]">{`${
+                score.hard + "%"
+              }`}</span>
             </div>
           </div>
           <div className="mb-3 flex">
@@ -73,7 +75,9 @@ const DepartmentReviewComponent = ({
                 barWidth={0.25}
                 className="mr-3"
               />
-              <span className="text-base text-[#808080]">{`${calcPercents(score.ok, 2) + "%"}`}</span>
+              <span className="text-base text-[#808080]">{`${
+                score.ok + "%"
+              }`}</span>
             </div>
           </div>
           <div className="mb-3 flex">
@@ -84,7 +88,9 @@ const DepartmentReviewComponent = ({
                 barWidth={0.25}
                 className="mr-3"
               />
-              <span className="text-base text-[#808080]">{`${calcPercents(score.best, 2) + "%"}`}</span>
+              <span className="text-base text-[#808080]">{`${
+                score.best + "%"
+              }`}</span>
             </div>
           </div>
         </div>

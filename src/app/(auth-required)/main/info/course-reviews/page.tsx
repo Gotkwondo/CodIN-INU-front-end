@@ -3,7 +3,14 @@
 import SmRoundedBtn from "@/components/buttons/smRoundedBtn";
 import { DEPARTMENTS, SEARCHTYPES } from "./constants";
 import { labelType, reviewContentType, searchTypesType } from "./types";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Input } from "@/components/input/Input";
 import { debounce } from "lodash";
 import { UnderbarBtn } from "@/components/buttons/underbarBtn";
@@ -12,8 +19,9 @@ import Header from "@/components/Layout/header/Header";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { useReviewsContext } from "@/api/review/getReviewsContext";
+import { ReviewBtn } from '@/components/Review/ReviewBtn';
 
-const courseReviewPage = () => {
+const CourseReviewPage = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<labelType>({
     label: "컴공",
     value: "COMPUTER_SCI",
@@ -26,55 +34,105 @@ const courseReviewPage = () => {
   const [query, setQuery] = useState<string>(""); // 입력값 즉시 반영
   const [searchKeyword, setSearchKeyword] = useState<string>(""); // 디바운스된 값
   const [reviewContents, setReviewContents] = useState<reviewContentType[]>([]);
+  const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true); // 추가 데이터 존재 여부
+  const [loadState, setLoadState] = useState(false);
 
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  // 과목 선택 핸들러
   const selectDepartmentHandler = (
     selectedLabel: string,
     selectedValue: string
   ) => {
     setSelectedDepartment({ label: selectedLabel, value: selectedValue });
+    setPage(0); // 페이지 초기화
+    setReviewContents([]); // 기존 데이터 초기화
+    setHasMore(true); // 데이터 존재 여부 초기화
   };
 
-  // 디바운스된 검색 함수 (API 호출 시 사용)
+  // 검색 유형 변경 핸들러
+  const onSearchTypeChange = ({ label, value }: searchTypesType) => {
+    setSearchType({ label, value });
+    setPage(0);
+    setReviewContents([]);
+    setHasMore(true);
+  };
+
+  // 디바운스된 검색 함수
   const debouncedSearch = useMemo(
     () =>
       debounce((keyword) => {
         setSearchKeyword(keyword);
+        setPage(0);
+        setReviewContents([]);
+        setHasMore(true);
       }, 200),
     []
   );
 
   // 입력 변경 핸들러
   const onSearchKeywordChange = (keyword: string) => {
-    setQuery(keyword); // 즉시 업데이트
-    debouncedSearch(keyword); // 디바운스 적용된 값 업데이트
+    setQuery(keyword);
+    debouncedSearch(keyword);
   };
 
-  const onSearchTypeChange = ({ label, value }: searchTypesType) => {
-    setSearchType({ label: label, value: value });
-  };
-
+  // 리뷰 데이터 가져오기
   const getReviewsContent = async () => {
+    if (loading || !hasMore) return; // 로딩 중이거나 데이터가 없으면 요청 안 함
+
+    setLoading(true);
     try {
       const data = await useReviewsContext({
         department: selectedDepartment.value,
+        keyword: searchKeyword,
         option: searchType.value,
-        page: 0,
+        page: page,
       });
-      setReviewContents(data.data.contents);
+
+      setReviewContents((prev) => [...prev, ...data.data.contents]);
+      setHasMore(data.data.contents.length > 0); // 추가 데이터가 없으면 false 설정
     } catch (err) {
       alert("데이터를 불러오지 못했습니다");
-      setReviewContents([]);
-      console.log(err);
+      setHasMore(false);
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const filterContent = () => {
-    console.log("dd");
-  };
+  // 마지막 요소 감지 (IntersectionObserver)
+  const lastElementRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (loading || !hasMore) return;
 
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          setPage((prev) => prev + 1);
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
+
+  // `page` 상태가 변경될 때마다 `getReviewsContent` 호출
   useEffect(() => {
     getReviewsContent();
-  }, [selectedDepartment]);
+    setLoadState(false);
+  }, [page, loadState]);
+
+  // `selectedDepartment`, `searchKeyword`, `searchType`가 변경될 때 `page` 초기화
+  useEffect(() => {
+    setPage(0);
+    setReviewContents([]);
+    setHasMore(true);
+    setLoadState(true);
+  }, [selectedDepartment, searchKeyword, searchType]);
 
   return (
     <Suspense>
@@ -84,6 +142,7 @@ const courseReviewPage = () => {
       </Header>
       <DefaultBody hasHeader={1}>
         <div className="mt-28 w-11/12">
+          {/* 학과 선택 버튼 */}
           <div className="flex flex-col w-full">
             <div className="w-full flex justify-between">
               {DEPARTMENTS.map(({ label, value }: labelType) => (
@@ -96,6 +155,8 @@ const courseReviewPage = () => {
               ))}
             </div>
           </div>
+
+          {/* 검색 입력 */}
           <div className="mt-4 w-full">
             <Input
               className="w-full"
@@ -104,34 +165,46 @@ const courseReviewPage = () => {
               onChange={(e) => onSearchKeywordChange(e.target.value)}
             />
             <div className="flex mt-4">
-              {SEARCHTYPES.map(({ label, value }: searchTypesType) => {
-                return (
-                  <UnderbarBtn
-                    key={`searchType_${value}`}
-                    text={label}
-                    inverted={value === searchType.value}
-                    className="font-semibold"
-                    onClick={() => onSearchTypeChange({ label, value })}
-                  />
-                );
-              })}
+              {SEARCHTYPES.map(({ label, value }: searchTypesType) => (
+                <UnderbarBtn
+                  key={`searchType_${value}`}
+                  text={label}
+                  inverted={value === searchType.value}
+                  className="font-semibold"
+                  onClick={() => onSearchTypeChange({ label, value })}
+                />
+              ))}
             </div>
           </div>
-          {reviewContents &&
+
+          {/* 리뷰 리스트 */}
+          {reviewContents.length > 0 ? (
             reviewContents.map(
-              ({ lectureNm, _id, starRating, professor, participants }) => {
-                return (
-                  <Subject
-                    key={`subject_${_id}_${lectureNm}`}
-                    subjectName={lectureNm}
-                    subjectCode={_id}
-                    score={starRating}
-                    professor={professor}
-                    rateCnt={participants}
-                  />
-                );
-              }
-            )}
+              (
+                { lectureNm, _id, starRating, professor, participants },
+                idx
+              ) => (
+                <Subject
+                  key={`subject_${_id}_${lectureNm}_${idx}`}
+                  subjectName={lectureNm}
+                  subjectCode={_id}
+                  score={starRating}
+                  professor={professor}
+                  rateCnt={participants}
+                />
+              )
+            )
+          ) : (
+            <p className="text-center mt-6 text-gray-500">
+              데이터가 없습니다.
+            </p>
+          )}
+          <ReviewBtn />
+          {/* 마지막 요소 감지 */}
+          {hasMore && <div className="h-10" ref={lastElementRef}></div>}
+
+          {/* 로딩 표시 */}
+          {loading && <p className="text-center mt-4">Loading...</p>}
         </div>
       </DefaultBody>
       <BottomNav activeIndex={3} />
@@ -139,4 +212,4 @@ const courseReviewPage = () => {
   );
 };
 
-export default courseReviewPage;
+export default CourseReviewPage;

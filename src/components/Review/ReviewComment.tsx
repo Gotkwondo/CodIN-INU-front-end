@@ -1,5 +1,5 @@
-import { useReviewLikeToggleContext } from '@/api/review/useReviewLikeToggleContext';
-import { useState } from 'react';
+import { useReviewLikeToggleContext } from "@/api/review/useReviewLikeToggleContext";
+import { useState } from "react";
 import { CiHeart } from "react-icons/ci";
 import { FaHeart } from "react-icons/fa";
 
@@ -20,14 +20,12 @@ const ReviewComment = ({
   semester = "test",
   _id,
 }: ReviewCommentType) => {
-    "BlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlankBlank";
   const [heartClick, setHeartClick] = useState(isLiked);
-  
+
   const handleHeartClick = () => {
     setHeartClick(!heartClick);
     // API 추가(하트 상태 변경)
     useReviewLikeToggleContext({ _id: _id });
-    console.log(heartClick);
   };
   return (
     <div className="border-t">
@@ -51,10 +49,11 @@ const ReviewComment = ({
           )}
         </div>
         <div className="flex justify-start items-center w-full mt-2">
-          <p className="text-lg text-wrap break-all">{content}</p>
+          <p className="text-lg text-wrap break-all whitespace-pre-wrap">
+            {content}
+          </p>
         </div>
         <div className="flex justify-between items-center w-full mt-2">
-          {/* <p className="text-lg text-wrap break-all">{testText}</p> */}
           <p className="text-xl">{semester + "학기 수강생"}</p>
           <div className="flex items-center">
             <p>{likes}</p>
