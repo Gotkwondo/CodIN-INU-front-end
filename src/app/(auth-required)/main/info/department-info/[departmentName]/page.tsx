@@ -38,7 +38,7 @@ export default function DepartmentPage() {
 
       try {
         const response = await axios.get(
-          `https://codin.inu.ac.kr/api/info/office/${departmentName}`
+          `https://www.codin.co.kr/api/info/office/${departmentName}`
         );
 
         if (response.data.success) {
@@ -111,7 +111,7 @@ export default function DepartmentPage() {
                 {info.data.officeMember.map((member, index) => (
                   <div key={index} className="flex gap-[20px]">
                     <img
-                      src="/icons/chat/deafultProfile.png"
+                      src="/icons/chat/DeafultProfile.png"
                       className="w-[50px] h-[50px]"
                       width={50}
                       height={50}

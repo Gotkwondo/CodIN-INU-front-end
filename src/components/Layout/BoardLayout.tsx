@@ -1,11 +1,11 @@
-// 예: /components/BoardLayout.tsx
+// /components/BoardLayout.tsx
 
 "use client";
 
-import { FC, PropsWithChildren } from "react";
+import {FC, PropsWithChildren, useEffect} from "react";
 import { useRouter } from "next/navigation";
 import Tabs from "@/components/Layout/Tabs";
-import { boardData } from "@/data/boardData"; // boardData의 타입(alias) 직접 정의하시면 됩니다.
+import { boardData } from "@/data/boardData"; // boardData 불러오기
 import Header from "./header/Header";
 import DefaultBody from "./Body/defaultBody";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
@@ -24,27 +24,38 @@ const BoardLayout: FC<BoardLayoutProps> = ({
                                                children,
                                            }) => {
     const router = useRouter();
-    const { name, icon, tabs } = board;
+    const { name, icon, tabs, backLink } = board;
     const hasTabs = tabs.length > 0;
+    useEffect(() => {
+        console.log("BoardLayout: board", board);
+    },[activeTab]);
+    // backLink 정보가 있으면 해당 URL로, 없으면 기본 router.back() 실행
+    const handleBack = () => {
+        console.log("backLink", backLink);
+        if (backLink) {
+            router.push(backLink);
+        } else {
+            router.back();
+        }
+    };
 
     return (
         <>
             {/* 고정 헤더 */}
             <Header>
-                <Header.BackButton/>
+                <Header.BackButton onClick={handleBack} />
                 <Header.Title>{name}</Header.Title>
-                <Header.SearchButton/>
+                <Header.SearchButton />
             </Header>
 
             <DefaultBody hasHeader={1}>
                 {/* Tabs Section */}
                 {hasTabs && (
-                    <div id="scrollbar-hidden" className="w-full bg-white z-50 overflow-x-scroll fixed pb-[8px] pr-[40px]">
-                        <Tabs
-                            tabs={tabs}
-                            activeTab={activeTab}
-                            onTabChange={onTabChange}
-                        />
+                    <div
+                        id="scrollbar-hidden"
+                        className="w-full bg-white z-50 overflow-x-scroll fixed pb-[8px] pr-[40px]"
+                    >
+                        <Tabs tabs={tabs} activeTab={activeTab} onTabChange={onTabChange} />
                     </div>
                 )}
                 <div className="pb-[12px] opacity-0">
@@ -54,7 +65,7 @@ const BoardLayout: FC<BoardLayoutProps> = ({
                 {/* children 영역: 게시물 리스트, 로딩, 페이지네이션, 글쓰기 버튼 등 */}
                 {children}
             </DefaultBody>
-            <BottomNav/>
+            <BottomNav />
         </>
     );
 };

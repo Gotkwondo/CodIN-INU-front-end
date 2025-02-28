@@ -119,7 +119,7 @@ const MainPage: FC = () => {
         if (!token) {
           console.error("토큰이 없습니다. 로그인이 필요합니다. 로그인페이지로");
         }
-        const response = await fetch("https://codin.inu.ac.kr/api/posts/top3", {
+        const response = await fetch("https://www.codin.co.kr/api/posts/top3", {
           method: "GET",
           headers: {
             Authorization: token,

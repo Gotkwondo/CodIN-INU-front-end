@@ -54,7 +54,8 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                     ...post,
                     userInfo: {
                         ...post.userInfo,
-                        [action === "like" ? "like" : "scrap"]: !post.userInfo[action === "like" ? "like" : "scrap"],
+                        [action === "like" ? "like" : "scrap"]:
+                            !post.userInfo[action === "like" ? "like" : "scrap"],
                     },
                     likeCount:
                         action === "like"
@@ -70,10 +71,16 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                             : post.scrapCount,
                 });
             } else {
-                console.error(response.data.message || `${action === "like" ? "좋아요" : "북마크"} 실패`);
+                console.error(
+                    response.data.message ||
+                    `${action === "like" ? "좋아요" : "북마크"} 실패`
+                );
             }
         } catch (error) {
-            console.error(`${action === "like" ? "좋아요" : "북마크"} 토글 실패`, error);
+            console.error(
+                `${action === "like" ? "좋아요" : "북마크"} 토글 실패`,
+                error
+            );
         }
     };
 
@@ -99,7 +106,9 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
     if (!post) {
         return (
             <div className="flex items-center justify-center min-h-screen">
-                <h2 className="text-xl font-semibold text-gray-700">게시물을 찾을 수 없습니다.</h2>
+                <h2 className="text-xl font-semibold text-gray-700">
+                    게시물을 찾을 수 없습니다.
+                </h2>
             </div>
         );
     }
@@ -136,7 +145,10 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
 
             <div>
                 <h3 className="text-Lm mb-[12px]">{post.title}</h3>
-                <p className="text-Mr mb-[24px]">{post.content}</p>
+                {/* 본문 텍스트 가독성 증가를 위해 white-space 스타일 적용 */}
+                <p className="text-Mr mb-[24px] whitespace-pre-wrap">
+                    {post.content}
+                </p>
             </div>
 
             {post.postImageUrl && post.postImageUrl.length > 0 && (
@@ -144,22 +156,59 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
             )}
             <div className="flex justify-between items-center text-sr text-sub">
                 <div className="flex space-x-[12px]">
-                    <span className="flex items-center gap-[4.33px]">
-                        <img src={"/icons/board/viewIcon.svg"} width={16} height={16}/>
-                        {post.hits || 0}
-                    </span>
-                    <button onClick={() => toggleAction("like")} className="flex items-center gap-[4.33px]">
-                        <img src={post.userInfo.like ? "/icons/board/active_heartIcon.svg": "/icons/board/heartIcon.svg"} width={16} height={16}/>
+          <span className="flex items-center gap-[4.33px]">
+            <img
+                src={"/icons/board/viewIcon.svg"}
+                width={16}
+                height={16}
+                alt="조회수 아이콘"
+            />
+              {post.hits || 0}
+          </span>
+                    <button
+                        onClick={() => toggleAction("like")}
+                        className="flex items-center gap-[4.33px]"
+                    >
+                        <img
+                            src={
+                                post.userInfo.like
+                                    ? "/icons/board/active_heartIcon.svg"
+                                    : "/icons/board/heartIcon.svg"
+                            }
+                            width={16}
+                            height={16}
+                            alt="좋아요 아이콘"
+                        />
                         {post.likeCount || 0}
                     </button>
                     <span className="flex items-center gap-[4.33px]">
-                        <img src="/icons/board/commentIcon.svg" width={16} height={16}/>
+            <img
+                src="/icons/board/commentIcon.svg"
+                width={16}
+                height={16}
+                alt="댓글 아이콘"
+            />
                         {post.commentCount || 0}
-                    </span>
+          </span>
                 </div>
 
-                <button onClick={() => toggleAction("bookmark")} className="flex items-centertext-sub gap-[4.33px]">
-                    <img src={post.userInfo.scrap ? "/icons/board/active_BookmarkIcon.svg": "/icons/board/BookmarkIcon.svg"} width={16} height={16} className={`w-[16px] h-[16px] ${post.userInfo.scrap ? "text-yellow-300" : "text-gray-500"}`} />
+                <button
+                    onClick={() => toggleAction("bookmark")}
+                    className="flex items-center text-sub gap-[4.33px]"
+                >
+                    <img
+                        src={
+                            post.userInfo.scrap
+                                ? "/icons/board/active_BookmarkIcon.svg"
+                                : "/icons/board/BookmarkIcon.svg"
+                        }
+                        width={16}
+                        height={16}
+                        className={`w-[16px] h-[16px] ${
+                            post.userInfo.scrap ? "text-yellow-300" : "text-gray-500"
+                        }`}
+                        alt="북마크 아이콘"
+                    />
                     <span>{post.scrapCount}</span>
                 </button>
             </div>

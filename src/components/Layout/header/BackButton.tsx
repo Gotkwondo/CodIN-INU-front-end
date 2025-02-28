@@ -12,6 +12,7 @@ const BackButton: React.FC<BackProps> = ({ onClick }) => {
 
     const handleBack = () => {
         onClick ? onClick() : router.back();
+        console.log("BackButton: handleBack");
     };
 
     return (

@@ -1,7 +1,7 @@
 // src/api/clients/apiClient.ts
 import axios, { AxiosInstance } from "axios";
 
-const BASE_URL = "https://codin.inu.ac.kr/api";
+const BASE_URL = "https://www.codin.inu.ac.kr/api";
 
 function createAPIClient(): AxiosInstance {
   axios.defaults.withCredentials = true;
