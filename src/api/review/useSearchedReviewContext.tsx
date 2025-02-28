@@ -1,12 +1,16 @@
-import axios from 'axios';
+import axios from "axios";
 
 type useSearchedReviewContextType = {
   department?: string;
   grade?: string;
   semester?: string;
-}
+};
 
-const useSearchedReviewContext = async ({ department, grade, semester }: useSearchedReviewContextType) => {
+const useSearchedReviewContext = async ({
+  department,
+  grade,
+  semester,
+}: useSearchedReviewContextType) => {
   axios.defaults.withCredentials = true;
 
   try {
@@ -17,7 +21,7 @@ const useSearchedReviewContext = async ({ department, grade, semester }: useSear
     });
 
     const result = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}lectures/search-review?${params}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/lectures/search-review?${params}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -35,6 +39,6 @@ const useSearchedReviewContext = async ({ department, grade, semester }: useSear
       console.error("Error setting up request:", error.message);
     }
   }
-}
+};
 
 export { useSearchedReviewContext };

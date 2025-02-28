@@ -7,8 +7,12 @@ type useReviewContextType = {
   keyword?: string;
 };
 
-const useReviewsContext = async ({ department, option, page, keyword='' }: useReviewContextType) => {
-  const token = localStorage.getItem("accessToken");
+const useReviewsContext = async ({
+  department,
+  option,
+  page,
+  keyword = "",
+}: useReviewContextType) => {
   axios.defaults.withCredentials = true;
 
   try {
@@ -32,16 +36,15 @@ const useReviewsContext = async ({ department, option, page, keyword='' }: useRe
   } catch (error) {
     if (error.response) {
       const { status, data } = error.response;
-      console.error('Error response:', status, data);
-     
+      console.error("Error response:", status, data);
     } else if (error.request) {
-      console.error('No response received:', error.request);
+      console.error("No response received:", error.request);
     } else {
-      console.error('Error setting up request:', error.message);
+      console.error("Error setting up request:", error.message);
     }
-    
+
     throw error;
   }
-}
+};
 
 export { useReviewsContext };

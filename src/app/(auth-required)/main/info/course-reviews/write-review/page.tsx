@@ -10,8 +10,11 @@ import { DEPARTMENT, GRADE, SEMESTER, ALERTMESSAGE, TEMPLATETEXT } from "./const
 import { CustomSelect } from '@/components/Review/CustomSelect';
 import { useSearchedReviewContext } from '@/api/review/useSearchedReviewContext';
 import { AlertModal } from '@/components/modals/AlertModal';
+import { submitReview } from '@/api/review/submitReview';
+import { useRouter } from 'next/navigation';
 
 const WriteReview = () => {
+  const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const [rating, setRating] = useState(0);
   const [lecture, setLecture] = useState<selectType>({
@@ -50,6 +53,21 @@ const WriteReview = () => {
       setDepartmentList(data);
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  const onSummitReview = async () => {
+    if (department.value === '') return;
+    else {
+      const response = await submitReview({
+        lectureId: department.value,
+        content: reviewContents,
+        starRating: rating,
+        semester: semester.value,
+      });
+      const message = response.message;
+      alert(message);
+      router.back();
     }
   }
 
@@ -165,7 +183,7 @@ const WriteReview = () => {
         </div>
         <button
           className="h-[50px] bg-[#EBF0F7] mt-4 rounded-md"
-          onClick={() => console.log("작성 버튼 클릭")}
+          onClick={() => onSummitReview()}
         >
           후기 작성하기
         </button>

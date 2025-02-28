@@ -13,8 +13,6 @@ const AlertModal = ({
   modalStateSetter,
   onClose,
 }: AlertModalType) => {
-  console.log(text);
-
   const onConfirm = (
     templateText: string,
     modalStateSetter: Dispatch<SetStateAction<string>>,
