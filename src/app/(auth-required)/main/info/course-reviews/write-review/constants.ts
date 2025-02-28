@@ -20,3 +20,6 @@ export const SEMESTER = [
   { label: "24 - 2", value: "24-2" },
   { label: "25 - 1", value: "25-1" },
 ];
+
+export const ALERTMESSAGE = '작성 중이던 리뷰는 모두 지워져요.\n템플릿을 적용할까요?';
+export const TEMPLATETEXT = "강의와 교재는? : \n과제는? : \n시험은? : \n조별 과제는? : \n\n\n나만의 꿀팁 : ";

@@ -6,9 +6,10 @@ import Header from "@/components/Layout/header/Header";
 import { RateBar } from '@/components/Review/RateBar';
 import { SetStateAction, Suspense, useEffect, useState } from "react";
 import { departMentType, selectType } from './type';
-import { DEPARTMENT, GRADE, SEMESTER } from './constants';
+import { DEPARTMENT, GRADE, SEMESTER, ALERTMESSAGE, TEMPLATETEXT } from "./constants";
 import { CustomSelect } from '@/components/Review/CustomSelect';
 import { useSearchedReviewContext } from '@/api/review/useSearchedReviewContext';
+import { AlertModal } from '@/components/modals/AlertModal';
 
 const WriteReview = () => {
   const [isClient, setIsClient] = useState(false);
@@ -31,6 +32,7 @@ const WriteReview = () => {
     value: "",
   });
   const [reviewContents, setReviewContents] = useState<string>('');
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   
   const getReviewList = async () => {
     try {
@@ -152,18 +154,29 @@ const WriteReview = () => {
         </div>
         <div className="w-full flex justify-end mt-3">
           <button
-            className="bg-[#0D99FF] text-white rounded-full px-4 py-2"
-            onClick={() => console.log("템플릿 사용 버튼 클릭")}
+            className="bg-[#0D99FF] text-white rounded-full px-4 py-2 hover:bg-[#51b4fa]"
+            onClick={() => {
+              // setReviewContents('강의와 교재는? : \n과제는? : \n시험은? : \n조별 과제는? : \n\n\n나만의 꿀팁 : ');
+              setIsModalOpen(true);
+            }}
           >
             템플릿 사용하기
           </button>
         </div>
         <button
           className="h-[50px] bg-[#EBF0F7] mt-4 rounded-md"
-          onClick={() => console.log('작성 버튼 클릭')}
+          onClick={() => console.log("작성 버튼 클릭")}
         >
           후기 작성하기
         </button>
+        {isModalOpen && (
+          <AlertModal
+            text={ALERTMESSAGE}
+            templateText={TEMPLATETEXT}
+            modalStateSetter={setReviewContents}
+            onClose={setIsModalOpen}
+          />
+        )}
       </DefaultBody>
 
       <BottomNav activeIndex={3} />
