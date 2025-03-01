@@ -61,7 +61,7 @@ export default function Chat() {
                         className="flex flex-row w-full gap-[13px] relative"
                         onClick={() => handleGoChatRoom(data.chatRoomId, data.roomName)}
                     >
-                        <Image src="/icons/chat/deafultProfile.png" width="49" height="49" alt="" loading="eager"/>
+                        <Image src="/icons/chat/DeafultProfile.png" width="49" height="49" alt="" loading="eager"/>
                         <div className="flex flex-col gap-[4px]">
                             <div id="name" className="text-Lm" >{data.roomName}</div>
                             <div id="ment" className="text-Mr text-[#808080]">

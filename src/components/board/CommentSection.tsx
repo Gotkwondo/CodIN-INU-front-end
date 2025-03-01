@@ -103,7 +103,7 @@ const CommentInput = ({
       className="mr-[16px] rounded-full"
       disabled={submitLoading}
     >
-      <img src="/icons/board/send.svg" />
+      <img src= "/icons/board/Send.svg" />
     </button>
   </div>
 );
