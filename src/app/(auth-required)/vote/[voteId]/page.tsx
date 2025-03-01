@@ -2,6 +2,7 @@
 import '../vote.css';
 import { useRouter } from 'next/navigation';
 import { useContext, useState, useEffect, useRef } from 'react';
+import apiClient from "@/api/clients/apiClient"; // 공통 apiClient 불러오기
 
 import { PostVoting } from '@/api/vote/postVoting';
 import { GetVoteDetail } from '@/api/vote/getVoteDetail';
@@ -107,22 +108,50 @@ export default function VoteDetail() {
     }, [ voteId]);
 
 
-    //게시글 좋아요 핸들러
-    const handleLike = async (e: React.MouseEvent<HTMLDivElement>, likeType: string, id: string) => {
-        e.preventDefault();
+     // 좋아요 및 북마크 토글 함수
+     const toggleAction = async (action: "like" | "bookmark") => {
+        try {
+            // API 요청 URL 및 데이터 설정
+            const url = action === "like" ? "/likes" : `/scraps/${voteId}`;
+            const requestData =
+                action === "like" ? { likeType: "POST", id: vote?._id } : undefined;
 
-        if (likeType === 'POST') {
-            // 게시글 좋아요 상태 반전
-            const newLikeStatus = !isPostLiked[id]; // 해당 게시물의 좋아요 상태를 반전
-            try {
-                await PostLike( likeType, id);
-                setIsPostLiked((prevState) => ({ ...prevState, [id]: newLikeStatus })); // 상태 업데이트
+            // API 호출
+            const response = await apiClient.post(url, requestData);
+            console.log(response.data);
 
-                setLikeCount((prevCount) => newLikeStatus ? prevCount + 1 : prevCount - 1);
-            } catch (error) {
-                console.error("좋아요 처리 실패", error);
+            if (response.data.success && vote) {
+                setVote({
+                    ...vote,
+                    userInfo: {
+                        ...vote.userInfo,
+                        [action === "like" ? "like" : "scrap"]:
+                            !vote.userInfo[action === "like" ? "like" : "scrap"],
+                    },
+                    likeCount:
+                        action === "like"
+                            ? vote.userInfo.like
+                                ? vote.likeCount - 1
+                                : vote.likeCount + 1
+                            : vote.likeCount,
+                    scrapCount:
+                        action === "bookmark"
+                            ? vote.userInfo.scrap
+                                ? vote.scrapCount - 1
+                                : vote.scrapCount + 1
+                            : vote.scrapCount,
+                });
+            } else {
+                console.error(
+                    response.data.message ||
+                    `${action === "like" ? "좋아요" : "북마크"} 실패`
+                );
             }
-        
+        } catch (error) {
+            console.error(
+                `${action === "like" ? "좋아요" : "북마크"} 토글 실패`,
+                error
+            );
         }
     };
 
@@ -300,7 +329,7 @@ export default function VoteDetail() {
                                         <img src={"/icons/board/viewIcon.svg"} width={16} height={16}/>
                                         {vote.hits || 0}
                                     </span>
-                                    <button onClick={() => ""} className="flex items-center gap-[4.33px]">
+                                    <button onClick={() =>toggleAction("like")} className="flex items-center gap-[4.33px]">
                                         <img src={vote.userInfo.like ? "/icons/board/active_heartIcon.svg": "/icons/board/heartIcon.svg"} width={16} height={16}/>
                                         {vote.likeCount || 0}
                                     </button>
@@ -310,7 +339,7 @@ export default function VoteDetail() {
                                     </span>
                                 </div>
 
-                                <button onClick={() => ""} className="flex items-centertext-sub gap-[4.33px]">
+                                <button onClick={() =>toggleAction("bookmark")} className="flex items-centertext-sub gap-[4.33px]">
                                     <img src={vote.userInfo.scrap ? "/icons/board/active_BookmarkIcon.svg": "/icons/board/BookmarkIcon.svg"} width={16} height={16} className={`w-[16px] h-[16px] ${vote.userInfo.scrap ? "text-yellow-300" : "text-gray-500"}`} />
                                     <span>{vote.scrapCount}</span>
                                 </button>
