@@ -1,5 +1,6 @@
 // src/api/clients/apiClient.ts
 import axios, { AxiosInstance } from "axios";
+import { PostReissue } from "../user/postReissue";
 
 // 쿠키에서 특정 이름의 값을 읽어오는 함수
 function getCookie(name: string): string | null {
@@ -35,23 +36,9 @@ function createAPIClient(): AxiosInstance {
     async (error) => {
       if (error?.response?.status === 401) {
         try {
-          const refreshToken = getCookie("refresh-token");  // 쿠키에서 refresh-token 읽기
-          if (refreshToken) {
-            const { data } = await axios.post(`${apiUrl}/auth/refresh`, {
-              refreshToken,
-            });
-            if (data?.success) {
-              // 새로 받은 accessToken을 쿠키에 저장
-              document.cookie = `accessToken=${data.data.accessToken}; path=/; secure; HttpOnly`;
-
-              // 토큰을 갱신하고 요청 재시도
-              error.config.headers.Authorization = `Bearer ${data.data.accessToken}`;
-              return client.request(error.config);
-            }
-          }
-          window.location.href = "/login";
-        } catch (refreshError) {
-          console.error("리프레시 토큰 실패:", refreshError);
+              PostReissue();
+          } catch (refreshError) {
+          console.error("토큰 리이슈 실패:", refreshError);
           window.location.href = "/login";
         }
       }

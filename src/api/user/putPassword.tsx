@@ -21,6 +21,7 @@ export const PutPassword = async (
     if (error.response) {
       const { status, data } = error.response;
       console.error("Error response:", status, data);
+      
     } else if (error.request) {
       console.error("No response received:", error.request);
     } else {

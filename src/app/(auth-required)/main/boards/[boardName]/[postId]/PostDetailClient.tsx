@@ -7,6 +7,7 @@ import apiClient from "@/api/clients/apiClient"; // 공통 apiClient 불러오�
 import CommentSection from "@/components/board/CommentSection";
 import ZoomableImageModal from "@/components/modals/ZoomableImageModal";
 import { FaEye, FaHeart, FaRegCommentDots, FaBookmark } from "react-icons/fa";
+import DefaultBody from "@/components/Layout/Body/defaultBody";
 
 interface PostDetailClientProps {
     postId: string;
@@ -115,7 +116,9 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
 
     // 렌더링
     return (
-        <div className="bg-white min-h-screen">
+       
+        <div className="bg-white min-h-screen"> 
+       
             <div className="flex items-center space-x-[12px] mb-[20px]">
                 <div className="w-[36px] h-[36px] bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
                     {post.anonymous ? (
@@ -212,7 +215,9 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                     <span>{post.scrapCount}</span>
                 </button>
             </div>
-            <CommentSection postId={postId} postName={post.title} />
+            <CommentSection postId={postId} postName={post.title} /> 
+           
         </div>
+       
     );
 }
