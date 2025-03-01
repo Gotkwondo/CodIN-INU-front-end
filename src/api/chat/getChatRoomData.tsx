@@ -18,7 +18,7 @@ export const GetChatRoomData = async (): Promise<any> => {
           console.error('Error response:', status, data);
           if (status === 401){
             console.error('401 Unauthorized: 토큰이 유효하지 않거나 만료되었습니다.');
-            
+            PostReissue();
             GetChatRoomData();
 
           }

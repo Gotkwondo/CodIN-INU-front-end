@@ -22,6 +22,12 @@ export const GetChatData = async (
     if (error.response) {
       const { status, data } = error.response;
       console.error("Error response:", status, data);
+      if (status === 401){
+        console.error('401 Unauthorized: 토큰이 유효하지 않거나 만료되었습니다.');
+        PostReissue();
+        GetChatData(chatRoomId,page);
+
+      }
     } else if (error.request) {
       console.error("No response received:", error.request);
     } else {
