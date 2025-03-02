@@ -141,6 +141,7 @@ export default function CommentSection({
 
   // 삭제 모달
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [deleteTargetDepth, setDeleteTargetDepth] = useState<number>(0); 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   // (추가) 댓글 입력창 열림/닫힘 상태
@@ -367,6 +368,25 @@ export default function CommentSection({
     }
   };
 
+  //대댓글 삭제
+  const deleteReply = async (commentId: string) => {
+    try {
+      const { data } = await axios.delete(
+        `https://codin.inu.ac.kr/api/replies/${commentId}`
+      );
+
+      if (data.success) {
+        fetchComments();
+        setSuccessMessage("댓글이 삭제되었습니다.");
+        setTimeout(() => setSuccessMessage(null), 2000);
+      } else {
+        throw new Error(data.message || "대댓글 삭제 실패");
+      }
+    } catch (err: any) {
+      setError(err.message || "API 호출 중 오류가 발생했습니다.");
+    }
+  };
+
   // 대댓글 작성
   const submitReply = async (content: string, commentId: string) => {
     try {
@@ -436,7 +456,14 @@ export default function CommentSection({
             <button
               className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 transition-colors duration-200"
               onClick={() => {
-                if (deleteTargetId) deleteComment(deleteTargetId);
+                if (deleteTargetId) {
+                  // 댓글의 depth가 0이면 본문 댓글, 1 이상이면 대댓글
+                  if (deleteTargetDepth  > 0) {
+                    deleteReply(deleteTargetId); // 대댓글 삭제
+                  } else {
+                    deleteComment(deleteTargetId); // 본문 댓글 삭제
+                  }
+                }
                 setIsModalOpen(false);
               }}
             >
@@ -612,6 +639,7 @@ export default function CommentSection({
                             onClick={() => {
                               setIsModalOpen(true);
                               setDeleteTargetId(comment._id);
+                              setDeleteTargetDepth(depth);
                               setMenuOpenId(null);
                             }}
                           >
@@ -694,7 +722,7 @@ export default function CommentSection({
       {/* (추가) 댓글 작성 인풋창: showCommentInput이 true일 때만 보임 */}
       {showCommentInput && (
         <div
-          className="fixed bottom-0 left-0 right-0 bg-white pb-[35px] pt-[10px] px-[20px]"
+          className="fixed bottom-[60px] w-[100%] max-w-[500px] self-center bg-white pb-[35px] pt-[10px] px-[20px] ml-[-70px]"
           style={{
             boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.1)", // 얇고 가벼운 그림자
             height: "82px", // 컴팩트한 높이
