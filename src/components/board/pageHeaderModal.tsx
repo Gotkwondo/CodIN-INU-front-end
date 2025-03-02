@@ -121,7 +121,7 @@ const PageHeaderModal = ({
     };
 
     return (
-        <div id="scrollbar-hidden" className=" fixed inset-0 bg-white z-50 overflow-y-scroll">
+        <div id="scrollbar-hidden" className=" flex w-[100%] mt-[-280px] inset-0 bg-white z-50 overflow-y-scroll">
             <Header>
                 <Header.BackButton onClick={onClose}/>
                 <Header.Title>{getBoardNameByPostCategory(post.postCategory)}</Header.Title>
