@@ -722,7 +722,7 @@ export default function CommentSection({
       {/* (추가) 댓글 작성 인풋창: showCommentInput이 true일 때만 보임 */}
       {showCommentInput && (
         <div
-          className="fixed bottom-[60px] w-[100%] max-w-[500px] self-center bg-white pb-[35px] pt-[10px] px-[20px] ml-[-70px]"
+         className="fixed bottom-0 left-0 right-0 bg-white pb-[35px] pt-[10px] px-[20px]"
           style={{
             boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.1)", // 얇고 가벼운 그림자
             height: "82px", // 컴팩트한 높이

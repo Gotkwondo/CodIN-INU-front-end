@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation"; // useRouter 추가
 import axios from "axios";
 import Header from "@/components/Layout/header/Header";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export default function DepartmentPage() {
   const params = useParams(); // URL의 파라미터 가져오기
@@ -38,7 +39,7 @@ export default function DepartmentPage() {
 
       try {
         const response = await axios.get(
-          `https://www.codin.co.kr/api/info/office/${departmentName}`
+          `${apiUrl}/info/office/${departmentName}`
         );
 
         if (response.data.success) {
