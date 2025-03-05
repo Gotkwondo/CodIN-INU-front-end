@@ -16,6 +16,9 @@ import AlarmModal from "@/components/modals/AlarmModal"; // 알림 아이콘 추
 import Header from "@/components/Layout/header/Header";
 import Logo from "@/components/Layout/header/Logo";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
+import apiClient from "@/api/clients/apiClient";
+
+
 const timeAgo = (timestamp: string): string => {
   const now = new Date();
   const createdAt = new Date(timestamp);
@@ -115,22 +118,8 @@ const MainPage: FC = () => {
   useEffect(() => {
     const fetchRankingPosts = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
-          console.error("토큰이 없습니다. 로그인이 필요합니다. 로그인페이지로");
-        }
-        const response = await fetch("https://www.codin.co.kr/api/posts/top3", {
-          method: "GET",
-          headers: {
-            Authorization: token,
-          },
-        });
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data);
-        setRankingPosts(data.dataList || []); // 데이터 구조에 따라 수정
+        const response = await apiClient.get("/posts/top3");
+        setRankingPosts(response.data.dataList || []); // 데이터 구조에 따라 수정
       } catch (err) {
         setError(err.message);
       } finally {
