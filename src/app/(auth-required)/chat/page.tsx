@@ -65,7 +65,7 @@ export default function Chat() {
                         <div className="flex flex-col gap-[4px]">
                             <div id="name" className="text-Lm" >{data.roomName}</div>
                             <div id="ment" className="text-Mr text-[#808080]">
-                                {data.lastMessage && data.lastMessage.startsWith("data:image") ? (
+                                {data.lastMessage && data.lastMessage.startsWith("https://codin") ? (
                                     "( 사진 )"
                                 ) : (
                                     data.lastMessage

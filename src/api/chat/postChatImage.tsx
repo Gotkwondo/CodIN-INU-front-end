@@ -16,6 +16,9 @@ export const PostChatImage = async (chatImages: File): Promise<any> => {
         "Content-Type": "multipart/form-data",
       },
     });
+    console.log("이미지 전송 결과",response);
+
+    return response.data;
   } catch (error: any) {
     if (error.response) {
       const { status, data } = error.response;
