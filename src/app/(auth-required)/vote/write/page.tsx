@@ -160,7 +160,7 @@ export default function Vote() {
                             />
                         </div>
                         <div id='dateCont' className='relative max-h-[50px] border-[1px] rounded-[5px] p-[16px] flex flex-start justify-start items-center'>
-                            <img src='/icons/board/clock.svg' className='w-[16px] h-[16px] mr-[12px]'/>
+                            <img src='/icons/board/Clock.svg' className='w-[16px] h-[16px] mr-[12px]'/>
                             
                             <div className='flex-1'>
                                 <DatePicker
