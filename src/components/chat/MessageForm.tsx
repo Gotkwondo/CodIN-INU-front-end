@@ -9,7 +9,7 @@ interface Message {
     createdAt: string;
     contentType: string;
     me: boolean;
-    unread: number;
+    
 }
 
 interface MessageFormProps {
@@ -49,7 +49,7 @@ const MessageForm = ({ onMessageSubmit, myId, imageFile, setImageFile }: Message
             id: '',
             createdAt: formattedTime,
             contentType: 'TEXT',
-            unread: 1
+        
         };
 
         if (imageFile) {
