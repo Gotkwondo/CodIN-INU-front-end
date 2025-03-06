@@ -199,10 +199,26 @@ export default function ChatRoom() {
   };
   
 
+  const disconnectSocket = () => {
+    if (stompClient && connected) {
+      stompClient.disconnect(() => {
+        console.log("소켓 연결이 종료되었습니다.");
+      });
+    }
+  };
+  
+  const handleBackButtonClick = () => {
+    // 소켓 연결 끊기
+    disconnectSocket();
+  
+    // 페이지 뒤로 가기
+    router.back();  // router.back()은 브라우저의 뒤로가기 기능을 수행
+  };
+
   return (
     <div className="chatroom">
       <Header>
-        <Header.BackButton />
+        <Header.BackButton onClick={()=>handleBackButtonClick}/>
         <Header.Title> {`${title}`}</Header.Title>
         <Header.Menu>
           <Header.MenuItem onClick={() => exitRoom(chatRoomId)}>
