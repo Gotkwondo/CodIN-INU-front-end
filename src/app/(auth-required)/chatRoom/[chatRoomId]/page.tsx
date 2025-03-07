@@ -51,6 +51,7 @@ export default function ChatRoom() {
   const [stompClient, setStompClient] = useState<any>(null);
   const [myId, setMyID] = useState<string>("");
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl]=useState<string>("");
   const headers = {
     chatRoomId: chatRoomId,
   };
@@ -166,14 +167,29 @@ export default function ChatRoom() {
       console.log("채팅방 나가기를 실패했습니다.", error);
     }
   };
-  const handleMessageSubmit = (message: Message) => {
+  const handleMessageSubmit = async(message: Message) => {
     setMessages((prevMessages) => [...prevMessages, message]);
-    const sendMessage = {
+   
+    let localImageUrl = imageUrl;
+
+    if (message.contentType === 'IMAGE') {
+      try {
+        const response = await PostChatImage(imageFile); // 이미지 업로드 함수 호출
+        console.log('응답입니다용', response.data[0]);
+        localImageUrl = response.data[0];  // 업로드된 이미지 URL을 로컬 변수에 저장
+        setImageUrl(localImageUrl); // 상태를 업데이트
+      } catch (error) {
+        console.error("이미지 업로드 오류", error);
+      }
+    } else {
+      console.log(message.contentType); // 다른 타입의 콘텐츠일 경우 로그만 찍음
+    }
+    
+   const sendMessage = {
       type: "SEND",
-      content: message.content,
+      content: message.contentType === 'IMAGE' ? localImageUrl : message.content,
       contentType: message.contentType,
     };
-    console.log(message.contentType);
     stompClient.send(
       `/pub/chats/` + chatRoomId,
       headers,
@@ -181,11 +197,28 @@ export default function ChatRoom() {
     );
     console.log(message.content);
   };
+  
+
+  const disconnectSocket = () => {
+    if (stompClient && connected) {
+      stompClient.disconnect(() => {
+        console.log("소켓 연결이 종료되었습니다.");
+      });
+    }
+  };
+  
+  const handleBackButtonClick = () => {
+    // 소켓 연결 끊기
+    disconnectSocket();
+  
+    // 페이지 뒤로 가기
+    router.back();  // router.back()은 브라우저의 뒤로가기 기능을 수행
+  };
 
   return (
     <div className="chatroom">
       <Header>
-        <Header.BackButton />
+        <Header.BackButton onClick={()=>handleBackButtonClick}/>
         <Header.Title> {`${title}`}</Header.Title>
         <Header.Menu>
           <Header.MenuItem onClick={() => exitRoom(chatRoomId)}>
