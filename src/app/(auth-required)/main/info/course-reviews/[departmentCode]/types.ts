@@ -18,7 +18,7 @@ type reviewType = {
   userId: string;
   content: string;
   starRating: number;
-  likes: number;
-  isLiked: boolean;
+  likeCount: number;
+  liked: boolean;
   semester: string;
 };

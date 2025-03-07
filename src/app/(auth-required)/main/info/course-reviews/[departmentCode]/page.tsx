@@ -17,6 +17,7 @@ const DepartmentReview = () => {
   const [lectureInfo, setLectureInfo] = useState<lectureInfoType | null>(null);
   const [emotion, setEmotion] = useState<emotionType | null>(null);
   const [reviewList, setReviewList] = useState<reviewType[]>([]);
+  const [refetch, setRefetch] = useState<boolean>(false);
 
   const getDepartMentRateInfo = async () => {
     try {
@@ -57,11 +58,15 @@ const DepartmentReview = () => {
 
   useEffect(() => {
     getDepartMentRateInfo();
+    getReviewList();
   }, []);
 
   useEffect(() => {
     getReviewList();
-  }, [lectureInfo]);
+    if (refetch) {
+      setRefetch(false);
+    }
+  }, [refetch]);
 
   return (
     <Suspense>
@@ -75,22 +80,23 @@ const DepartmentReview = () => {
             subjectName={lectureInfo.lectureNm}
             subjectCode={lectureInfo._id}
             professor={lectureInfo.professor}
+            starRating={lectureInfo.starRating}
             score={emotion}
-            rateCnt={lectureInfo.participants}
           />
         )}
         {reviewList.length > 0 &&
           reviewList.map(
-            ({ _id, content, starRating, likes, isLiked, semester }, idx) => {
+            ({ _id, content, starRating, likeCount, liked, semester }, idx) => {
               return (
                 <ReviewComment
                   key={`${_id}_${idx}`}
                   starRating={starRating}
                   content={content}
-                  likes={likes}
-                  isLiked={isLiked}
+                  likes={likeCount}
+                  isLiked={liked}
                   semester={semester}
                   _id={_id}
+                  refetch={setRefetch}
                 />
               );
             }
