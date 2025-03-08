@@ -12,7 +12,7 @@ type SubjectType = {
     ok: number;
     best: number;
   };
-  rateCnt: number;
+  starRating: number;
 } & ComponentProps<"div">;
 
 const DepartmentReviewComponent = ({
@@ -20,14 +20,8 @@ const DepartmentReviewComponent = ({
   subjectCode,
   professor,
   score,
-  rateCnt,
-}: // ...rest
-SubjectType) => {
-  const totalScore = Math.floor((score.hard + score.ok + score.best) * 10) / 10;
-
-  // const calcPercents = (rate: number, total: number) => {
-  //   return Math.floor((rate / total) * 100);
-  // };
+  starRating,
+}: SubjectType) => {
   return (
     <div className="w-full h-64 mb-4">
       <div className="w-full flex flex-row justify-between">
@@ -36,7 +30,7 @@ SubjectType) => {
             <span className="mr-11">{`${subjectName}`}</span>
             <span className="text-xl mr-5">
               <span className="text-[#0D99FF]">{`${
-                totalScore % 1 ? totalScore : totalScore + ".0"
+                starRating % 1 ? starRating : starRating + ".0"
               }`}</span>{" "}
               / 5.0
             </span>

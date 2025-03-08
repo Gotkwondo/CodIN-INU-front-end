@@ -1,5 +1,5 @@
-import { useReviewLikeToggleContext } from "@/api/review/useReviewLikeToggleContext";
-import { useState } from "react";
+import { PostLike } from '@/api/like/postLike';
+import { Dispatch, SetStateAction, useState } from "react";
 import { CiHeart } from "react-icons/ci";
 import { FaHeart } from "react-icons/fa";
 
@@ -10,22 +10,25 @@ type ReviewCommentType = {
   isLiked: boolean; // 추가: 좋아요 여부
   semester: string;
   _id: string;
+  refetch: Dispatch<SetStateAction<boolean>>;
 };
 
 const ReviewComment = ({
   starRating = 0,
   content = "Blank",
-  likes = 0,
-  isLiked = false,
+  likes,
+  isLiked,
   semester = "test",
   _id,
+  refetch,
 }: ReviewCommentType) => {
   const [heartClick, setHeartClick] = useState(isLiked);
 
   const handleHeartClick = () => {
     setHeartClick(!heartClick);
     // API 추가(하트 상태 변경)
-    useReviewLikeToggleContext({ _id: _id });
+    PostLike("REVIEW", _id);
+    refetch(true);
   };
   return (
     <div className="border-t">
@@ -56,7 +59,7 @@ const ReviewComment = ({
         <div className="flex justify-between items-center w-full mt-2">
           <p className="text-xl">{semester + "학기 수강생"}</p>
           <div className="flex items-center">
-            <p>{likes}</p>
+            <p>{likes ? likes : 0}</p>
             <CiHeart className="ml-1" fill={"#808080"} color={"#808080"} />
           </div>
         </div>
