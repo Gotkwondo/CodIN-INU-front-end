@@ -1,4 +1,3 @@
-// D:\IdeaProjects\front-end\src\app\(auth-required)\main\boards\[boardName]\[postId]\page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -116,108 +115,106 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
 
     // 렌더링
     return (
-       
-        <div className="bg-white min-h-screen"> 
-       
-            <div className="flex items-center space-x-[12px] mb-[20px]">
-                <div className="w-[36px] h-[36px] bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
-                    {post.anonymous ? (
-                        <img
-                            src="/images/anonymousUserImage.png" // 정적 경로의 익명 이미지
-                            alt="Anonymous profile"
-                            className="w-full h-full object-cover"
-                        />
-                    ) : post.userImageUrl ? (
-                        <img
-                            src={post.userImageUrl}
-                            alt="User profile"
-                            className="w-full h-full object-cover"
-                        />
-                    ) : (
-                        <span className="text-gray-600 text-sm">No Image</span>
-                    )}
+        <div className="bg-white min-h-screen flex justify-center"> {/* 가운데 정렬을 위한 flex 및 justify-center 추가 */}
+            <div className="w-full max-w-[500px] px-4"> {/* max-w-[500px] 및 패딩 추가 */}
+                <div className="flex items-center space-x-[12px] mb-[20px]">
+                    <div className="w-[36px] h-[36px] bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+                        {post.anonymous ? (
+                            <img
+                                src="/images/anonymousUserImage.png" // 정적 경로의 익명 이미지
+                                alt="Anonymous profile"
+                                className="w-full h-full object-cover"
+                            />
+                        ) : post.userImageUrl ? (
+                            <img
+                                src={post.userImageUrl}
+                                alt="User profile"
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <span className="text-gray-600 text-sm">No Image</span>
+                        )}
+                    </div>
+
+                    <div>
+                        <h4 className="text-sm">
+                            {post.anonymous ? "익명" : post.nickname || "익명"}
+                        </h4>
+                        <p className="text-sr text-sub">{post.createdAt}</p>
+                    </div>
                 </div>
 
                 <div>
-                    <h4 className="text-sm">
-                        {post.anonymous ? "익명" : post.nickname || "익명"}
-                    </h4>
-                    <p className="text-sr text-sub">{post.createdAt}</p>
+                    <h3 className="text-Lm mb-[12px]">{post.title}</h3>
+                    {/* 본문 텍스트 가독성 증가를 위해 white-space 스타일 적용 */}
+                    <p className="text-Mr mb-[24px] whitespace-pre-wrap">
+                        {post.content}
+                    </p>
                 </div>
-            </div>
 
-            <div>
-                <h3 className="text-Lm mb-[12px]">{post.title}</h3>
-                {/* 본문 텍스트 가독성 증가를 위해 white-space 스타일 적용 */}
-                <p className="text-Mr mb-[24px] whitespace-pre-wrap">
-                    {post.content}
-                </p>
-            </div>
+                {post.postImageUrl && post.postImageUrl.length > 0 && (
+                    <ZoomableImageModal images={post.postImageUrl} />
+                )}
+                <div className="flex justify-between items-center text-sr text-sub">
+                    <div className="flex space-x-[12px]">
+                        <span className="flex items-center gap-[4.33px]">
+                            <img
+                                src={"/icons/board/viewIcon.svg"}
+                                width={16}
+                                height={16}
+                                alt="조회수 아이콘"
+                            />
+                            {post.hits || 0}
+                        </span>
+                        <button
+                            onClick={() => toggleAction("like")}
+                            className="flex items-center gap-[4.33px]"
+                        >
+                            <img
+                                src={
+                                    post.userInfo.like
+                                        ? "/icons/board/active_heartIcon.svg"
+                                        : "/icons/board/heartIcon.svg"
+                                }
+                                width={16}
+                                height={16}
+                                alt="좋아요 아이콘"
+                            />
+                            {post.likeCount || 0}
+                        </button>
+                        <span className="flex items-center gap-[4.33px]">
+                            <img
+                                src="/icons/board/commentIcon.svg"
+                                width={16}
+                                height={16}
+                                alt="댓글 아이콘"
+                            />
+                            {post.commentCount || 0}
+                        </span>
+                    </div>
 
-            {post.postImageUrl && post.postImageUrl.length > 0 && (
-                <ZoomableImageModal images={post.postImageUrl} />
-            )}
-            <div className="flex justify-between items-center text-sr text-sub">
-                <div className="flex space-x-[12px]">
-          <span className="flex items-center gap-[4.33px]">
-            <img
-                src={"/icons/board/viewIcon.svg"}
-                width={16}
-                height={16}
-                alt="조회수 아이콘"
-            />
-              {post.hits || 0}
-          </span>
                     <button
-                        onClick={() => toggleAction("like")}
-                        className="flex items-center gap-[4.33px]"
+                        onClick={() => toggleAction("bookmark")}
+                        className="flex items-center text-sub gap-[4.33px]"
                     >
                         <img
                             src={
-                                post.userInfo.like
-                                    ? "/icons/board/active_heartIcon.svg"
-                                    : "/icons/board/heartIcon.svg"
+                                post.userInfo.scrap
+                                    ? "/icons/board/active_BookmarkIcon.svg"
+                                    : "/icons/board/BookmarkIcon.svg"
                             }
                             width={16}
                             height={16}
-                            alt="좋아요 아이콘"
+                            className={`w-[16px] h-[16px] ${
+                                post.userInfo.scrap ? "text-yellow-300" : "text-gray-500"
+                            }`}
+                            alt="북마크 아이콘"
                         />
-                        {post.likeCount || 0}
+                        <span>{post.scrapCount}</span>
                     </button>
-                    <span className="flex items-center gap-[4.33px]">
-            <img
-                src="/icons/board/commentIcon.svg"
-                width={16}
-                height={16}
-                alt="댓글 아이콘"
-            />
-                        {post.commentCount || 0}
-          </span>
                 </div>
-
-                <button
-                    onClick={() => toggleAction("bookmark")}
-                    className="flex items-center text-sub gap-[4.33px]"
-                >
-                    <img
-                        src={
-                            post.userInfo.scrap
-                                ? "/icons/board/active_BookmarkIcon.svg"
-                                : "/icons/board/BookmarkIcon.svg"
-                        }
-                        width={16}
-                        height={16}
-                        className={`w-[16px] h-[16px] ${
-                            post.userInfo.scrap ? "text-yellow-300" : "text-gray-500"
-                        }`}
-                        alt="북마크 아이콘"
-                    />
-                    <span>{post.scrapCount}</span>
-                </button>
+                <CommentSection postId={postId} postName={post.title} />
             </div>
-            <CommentSection postId={postId} postName={post.title} /> 
-           
         </div>
-       
     );
 }
