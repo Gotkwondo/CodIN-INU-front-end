@@ -6,7 +6,7 @@ import { boardData } from "@/data/boardData";
 import apiClient from "@/api/clients/apiClient"; // apiClient import
 import Header from "@/components/Layout/header/Header";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
-import Tabs from "@/components/Layout/Tabs";
+
 import SmRoundedBtn from "@/components/buttons/smRoundedBtn";
 
 const CreatePostPage = () => {
@@ -164,7 +164,7 @@ const CreatePostPage = () => {
                 ))}
                 {/* 사진 추가 버튼 */}
                 <label className="min-w-[52px] h-[52px] ml-6 border border-gray-300 rounded-md flex flex-col items-center justify-center cursor-pointer">
-                  <img src="/icons/board/camera.png" width={18} height={15} />
+                  <img src="/icons/board/camera.png" width={18} height={15} alt={"이미지 추가"}/>
                   <span className="text-sr text-[12px]">{postImages.length}/10</span>
                   <input
                       type="file"
