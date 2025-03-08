@@ -68,15 +68,14 @@ const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenM
             <li className="flex flex-col bg-white overflow-hidden rounded shadow">
                 <a href="#" onClick={handleClick}>
                     <div className="relative w-full h-40">
-                        {imageUrl && (
-                            <Image
-                                src={imageUrl}
-                                alt={post.title}
-                                width={400}
-                                height={400}
-                                className="object-cover w-full h-full bg-amber-50"
-                            />
-                        )}
+                        {/* 이미지가 없으면 기본 이미지 표시 */}
+                        <Image
+                            src={imageUrl || "/images/교학실.png"} // imageUrl이 없으면 기본 이미지 사용
+                            alt={post.title}
+                            width={400}
+                            height={400}
+                            className="object-cover w-full h-full bg-white"
+                        />
                     </div>
                     <div className="p-2">
                         <h3 className="text-sm sm:text-base font-semibold text-gray-800 truncate">
