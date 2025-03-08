@@ -158,9 +158,11 @@ const BoardPage: FC = () => {
             )}
 
             {/* 글쓰기 버튼 */}
+<div className="absolute right-[78px]">
+
             <Link
                 href={`/main/boards/${boardName}/create`}
-                className="fixed bottom-[108px] right-[17px] bg-main text-white rounded-full shadow-lg p-4 hover:bg-blue-600 transition duration-300"
+                className="fixed bottom-[108px] bg-main text-white rounded-full shadow-lg p-4 hover:bg-blue-600 transition duration-300"
                 aria-label="글쓰기"
             >
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -168,6 +170,8 @@ const BoardPage: FC = () => {
                 </svg>
 
             </Link>
+
+</div>
         </BoardLayout>
     );
 };
