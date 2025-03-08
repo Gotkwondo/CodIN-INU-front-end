@@ -1,5 +1,6 @@
+"use client";
+
 import Image from "next/image";
-import { FaEye, FaHeart, FaRegCommentDots, FaBookmark } from "react-icons/fa";
 import { Post } from "@/interfaces/Post";
 import { boardData } from "@/data/boardData";
 
@@ -10,7 +11,6 @@ interface PostItemProps {
     onOpenModal: (post: Post) => void; // 모달 열기 핸들러
 }
 
-
 const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenModal }) => {
     const imageUrl = post.postImageUrl?.length > 0 ? post.postImageUrl[0] : null;
 
@@ -18,11 +18,12 @@ const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenM
         e.preventDefault(); // 기본 Link 동작 방지
         onOpenModal(post); // 모달 열기
     };
+
     const timeAgo = (timestamp: string): string => {
         const now = new Date();
         const createdAt = new Date(timestamp);
         const diffInSeconds = Math.floor((now.getTime() - createdAt.getTime()) / 1000);
-    
+
         if (diffInSeconds < 60) {
             return "방금 전";
         } else if (diffInSeconds < 3600) {
@@ -33,30 +34,32 @@ const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenM
             return `${Math.floor(diffInSeconds / 86400)}일 전`;
         }
     };
+
     const postStats = (
-        
-        <div className="flex justify-between items-center text-sr text-sub">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs sm:text-sr text-sub gap-2 sm:gap-0">
+            {/* 아이콘과 통계 데이터 */}
             <div className="flex space-x-[6px]">
+      <span className="flex items-center gap-[4.33px]">
+        <img src="/icons/board/viewIcon.svg" width={16} height={16} />
+          {post.hits || 0}
+      </span>
                 <span className="flex items-center gap-[4.33px]">
-                    <img src="/icons/board/viewIcon.svg" width={16} height={16}/>
-                    {post.hits || 0}
-                </span>
-                <span className="flex items-center gap-[4.33px]">
-                    <img src="/icons/board/heartIcon.svg" width={16} height={16}/>
+        <img src="/icons/board/heartIcon.svg" width={16} height={16} />
                     {post.likeCount || 0}
-                </span>
+      </span>
                 <span className="flex items-center gap-[4.33px]">
-                    <img src="/icons/board/commentIcon.svg" width={16} height={16}/>
+        <img src="/icons/board/commentIcon.svg" width={16} height={16} />
                     {post.commentCount || 0}
-                </span>
+      </span>
             </div>
-            <div className="flex items-centertext-sub space-x-1 text-sr">
+
+            {/* 작성자 정보 및 시간 */}
+            <div className="flex items-center text-sub space-x-1">
                 <span>{post.anonymous ? "익명" : post.nickname}</span>
                 <span> · </span>
                 <span>{timeAgo(post.createdAt)}</span>
             </div>
         </div>
-
     );
 
     if (boardType === "gallery") {
@@ -76,10 +79,10 @@ const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenM
                         )}
                     </div>
                     <div className="p-2">
-                        <h3 className="text-sm font-semibold text-gray-800 truncate">
+                        <h3 className="text-sm sm:text-base font-semibold text-gray-800 truncate">
                             {post.title}
                         </h3>
-                        <p className="text-xs text-gray-600 line-clamp-2">{post.content}</p>
+                        <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">{post.content}</p>
                         {postStats}
                     </div>
                 </a>
@@ -101,13 +104,12 @@ const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenM
                             />
                         </div>
                     )}
-                    <p className="text-center font-medium text-gray-800">{post.title}</p>
+                    <p className="text-center text-sm sm:text-base font-medium text-gray-800">{post.title}</p>
                 </a>
             </li>
         );
     } else {
         // 리스트형 디자인
-
         const mapPostCategoryToBoardPath = (postCategory: string): string | null => {
             for (const boardKey in boardData) {
                 const board = boardData[boardKey];
@@ -122,15 +124,8 @@ const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenM
         return (
             <li className="flex items-start justify-between">
                 <a href="#" onClick={handleClick} className="flex-1">
-                    {/*
-                    <div>
-                        <p className="text-sr text-sub px-[4px] py-[2px] bg-[#F2F2F2] rounded-[3px] inline">
-                            {boardData[boardPath]?.name || "알 수 없음"}
-                        </p>
-                    </div>
-                    */}
-                    <h3 className="text-Lm mt-[8px]">{post.title}</h3>
-                    <p className="text-Mm text-sub line-clamp-2 mt-[4px] mb-[8px]">{post.content}</p>
+                    <h3 className="text-sm sm:text-Lm font-medium text-gray-800 mt-[8px]">{post.title}</h3>
+                    <p className="text-xs sm:text-Mm text-sub line-clamp-2 mt-[4px] mb-[8px]">{post.content}</p>
                     {postStats}
                 </a>
                 {imageUrl && (
