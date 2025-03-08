@@ -150,6 +150,7 @@ const CreatePostPage = () => {
                 onChange={handleChange}
                 className="defaultInput"
             />
+
             <div className="flex flex-col gap-[12px]">
               <h3 className="text-XLm">사진을 추가하세요</h3>
               <div className="flex items-center gap-2 overflow-x-auto">
@@ -163,7 +164,7 @@ const CreatePostPage = () => {
                     />
                 ))}
                 {/* 사진 추가 버튼 */}
-                <label className="min-w-[52px] h-[52px] ml-6 border border-gray-300 rounded-md flex flex-col items-center justify-center cursor-pointer">
+                <label className={`min-w-[52px] h-[52px] ${postImages.length<=0? "ml-0" : "ml-5"} border border-gray-300 rounded-md flex flex-col items-center justify-center cursor-pointer`}>
                   <img src="/icons/board/camera.png" width={18} height={15} alt={"이미지 추가"}/>
                   <span className="text-sr text-[12px]">{postImages.length}/10</span>
                   <input
@@ -183,14 +184,61 @@ const CreatePostPage = () => {
                 onChange={handleChange}
                 className="w-full h-[143px] border border-gray-300 rounded-[5px] p-[16px] text-sm"
             ></textarea>
-            <button
-                type="submit"
-                onClick={handleSubmit}
-                disabled={isLoading}
-                className="w-full py-[12px] bg-[#0d99ff] text-white rounded-[5px]"
-            >
-              {isLoading ? "업로드 중..." : "작성 완료"}
-            </button>
+
+            {/* 하단 작성 완료 및 익명 */}
+            <div className="fixed bottom-0 left-0 right-0 w-full bg-white p-4 flex flex-col items-center">
+              <div className="w-full max-w-[500px] mx-auto"> {/* 부모 요소의 최대 너비를 512px로 제한 */}
+                {/* 익명 여부 */}
+                <div className="flex items-center justify-end w-full mb-4">
+                  <input
+                      type="checkbox"
+                      name="anonymous"
+                      checked={formData.anonymous}
+                      onChange={(e) =>
+                          setFormData((prevData) => ({
+                            ...prevData,
+                            anonymous: e.target.checked,
+                          }))
+                      }
+                      id="anonymous"
+                      className="hidden"
+                  />
+                  <label
+                      htmlFor="anonymous"
+                      className={`w-[17px] h-[17px] border-2 rounded-full flex items-center justify-center cursor-pointer transition ${
+                          formData.anonymous
+                              ? "bg-[#0d99ff] border-[#0d99ff]"
+                              : "bg-white border-gray-400"
+                      }`}
+                  >
+                    {formData.anonymous && (
+                        <svg
+                            className="w-4 h-4 text-white"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                            viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                    )}
+                  </label>
+                  <span className="ml-[5px] text-Mr text-gray-600">익명</span>
+                </div>
+
+                {/* 작성 완료 버튼 */}
+                <button
+                    type="submit"
+                    onClick={handleSubmit}
+                    disabled={isLoading}
+                    className="w-full py-[12px] bg-[#0d99ff] text-white text-sm font-bold rounded-[5px] hover:bg-blue-600"
+                >
+                  {isLoading ? "업로드 중..." : "작성 완료"}
+                </button>
+              </div>
+            </div>
+
+
           </div>
         </DefaultBody>
       </div>
