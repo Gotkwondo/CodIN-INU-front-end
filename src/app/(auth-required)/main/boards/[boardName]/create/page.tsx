@@ -1,19 +1,16 @@
 "use client";
-// 생성 페이지
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { boardData } from "@/data/boardData";
-import apiClient from "@/api/clients/apiClient"; // apiClient import
+import apiClient from "@/api/clients/apiClient";
 import Header from "@/components/Layout/header/Header";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
-
 import SmRoundedBtn from "@/components/buttons/smRoundedBtn";
 
 const CreatePostPage = () => {
   const params = useParams();
   const router = useRouter();
   const boardName = params.boardName as string;
-
   const board = boardData[boardName];
 
   const handleBack = () => {
@@ -119,6 +116,9 @@ const CreatePostPage = () => {
     }
   };
 
+  // 제목 또는 내용이 공백인지 확인
+  const isFormValid = formData.title.trim() !== "" && formData.content.trim() !== "";
+
   return (
       <div className="w-full h-full">
         <Header>
@@ -154,7 +154,6 @@ const CreatePostPage = () => {
             <div className="flex flex-col gap-[12px]">
               <h3 className="text-XLm">사진을 추가하세요</h3>
               <div className="flex items-center gap-2 overflow-x-auto">
-                {/* 사진 리스트 */}
                 {previewImages.map((url, index) => (
                     <img
                         key={index}
@@ -163,9 +162,17 @@ const CreatePostPage = () => {
                         className="w-[100px] h-[100px] object-cover rounded-[5px]"
                     />
                 ))}
-                {/* 사진 추가 버튼 */}
-                <label className={`min-w-[52px] h-[52px] ${postImages.length<=0? "ml-0" : "ml-5"} border border-gray-300 rounded-md flex flex-col items-center justify-center cursor-pointer`}>
-                  <img src="/icons/board/camera.png" width={18} height={15} alt={"이미지 추가"}/>
+                <label
+                    className={`min-w-[52px] h-[52px] ${
+                        postImages.length <= 0 ? "ml-0" : "ml-5"
+                    } border border-gray-300 rounded-md flex flex-col items-center justify-center cursor-pointer`}
+                >
+                  <img
+                      src="/icons/board/camera.png"
+                      width={18}
+                      height={15}
+                      alt={"이미지 추가"}
+                  />
                   <span className="text-sr text-[12px]">{postImages.length}/10</span>
                   <input
                       type="file"
@@ -187,7 +194,7 @@ const CreatePostPage = () => {
 
             {/* 하단 작성 완료 및 익명 */}
             <div className="fixed bottom-0 left-0 right-0 w-full bg-white p-4 flex flex-col items-center">
-              <div className="w-full max-w-[500px] mx-auto"> {/* 부모 요소의 최대 너비를 512px로 제한 */}
+              <div className="w-full max-w-[500px] mx-auto">
                 {/* 익명 여부 */}
                 <div className="flex items-center justify-end w-full mb-4">
                   <input
@@ -219,7 +226,11 @@ const CreatePostPage = () => {
                             strokeWidth={2}
                             viewBox="0 0 24 24"
                         >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M5 13l4 4L19 7"
+                          />
                         </svg>
                     )}
                   </label>
@@ -230,15 +241,17 @@ const CreatePostPage = () => {
                 <button
                     type="submit"
                     onClick={handleSubmit}
-                    disabled={isLoading}
-                    className="w-full py-[12px] bg-[#0d99ff] text-white text-sm font-bold rounded-[5px] hover:bg-blue-600"
+                    disabled={!isFormValid || isLoading} // 비활성화 조건 추가
+                    className={`w-full py-[12px] text-sm font-bold rounded-[5px] ${
+                        isFormValid
+                            ? "bg-[#0d99ff] text-white hover:bg-blue-600"
+                            : "bg-gray-300 text-gray-500 cursor-not-allowed" // 비활성화 시 스타일
+                    }`}
                 >
                   {isLoading ? "업로드 중..." : "작성 완료"}
                 </button>
               </div>
             </div>
-
-
           </div>
         </DefaultBody>
       </div>
