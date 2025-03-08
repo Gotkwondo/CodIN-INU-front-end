@@ -3,18 +3,10 @@ import { FC, Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
-import {
-  FaBell,
-  FaEye,
-  FaHeart,
-  FaRegCommentDots,
-  FaRegBell,
-} from "react-icons/fa";
 import ZoomableImageModal from "../../../components/modals/ZoomableImageModal";
 import { boardData } from "@/data/boardData";
 import AlarmModal from "@/components/modals/AlarmModal"; // 알림 아이콘 추가
 import Header from "@/components/Layout/header/Header";
-import Logo from "@/components/Layout/header/Logo";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
 import apiClient from "@/api/clients/apiClient";
 
