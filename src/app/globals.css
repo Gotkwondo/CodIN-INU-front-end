@@ -114,3 +114,12 @@
   }
 
 }
+
+/* 복사 금지 스타일 지정*/
+html, body {
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+  touch-action: manipulation; /* 터치 이벤트 제어 */
+}
