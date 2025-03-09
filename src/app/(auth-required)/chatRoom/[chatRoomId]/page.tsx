@@ -218,7 +218,7 @@ export default function ChatRoom() {
   return (
     <div className="chatroom">
       <Header>
-        <Header.BackButton onClick={()=>handleBackButtonClick}/>
+        <Header.BackButton />
         <Header.Title> {`${title}`}</Header.Title>
         <Header.Menu>
           <Header.MenuItem onClick={() => exitRoom(chatRoomId)}>
