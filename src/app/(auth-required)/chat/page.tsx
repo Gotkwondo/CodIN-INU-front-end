@@ -31,7 +31,7 @@ export default function Chat() {
 
     useEffect(() => {
         const getChatRoomData = async () => {
-            console.log('실행행')
+            console.log('실행')
             try {
                 const chatRoomData = await GetChatRoomData();
                 console.log(chatRoomData.data.dataList);
