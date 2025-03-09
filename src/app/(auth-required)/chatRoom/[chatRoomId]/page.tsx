@@ -104,7 +104,7 @@ export default function ChatRoom() {
         const receivedMessage = JSON.parse(message.body);
         console.log("Received message:", receivedMessage);
 
-        if (receivedMessage.body.data.senderId !== myId) {
+        
           setMessages((prevMessages) => [
             ...prevMessages,
             {
@@ -114,10 +114,10 @@ export default function ChatRoom() {
               createdAt: receivedMessage.body.data.createdAt,
               me: false,
               contentType: receivedMessage.body.data.contentType,
-              unread: receivedMessage.body.data.unread,
+              unread:receivedMessage.body.data.unread,
             },
           ]);
-        }
+        
       },
       headers);
 
@@ -172,7 +172,7 @@ export default function ChatRoom() {
   };
 
   const handleMessageSubmit = async(message: Message) => {
-    setMessages((prevMessages) => [...prevMessages, message]);
+    //setMessages((prevMessages) => [...prevMessages, message]);
 
     let localImageUrl = imageUrl;
 
@@ -213,7 +213,7 @@ export default function ChatRoom() {
   const handleBackButtonClick = () => {
     // 소켓 구독 해제
     if (subscription) {
-      subscription.unsubscribe();
+      subscription.unsubscribe(headers);
     }
     console.log('구독해제')
     // 페이지 뒤로 가기

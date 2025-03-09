@@ -40,9 +40,9 @@ interface MessageProps {
           </div>
         </div>
         <div id="time">{createdAt}</div>
-        {unread !== 0 &&
+        {messageClass === 'message-right' && unread !== 0 && (
           <div id='isRead' className="text-[#0D99FF] text-[10px] w-3 z-3 self-end mb-2">{unread}</div>
-        }
+        )}
       </div>
     );
   };
