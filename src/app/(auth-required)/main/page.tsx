@@ -51,7 +51,7 @@ const menuItems = [
     icon: "/icons/info.png",
   },
   {
-    label: "중고책",
+    label: "중고거래",
     href: "/main/boards/used-books",
     icon: "/icons/used-books.png",
   },
