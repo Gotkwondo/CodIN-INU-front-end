@@ -24,7 +24,7 @@ const AlertModal = ({
 
   return (
     <div
-      className=" inset-0 w-screen h-screen bg-gray-500/50 flex justify-center items-center z-30"
+      className="fixed inset-0 w-screen h-screen bg-gray-500/50 flex justify-center items-center z-30"
       onClick={() => onClose(false)}
     >
       <div
