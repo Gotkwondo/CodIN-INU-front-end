@@ -11,7 +11,8 @@ const RoomItemDetail: React.FC<roomItemDetailProps> = ({ isActive, lecture }) =>
         <div className="absolute py-[6px] px-[12px] bg-[#FFFFFF] 
                         bottom-[24px] rounded-[15px] shadow-[0_0_10px_0_rgba(0,_0,_0,_0.25)] 
                         transform -translate-x-1/2 select-none
-                        font-regular text-[12px] text-[#212121]">
+                        font-regular text-[12px] text-[#212121]
+                        ml-3">
             <p className="font-medium whitespace-nowrap ">{lecture.lectureNm} {lecture.professor}</p>
             <p className="text-[#808080] whitespace-nowrap">{lecture.startTime} ~ {lecture.endTime}</p>
         </div>

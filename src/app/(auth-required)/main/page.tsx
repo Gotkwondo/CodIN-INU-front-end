@@ -3,19 +3,14 @@ import { FC, Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
-import {
-  FaBell,
-  FaEye,
-  FaHeart,
-  FaRegCommentDots,
-  FaRegBell,
-} from "react-icons/fa";
 import ZoomableImageModal from "../../../components/modals/ZoomableImageModal";
 import { boardData } from "@/data/boardData";
 import AlarmModal from "@/components/modals/AlarmModal"; // 알림 아이콘 추가
 import Header from "@/components/Layout/header/Header";
-import Logo from "@/components/Layout/header/Logo";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
+import apiClient from "@/api/clients/apiClient";
+
+
 const timeAgo = (timestamp: string): string => {
   const now = new Date();
   const createdAt = new Date(timestamp);
@@ -56,7 +51,7 @@ const menuItems = [
     icon: "/icons/info.png",
   },
   {
-    label: "중고책",
+    label: "중고거래",
     href: "/main/boards/used-books",
     icon: "/icons/used-books.png",
   },
@@ -115,22 +110,8 @@ const MainPage: FC = () => {
   useEffect(() => {
     const fetchRankingPosts = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
-          console.error("토큰이 없습니다. 로그인이 필요합니다. 로그인페이지로");
-        }
-        const response = await fetch("https://www.codin.co.kr/api/posts/top3", {
-          method: "GET",
-          headers: {
-            Authorization: token,
-          },
-        });
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data);
-        setRankingPosts(data.dataList || []); // 데이터 구조에 따라 수정
+        const response = await apiClient.get("/posts/top3");
+        setRankingPosts(response.data.dataList || []); // 데이터 구조에 따라 수정
       } catch (err) {
         setError(err.message);
       } finally {

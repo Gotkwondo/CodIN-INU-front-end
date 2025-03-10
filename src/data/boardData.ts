@@ -56,11 +56,11 @@ export const boardData: Record<string, Board> = {
         type: 'list',
     },
     'used-books': {
-        name: '중고 서적',
+        name: '중고 거래',
         backLink: '/main',
         tabs: [
-            { label: '판매중', value: 'selling', postCategory: 'BOOKS_SELL' },
-            { label: '구매중', value: 'buying', postCategory: 'BOOKS_BUY' },
+            { label: '팝니다', value: 'selling', postCategory: 'BOOKS_SELL' },
+            { label: '삽니다', value: 'buying', postCategory: 'BOOKS_BUY' },
         ],
         type: 'gallery',
     },

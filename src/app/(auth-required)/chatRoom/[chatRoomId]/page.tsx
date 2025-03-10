@@ -1,7 +1,7 @@
 "use client";
 import "./chatRoom.css";
 import { useRouter, useParams } from "next/navigation";
-import { useContext, useState, useEffect, useRef, FormEvent } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { AuthContext } from "@/context/AuthContext";
 import { GetChatData } from "@/api/chat/getChatData";
@@ -51,11 +51,12 @@ export default function ChatRoom() {
   const [stompClient, setStompClient] = useState<any>(null);
   const [myId, setMyID] = useState<string>("");
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl]=useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string>("");
   const headers = {
     chatRoomId: chatRoomId,
   };
   const [connected, setConnected] = useState(false); // 연결 상태 추적
+  const [subscription, setSubscription] = useState<any>(null); // 구독 객체 관리
 
   useEffect(() => {
     if (!chatRoomId) {
@@ -67,10 +68,6 @@ export default function ChatRoom() {
 
     setStompClient(stomp);
   }, [chatRoomId]);
-
-  useEffect(() => {
-    console.log("Messages updated:", messages); // 상태 업데이트 후 메시지 확인
-  }, [messages]);
 
   useEffect(() => {
     const fetchChatRoomData = async () => {
@@ -101,11 +98,13 @@ export default function ChatRoom() {
     stompClient.connect(headers, (frame) => {
       console.log("connected:", frame);
       setConnected(true);
-      stompClient.subscribe(`/queue/` + chatRoomId, (message) => {
+      
+      // 구독 생성 및 저장
+      const sub = stompClient.subscribe(`/queue/` + chatRoomId, (message) => {
         const receivedMessage = JSON.parse(message.body);
         console.log("Received message:", receivedMessage);
 
-        if (receivedMessage.body.data.senderId !== myId) {
+        
           setMessages((prevMessages) => [
             ...prevMessages,
             {
@@ -115,11 +114,15 @@ export default function ChatRoom() {
               createdAt: receivedMessage.body.data.createdAt,
               me: false,
               contentType: receivedMessage.body.data.contentType,
-              unread: receivedMessage.body.data.unread,
+              unread:receivedMessage.body.data.unread,
             },
           ]);
-        }
-      });
+        
+      },
+      headers);
+
+      // 구독 객체 저장
+      setSubscription(sub);
     });
   }, [stompClient, myId, chatRoomId]);
 
@@ -167,9 +170,10 @@ export default function ChatRoom() {
       console.log("채팅방 나가기를 실패했습니다.", error);
     }
   };
+
   const handleMessageSubmit = async(message: Message) => {
-    setMessages((prevMessages) => [...prevMessages, message]);
-   
+    //setMessages((prevMessages) => [...prevMessages, message]);
+
     let localImageUrl = imageUrl;
 
     if (message.contentType === 'IMAGE') {
@@ -184,8 +188,8 @@ export default function ChatRoom() {
     } else {
       console.log(message.contentType); // 다른 타입의 콘텐츠일 경우 로그만 찍음
     }
-    
-   const sendMessage = {
+
+    const sendMessage = {
       type: "SEND",
       content: message.contentType === 'IMAGE' ? localImageUrl : message.content,
       contentType: message.contentType,
@@ -197,7 +201,6 @@ export default function ChatRoom() {
     );
     console.log(message.content);
   };
-  
 
   const disconnectSocket = () => {
     if (stompClient && connected) {
@@ -206,11 +209,13 @@ export default function ChatRoom() {
       });
     }
   };
-  
+
   const handleBackButtonClick = () => {
-    // 소켓 연결 끊기
-    disconnectSocket();
-  
+    // 소켓 구독 해제
+    if (subscription) {
+      subscription.unsubscribe(headers);
+    }
+    console.log('구독해제')
     // 페이지 뒤로 가기
     router.back();  // router.back()은 브라우저의 뒤로가기 기능을 수행
   };
@@ -218,7 +223,7 @@ export default function ChatRoom() {
   return (
     <div className="chatroom">
       <Header>
-        <Header.BackButton onClick={()=>handleBackButtonClick}/>
+        <Header.BackButton onClick={handleBackButtonClick} />
         <Header.Title> {`${title}`}</Header.Title>
         <Header.Menu>
           <Header.MenuItem onClick={() => exitRoom(chatRoomId)}>

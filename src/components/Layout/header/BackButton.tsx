@@ -11,7 +11,13 @@ const BackButton: React.FC<BackProps> = ({ onClick }) => {
     const router = useRouter();
 
     const handleBack = () => {
-        onClick ? onClick() : router.back();
+        if (onClick) {
+            // onClick이 있으면 onClick 메서드 호출
+            onClick();
+        } else {
+            // onClick이 없으면 router.back() 호출
+            router.back();
+        }
         console.log("BackButton: handleBack");
     };
 
