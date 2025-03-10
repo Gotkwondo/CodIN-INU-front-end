@@ -27,12 +27,6 @@ const Subject = ({ subjectName, subjectCode, professor, score, rateCnt, ...rest 
             </div>
             {professor}
           </div>
-          <div className="w-full text-sm flex font-semibold mt-1">
-            <div className="w-[4.5rem] text-start text-[#808080] font-normal">
-              과목 코드
-            </div>
-            <div className="w-[6rem] text-wrap break-all">{subjectCode}</div>
-          </div>
         </div>
         <div className="w-1/2 text-end">
           <p className="text-xl">
