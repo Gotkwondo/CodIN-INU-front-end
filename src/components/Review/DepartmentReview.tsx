@@ -5,7 +5,6 @@ import { RateBar } from "./RateBar";
 
 type SubjectType = {
   subjectName: string;
-  subjectCode: string | number;
   professor: string;
   score: {
     hard: number;
@@ -17,7 +16,6 @@ type SubjectType = {
 
 const DepartmentReviewComponent = ({
   subjectName,
-  subjectCode,
   professor,
   score,
   starRating,
@@ -42,13 +40,7 @@ const DepartmentReviewComponent = ({
             </span>
             <span className="w-[6rem]">{`${professor}`}</span>
           </div>
-          <div className="w-full text-sm flex font-semibold mt-1 justify-start mb-4">
-            <div className="w-[4.5rem] mr-11 text-start text-[#808080] font-normal">
-              과목 코드
-            </div>
-            <span className="w-[6rem] text-wrap break-all">{`${subjectCode}`}</span>
-          </div>
-          <div className="mb-3 flex">
+          <div className="my-5 flex">
             <span className="mr-10">힘들어요</span>
             <div className="flex items-center">
               <RateBar
