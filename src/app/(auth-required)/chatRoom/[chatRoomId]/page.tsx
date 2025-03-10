@@ -233,7 +233,7 @@ export default function ChatRoom() {
     // 소켓 구독 해제
     if (subscription && Array.isArray(subscription)) {
       subscription.forEach((sub: any) => {
-        sub.unsubscribe(); // 각 구독 객체에 대해 unsubscribe 호출
+        sub.unsubscribe(headers); // 각 구독 객체에 대해 unsubscribe 호출
       });
       console.log('구독 해제');
     }
