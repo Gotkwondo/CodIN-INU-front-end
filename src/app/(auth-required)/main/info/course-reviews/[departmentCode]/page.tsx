@@ -78,7 +78,6 @@ const DepartmentReview = () => {
         {lectureInfo && emotion && (
           <DepartmentReviewComponent
             subjectName={lectureInfo.lectureNm}
-            subjectCode={lectureInfo._id}
             professor={lectureInfo.professor}
             starRating={lectureInfo.starRating}
             score={emotion}
