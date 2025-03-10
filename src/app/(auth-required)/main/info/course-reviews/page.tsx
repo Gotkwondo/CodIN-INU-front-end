@@ -141,7 +141,7 @@ const CourseReviewPage = () => {
         <Header.Title>수강 후기</Header.Title>
       </Header>
       <DefaultBody hasHeader={1}>
-        <div className="mt-28 w-11/12">
+        <div className="w-full">
           {/* 학과 선택 버튼 */}
           <div className="flex flex-col w-full">
             <div className="w-full flex justify-between">
