@@ -76,7 +76,7 @@ const MessageForm = ({ onMessageSubmit, myId, imageFile, setImageFile }: Message
         if (e.target.files) {
           const file = e.target.files[0]; 
           setImageFile(file); // 선택한 파일 상태 업데이트
-
+          console.log('이미지 선택됨');
           // Base64 변환하여 미리보기 설정
           const reader = new FileReader();
           reader.onloadend = () => {
