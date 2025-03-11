@@ -85,7 +85,7 @@ const CommentInput = ({
                 anonymous ? "text-[#0D99FF]" : "text-sub"
             }`}
         />
-        <span className={`text-[10px] w-40 ${anonymous ? "text-active" : "text-sub"}`}>
+        <span className={`text-[10px] w-6 ${anonymous ? "text-active" : "text-sub"}`}>
         익명
       </span>
       </button>
