@@ -19,11 +19,11 @@ export default function DepartmentPage() {
   const [error, setError] = useState(null);
 
   const departmentNamesMap = {
-    COMPUTER_SCI: "컴퓨터 공학부",
+    COMPUTER_SCI: "컴퓨터공학부",
     INFO_COMM: "정보통신학과",
-    EMBEDDED: "임베디드 시스템 공학과",
+    EMBEDDED: "임베디드시스템공학과",
     STAFF: "교직원",
-    IT_COLLEGE: "정보기술 대학",
+    IT_COLLEGE: "정보기술대학",
   };
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function DepartmentPage() {
           <Header.BackButton />
           <Header.Title>
             {departmentName
-                ? `${departmentNamesMap[departmentName] || departmentName} 정보`
+                ? `${departmentNamesMap[departmentName] || departmentName}`
                 : "로딩 중..."}
           </Header.Title>
         </Header>
