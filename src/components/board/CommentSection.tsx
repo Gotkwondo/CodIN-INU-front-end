@@ -85,7 +85,7 @@ const CommentInput = ({
                 anonymous ? "text-[#0D99FF]" : "text-sub"
             }`}
         />
-        <span className={`text-[10px] ${anonymous ? "text-active" : "text-sub"}`}>
+        <span className={`text-[10px] w-40 ${anonymous ? "text-active" : "text-sub"}`}>
         익명
       </span>
       </button>
@@ -483,7 +483,7 @@ export default function CommentSection({
   ) => (
       <ul>
         {commentList.map((comment) => (
-            <div className="flex flex-row gap-[8px] pt-[24px]">
+            <div className="flex w-full flex-row gap-[8px] pt-[24px]">
               <img
                   src={
                     comment.anonymous
@@ -551,25 +551,6 @@ export default function CommentSection({
                     <div className="flex items-center text-xs text-gray-500 mb-2">
                       <button
                           onClick={
-                            //async () => {
-                            // const success = await toggleLike(status, comment._id);
-                            // if (success) {
-                            //     setComments((prevComments) =>
-                            //         prevComments.map((item) =>
-                            //             item._id === comment._id
-                            //                 ? {
-                            //                     ...item,
-                            //                     isLiked: !item.isLiked,
-                            //                     likeCount: item.isLiked
-                            //                         ? item.likeCount - 1
-                            //                         : item.likeCount + 1,
-                            //                 }
-                            //                 : item
-                            //         )
-                            //     );
-                            // }
-
-                            // }
                             //수정된 좋아요 토글
                             (e) => handleLike(e, status, comment._id)
                           }
