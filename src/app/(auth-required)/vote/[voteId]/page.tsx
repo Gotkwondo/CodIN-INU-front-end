@@ -3,14 +3,18 @@ import '../vote.css';
 import { useRouter } from 'next/navigation';
 import { useContext, useState, useEffect, useRef } from 'react';
 import apiClient from "@/api/clients/apiClient"; // 공통 apiClient 불러오기
-
+import { PostChatRoom } from '@/api/chat/postChatRoom';
 import { PostVoting } from '@/api/vote/postVoting';
 import { GetVoteDetail } from '@/api/vote/getVoteDetail';
+import { PostBlockUser } from '@/api/user/postBlockUser';
 import { useParams } from 'next/navigation';
 import { PostLike } from '@/api/like/postLike';
 import Header from '@/components/Layout/header/Header';
 import CommentSection from '@/components/board/CommentSection';
 import DefaultBody from '@/components/Layout/Body/defaultBody';
+import ReportModal from '@/components/modals/ReportModal'; // ReportModal 컴포넌트 임포트
+import { useReportModal } from "@/hooks/useReportModal";
+
 
 export default function VoteDetail() {
     const router = useRouter();
@@ -19,7 +23,7 @@ export default function VoteDetail() {
     const { voteId } = useParams();
     const [isPostLiked, setIsPostLiked] = useState<{ [key: string]: boolean }>({}); // 수정: 객체로 변경    const [isCommentLiked, setIsCommentLiked] = useState<{ [key: string]: boolean }>({});
     const [likeCount, setLikeCount] = useState<number>(0);
-   
+    const [menuOpen, setMenuOpen] = useState(false);
 
    
 
@@ -49,6 +53,7 @@ export default function VoteDetail() {
             pollFinished: boolean;
         };
         anonymous: boolean;
+        userId: string;
         _id: string;
     }
 
@@ -181,18 +186,56 @@ export default function VoteDetail() {
         }
     };
 
-    //시간 포맷 함수
-    const formatDate = (date: Date) => {
-        const options: Intl.DateTimeFormatOptions = {
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false, // 24시간 포맷
+     const blockUser = async () => {
+    
+            try {if (confirm("해당 유저의 게시물이 목록에 노출되지 않으며, 다시 해제하실 수 없습니다.")) {
+    
+    
+                await PostBlockUser(vote.userId);
+                alert("유저를 차단하였습니다");
+            }
+            } catch (error) {
+                console.log("유저 차단에 실패하였습니다.", error);
+                const message = error.response?.data?.message;
+                alert(message);
+            }
         };
-        return new Intl.DateTimeFormat('ko-KR', options).format(date);
-    };
+    
+     const startChat = async () => {
+            try {
+                const accessToken = localStorage.getItem("accessToken");
+                const response = await PostChatRoom( vote.title, vote.userId);
+    
+                console.log("채팅방 생성이 완료되었습니다");
+                if (response?.data.data.chatRoomId) {
+                    window.location.href = `/chat`;
+                } else {
+                    throw new Error("Chat room ID is missing in the response.");
+                }
+            } catch (error) {
+                console.log("채팅방 생성에 실패하였습니다.", error);
+            }
+        };
+    
+         const {
+                isOpen: isReportModalOpen,
+                openModal: openReportModal,
+                closeModal: closeReportModal,
+                getModalComponent: getReportModalComponent,
+            } = useReportModal();
+        
 
+    const handleMenuAction = (action: string) => {
+        if (action === "chat") {
+            alert("채팅하기 클릭됨");
+            startChat();
+        } else if (action === "report") {
+            openReportModal("POST", vote._id);
+        } else if (action === "block") {
+            blockUser();
+        }
+        setMenuOpen(false);
+    };
 
     return (
         <div className="vote w-full">
@@ -200,15 +243,13 @@ export default function VoteDetail() {
                 <Header.BackButton/>
                 <Header.Title>{`투표 게시글`}</Header.Title>
                 <Header.Menu>
-                    <Header.MenuItem onClick={() => console.log("채팅하기 클릭")}>
+                    <Header.MenuItem onClick={() => handleMenuAction("chat")}>
                         채팅하기
                     </Header.MenuItem>
-
-                    <Header.MenuItem onClick={() => console.log("신고하기 클릭")}>
+                    <Header.MenuItem onClick={() => handleMenuAction("report")}>
                         신고하기
                     </Header.MenuItem>
-
-                    <Header.MenuItem onClick={() => console.log("차단하기 클릭")}>
+                    <Header.MenuItem onClick={() => handleMenuAction("block")}>
                         차단하기
                     </Header.MenuItem>
                 </Header.Menu>
