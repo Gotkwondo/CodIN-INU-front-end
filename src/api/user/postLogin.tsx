@@ -3,24 +3,28 @@ import axios, { AxiosResponse } from "axios";
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const PostLogin = async (
-  studentId: string,
-  password: string
+    studentId: string,
+    password: string
 ): Promise<any> => {
   console.log("전송 데이터", studentId, password);
   axios.defaults.withCredentials = true;
-  
+
   try {
     const response: AxiosResponse<any> = await axios.post(
-      `${apiUrl}/auth/login`,
-      {
-        email: studentId,
-        password: password,
-      },
-      { withCredentials: true }
+        `${apiUrl}/auth/login`,
+        {
+          email: studentId,
+          password: password,
+        },
+        { withCredentials: true }
     );
 
     console.log(response.data);
     console.log(response.headers);
+
+    // 로그인 성공 시 React Native로 메시지 전송
+    onLoginSuccess(); // 로그인 성공 시 네이티브로 메시지 전달
+
     return response;
   } catch (error: any) {
     if (error.response) {
@@ -33,5 +37,14 @@ export const PostLogin = async (
     }
 
     throw error;
+  }
+};
+
+// 로그인 성공 시 네이티브로 메시지 보내는 함수
+const onLoginSuccess = () => {
+  if (window.ReactNativeWebView) {
+    window.ReactNativeWebView.postMessage(
+        JSON.stringify({ type: "LOGIN_SUCCESS" })
+    );
   }
 };
