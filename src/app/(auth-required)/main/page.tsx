@@ -75,7 +75,7 @@ const Calendar = () => {
 
   return (
     <div className="relative w-full mt-[18px]">
-      <ZoomableImageModal images={`/images/calendar/calendar_2025_3.png`} />
+      <ZoomableImageModal images={`/images/calendar/3.png`} />
     </div>
   );
 };
