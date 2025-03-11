@@ -101,10 +101,10 @@ const CommentInput = ({
       {/* 전송 버튼 */}
       <button
           onClick={onSubmit}
-          className="mr-[16px] rounded-full"
+          className="mt-[-13px] mr-[14px] rounded-full "
           disabled={submitLoading}
       >
-        <img src="/icons/board/Send.svg" />
+        <img src="/icons/board/Send.svg" className="fixed w-[20px] h-[20px]"/>
       </button>
     </div>
 );
