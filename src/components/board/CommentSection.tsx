@@ -26,6 +26,7 @@ interface Comment {
   replies: Comment[];
   createdAt: string;
   updatedAt?: string;
+  postName: string;
 }
 
 interface CommentSectionProps {
@@ -635,7 +636,7 @@ export default function CommentSection({
                                       onClick={async () => {
                                         try {
                                           // 필요한 제목(title)은 원하는 대로 지정 가능
-                                          await startChat("채팅방 제목", comment.userId);
+                                          await startChat(comment.postName, comment.userId, comment._id);
                                           setMenuOpenId(null);
                                         } catch (error) {
                                           console.error("채팅 오류:", error);
