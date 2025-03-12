@@ -204,7 +204,7 @@ export default function VoteDetail() {
      const startChat = async () => {
             try {
                 const accessToken = localStorage.getItem("accessToken");
-                const response = await PostChatRoom( vote.title, vote.userId);
+                const response = await PostChatRoom( vote.title, vote.userId, vote._id);
     
                 console.log("채팅방 생성이 완료되었습니다");
                 if (response?.data.data.chatRoomId) {

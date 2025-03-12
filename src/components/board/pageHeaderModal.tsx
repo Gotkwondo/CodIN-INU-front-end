@@ -67,7 +67,7 @@ const PageHeaderModal = ({
     const startChat = async () => {
         try {
             const accessToken = localStorage.getItem("accessToken");
-            const response = await PostChatRoom( post.title, post.userId);
+            const response = await PostChatRoom( post.title, post.userId, post._id);
 
             console.log("채팅방 생성이 완료되었습니다");
             if (response?.data.data.chatRoomId) {
