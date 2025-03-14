@@ -4,6 +4,8 @@ type lectureInfoType = {
   professor: string;
   starRating: number;
   participants: number;
+  grade: number;
+  semesters: string[];
 };
 
 type emotionType = {

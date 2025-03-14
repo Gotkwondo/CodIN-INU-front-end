@@ -181,7 +181,7 @@ const CourseReviewPage = () => {
           {reviewContents.length > 0 ? (
             reviewContents.map(
               (
-                { lectureNm, _id, starRating, professor, participants },
+                { lectureNm, _id, starRating, professor, participants, grade, semesters },
                 idx
               ) => (
                 <Subject
@@ -191,6 +191,8 @@ const CourseReviewPage = () => {
                   score={starRating}
                   professor={professor}
                   rateCnt={participants}
+                  grade={grade}
+                  semesters={semesters}
                 />
               )
             )

@@ -97,7 +97,7 @@ const WriteReview = () => {
         <Header.Title>후기 작성하기</Header.Title>
       </Header>
       <DefaultBody hasHeader={1}>
-        <div className="mt-28 w-11/12 flex">
+        <div className="w-full flex">
           {/* 학과 학년 수강학기 선택 */}
           <CustomSelect
             options={DEPARTMENT}

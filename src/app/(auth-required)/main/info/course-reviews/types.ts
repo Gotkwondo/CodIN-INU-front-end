@@ -14,4 +14,6 @@ export type reviewContentType = {
   professor: string;
   starRating: number;
   participants: number;
+  grade: number;
+  semesters: string[];
 };

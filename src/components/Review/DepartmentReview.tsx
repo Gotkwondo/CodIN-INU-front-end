@@ -6,6 +6,8 @@ import { RateBar } from "./RateBar";
 type SubjectType = {
   subjectName: string;
   professor: string;
+  grade: number;
+  semesters: string[];
   score: {
     hard: number;
     ok: number;
@@ -17,6 +19,8 @@ type SubjectType = {
 const DepartmentReviewComponent = ({
   subjectName,
   professor,
+  grade,
+  semesters,
   score,
   starRating,
 }: SubjectType) => {
@@ -39,6 +43,18 @@ const DepartmentReviewComponent = ({
               교수명
             </span>
             <span className="w-[6rem]">{`${professor}`}</span>
+          </div>
+          <div className="w-full mt-1 text-sm flex font-semibold justify-start">
+            <span className="w-[4.5rem] mr-11 text-start text-[#808080] font-normal">
+              학년
+            </span>
+            <span className="w-[6rem]">{`${grade} 학년`}</span>
+          </div>
+          <div className="w-full mt-1 text-sm flex font-semibold justify-start">
+            <span className="min-w-[4.5rem] mr-11 text-start text-[#808080] font-normal">
+              학기
+            </span>
+            <span className="w-[6rem] text-wrap pr-4">{`${semesters.join(", ")}`}</span>
           </div>
           <div className="my-5 flex">
             <span className="mr-10">힘들어요</span>

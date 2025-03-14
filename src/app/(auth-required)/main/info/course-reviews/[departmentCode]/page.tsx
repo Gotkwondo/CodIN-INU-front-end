@@ -18,7 +18,6 @@ const DepartmentReview = () => {
   const [emotion, setEmotion] = useState<emotionType | null>(null);
   const [reviewList, setReviewList] = useState<reviewType[]>([]);
   const [refetch, setRefetch] = useState<boolean>(false);
-
   const getDepartMentRateInfo = async () => {
     try {
       const response = await useDepartmentRatingInfoContext({
@@ -31,6 +30,8 @@ const DepartmentReview = () => {
         professor: data.professor,
         starRating: data.starRating,
         participants: data.participants,
+        grade: data.grade,
+        semesters: data.semesters,
       });
       setEmotion(data.emotion);
     } catch (error) {
@@ -79,6 +80,8 @@ const DepartmentReview = () => {
           <DepartmentReviewComponent
             subjectName={lectureInfo.lectureNm}
             professor={lectureInfo.professor}
+            grade={lectureInfo.grade}
+            semesters={lectureInfo.semesters}
             starRating={lectureInfo.starRating}
             score={emotion}
           />
