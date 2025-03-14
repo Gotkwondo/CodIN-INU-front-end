@@ -6,6 +6,7 @@ import { labelType, reviewContentType, searchTypesType } from "./types";
 import {
   Suspense,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -20,6 +21,7 @@ import DefaultBody from "@/components/Layout/Body/defaultBody";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { useReviewsContext } from "@/api/review/getReviewsContext";
 import { ReviewBtn } from '@/components/Review/ReviewBtn';
+import { ReviewContext } from '@/context/WriteReviewContext';
 
 const CourseReviewPage = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<labelType>({
@@ -41,12 +43,18 @@ const CourseReviewPage = () => {
 
   const observer = useRef<IntersectionObserver | null>(null);
 
+  const { data, setData } = useContext(ReviewContext);
+
   // 과목 선택 핸들러
   const selectDepartmentHandler = (
     selectedLabel: string,
     selectedValue: string
   ) => {
     setSelectedDepartment({ label: selectedLabel, value: selectedValue });
+    setData({
+      ...data,
+      departments: { label: selectedLabel, value: selectedValue },
+    });
     setPage(0); // 페이지 초기화
     setReviewContents([]); // 기존 데이터 초기화
     setHasMore(true); // 데이터 존재 여부 초기화
@@ -119,6 +127,13 @@ const CourseReviewPage = () => {
     },
     [loading, hasMore]
   );
+
+  useEffect(() => {
+    setData({
+      departments: selectedDepartment,
+      grade: { label: '', value: '' }
+    });
+  }, [])
 
   // `page` 상태가 변경될 때마다 `getReviewsContent` 호출
   useEffect(() => {

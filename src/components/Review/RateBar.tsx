@@ -22,7 +22,7 @@ const generateBars = (coloredBarCnt: number, barWidth: number) => {
       bars.push(
         <div
           key={`grayBar_${i}`}
-          className={`h-7 mr-[0.15rem] bg-[#EBF0F7]`}
+          className={`h-7 mr-[0.15rem] bg-[#EBF0F7] group-hover:bg-white`}
           style={{ width: `${barWidth}rem` }}
         />
       );

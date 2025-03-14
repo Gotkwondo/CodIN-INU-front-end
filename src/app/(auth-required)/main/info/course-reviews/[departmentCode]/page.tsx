@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useContext, useEffect, useState } from "react";
 import Header from "@/components/Layout/header/Header";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
@@ -10,6 +10,7 @@ import { useDepartmentRatingInfoContext } from "@/api/review/useDepartmentRating
 import { ReviewComment } from "@/components/Review/ReviewComment";
 import { useLectureReviewsContext } from "@/api/review/useLectureReviewsContext";
 import { ReviewBtn } from "@/components/Review/ReviewBtn";
+import { ReviewContext } from '@/context/WriteReviewContext';
 
 const DepartmentReview = () => {
   const { departmentCode } = useParams();
@@ -18,6 +19,7 @@ const DepartmentReview = () => {
   const [emotion, setEmotion] = useState<emotionType | null>(null);
   const [reviewList, setReviewList] = useState<reviewType[]>([]);
   const [refetch, setRefetch] = useState<boolean>(false);
+  const { data, setData } = useContext(ReviewContext);
   const getDepartMentRateInfo = async () => {
     try {
       const response = await useDepartmentRatingInfoContext({
@@ -61,6 +63,18 @@ const DepartmentReview = () => {
     getDepartMentRateInfo();
     getReviewList();
   }, []);
+
+  useEffect(() => {
+    if (lectureInfo) {
+      setData({
+        ...data,
+        grade: {
+          label: `${lectureInfo.grade}학년`,
+          value: `${lectureInfo.grade}`,
+        },
+      });
+    }
+  }, [lectureInfo]);
 
   useEffect(() => {
     getReviewList();

@@ -4,6 +4,7 @@ import { UserProvider } from '@/context/UserContext';
 import BottomNav from '../components/Layout/BottomNav';
 import { AuthProvider } from '@/context/AuthContext';
 import type { Viewport } from 'next'
+import ReviewProvider from '@/context/WriteReviewContext';
  
 
 export const viewport: Viewport = {
@@ -20,13 +21,20 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 <title>인천대학교 정보대 SNS</title>
             </head>
             <AuthProvider>
-            <UserProvider>
-            <body id="scrollbar-hidden" className="bg-white max-w-full min-h-full relative flex justify-center"> {/* 바텀 네비게이션 높이만큼 패딩 추가 */}
-                <div className='bg-white w-full min-h-full max-w-[500px] relative'>
-                    {children}
-                </div>
-            </body>
-            </UserProvider>
+                <UserProvider>
+                    <ReviewProvider>
+                        <body
+                            id="scrollbar-hidden"
+                            className="bg-white max-w-full min-h-full relative flex justify-center"
+                        >
+                            {" "}
+                            {/* 바텀 네비게이션 높이만큼 패딩 추가 */}
+                            <div className="bg-white w-full min-h-full max-w-[500px] relative">
+                                {children}
+                            </div>
+                        </body>
+                    </ReviewProvider>
+                </UserProvider>
             </AuthProvider>
         </html>
     );
