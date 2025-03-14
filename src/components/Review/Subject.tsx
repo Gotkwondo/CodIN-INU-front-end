@@ -10,9 +10,11 @@ type SubjectType = {
   professor: string;
   score: number;
   rateCnt: number;
+  grade: number;
+  semesters: string[];
 } & ComponentProps<'div'>;
 
-const Subject = ({ subjectName, subjectCode, professor, score, rateCnt, ...rest }: SubjectType) => {
+const Subject = ({ subjectName, subjectCode, professor, score, rateCnt, grade, semesters, ...rest }: SubjectType) => {
   return (
     <div className="w-full h-44" {...rest}>
       <p className="text-[#D4D4D4]">{`<li>`}</p>
@@ -26,6 +28,12 @@ const Subject = ({ subjectName, subjectCode, professor, score, rateCnt, ...rest 
               교수명
             </div>
             {professor}
+          </div>
+          <div className="w-full text-sm flex font-semibold">
+            <div className="min-w-10 mr-[2rem] text-start text-[#808080] font-normal">
+              학기
+            </div>
+            <p className="text-wrap pr-3">{semesters.join(", ")}</p>
           </div>
         </div>
         <div className="w-1/2 text-end">
