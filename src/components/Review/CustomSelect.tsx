@@ -28,12 +28,12 @@ const CustomSelect = ({
       ...provided,
       backgroundColor: inverted
         ? value.value === ""
-          ? "white"
+          ? "#EBF0F7"
           : "#0D99FF"
         : "white", // 파란색 배경
       color: inverted ? "white" : "black",
       borderRadius: rounded ? "9999px" : "5px", // Tailwind의 rounded-full
-      border: inverted ? (value.value === '' ? "" : "none") : "1px solid #E5E7EB", // 테두리 제거
+      border: inverted ? "none" : "1px solid #E5E7EB", // 테두리 제거
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -46,7 +46,13 @@ const CustomSelect = ({
     }),
     singleValue: (provided: any) => ({
       ...provided,
-      color: inverted ? (value.value === "" ? "black" : "white") : "#0D99FF", // 선택된 값의 색상 변경
+      color: inverted
+        ? value.value === ""
+          ? "black"
+          : "white"
+        : value.value === ""
+        ? "#A9ADAE"
+        : "#0D99FF", // 선택된 값의 색상 변경
       textAlign: inverted ? "center" : "start",
     }),
     dropdownIndicator: (provided: any) => ({
@@ -78,6 +84,10 @@ const CustomSelect = ({
       "&:hover": {
         backgroundColor: inverted ? "#E5E7EB" : "#0D99FF",
       },
+    }),
+    indicatorSeparator: (base) => ({
+      ...base,
+      display: "none",
     }),
   };
   
