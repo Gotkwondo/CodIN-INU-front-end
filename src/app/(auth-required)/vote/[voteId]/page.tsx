@@ -391,7 +391,7 @@ export default function VoteDetail() {
 
                         </div>
                     )}
-                    <CommentSection postId={voteId.toString()}/>
+                    <CommentSection postId={voteId.toString()} postName={vote?.title}/>
                 </div>
             </DefaultBody>
      

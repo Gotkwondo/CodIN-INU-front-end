@@ -640,9 +640,9 @@ export default function CommentSection({
                                       onClick={async () => {
                                         try {
                                           // 필요한 제목(title)은 원하는 대로 지정 가능
-                                          await startChat(comment.postName, comment.userId, comment.postId);
+                                          await startChat(postName, comment.userId, postId);
                                           setMenuOpenId(null);
-                                          console.log("채팅전달값:",comment.postName, comment.userId, comment.postId);
+                                          console.log("채팅전달값:",postName, comment.userId, postId);
                                         } catch (error) {
                                           console.error("채팅 오류:", error);
                                         }
