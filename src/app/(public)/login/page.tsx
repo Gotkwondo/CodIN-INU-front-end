@@ -126,9 +126,23 @@ export default function LoginPage() {
     }
   };
 
+
+  const handleappleLogin = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ): Promise<void> => {
+    e.preventDefault();
+    try {
+      // 구글 로그인 URL로 리디렉션
+      window.location.href = "https://codin.inu.ac.kr/apple/callback";
+    } catch (error) {
+      console.error("로그인 실패", error);
+      alert("로그인 오류");
+    }
+  };
+
   return (
     <DefaultBody hasHeader={0}>
-      <div className="absolute bottom-[35%] w-full px-[20px] left-0 flex flex-col items-center justify-center">
+      <div className="absolute bottom-[30%] w-full px-[20px] left-0 flex flex-col items-center justify-center">
         <img
           className="w-[171.41px] h-[45px] mb-[72px]"
           src="/images/logo.png"
@@ -176,6 +190,10 @@ export default function LoginPage() {
         </p>
         <button onClick={handleGoogleLogin}>
           <img src="/images/google.png"></img>
+        </button>
+
+        <button onClick={handleappleLogin}>
+          <img src="/images/apple.png" className="w-[175px] h-[42px] mt-3" ></img>
         </button>
       </div>
     </DefaultBody>

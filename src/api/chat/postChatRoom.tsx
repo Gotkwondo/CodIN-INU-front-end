@@ -9,7 +9,7 @@ export const PostChatRoom = async (
   referenceId : string,
   retryCount=0
 ): Promise<any> => {
-  console.log("전송 데이터", roomName, receiverId);
+  console.log("전송 데이터", roomName, receiverId, referenceId);
   axios.defaults.withCredentials = true;
   try {
     const response: AxiosResponse<any> = await axios.post(

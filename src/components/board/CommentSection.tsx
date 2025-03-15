@@ -251,12 +251,15 @@ export default function CommentSection({
         const validComments = (data.dataList || []).map((comment) => ({
           ...comment,
           content: comment.content || "내용이 없습니다.",
+          postId: postId,
+          postName: postName
         }));
         console.log("응답", data);
         setComments(validComments);
         const initialCommentLikes = data.dataList.reduce(
             (acc: { [key: string]: boolean }, comment: Comment) => {
               acc[comment._id] = comment.userInfo.like;
+              
 
               comment.replies?.forEach((subComment) => {
                 acc[`${subComment._id}`] = subComment.userInfo.like;
