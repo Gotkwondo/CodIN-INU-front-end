@@ -133,7 +133,7 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       // 구글 로그인 URL로 리디렉션
-      window.location.href = "https://codin.inu.ac.kr/apple/callback";
+      window.location.href = "https://codin.inu.ac.kr/api/auth/apple";
     } catch (error) {
       console.error("로그인 실패", error);
       alert("로그인 오류");
