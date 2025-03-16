@@ -8,11 +8,17 @@ import { GetChatRoomData } from '@/api/chat/getChatRoomData';
 import Header from '@/components/Layout/header/Header';
 import DefaultBody from '@/components/Layout/Body/defaultBody';
 import Image from 'next/image';
+import { Stomp } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
 
 export default function Chat() {
     const router = useRouter();
+    const [stompClient, setStompClient] = useState<any>(null);
+    const headers = {
+        
+      };
+      const [connected, setConnected] = useState(false); // 연결 상태 추적
 
-  
     const [chatList, setChatList] = useState<any>([]);
       interface ChatData {
         chatRoomId: string;
@@ -27,8 +33,33 @@ export default function Chat() {
         chatList: ChatData[];
     }
 
+     useEffect(() => {
+       
+        const socket = new SockJS("https://codin.inu.ac.kr/dev/ws-stomp");
+        const stomp = Stomp.over(socket);
     
-
+        setStompClient(stomp);
+      }, []);
+    
+      useEffect(() => {
+        if (!stompClient) return;
+      
+        console.log("전송 헤더", headers);
+      
+        stompClient.connect(headers, (frame) => {
+          console.log("connected:", frame);
+          setConnected(true);
+      
+          // /queue/unread 구독
+          const subUnread = stompClient.subscribe(`/user/queue/chatroom/unread/`, (message) => {
+            const receivedUnread = JSON.parse(message.body);
+            console.log("Received unread message:", receivedUnread);
+      
+          });
+      
+        });
+      }, [stompClient]);
+      
     useEffect(() => {
         const getChatRoomData = async () => {
             console.log('실행')
@@ -63,7 +94,12 @@ export default function Chat() {
                     >
                         <Image src="/icons/chat/DeafultProfile.png" width="49" height="49" alt="" loading="eager"/>
                         <div className="flex flex-col gap-[4px]">
-                            <div id="name" className="text-Lm" >{data.roomName}</div>
+                            <div id="name" className="text-Lm overflow-hidden" > 
+                                {data.roomName && data.roomName.length > 14 
+                                    ? `${data.roomName.slice(0, 14)} ...` 
+                                    : data.roomName
+                                }
+                            </div>
                             <div id="ment" className="text-Mr text-[#808080]">
                                 {data.lastMessage && data.lastMessage.startsWith("https://codin") ? (
                                     "( 사진 )"
