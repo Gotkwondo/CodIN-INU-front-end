@@ -4,7 +4,13 @@ import DefaultBody from "@/components/Layout/Body/defaultBody";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import Header from "@/components/Layout/header/Header";
 import { RateBar } from "@/components/Review/RateBar";
-import { SetStateAction, Suspense, useContext, useEffect, useState } from "react";
+import {
+  SetStateAction,
+  Suspense,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { departMentType, selectType } from "./type";
 import {
   DEPARTMENT,
@@ -18,8 +24,8 @@ import { useSearchedReviewContext } from "@/api/review/useSearchedReviewContext"
 import { AlertModal } from "@/components/modals/AlertModal";
 import { submitReview } from "@/api/review/submitReview";
 import { useRouter } from "next/navigation";
-import { calcEmotion } from './util/calcEmotion';
-import { ReviewContext } from '@/context/WriteReviewContext';
+import { calcEmotion } from "./util/calcEmotion";
+import { ReviewContext } from "@/context/WriteReviewContext";
 
 const WriteReview = () => {
   const router = useRouter();
@@ -86,13 +92,13 @@ const WriteReview = () => {
     //   setLecture(data.departments);
     //   setGrade(data.grade);
     // }
-    if (data.departments.value !== '') {
+    if (data.departments.value !== "") {
       setLecture(data.departments);
     }
-    if (data.grade.value !== '') {
+    if (data.grade.value !== "") {
       setGrade(data.grade);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     setIsClient(true);
@@ -114,7 +120,7 @@ const WriteReview = () => {
         <Header.Title>후기 작성하기</Header.Title>
       </Header>
       <DefaultBody hasHeader={1}>
-        <div className="flex flex-col h-[80vh] justify-between">
+        <div className="flex flex-col justify-between h-[70vh] sm:h-[80vh]">
           <div>
             <div className="w-full flex">
               {/* 학과 학년 수강학기 선택 */}
@@ -164,21 +170,21 @@ const WriteReview = () => {
               />
             </div>
 
-            <p className="text-2xl mt-8">전반적인 수업 경험은 어땠나요?</p>
+            <p className="text-base sm:text-xl mt-3 sm:mt-8">
+              전반적인 수업 경험은 어땠나요?
+            </p>
             {/* 수업 후기 점수 평가  */}
             <div className="w-full mt-2">
               {/* 1-5점  해당 바를 눌러 점수를 정할 수 있도록 기능 구현 필요*/}
-              <div className="text-xl flex">
-                <div className=' w-32 min-w-32'>
-                  <span className="text-[#0D99FF] min-w-48 text-right">{`${
+              <div className="text-base sm:text-xl flex">
+                <div className=" w-32 min-w-32">
+                  <span className="text-[#0D99FF] text-right">{`${
                     rating % 1 ? rating : rating + ".0"
                   }`}</span>{" "}
-                  <span>/ 5.0</span>
+                  <span className="text-[#E5E7EB]">/ 5.0</span>
                 </div>
 
-                <span className=" text-[#0D99FF]">
-                  {calcEmotion(rating)}
-                </span>
+                <span className="text-[#0D99FF]">{calcEmotion(rating)}</span>
               </div>
               <RateBar
                 score={rating}
@@ -187,21 +193,21 @@ const WriteReview = () => {
                 clickFn={setRating}
                 className="mt-1"
               />
-              <p className="text-base mt-3 text-[#808080]">
+              <p className="text-sm sm:text-base mt-3 text-[#808080]">
                 위 그래프를 눌러 조절해주세요
               </p>
             </div>
             {/* 후기 입력 공간 */}
-            <div className="mt-5">
+            <div className="mt-3">
               {/* 후기 내용 */}
               <textarea
-                className="border-2 border-gray-200 rounded-md p-3 mt-5 w-full h-60 resize-none"
+                className="border-2 border-gray-200 rounded-md p-3 sm:mt-5 w-full h-[20vh] sm:h-[30vh] resize-none"
                 placeholder="상세한 후기를 작성해주세요"
                 onChange={(e) => setReviewContents(e.target.value)}
                 value={reviewContents}
               ></textarea>
             </div>
-            <div className="w-full flex justify-end mt-3">
+            <div className="w-full flex justify-end sm:mt-3">
               <button
                 className="bg-[#0D99FF] text-white rounded-full px-4 py-2 hover:bg-[#51b4fa]"
                 onClick={() => {
@@ -214,7 +220,7 @@ const WriteReview = () => {
             </div>
           </div>
           <button
-            className="h-[50px] bg-[#EBF0F7] mt-4 rounded-md bottom-[-82px]"
+            className="h-[35px] sm:h-[50px] bg-[#0D99FF] text-white mt-2 sm:mt-4 rounded-md bottom-[-100px] text-sm sm:text-base"
             onClick={() => onSummitReview()}
           >
             후기 작성하기
