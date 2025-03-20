@@ -31,7 +31,7 @@ const timeAgo = (timestamp: string): string => {
 
 const menuItems = [
   {
-    label: "구해요",
+    label: "모집해요",
     href: "/main/boards/need-help",
     icon: "/icons/need-help.png",
   },
