@@ -95,11 +95,9 @@ const SearchPage: FC = () => {
           </Header>
           <DefaultBody hasHeader={1}>
             {/* 검색창 및 검색 버튼 */}
-            <div className="relative mt-[18px] mb-4 flex items-center">
-
-              {/* 검색 입력창 */}
+            <div className="relative flex items-center w-full">
               <input
-                  className="defaultInput flex-1 ml-2"
+                  className="flex-1 rounded-full bg-gray-50 py-3 px-5 pr-12 focus:outline-none focus:ring-0" // pr-12로 오른쪽 여백 확보
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -108,14 +106,15 @@ const SearchPage: FC = () => {
                     if (e.key === "Enter") handleSearch(); // 엔터 키로 검색 가능
                   }}
               />
-              {/* 검색 버튼 (왼쪽에 위치) */}
+              {/* 검색 버튼 (입력창 내부 오른쪽) */}
               <button
                   onClick={handleSearch}
-                  className="p-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                  className="absolute right-4 text-gray-500 hover:text-gray-700 focus:outline-none"
               >
-                <FaSearch className="w-5 h-5" /> {/* 검색 아이콘 */}
+                <FaSearch className="w-5 h-5" color="#5f98f7" />
               </button>
             </div>
+
 
             {/* 검색 결과 목록 */}
             <PostList posts={posts} boardName="search" boardType="listWithCategory"  />
