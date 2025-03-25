@@ -145,34 +145,33 @@ export default function MyPage() {
         </div>
 
         {/* 메뉴 리스트 */}
-        <ul className="mt-[45px] text-Mm ">
+        <ul className="mt-[45px] text-Mm">
           {menuItems.map((item, index) => (
-            <li
-              key={index}
-              className={`flex justify-between items-center w-full
-                            ${item.isSpacer ? "mb-[48px] " : "mb-[24px] "}
-                        `}
-            >
-              {item.onclick ? (
-                <button onClick={(e) => item.onclick(e)}>{item.label}</button>
-              ) : (
-                <Link
-                  href={item.href}
-                  className={`
-                                        ${
-                                          item.label === "프로필 편집"
-                                            ? " text-active"
-                                            : "text-main"
-                                        }
-                                    `}
-                >
-                  {item.label}
-                </Link>
-              )}
-              <img src="/icons/mypage/rightArrow.svg" width={20} height={20} />
-            </li>
+              <li
+                  key={index}
+                  className={`flex justify-between items-center w-full px-4 py-3 rounded-lg cursor-pointer ${
+                      item.isSpacer ? "mb-[48px]" : "mb-[24px]"
+                  }`}
+                  onClick={(e) => {
+                    if (item.onclick) {
+                      item.onclick(e);
+                    } else {
+                      window.location.href = item.href;
+                    }
+                  }}
+              >
+              <span
+                  className={`${
+                      item.label === "프로필 편집" ? "text-active" : "text-main"
+                  }`}
+              >
+                {item.label}
+              </span>
+                <img src="/icons/mypage/rightArrow.svg" width={20} height={20} />
+              </li>
           ))}
         </ul>
+
       </DefaultBody>
 
       <BottomNav activeIndex={3} />

@@ -62,7 +62,18 @@ const UserInfoEditPage = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setProfileImage(e.target.files[0]);
+      const file = e.target.files[0];
+
+      // 허용된 이미지 타입 리스트
+      const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif", "image/webp"];
+
+      if (!allowedTypes.includes(file.type)) {
+        alert("이미지 파일만 업로드할 수 있습니다.");
+        e.target.value = ""; // 선택한 파일 초기화
+        return;
+      }
+
+      setProfileImage(file);
     }
   };
 
