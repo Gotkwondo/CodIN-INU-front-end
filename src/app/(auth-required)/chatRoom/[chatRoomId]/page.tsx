@@ -128,27 +128,12 @@ export default function ChatRoom() {
         const receivedUnread = JSON.parse(message.body);
         console.log("Received unread message:", receivedUnread);
   
-        // receivedUnread가 배열일 경우 첫 번째 항목을 확인
-        if (Array.isArray(receivedUnread) && receivedUnread.length > 0) {
-          const unreadData = receivedUnread[0];  // 배열에서 첫 번째 항목을 추출
-          console.log("Unread data:", unreadData);
-  
-          if (unreadData && unreadData.id && unreadData.unread !== undefined) {
-            setMessages((prevMessages) => {
-              return prevMessages.map((msg) => {
-                if (msg.id === unreadData.id) {
-                  return {
-                    ...msg,
-                    unread: unreadData.unread, // unread 값 갱신
-                  };
-                }
-                return msg;
-              });
-            });
-          }
-        } else {
-          console.error("유효하지 않은 unread 데이터:", receivedUnread);
-        }
+        setMessages((prevMessages) => {
+          return prevMessages.map((msg) => ({
+            ...msg,
+            unread: 0, // 모든 메시지의 unread 값을 0으로 변경
+          }));
+        });
       }, headers);
   
       // 구독 객체 저장 (배열 형태로 저장하여 여러 개의 구독 관리)
