@@ -177,7 +177,7 @@ const CreatePostPage = () => {
                   <input
                       type="file"
                       multiple
-                      accept="image/*"
+                      accept="image/png, image/jpeg, image/jpg, image/gif, image/webp"
                       onChange={handleFileChange}
                       className="hidden"
                   />
