@@ -26,11 +26,11 @@ const UserInfoEditPage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-       
+
 
         const response = await axios.get("https://codin.inu.ac.kr/api/users", {
           headers: {
-           
+
           },
         });
 
@@ -72,7 +72,7 @@ const UserInfoEditPage = () => {
 
     // 유저 정보 수정
     try {
-      
+
 
       const userResponse = await axios.put(
         "https://codin.inu.ac.kr/api/users",
@@ -95,13 +95,13 @@ const UserInfoEditPage = () => {
       formData.append("postImages", profileImage);
 
       try {
-       
+
         const imageResponse = await axios.put(
           "https://codin.inu.ac.kr/api/users/profile",
           formData,
           {
             headers: {
-            
+
               "Content-Type": "multipart/form-data",
             },
           }
@@ -152,11 +152,13 @@ const UserInfoEditPage = () => {
             프로필 사진 변경
           </label>
           <input
-            type="file"
-            id="profileImage"
-            onChange={handleFileChange}
-            className="hidden"
+              type="file"
+              id="profileImage"
+              accept="image/png, image/jpeg, image/jpg, image/gif, image/webp"
+              onChange={handleFileChange}
+              className="hidden"
           />
+
         </div>
 
         {/* 이름, 닉네임, 학과 수정 박스 */}

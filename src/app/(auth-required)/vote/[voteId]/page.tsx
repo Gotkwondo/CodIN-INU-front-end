@@ -10,7 +10,7 @@ import { PostBlockUser } from '@/api/user/postBlockUser';
 import { useParams } from 'next/navigation';
 import { PostLike } from '@/api/like/postLike';
 import Header from '@/components/Layout/header/Header';
-import CommentSection from '@/components/board/CommentSection';
+import CommentSection from '@/components/comment/CommentSection';
 import DefaultBody from '@/components/Layout/Body/defaultBody';
 import ReportModal from '@/components/modals/ReportModal'; // ReportModal 컴포넌트 임포트
 import { useReportModal } from "@/hooks/useReportModal";
@@ -25,7 +25,7 @@ export default function VoteDetail() {
     const [likeCount, setLikeCount] = useState<number>(0);
     const [menuOpen, setMenuOpen] = useState(false);
 
-   
+
 
     interface vote {
 
@@ -84,7 +84,7 @@ export default function VoteDetail() {
         });
     };
 
-   
+
 
     useEffect(() => {
         if (!voteId) return;
@@ -96,14 +96,14 @@ export default function VoteDetail() {
                 const voteInfo = voteData.data;
                 setVote(voteInfo);
 
-               
+
 
                 const initialPostLike = {
                     [voteInfo._id]: voteInfo.userInfo.like, // 게시물에 대한 좋아요 상태 설정
                 };
                 setIsPostLiked(initialPostLike); // 게시물 좋아요 상태 초기화
 
-    
+
             } catch (error) {
                 console.log("투표 정보를 불러오지 못했습니다.", error);
             }
@@ -187,10 +187,10 @@ export default function VoteDetail() {
     };
 
      const blockUser = async () => {
-    
+
             try {if (confirm("해당 유저의 게시물이 목록에 노출되지 않으며, 다시 해제하실 수 없습니다.")) {
-    
-    
+
+
                 await PostBlockUser(vote.userId);
                 alert("유저를 차단하였습니다");
             }
@@ -200,12 +200,12 @@ export default function VoteDetail() {
                 alert(message);
             }
         };
-    
+
      const startChat = async () => {
             try {
                 const accessToken = localStorage.getItem("accessToken");
                 const response = await PostChatRoom( vote.title, vote.userId, vote._id);
-    
+
                 console.log("채팅방 생성이 완료되었습니다");
                 if (response?.data.data.chatRoomId) {
                     window.location.href = `/chat`;
@@ -216,14 +216,14 @@ export default function VoteDetail() {
                 console.log("채팅방 생성에 실패하였습니다.", error);
             }
         };
-    
+
          const {
                 isOpen: isReportModalOpen,
                 openModal: openReportModal,
                 closeModal: closeReportModal,
                 getModalComponent: getReportModalComponent,
             } = useReportModal();
-        
+
 
     const handleMenuAction = (action: string) => {
         if (action === "chat") {
@@ -285,7 +285,7 @@ export default function VoteDetail() {
                 </div>
 
                 {/* 스크롤 되는 부분 */}
-                <div id="voteCont"> 
+                <div id="voteCont">
                     {/* 투표 컨테이너 */}
                     {vote && (
                         <div id='voteIndex' className=' flex flex-col gap-[4px]'>
@@ -323,8 +323,8 @@ export default function VoteDetail() {
                                         </ul>
                                         <button id='voteBtn' className={selectedOptions[vote._id]?.length !== 0? 'w-full rounded-[5px] bg-[#0D99FF] py-[8px] text-Mm text-white' : 'w-full rounded-[5px] bg-sub py-[8px] text-Mm text-sub' }  disabled={selectedOptions[vote._id]?.length === 0} onClick={(e) => votingHandler(e, vote._id)}>투표하기</button>
                                     </>
-                                ) 
-                                
+                                )
+
                                 : ( // 투표 기간이 만료되었거나 유저가 투표를 완료하였을 때
                                     <div id='conT'>
                                         {vote.poll.pollOptions.map((option, i) => (
@@ -333,9 +333,9 @@ export default function VoteDetail() {
                                                     <p id='optionText' className='text-Mr' >{option}</p>
                                                     <div id='optionCount' className='text-sr text-sub'>{vote.poll.pollVotesCounts[i]}명</div>
                                                 </div>
-            
+
                                                 <div id='statusbar' className='w-full bg-gray h-[4px] rounded-full mb-[12px] mt-[8px]' >
-                                                    <div id="pollOptionBar" className="bg-main h-full rounded-full" 
+                                                    <div id="pollOptionBar" className="bg-main h-full rounded-full"
                                                         style={{
                                                             width: `${Math.floor((vote.poll.pollVotesCounts[i] / vote.poll.totalParticipants) * 100)}%`
                                                         }}
@@ -353,7 +353,7 @@ export default function VoteDetail() {
                                 </div>
                             </div>
 
-                             
+
                             <div id='pollEndTime' className='text-sr text-sub ml-[4px] mb-[12px] mt-[6px]'>
                                 {calculateDaysLeft(vote.poll.pollEndTime) > 0 ?  (
                                     <>
@@ -394,7 +394,7 @@ export default function VoteDetail() {
                     <CommentSection postId={voteId.toString()} postName={vote?.title}/>
                 </div>
             </DefaultBody>
-     
+
         </div>
     );
 }

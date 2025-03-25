@@ -15,11 +15,11 @@ export default function MyPage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-       
+
         const response = await fetch("https://codin.inu.ac.kr/api/users", {
           method: "GET",
           headers: {
-          
+
             "Content-Type": "application/json",
           },
         });
@@ -126,10 +126,11 @@ export default function MyPage() {
           {/* 프로필 이미지 */}
           <div className="flex items-center space-x-[12px]">
             <img
-              className="rounded-full"
-              src={userData.profileImageUrl}
-              width={49}
-              height={49}
+                className="rounded-full w-[49px] h-[49px] object-cover"
+                src={userData.profileImageUrl}
+                width={49}
+                height={49}
+                alt="프로필 이미지"
             />
             <div>
               {/* 사용자 이름 */}
