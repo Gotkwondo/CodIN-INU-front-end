@@ -134,7 +134,14 @@ export default function Chat() {
                 <Header.SearchButton onClick={() => console.log("검색 버튼 클릭")} />
             </Header>
             <DefaultBody hasHeader={1}>
-                <ChatList chatList={chatList} />
+                {/* 채팅방 목록이 비어 있을 경우 안내 메시지 표시 */}
+                {chatList.length === 0 ? (
+                    <div className="text-center text-lg text-gray-500 mt-[60%]">
+                        채팅을 시작해보세요!
+                    </div>
+                ) : (
+                    <ChatList chatList={chatList} />
+                )}
             </DefaultBody>
             <BottomNav activeIndex={2}/>
         </Suspense>
