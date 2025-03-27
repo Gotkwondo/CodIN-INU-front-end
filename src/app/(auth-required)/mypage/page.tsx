@@ -143,7 +143,7 @@ export default function MyPage() {
             {menuItems.map((item, index) => (
                 <li
                     key={index}
-                    className={`flex justify-between items-center w-full px-4 py-3 rounded-lg cursor-pointer ${
+                    className={`flex justify-between items-center w-full px-4 py-1 rounded-lg cursor-pointer ${
                         item.isSpacer ? "mb-[48px]" : "mb-[24px]"
                     }`}
                     onClick={(e) => {
