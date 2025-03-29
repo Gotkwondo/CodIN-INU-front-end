@@ -145,7 +145,7 @@ export default function LoginPage() {
     <DefaultBody hasHeader={0}>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <img
-          className="w-[171.41px] h-[45px] mb-[72px]"
+          className="w-[171.41px] mb-[72px]"
           src="/images/logo.png"
         />
         {/* <div className='flex flex-col w-full gap-[12px] mb-[169px]'>
@@ -194,10 +194,15 @@ export default function LoginPage() {
       {/*<div className="flex items-center justify-center text-Mr text-[#808080] w-[312px] rounded-[12px] bg-white/[88] px-6 py-2 mb-[32px] drop-shadow-[0_3px_8px_rgba(0,0,0,0.15)]">
         <span className="text-[#0D99FF]">@inu.ac.kr</span>계정만 사용할 수 있어요
       </div> */}
-        <img src="/icons/auth/onlyInuAccount.svg" className="mb-[24px] bubble"/>
+        <div className='bubble relative flex items-center justify-center'>
+          <img src="/icons/auth/onlyInuAccount.svg" className="mb-[24px] flex items-center justify-center"></img>
+          <p className="absolute top-0 transform translate-y-1/2 text-sub text-Mr">
+            <span className='text-active'>@inu.ac.kr</span> 계정만 사용할 수 있어요
+          </p>
+        </div>
         <button onClick={handleGoogleLogin} className="w-[348.5px] h-[48.5px] mb-[62px] flex gap-[8px] items-center justify-center shadow-[0_0_12px_4px_rgba(0,44,76,0.25)] rounded-[5px] bg-white floatBtn">
           <img src='/icons/auth/googleLogo.png' className="w-[14px] h-[14px]"/>
-          <p className="text-XLm font-medium leading-none">Google계정으로 로그인</p>
+          <p className="text-XLm leading-none">Google계정으로 로그인</p>
         </button>
       </div>
     </DefaultBody>
