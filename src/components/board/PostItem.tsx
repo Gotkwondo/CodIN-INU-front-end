@@ -64,7 +64,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenM
     const mappedCategoryName = mapPostCategoryToName(post.postCategory); // 매핑된 카테고리 이름
 
     const postStats = (
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs sm:text-sr text-sub gap-2 sm:gap-0">
+        <div className="flex justify-between items-center text-xs mt-[8px]">
             {/* 아이콘과 통계 데이터 */}
             <div className="flex space-x-[6px]">
                 <span className="flex items-center gap-[4.33px]">
