@@ -53,14 +53,10 @@ function createAPIClient(): AxiosInstance {
                     }
                 } catch (refreshError) {
                     console.error("❌ 토큰 재발급 실패", refreshError);
-                    // 토큰 재발급 실패시 로그인 페이지로 이동
-                    window.location.href = "/login";
+                  
                 }
             }
 
-            // 재시도 후에도 실패하거나, 재시도 횟수를 초과한 경우
-            console.error("❌ 토큰 재발급 후에도 실패. 로그인 페이지로 이동합니다.");
-            window.location.href = "/login";
             return Promise.reject(error);
         }
     );

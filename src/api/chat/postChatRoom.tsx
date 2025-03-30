@@ -48,8 +48,7 @@ export const PostChatRoom = async (
             }
         }
     
-        console.error("❌ 2번 재시도 후에도 실패. 로그인 페이지로 이동합니다.");
-        window.location.href = "/login";
+       
       }else if(data.code === 403) {
         const id = data.message.split("/")[1];
         window.location.href = `/chatRoom/${id}`;
