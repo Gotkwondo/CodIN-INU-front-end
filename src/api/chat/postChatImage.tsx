@@ -42,8 +42,7 @@ export const PostChatImage = async (chatImages: File, retryCount=0): Promise<any
             }
         }
     
-        console.error("❌ 2번 재시도 후에도 실패. 로그인 페이지로 이동합니다.");
-        window.location.href = "/login";
+      
     }
     } else if (error.request) {
       console.error("No response received:", error.request);

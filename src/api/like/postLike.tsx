@@ -31,12 +31,10 @@ export const PostLike = async (likeType: string, id: string, retryCount=0): Prom
             } catch (error) {
                 console.error("❌ 토큰 재발급 실패", error);
                 // 토큰 재발급 실패시 더 이상 재시도하지 않고 로그인 페이지로 이동
-                window.location.href = "/login";
+               
             }
         }
     
-        console.error("❌ 2번 재시도 후에도 실패. 로그인 페이지로 이동합니다.");
-        window.location.href = "/login";
     }
     } else if (error.request) {
       console.error("No response received:", error.request);
