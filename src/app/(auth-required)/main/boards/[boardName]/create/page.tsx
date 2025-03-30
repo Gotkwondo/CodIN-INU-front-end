@@ -128,7 +128,7 @@ const CreatePostPage = () => {
         <DefaultBody hasHeader={1}>
           <div className="flex flex-col gap-[18px] pt-[18px]">
             {hasTabs && (
-                <div className="flex gap-[8px] overflow-x-scroll">
+                <div className="flex gap-[8px] overflow-x-scroll" id="scrollbar-hidden">
                   {tabs.map((tab) =>
                       tab.value === "all" ? null : (
                           <div key={tab.postCategory}>
