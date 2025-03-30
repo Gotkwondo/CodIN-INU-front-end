@@ -124,13 +124,13 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                             <img
                                 src="/images/anonymousUserImage.png" // 정적 경로의 익명 이미지
                                 alt="Anonymous profile"
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover mb-[24px]"
                             />
                         ) : post.userImageUrl ? (
                             <img
                                 src={post.userImageUrl}
                                 alt="User profile"
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover mb-[24px]"
                             />
                         ) : (
                             <span className="text-gray-600 text-sm">No Image</span>
