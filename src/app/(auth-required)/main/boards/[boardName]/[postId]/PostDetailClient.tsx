@@ -124,13 +124,13 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                             <img
                                 src="/images/anonymousUserImage.png" // 정적 경로의 익명 이미지
                                 alt="Anonymous profile"
-                                className="w-full h-full object-cover mb-[24px]"
+                                className="w-full h-full object-cover"
                             />
                         ) : post.userImageUrl ? (
                             <img
                                 src={post.userImageUrl}
                                 alt="User profile"
-                                className="w-full h-full object-cover mb-[24px]"
+                                className="w-full h-full object-cover"
                             />
                         ) : (
                             <span className="text-gray-600 text-sm">No Image</span>
@@ -152,10 +152,12 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                         {post.content}
                     </p>
                 </div>
-
-                {post.postImageUrl && post.postImageUrl.length > 0 && (
-                    <ZoomableImageModal images={post.postImageUrl} />
-                )}
+                
+                <div className="mb-[24px]">
+                    {post.postImageUrl && post.postImageUrl.length > 0 && (
+                        <ZoomableImageModal images={post.postImageUrl} />
+                    )}
+                </div>
                 <div className="flex justify-between items-center text-sr text-sub">
                     <div className="flex space-x-[12px]">
                         <span className="flex items-center gap-[4.33px]">
