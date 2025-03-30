@@ -87,6 +87,16 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
         selectToucedLecture(idx);
     }
 
+    const getIsActive = (idx: number) => {
+        if ( idx == 5 && clicked <=5 && clicked != -1 ){
+            return true;
+        }else if ( idx == 28 && clicked >= 28 ){
+            return true;
+        }else{
+            return ( 5 < idx && idx < 28 && clicked === idx ) ? true : false;
+        }
+    }
+
     return (
         <div className="flex flex-col gap-[12px]">
 
@@ -108,7 +118,7 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
                             onTouchStart={()=>onClickTimeLine(index)}
                             onTouchEnd={()=>onClickTimeLine(-1)}
                             className={`relative flex-1 h-[12px] ${activeIndexList[index] ? RoomStatusList[index] === 1 ? 'bg-[#17659c]' : 'bg-[#212121]' : status ? 'bg-[#0D99FF]' : 'bg-[#EBF0F7]'}`}
-                        ><RoomItemDetail isActive={clicked === index} lecture={touchedLecture} /></button>
+                        ><RoomItemDetail isActive={getIsActive(index)} lecture={touchedLecture} /></button>
                     ))}
                 </div>
             </div>
