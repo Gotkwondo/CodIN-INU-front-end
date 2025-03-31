@@ -32,7 +32,7 @@ const DepartmentReviewComponent = ({
       <div className="w-full flex flex-row justify-between">
         <div className="w-full text-XLm">
           <div className="w-full mb-[18px] flex justify-start">
-            <span className="font-semibold mr-11">{`${subjectName}`}</span>
+            <span className="font-semibold mr-5">{`${subjectName}`}</span>
             <span className="text-XLm mr-5">
               <span className="text-[#0D99FF]">{`${
                 starRating % 1 ? starRating : starRating + ".0"
@@ -42,19 +42,19 @@ const DepartmentReviewComponent = ({
           </div>
 
           <div className="w-full text-Mr flex font-semibold justify-start">
-            <span className="w-[4.5rem] mr-11 text-start text-[#808080] font-normal">
+            <span className="w-[4.5rem] mr-4 text-start text-[#808080] font-normal">
               교수명
             </span>
             <span className="w-[6rem]">{`${professor}`}</span>
           </div>
           <div className="w-full mt-1 text-Mr flex font-semibold justify-start">
-            <span className="w-[4.5rem] mr-11 text-start text-[#808080] font-normal">
+            <span className="w-[4.5rem] mr-4 text-start text-[#808080] font-normal">
               학년
             </span>
             <span className="w-[6rem]">{`${grade} 학년`}</span>
           </div>
           <div className="w-full mt-1 text-Mr flex font-semibold justify-start">
-            <span className="min-w-[4.5rem] mr-11 text-start text-[#808080] font-normal">
+            <span className="min-w-[4.5rem] mr-4 text-start text-[#808080] font-normal">
               학기
             </span>
             <span className="w-[6rem] text-wrap pr-4">{`${semesters.join(
