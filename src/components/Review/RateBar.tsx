@@ -39,7 +39,7 @@ const generateClickableBars = (coloredBarCnt: number, barWidth: number, clickFn:
       bars.push(
         <div
           key={`coloredBar_${i}`}
-          className={`h-7 mr-[0.15rem] bg-[#0D99FF]`}
+          className={`h-6 mr-[0.15rem] bg-[#0D99FF]`}
           style={{ width: `${barWidth}rem` }}
           onClick={() => clickFn((i + 1) * 0.25) }
         />
@@ -48,7 +48,7 @@ const generateClickableBars = (coloredBarCnt: number, barWidth: number, clickFn:
       bars.push(
         <div
           key={`grayBar_${i}`}
-          className={`h-7 mr-[0.15rem] bg-[#EBF0F7]`}
+          className={`h-6 mr-[0.15rem] bg-[#EBF0F7]`}
           style={{ width: `${barWidth}rem` }}
           onClick={() => clickFn((i + 1) * 0.25) }
         />
