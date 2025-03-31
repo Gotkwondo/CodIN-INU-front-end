@@ -97,7 +97,7 @@ const CommentInput = ({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className="ml-[8px] flex-grow bg-transparent text-Mr outline-none placeholder-[#808080]"
+          className="ml-[8px] w-full bg-transparent text-Mr outline-none placeholder-[#808080]"
       />
 
       {/* 전송 버튼 */}
