@@ -56,11 +56,11 @@ const ReviewComment = ({
             {content}
           </p>
         </div>
-        <div className="flex justify-between items-center w-full mt-2">
-          <p className="text-sm sm:text-xl text-[#808080]">{semester + "학기 수강생"}</p>
+        <div className="flex justify-between items-center w-full mt-2 mb-[24px]">
+          <p className="text-sr text-[#808080]">{semester + "학기 수강생"}</p>
           <div className="flex items-center">
-            <FaHeart className="mr-1" fill={"#D2D5D9"} color={"#D2D5D9"} />
-            <p className="text-[#808080]">{likes ? likes : 0}</p>
+            <FaHeart className="mr-1 w-[12px]" fill={"#D2D5D9"} color={"#D2D5D9"} />
+            <p className="text-[#808080] text-sr">{likes ? likes : 0}</p>
           </div>
         </div>
       </div>
