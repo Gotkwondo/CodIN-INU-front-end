@@ -53,7 +53,7 @@ const Header = ({ children }: HeaderProps) => {
         <header
             className="
                 flex items-end justify-between
-                px-[20px] h-[108px] bg-white fixed top-0
+                px-[20px] h-[80px] bg-white fixed top-0
                 left-1/2 -translate-x-1/2 right-0 z-10
                 w-full
                 max-w-[500px] 

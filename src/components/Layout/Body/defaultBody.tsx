@@ -11,7 +11,7 @@ interface DefaultBodyProps {
 const DefaultBody: React.FC<DefaultBodyProps> = ({ hasHeader, children }) => {
     
     
-    const pt = hasHeader? " pt-[108px]" : "";
+    const pt = hasHeader? " pt-[80px]" : "";
 
     useEffect(()=>{
         const Postreissue = async (retryCount=0) => 
