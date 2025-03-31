@@ -135,7 +135,7 @@ const MainPage: FC = () => {
         <Calendar />
 
         {/* 메뉴 섹션 */}
-        <section className="mt-[63px] relative flex flex-col">
+        <section className="mt-[12px] relative flex flex-col">
           {/* 왼쪽 위에 <div> 텍스트 추가 (메뉴 외부, 왼쪽 정렬) */}
 
           {/* 메뉴 아이템 */}
