@@ -106,7 +106,7 @@ const CommentInput = ({
           className="mt-[-13px] mr-[14px] rounded-full "
           disabled={submitLoading}
       >
-        <img src="/icons/board/Send.svg" className="fixed w-[20px] h-[20px]"/>
+        <img src="/icons/board/Send.svg" className="absolute w-[20px] h-[20px]"/>
       </button>
     </div>
 );
@@ -499,7 +499,7 @@ export default function CommentSection({
                   height={36}
                   className="w-[36px] h-[36px]"
               />
-              <li key={comment._id}>
+              <li className="w-full" key={comment._id}>
                 {/* 상단 영역 */}
                 <div className="flex justify-between items-start">
                   <div className="pr-2 w-full">
@@ -659,10 +659,10 @@ export default function CommentSection({
 
                 {/* 대댓글 작성 인풋창(현재 댓글에 답글 달기 클릭 시) */}
                 {replyTargetId === comment._id && (
-                    <div className="p-4 mt-3 bg-white border border-gray-200 rounded shadow-sm relative">
+                    <div className="mt-3 bg-white relative">
                       {/* 상단 헤더: "답글 입력" & 닫기 버튼(X) */}
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-semibold">답글 입력</span>
+                        <span className="text-sr text-[#808080]">답글 입력</span>
                         <button
                             className="text-gray-400 hover:text-gray-600"
                             onClick={() => {
@@ -670,7 +670,7 @@ export default function CommentSection({
                               setNewReply("");
                             }}
                         >
-                          <FaTimes className="h-4 w-4" />
+                          <p className="text-sr text-active">취소하기</p>
                         </button>
                       </div>
                       <CommentInput
