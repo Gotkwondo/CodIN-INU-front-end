@@ -40,7 +40,7 @@ const WriteReview = () => {
     value: "",
   });
   const [semester, setSemester] = useState<selectType>({
-    label: "학기",
+    label: "수강 학기",
     value: "",
   });
   const [departmentList, setDepartmentList] = useState([]);
@@ -120,9 +120,9 @@ const WriteReview = () => {
         <Header.Title>후기 작성하기</Header.Title>
       </Header>
       <DefaultBody hasHeader={1}>
-        <div className="flex flex-col justify-between h-[70vh] sm:h-[80vh]">
+        <div className="flex flex-col justify-between">
           <div>
-            <div className="w-full flex">
+            <div className="w-full flex pt-[18px]">
               {/* 학과 학년 수강학기 선택 */}
               <CustomSelect
                 options={DEPARTMENT}
@@ -131,7 +131,7 @@ const WriteReview = () => {
                 }
                 value={lecture}
                 isSearchable={false}
-                minWidth={6.2}
+                minWidth={74}
                 inverted
                 rounded
               />
@@ -142,7 +142,7 @@ const WriteReview = () => {
                 }
                 value={grade}
                 isSearchable={false}
-                minWidth={6.7}
+                minWidth={74}
                 inverted
                 rounded
               />
@@ -153,7 +153,7 @@ const WriteReview = () => {
                 }
                 value={semester}
                 isSearchable={false}
-                minWidth={7}
+                minWidth={74}
                 inverted
                 rounded
               />
@@ -170,30 +170,30 @@ const WriteReview = () => {
               />
             </div>
 
-            <p className="text-base sm:text-xl mt-3 sm:mt-8">
+            <p className="text-XLm mt-[24px]">
               전반적인 수업 경험은 어땠나요?
             </p>
             {/* 수업 후기 점수 평가  */}
-            <div className="w-full mt-2">
+            <div className="w-full mt-[12px]">
               {/* 1-5점  해당 바를 눌러 점수를 정할 수 있도록 기능 구현 필요*/}
-              <div className="text-base sm:text-xl flex">
-                <div className=" w-32 min-w-32">
+              <div className="text-XLm flex items-center mb-[12px] gap-[16px]">
+                <div className="flex">
                   <span className="text-[#0D99FF] text-right">{`${
                     rating % 1 ? rating : rating + ".0"
                   }`}</span>{" "}
-                  <span className="text-[#E5E7EB]">/ 5.0</span>
+                  <span className="text-[#E5E7EB]">/ 5.0 </span>
                 </div>
 
-                <span className="text-[#0D99FF]">{calcEmotion(rating)}</span>
+                <span className="text-[#0D99FF] text-Mm">{calcEmotion(rating)}</span>
               </div>
               <RateBar
                 score={rating}
-                barWidth={1}
+                barWidth={0.625}
                 clickable={true}
                 clickFn={setRating}
                 className="mt-1"
               />
-              <p className="text-sm sm:text-base mt-3 text-[#808080]">
+              <p className="text-sr mt-[12px] mb-[24px] text-[#808080]">
                 위 그래프를 눌러 조절해주세요
               </p>
             </div>
@@ -201,7 +201,7 @@ const WriteReview = () => {
             <div className="mt-3">
               {/* 후기 내용 */}
               <textarea
-                className="border-2 border-gray-200 rounded-md p-3 sm:mt-5 w-full h-[20vh] sm:h-[30vh] resize-none"
+                className="border-[1px] focus:border-[#0D99FF] focus:outline-none focus:ring-1 focus:ring-[#0D99FF] border-gray-200 text-Mr rounded-md px-[16px] py-[12px] sm:mt-5 w-full h-[20vh] sm:h-[30vh] resize-none"
                 placeholder="상세한 후기를 작성해주세요"
                 onChange={(e) => setReviewContents(e.target.value)}
                 value={reviewContents}
@@ -209,7 +209,7 @@ const WriteReview = () => {
             </div>
             <div className="w-full flex justify-end sm:mt-3">
               <button
-                className="bg-[#0D99FF] text-white rounded-full px-4 py-2 hover:bg-[#51b4fa]"
+                className="bg-[#0D99FF] text-white text-Mm rounded-full px-[16px] py-[8px] mt-[6px] hover:bg-[#51b4fa]"
                 onClick={() => {
                   // setReviewContents('강의와 교재는? : \n과제는? : \n시험은? : \n조별 과제는? : \n\n\n나만의 꿀팁 : ');
                   setIsModalOpen(true);
@@ -220,7 +220,7 @@ const WriteReview = () => {
             </div>
           </div>
           <button
-            className="h-[35px] sm:h-[50px] bg-[#0D99FF] text-white mt-2 sm:mt-4 rounded-md bottom-[-100px] text-sm sm:text-base"
+            className="mt-[48px] h-[50px] bg-[#0D99FF] text-white rounded-md text-XLm"
             onClick={() => onSummitReview()}
           >
             후기 작성하기

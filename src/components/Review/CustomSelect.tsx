@@ -1,6 +1,8 @@
 import { selectType} from '@/app/(auth-required)/main/info/course-reviews/write-review/type';
 import { SetStateAction } from 'react';
+import { BiFontSize } from 'react-icons/bi';
 import Select, { GroupBase, OptionsOrGroups } from 'react-select'
+import { ValueContainer } from 'react-select/animated';
 
 type CustomSelectType = {
   options?: OptionsOrGroups<any, GroupBase<any>>;
@@ -37,12 +39,14 @@ const CustomSelect = ({
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      padding: "3px 5px",
+      padding: rounded? "0px" : "6px 3px",
       minHeight: "40px",
       boxShadow: state.isFocused ? "rgba(13, 153, 255)" : "none",
-      minWidth: minWidth ? `${minWidth}rem` : "100%",
+      minWidth: minWidth ? `${minWidth}px` : "100%",
       // maxWidth: minWidth ? `${minWidth}rem` : "100%",
       marginRight: "5px",
+      fontSize: "14px",
+      fontWeight: "medium",
     }),
     singleValue: (provided: any) => ({
       ...provided,
@@ -54,9 +58,13 @@ const CustomSelect = ({
         ? "#A9ADAE"
         : "#0D99FF", // 선택된 값의 색상 변경
       textAlign: inverted ? "center" : "start",
+      paddingLeft : rounded ? "8px" : "",
+      
     }),
     dropdownIndicator: (provided: any) => ({
       ...provided,
+      paddingLeft: "0px",
+      paddingRight: "8px",
       color: inverted ? (value.value === "" ? "black" : "white") : "black", // 화살표 색상 변경
     }),
     menu: (provided: any) => ({
@@ -84,6 +92,7 @@ const CustomSelect = ({
       "&:hover": {
         backgroundColor: inverted ? "#E5E7EB" : "#0D99FF",
       },
+      fontSize: "14px",
     }),
     indicatorSeparator: (base) => ({
       ...base,
