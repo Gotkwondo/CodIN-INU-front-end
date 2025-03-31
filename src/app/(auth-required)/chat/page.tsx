@@ -131,7 +131,6 @@ export default function Chat() {
         <Suspense>
             <Header>
                 <Header.Title>{`쪽지`}</Header.Title>
-                <Header.SearchButton onClick={() => console.log("검색 버튼 클릭")} />
             </Header>
             <DefaultBody hasHeader={1}>
                 {/* 채팅방 목록이 비어 있을 경우 안내 메시지 표시 */}
