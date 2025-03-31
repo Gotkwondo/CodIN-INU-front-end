@@ -3,7 +3,7 @@
 import './loginAnimation.css'; 
 import "@/app/globals.css";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState, useContext, useEffect } from "react";
+import React, { Suspense, useState, useContext, useEffect } from "react";
 import { PostLogin } from "@/api/user/postLogin";
 import { AuthContext } from "@/context/AuthContext";
 import CommonBtn from "@/components/buttons/commonBtn";
@@ -16,13 +16,22 @@ export default function LoginPage() {
   const [studentId, setStudentId] = useState<string>("");
   const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
+  
   const [schoolLoginExplained, setSchoolLoginExplained] =
     useState<boolean>(false);
   const authContext = useContext(AuthContext);
 
   const userContext = useContext(UserContext);
 
+  const [isClient, setIsClient] = useState(false); // 클라이언트에서만 렌더링하도록 상태 추가
+
   const [waitForNotice, setWaitForNotice] = useState<boolean>(true);
+  const [searchParams, setSearchParams] = useState<any>(null); // useSearchParams에 대한 상태 추가
+
+  useEffect(() => {
+    setIsClient(true); // 클라이언트 사이드에서만 렌더링하도록 설정
+    setSearchParams(new URLSearchParams(window.location.search)); // 클라이언트에서만 URL 파라미터 읽기
+  }, []);
 
   if (!userContext) {
     throw new Error("MyConsumer must be used within a MyProvider");
@@ -35,6 +44,14 @@ export default function LoginPage() {
   }
 
   const { Auth, updateAuth } = authContext;
+
+
+  useEffect(() => {
+    if (searchParams && searchParams.get("error") === "invalid_email_domain") {
+      alert("@inu.ac.kr 계정으로 로그인 해주세요");
+    }
+  }, [searchParams]);
+
 
   const handleStudentIdChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -149,78 +166,85 @@ export default function LoginPage() {
     }
   };
 
+  if (!isClient) {
+    return null; // 클라이언트 사이드 렌더링이 완료되기 전까지 아무것도 렌더링하지 않음
+  }
+
   return (
-    <DefaultBody hasHeader={0}>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <img
-          className="w-[171.41px] mb-[72px]"
-          src="/images/logo.png"
-        />
-        {/* <div className='flex flex-col w-full gap-[12px] mb-[169px]'>
-                    <input
-                        className="defaultInput"
-                        id="email"
-                        placeholder="학교 아이디 입력"
-                        value= {studentId}
-                        onChange={handleStudentIdChange}
-                    />
-                    <input
-                        className="defaultInput"
-                        id="password"
-                        type="password"
-                        placeholder="학교 비밀번호 입력"
-                        value={password}
-                        onChange={handlePWChange}
-                    />
-                    <a href="https://portal.inu.ac.kr:444/enview/" className='text-Mr underline text-[#808080] w-full text-right'>비밀번호를 잊으셨나요?</a>
-                </div> */}
-        {/*
-                <div id="else">
-                
-                    <button id="findPW" onClick={()=> router.push('/findPW')}> 비밀번호 찾기</button>
-                    <div id="divider"> | </div>
-                    <button id="signup" onClick={() => router.push('/signup')}>
-                        회원가입
-                    </button>
-                </div>
-                */}
-        {/* <div className='flex flex-row gap-[6px] mb-[22px]'>
-                    <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
-                    <div className='w-[12px] h-[12px] bg-[#0D99FF] rounded-[12px]'/>
-                    <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
-                </div>
-                <CommonBtn id="loginBtn" text="로그인하기" status={1} onClick={handleLogin}/> */}
+    <Suspense fallback={<div>Loading...</div>}>
+      <DefaultBody hasHeader={0}>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <img
+            className="w-[171.41px] mb-[72px]"
+            src="/images/logo.png"
+          />
+          {/* <div className='flex flex-col w-full gap-[12px] mb-[169px]'>
+                      <input
+                          className="defaultInput"
+                          id="email"
+                          placeholder="학교 아이디 입력"
+                          value= {studentId}
+                          onChange={handleStudentIdChange}
+                      />
+                      <input
+                          className="defaultInput"
+                          id="password"
+                          type="password"
+                          placeholder="학교 비밀번호 입력"
+                          value={password}
+                          onChange={handlePWChange}
+                      />
+                      <a href="https://portal.inu.ac.kr:444/enview/" className='text-Mr underline text-[#808080] w-full text-right'>비밀번호를 잊으셨나요?</a>
+                  </div> */}
+         {/*
+                  <div id="else">
+
+                      <button id="findPW" onClick={()=> router.push('/findPW')}> 비밀번호 찾기</button>
+                      <div id="divider"> | </div>
+                      <button id="signup" onClick={() => router.push('/signup')}>
+                          회원가입
+                      </button>
+                  </div>
+                 */}
+          {/* <div className='flex flex-row gap-[6px] mb-[22px]'>
+                      <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
+                      <div className='w-[12px] h-[12px] bg-[#0D99FF] rounded-[12px]'/>
+                      <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
+                  </div>
+                  <CommonBtn id="loginBtn" text="로그인하기" status={1} onClick={handleLogin}/> */}
         
 
         {/*
-        <button onClick={handleappleLogin}>
-          <img src="/images/apple.png" className="w-[175px] h-[42px] mt-3" ></img>
-        </button>
-        */}
-      </div>
-      <div className='absolute bottom-[0px] w-full px-[20px] left-0 flex flex-col items-center justify-end h-[330px] '>
-      {/*<div className="flex items-center justify-center text-Mr text-[#808080] w-[312px] rounded-[12px] bg-white/[88] px-6 py-2 mb-[32px] drop-shadow-[0_3px_8px_rgba(0,0,0,0.15)]">
-        <span className="text-[#0D99FF]">@inu.ac.kr</span>계정만 사용할 수 있어요
-      </div> */}
-        { waitForNotice ? 
-          <div className="w-[348.5px] h-[48.5px] mb-[62px] flex gap-[8px] items-center justify-center rounded-[5px] bg-white floatBtnBefore" >
-            <p className="text-XLm text-[rgba(0,0,0,0.3)] leading-none floatBtnBeforeText">@inu.ac.kr 계정을 사용해주세요</p>
-          </div>
-          :
-          <>
-            <div className='bubble relative flex items-center justify-center'>
-              <img src="/icons/auth/onlyInuAccount.svg" className="mb-[24px] flex items-center justify-center"></img>
-              <p className="absolute top-0 transform translate-y-1/2 text-sub text-Mr">
-                <span className='text-active'>@inu.ac.kr</span> 계정만 사용할 수 있어요
-              </p>
+          <button onClick={handleappleLogin}>
+            <img src="/images/apple.png" className="w-[175px] h-[42px] mt-3" ></img>
+          </button>
+          */}
+       </div>
+        <div className='absolute bottom-[0px] w-full px-[20px] left-0 flex flex-col items-center justify-end h-[330px] '>
+        {/*<div className="flex items-center justify-center text-Mr text-[#808080] w-[312px] rounded-[12px] bg-white/[88] px-6 py-2 mb-[32px] drop-shadow-[0_3px_8px_rgba(0,0,0,0.15)]">
+          <span className="text-[#0D99FF]">@inu.ac.kr</span>계정만 사용할 수 있어요
+        </div> */}
+          { waitForNotice ? 
+            <div className="w-[348.5px] h-[48.5px] mb-[62px] flex gap-[8px] items-center justify-center rounded-[5px] bg-white floatBtnBefore" >
+              <p className="text-XLm text-[rgba(0,0,0,0.3)] leading-none floatBtnBeforeText">@inu.ac.kr 계정을 사용해주세요</p>
             </div>
-            <button onClick={handleGoogleLogin} className="w-[348.5px] h-[48.5px] mb-[62px] flex gap-[8px] items-center justify-center shadow-[0_0_12px_4px_rgba(0,44,76,0.25)] rounded-[5px] bg-white floatBtn">
-              <img src='/icons/auth/googleLogo.png' className="w-[14px] h-[14px]"/>
-              <p className="text-XLm leading-none">Google계정으로 로그인</p>
-            </button>
-          </>
-        }
-      </div>
-    </DefaultBody>
+            :
+           <>
+              <div className='bubble relative flex items-center justify-center'>
+                <img src="/icons/auth/onlyInuAccount.svg" className="mb-[24px] flex items-center justify-center"></img>
+                <p className="absolute top-0 transform translate-y-1/2 text-sub text-Mr">
+                  <span className='text-active'>@inu.ac.kr</span> 계정만 사용할 수 있어요
+                </p>
+              </div>
+             <button onClick={handleGoogleLogin} className="w-[348.5px] h-[48.5px] mb-[62px] flex gap-[8px] items-center justify-center shadow-[0_0_12px_4px_rgba(0,44,76,0.25)] rounded-[5px] bg-white floatBtn">
+                <img src='/icons/auth/googleLogo.png' className="w-[14px] h-[14px]"/>
+                <p className="text-XLm leading-none">Google계정으로 로그인</p>
+              </button>
+            </>
+         }
+        </div>
+      </DefaultBody>
+    </Suspense>
+
   );
 }
