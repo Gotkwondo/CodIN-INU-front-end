@@ -34,7 +34,7 @@ const ReviewComment = ({
     <div className="border-t">
       <div className="mt-4">
         <div className="flex justify-between items-center w-full">
-          <p className="text-lg sm:text-xl font-bold">
+          <p className="text-Mm font-bold">
             {`${starRating % 1 ? starRating : starRating + ".0"}`}
           </p>
           {heartClick ? (
@@ -52,7 +52,7 @@ const ReviewComment = ({
           )}
         </div>
         <div className="flex justify-start items-center w-full mt-2">
-          <p className="text-base sm:text-lg text-wrap text-black break-all whitespace-pre-wrap">
+          <p className="text-Mr text-wrap text-normal break-all whitespace-pre-wrap">
             {content}
           </p>
         </div>
