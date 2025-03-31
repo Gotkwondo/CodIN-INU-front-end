@@ -64,7 +64,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenM
     const mappedCategoryName = mapPostCategoryToName(post.postCategory); // 매핑된 카테고리 이름
 
     const postStats = (
-        <div className="flex justify-between items-center text-xs mt-[8px]">
+        <div className="flex justify-between flex-wrap items-center text-xs mt-[8px]">
             {/* 아이콘과 통계 데이터 */}
             <div className="flex space-x-[6px]">
                 <span className="flex items-center gap-[4.33px]">
@@ -95,7 +95,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenM
         return (
             <li className="flex flex-col bg-white overflow-hidden rounded shadow">
                 <a href="#" onClick={handleClick}>
-                    <div className="relative w-full h-40">
+                    <div className="relative w-full h-[100px]">
                         {/* 이미지가 없으면 기본 이미지 표시 */}
                         <Image
                             src={imageUrl || defaultImageUrl} // imageUrl이 없으면 기본 이미지 사용

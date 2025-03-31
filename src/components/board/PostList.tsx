@@ -49,7 +49,7 @@ const PostList: React.FC<{ posts: any[]; boardName: string; boardType: string }>
         <div>
             <ul
                 className={`${
-                    boardType === "gallery" ? "grid grid-cols-2 gap-4" : "grid grid-cols-1 mt-[18px] gap-[24px]"
+                    boardType === "gallery" ? "grid grid-cols-2 mt-[18px] gap-4" : "grid grid-cols-1 mt-[18px] gap-[24px]"
                 }`}
             >
                 {posts.map((post) => (
