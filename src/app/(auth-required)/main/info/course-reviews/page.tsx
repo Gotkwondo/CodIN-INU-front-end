@@ -158,8 +158,11 @@ const CourseReviewPage = () => {
       <DefaultBody hasHeader={1}>
         <div className="w-full">
           {/* 학과 선택 버튼 */}
-          <div className="flex flex-col w-full">
-            <div className="w-full flex justify-between">
+          <div className="px-0 pt-[18px] overflow-hidden">
+            <div 
+              id="scrollbar-hidden"
+              className="flex w-full justify-start overflow-x-scroll gap-[7px]"
+            >
               {DEPARTMENTS.map(({ label, value }: labelType) => (
                 <SmRoundedBtn
                   key={`selectDepartment_${value}`}
