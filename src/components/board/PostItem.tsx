@@ -95,7 +95,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenM
         return (
             <li className="flex flex-col bg-white overflow-hidden rounded shadow">
                 <a href="#" onClick={handleClick}>
-                    <div className="relative w-full h-40">
+                    <div className="relative w-full h-[100px]">
                         {/* 이미지가 없으면 기본 이미지 표시 */}
                         <Image
                             src={imageUrl || defaultImageUrl} // imageUrl이 없으면 기본 이미지 사용
