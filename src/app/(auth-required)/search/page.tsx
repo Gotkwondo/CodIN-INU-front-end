@@ -97,7 +97,7 @@ const SearchPage: FC = () => {
             {/* 검색창 및 검색 버튼 */}
             <div className="relative flex items-center w-full">
               <input
-                  className="flex-1 rounded-full bg-gray-50 py-3 px-5 pr-12 focus:outline-none focus:ring-0" // pr-12로 오른쪽 여백 확보
+                  className="flex-1 w-full rounded-full bg-gray-50 py-3 px-5 pr-12 focus:outline-none focus:ring-0" // pr-12로 오른쪽 여백 확보
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
