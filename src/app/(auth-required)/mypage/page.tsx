@@ -8,6 +8,15 @@ import { PostLogout } from "@/api/user/postLogout";
 import { DeleteUser } from "@/api/user/deleteUser";
 import WebModal, { WebModalHandles } from "@/components/modals/WebModal";
 
+interface MenuItem {
+  label: string;
+  href?: string;
+  isSpacer?: boolean;
+  onclick?: (e: React.MouseEvent<HTMLElement>) => Promise<void> | void;
+  useModal?: boolean;
+}
+
+
 export default function MyPage() {
   const [userData, setUserData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -78,23 +87,24 @@ export default function MyPage() {
     }
   };
 
-  const menuItems = [
+  const  menuItems: MenuItem[] = [
     { label: "프로필 편집", href: "/mypage/edit" },
     { label: "게시글", href: "/mypage/board/posts" },
     { label: "좋아요", href: "/mypage/board/likes", isSpacer: true },
     { label: "스크랩", href: "/mypage/board/scraps", isSpacer: true },
-    {
-      label: "문의하기",
-      href: "https://docs.google.com/forms/d/1pDj4qKQMMVY87zrT-1QvoqljuJap5cDQaFaDeJII00A/edit?pli=1",
-      isSpacer: true,
-      useModal: true,
-    },
-    {
-      label: "이용약관",
-      href: "https://sites.google.com/view/codin-privacy-policy/%ED%99%88",
-      isSpacer: true,
-      useModal: true,
-    },
+    { label: "이용약관", href: "/mypage/condition", isSpacer: true },
+    // {
+    //   label: "문의하기",
+    //   href: "https://docs.google.com/forms/d/1pDj4qKQMMVY87zrT-1QvoqljuJap5cDQaFaDeJII00A/edit?pli=1",
+    //   isSpacer: true,
+    //   useModal: true,
+    // },
+    // {
+    //   label: "이용약관",
+    //   href: "https://sites.google.com/view/codin-privacy-policy/%ED%99%88",
+    //   isSpacer: true,
+    //   useModal: true,
+    // },
     { label: "로그아웃", onclick: handleLogout },
     { label: "회원 탈퇴", onclick: handleDeleteAccount },
   ];
