@@ -8,6 +8,15 @@ import { PostLogout } from "@/api/user/postLogout";
 import { DeleteUser } from "@/api/user/deleteUser";
 import WebModal, { WebModalHandles } from "@/components/modals/WebModal";
 
+interface MenuItem {
+  label: string;
+  href?: string;
+  isSpacer?: boolean;
+  onclick?: (e: React.MouseEvent<HTMLElement>) => Promise<void> | void;
+  useModal?: boolean;
+}
+
+
 export default function MyPage() {
   const [userData, setUserData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -78,7 +87,7 @@ export default function MyPage() {
     }
   };
 
-  const menuItems = [
+  const  menuItems: MenuItem[] = [
     { label: "프로필 편집", href: "/mypage/edit" },
     { label: "게시글", href: "/mypage/board/posts" },
     { label: "좋아요", href: "/mypage/board/likes", isSpacer: true },
