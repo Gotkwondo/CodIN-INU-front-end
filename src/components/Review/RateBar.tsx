@@ -14,17 +14,17 @@ const generateBars = (coloredBarCnt: number, barWidth: number, height: number) =
     if (coloredBarCnt > i) {
       bars.push(
         <div
-          key={`coloredBar_${i}`}
-          className={`h-${height} mr-[0.15rem] bg-[#0D99FF]`}
-          style={{ width: `${barWidth}rem` }}
+          key={`coloredBar_${i}`} 
+          className={`h-[${height}px] mr-[2px] bg-[#0D99FF]`}
+          style={{ width: `${barWidth}px` }}
         />
       );
     } else {
       bars.push(
         <div
           key={`grayBar_${i}`}
-          className={`h-${height} mr-[0.15rem] bg-[#EBF0F7] group-hover:bg-white`}
-          style={{ width: `${barWidth}rem` }}
+          className={`h-[${height}px] mr-[2px] bg-[#EBF0F7] group-hover:bg-white`}
+          style={{ width: `${barWidth}px` }}
         />
       );
     }
@@ -64,7 +64,7 @@ const RateBar = ({
   clickable = false,
   clickFn,
   className = "",
-  height = 7,
+  height = 17, //px
 }: RateBarType) => {
   const coloredBarCnt = score / 0.25;
   const barAry = clickable
