@@ -14,7 +14,7 @@ import CommentSection from '@/components/comment/CommentSection';
 import DefaultBody from '@/components/Layout/Body/defaultBody';
 import ReportModal from '@/components/modals/ReportModal'; // ReportModal 컴포넌트 임포트
 import { useReportModal } from "@/hooks/useReportModal";
-
+import { DeletePost } from '@/api/boards/deletePost';
 
 export default function VoteDetail() {
     const router = useRouter();
@@ -39,6 +39,7 @@ export default function VoteDetail() {
         userInfo: {
             scrap: boolean;
             like: boolean;
+            mine: boolean;
         };
         userImageUrl: string;
         nickname: string;
@@ -217,6 +218,21 @@ export default function VoteDetail() {
             }
         };
 
+        const deletePost = async () => {
+            try {
+                if (confirm("정말로 게시물을 삭제하시겠습니까?")) {
+                    await DeletePost(vote._id);
+                    alert("게시물이 삭제되었습니다.");
+                 
+                }
+            } catch (error) {
+                console.log("게시물 삭제에 실패하였습니다.", error);
+                const message = error.response?.data?.message;
+                alert(message);
+            }
+        };
+
+
          const {
                 isOpen: isReportModalOpen,
                 openModal: openReportModal,
@@ -233,6 +249,8 @@ export default function VoteDetail() {
             openReportModal("POST", vote._id);
         } else if (action === "block") {
             blockUser();
+        } else if (action === "delete") {
+            deletePost();
         }
         setMenuOpen(false);
     };
@@ -243,15 +261,23 @@ export default function VoteDetail() {
                 <Header.BackButton/>
                 <Header.Title>{`투표 게시글`}</Header.Title>
                 <Header.Menu>
-                    <Header.MenuItem onClick={() => handleMenuAction("chat")}>
-                        채팅하기
-                    </Header.MenuItem>
-                    <Header.MenuItem onClick={() => handleMenuAction("report")}>
-                        신고하기
-                    </Header.MenuItem>
-                    <Header.MenuItem onClick={() => handleMenuAction("block")}>
-                        차단하기
-                    </Header.MenuItem>
+                {vote?.userInfo.mine ? (
+                        <Header.MenuItem onClick={() => handleMenuAction("delete")}>
+                            삭제하기
+                        </Header.MenuItem>
+                    ) : (
+                        <>
+                            <Header.MenuItem onClick={() => handleMenuAction("chat")}>
+                                채팅하기
+                            </Header.MenuItem>
+                            <Header.MenuItem onClick={() => handleMenuAction("report")}>
+                                신고하기
+                            </Header.MenuItem>
+                            <Header.MenuItem onClick={() => handleMenuAction("block")}>
+                                차단하기
+                            </Header.MenuItem>
+                        </>
+                    )}
                 </Header.Menu>
             </Header>
             <DefaultBody hasHeader={1}>
