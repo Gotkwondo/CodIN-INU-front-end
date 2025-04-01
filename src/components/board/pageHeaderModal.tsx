@@ -97,8 +97,13 @@ const PageHeaderModal = ({
 
     const handleMenuAction = (action: string) => {
         if (action === "chat") {
-            alert("채팅하기 클릭됨");
-            startChat();
+            const userConfirmed = confirm("채팅하시겠습니까?");
+            if (userConfirmed) {
+                startChat();
+            } else {
+                // 사용자가 취소를 선택한 경우에 수행할 동작
+                console.log("채팅을 취소했습니다.");
+            }
         } else if (action === "report") {
             openReportModal("POST", post._id);
         } else if (action === "block") {
