@@ -21,5 +21,6 @@ export interface Post {
     userInfo: {
         like: boolean; // 사용자가 좋아요를 눌렀는지 여부
         scrap: boolean; // 사용자가 북마크했는지 여부
+        mine: boolean;
     };
 }
