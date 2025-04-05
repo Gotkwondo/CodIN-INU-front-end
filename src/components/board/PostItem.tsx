@@ -55,7 +55,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, boardName, boardType, onOpenM
     const mapPostCategoryToName = (postCategory: string): string => {
         for (const boardKey in boardData) {
             const board = boardData[boardKey];
-            console.log("board", board);
+            // console.log("board", board);
             if (board) return board.name; // 매핑된 이름 반환
         }
         return "알 수 없음"; // 매칭되는 카테고리가 없을 경우
