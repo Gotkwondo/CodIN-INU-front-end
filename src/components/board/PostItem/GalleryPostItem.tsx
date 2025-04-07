@@ -25,7 +25,7 @@ const GalleryPostItem: React.FC<Props> = ({ post, onOpenModal }) => {
             >
                 <div className="relative w-full h-[70px]">
                     <Image
-                        src={imageUrl || defaultImageUrl}
+                        src={imageUrl}
                         alt={post.title}
                         width={400}
                         height={400}
