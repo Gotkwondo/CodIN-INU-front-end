@@ -96,11 +96,15 @@ const CommentInput = ({
 
       {/* 입력창 */}
       <div className="w-full flex">
-        {replyTargetNickname && (
-              <span className="text-sub whitespace-nowrap text-sr flex items-start mt-[1px]">
+        {replyTargetNickname && replyTargetNickname.length > 3 ? 
+              (<span className="text-sub whitespace-nowrap text-sr flex items-start mt-[1px]">
+                @{replyTargetNickname.slice(0,3)+".."}
+              </span>)
+              :
+              (<span className="text-sub whitespace-nowrap text-sr flex items-start mt-[1px]">
                 @{replyTargetNickname}
-              </span>
-        )}
+              </span>)
+        }
         <input
             value={value}
             onChange={onChange}
