@@ -116,9 +116,9 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
 
     // 렌더링
     return (
-        <div className="bg-white min-h-screen flex justify-center"> {/* 가운데 정렬을 위한 flex 및 justify-center 추가 */}
-            <div className="w-full max-w-[500px] px-4"> {/* max-w-[500px] 및 패딩 추가 */}
-                <div className="flex items-center space-x-[12px] mb-[20px]">
+        <div id="scrollbar-hidden" className="bg-white min-h-screen flex justify-center overflow-x-scroll" > {/* 가운데 정렬을 위한 flex 및 justify-center 추가 */}
+            <div className="w-full max-w-[500px] px-4" > {/* max-w-[500px] 및 패딩 추가 */}
+                <div className="flex items-center space-x-[12px] mb-[20px]" >
                     <div className="w-[36px] h-[36px] bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
                         {post.anonymous ? (
                             <img
