@@ -7,6 +7,7 @@ import DefaultBody from "@/components/Layout/Body/defaultBody";
 import { PostLogout } from "@/api/user/postLogout";
 import { DeleteUser } from "@/api/user/deleteUser";
 import WebModal, { WebModalHandles } from "@/components/modals/WebModal";
+import apiClient from "@/api/clients/apiClient";
 
 interface MenuItem {
   label: string;
@@ -23,28 +24,20 @@ export default function MyPage() {
   const modalRef = useRef<WebModalHandles>(null);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch("https://codin.inu.ac.kr/api/users", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const result = await response.json();
-        if (result.success) {
-          setUserData(result.data);
-        } else {
-          console.error(result.message);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
 
-    fetchUserData();
+    apiClient
+    .get("/users")
+    .then((response) => {
+      const data = response.data;
+      setUserData(data);
+    })
+    .catch((err) => {
+      console.log(err.message);
+    })
+    .finally(() => {
+      setIsLoading(false);
+    });
+  
   }, []);
 
   const handleLogout = async (e: React.MouseEvent<HTMLElement>) => {
