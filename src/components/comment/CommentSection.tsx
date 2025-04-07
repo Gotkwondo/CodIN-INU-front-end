@@ -613,7 +613,7 @@ export default function CommentSection({
                                   className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-gray-700"
                                   onClick={() => {
                                     setreplyTargetNickname(status === "REPLY" ? comment.nickname : null);
-                                    setReplyTargetId(status === "REPLY" ? idFromParent : comment._id );
+                                    setReplyTargetId(comment._id );
                                     setMenuOpenId(null);
                                   }}
                               >
@@ -690,7 +690,7 @@ export default function CommentSection({
                           setAnonymous={setAnonymous}
                           value={newReply}
                           onChange={(e) => setNewReply(e.target.value)}
-                          onSubmit={() => replyTargetNickname ? submitReply("@"+replyTargetNickname+" "+newReply, comment._id) : submitReply(newReply, comment._id)}
+                          onSubmit={() => replyTargetNickname ? submitReply("@"+replyTargetNickname+" "+newReply, idFromParent) : submitReply(newReply, comment._id)}
                           submitLoading={submitLoading}
                           replyTargetNickname={replyTargetNickname}
                           placeholder="답글을 입력하세요"
