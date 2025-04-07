@@ -17,29 +17,32 @@ const GalleryPostItem: React.FC<Props> = ({ post, onOpenModal }) => {
     };
 
     return (
-        <li className="flex flex-col bg-white overflow-hidden rounded shadow">
-            <a href="#" onClick={handleClick}>
-                <div className="relative w-full h-[100px]">
+        <li className="flex flex-col h-full bg-white overflow-hidden rounded shadow">
+            <a
+                href="#"
+                onClick={handleClick}
+                className="flex flex-col flex-1 h-full" // 핵심!
+            >
+                <div className="relative w-full h-[70px]">
                     <Image
-                        src={imageUrl}
+                        src={imageUrl || defaultImageUrl}
                         alt={post.title}
                         width={400}
                         height={400}
-                        className="object-cover w-full h-full"
+                        className="object-cover w-full h-full bg-white"
                     />
                 </div>
-                <div className="p-2">
-                    <h3 className="text-sm sm:text-base font-semibold text-gray-800 truncate">
+                <div className="p-4 flex-1 flex flex-col justify-between">
+                    <h3 className="text-sm sm:text-base font-semibold text-gray-800">
                         {post.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">
-                        {post.content}
-                    </p>
                     <PostStats post={post} />
                 </div>
             </a>
         </li>
+
     );
+
 };
 
 export default GalleryPostItem;
