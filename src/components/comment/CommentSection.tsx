@@ -96,7 +96,7 @@ const CommentInput = ({
 
       {/* 입력창 */}
       <div className="w-full flex">
-        {replyTargetNickname && replyTargetNickname.length > 3 ? 
+        {replyTargetNickname ? replyTargetNickname.length > 3 ? 
               (<span className="text-sub whitespace-nowrap text-sr flex items-start mt-[1px]">
                 @{replyTargetNickname.slice(0,3)+".."}
               </span>)
@@ -104,6 +104,7 @@ const CommentInput = ({
               (<span className="text-sub whitespace-nowrap text-sr flex items-start mt-[1px]">
                 @{replyTargetNickname}
               </span>)
+          : null
         }
         <input
             value={value}
@@ -697,7 +698,7 @@ export default function CommentSection({
                           onSubmit={() => replyTargetNickname ? submitReply("@"+replyTargetNickname+" "+newReply, idFromParent) : submitReply(newReply, comment._id)}
                           submitLoading={submitLoading}
                           replyTargetNickname={replyTargetNickname}
-                          placeholder="답글을 입력하세요"
+                          placeholder={replyTargetNickname !== null ? "에게 답글 .. " : "답글을 입력하세요"}
                       />
                     </div>
                 )}
