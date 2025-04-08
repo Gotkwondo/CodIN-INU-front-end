@@ -5,6 +5,7 @@ import { roomItemProps } from "./interfaces/roomItem_interface";
 import RoomItemDetail from "./roomItemDetail";
 import { Lecture } from "./interfaces/page_interface";
 
+import styles from './styles/roomItem.module.css';
 
 const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusList, BoundaryList }) => {
 
@@ -102,7 +103,7 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
 
             <h3 className="text-[#212121] text-[16px] font-medium">{RoomName}</h3>
 
-            <div className="time-table select-none">
+            <div className={styles.scrollHint}>
                 <div className="flex w-full gap-[4px] mb-[6px]">
                     {[9, 10, 11, 12, 1, 2, 3, 4, 5].map((number) => (
                         <p key={number} className="flex-1 text-[#808080] font-regular text-[14px]">
@@ -110,7 +111,7 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
                         </p>
                     ))}
                 </div>
-                <div className="flex gap-[2px] ml-[3px] flex-nowrap">
+                <div className="flex gap-[2px] ml-[3px] flex-nowrap ">
                     {RoomStatusList.map((status, index) => (
                         <button
                             key={index}
