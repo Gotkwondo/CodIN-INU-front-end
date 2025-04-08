@@ -1,0 +1,19 @@
+.scrollHint {
+  animation: scrollHintAnim 1s;
+  }
+  
+  @keyframes scrollHintAnim {
+    0% {
+      transform: translateX(10%);
+    }
+    20%{
+      transform: translateX(-10%);
+    }
+    70% {
+      transform: translateX(2%);
+    }
+    100%{
+      transform: translateX(0%);
+    }
+  }
+  
