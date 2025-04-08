@@ -176,10 +176,10 @@ const RoomStatus: FC = () => {
         </Header>
 
         <DefaultBody hasHeader={1}>
-          <div className="px-0 pt-[18px] overflow-hidden">
+          <div className="px-0 pt-[18px]">
             <div
               id="scrollbar-hidden"
-              className="flex w-full justify-start overflow-x-scroll gap-[7px]"
+              className="flex justify-start overflow-x-scroll gap-[7px]"
             >
               <SmRoundedBtn
                 text="1층"
@@ -218,13 +218,17 @@ const RoomStatus: FC = () => {
               />
             </div>
 
+            <div 
+              id="scrollbar-hidden"
+              className="overflow-x-scroll relative"
+             >
             {roomStatus[floor - 1] &&
               Object.entries(roomStatus[floor - 1]).map(([roomNum, status]) => {
                 const [timeTable, boundaryTable] = getTimeTableData(status);
                 return (
                   <div
                     key={roomNum}
-                    className="flex flex-col my-[24px] gap-[48px]"
+                    className="flex flex-col my-[24px] gap-[58px] w-max"
                   >
                     <RoomItem
                       RoomName={roomNum + "호"}
@@ -235,6 +239,7 @@ const RoomStatus: FC = () => {
                   </div>
                 );
               })}
+            </div>
           </div>
         </DefaultBody>
 

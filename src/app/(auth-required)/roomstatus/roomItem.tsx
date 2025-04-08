@@ -40,13 +40,13 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
             for ( let lt of LectureList ){
                 const [st, et] = [lt.startTime , lt.endTime];
                 const startPointer = (parseInt(st.split(":")[0])-9)*4 + Math.floor(parseInt(st.split(":")[1])/15);
-    
+            
                 if(idx < startPointer) { 
-                    emptyEndTime = st;
-                    setTouchedLecture(createEmptyLecture(emptyStartTime, emptyEndTime));return;
+                    emptyEndTime = emptyEndTime > st ? st : emptyEndTime;
                 }else{
-                    emptyStartTime = et;
+                    emptyStartTime = emptyStartTime < et ? et : emptyStartTime;
                 }
+                
             }
             setTouchedLecture(createEmptyLecture(emptyStartTime, emptyEndTime)); return;
         }
@@ -100,24 +100,24 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
     return (
         <div className="flex flex-col gap-[12px]">
 
-            <h3 className="text-[#212121] text-[14px] font-medium">{RoomName}</h3>
+            <h3 className="text-[#212121] text-[16px] font-medium">{RoomName}</h3>
 
             <div className="time-table select-none">
-                <div className="flex w-full gap-[4px]">
+                <div className="flex w-full gap-[4px] mb-[6px]">
                     {[9, 10, 11, 12, 1, 2, 3, 4, 5].map((number) => (
-                        <p key={number} className="flex-1 text-[#808080] font-regular text-[12px]">
+                        <p key={number} className="flex-1 text-[#808080] font-regular text-[14px]">
                             {number}
                         </p>
                     ))}
                 </div>
-                <div className="flex gap-[2px] ml-[3px] w-full flex-wrap">
+                <div className="flex gap-[2px] ml-[3px] flex-nowrap">
                     {RoomStatusList.map((status, index) => (
                         <button
                             key={index}
                             id={`room-${RoomName}-time-${index}`}  
                             onTouchStart={()=>onClickTimeLine(index)}
                             onTouchEnd={()=>onClickTimeLine(-1)}
-                            className={`relative flex-1 h-[12px] ${activeIndexList[index] ? RoomStatusList[index] === 1 ? 'bg-[#17659c]' : 'bg-[#212121]' : status ? 'bg-[#0D99FF]' : 'bg-[#EBF0F7]'}`}
+                            className={`relative w-[16px] shrink-0 h-[24px] rounded-[3px] ${activeIndexList[index] ? RoomStatusList[index] === 1 ? 'bg-[#17659c]' : 'bg-[#212121]' : status ? 'bg-[#0D99FF]' : 'bg-[#EBF0F7]'}`}
                         ><RoomItemDetail isActive={getIsActive(index)} lecture={touchedLecture} /></button>
                     ))}
                 </div>
