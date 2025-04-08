@@ -69,16 +69,17 @@ const menuItems = [
 ];
 
 const Calendar = () => {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-
   return (
-    <div className="relative w-full mt-[18px]">
-      <ZoomableImageModal images={`/images/calendar/4.png`} />
-    </div>
+      <div className="relative w-full mt-[18px]">
+        <ZoomableImageModal
+            images={["/images/calendar/3.png", "/images/calendar/4.png"]}
+            mode="banner"
+        />
+      </div>
   );
 };
+
+
 
 const mapPostCategoryToBoardPath = (postCategory: string): string | null => {
   for (const boardKey in boardData) {
