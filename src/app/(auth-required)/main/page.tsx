@@ -70,12 +70,9 @@ const menuItems = [
 
 const Calendar = () => {
   return (
-      <div className="relative w-full mt-[18px]">
-        <ZoomableImageModal
-            images={["/images/calendar/3.png", "/images/calendar/4.png"]}
-            mode="banner"
-        />
-      </div>
+    <div className="relative w-full mt-[18px]">
+      <ZoomableImageModal images={`/images/calendar/4.png`} />
+    </div>
   );
 };
 
