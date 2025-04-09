@@ -6,8 +6,6 @@ import RoomItemDetail from "./roomItemDetail";
 import { Lecture } from "../interfaces/page_interface";
 import { TIMETABLE_GAP, TIMETABLE_LENGTH, TIMETABLE_WIDTH } from "../constants/timeTableSize";
 
-import styles from '../styles/roomItem.module.css';
-
 const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusList, BoundaryList }) => {
 
     const [clicked, setClicked] = React.useState<number>(-1);
@@ -119,7 +117,8 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
                             id={`room-${RoomName}-time-${index}`}  
                             onTouchStart={()=>onClickTimeLine(index)}
                             onTouchEnd={()=>onClickTimeLine(-1)}
-                            className={`relative w-[${TIMETABLE_WIDTH}px] shrink-0 h-[${TIMETABLE_WIDTH*1.5}px] rounded-[3px] ${activeIndexList[index] ? RoomStatusList[index] === 1 ? 'bg-[#17659c]' : 'bg-[#212121]' : status ? 'bg-[#0D99FF]' : 'bg-[#EBF0F7]'}`}
+                            style={{ width: `${TIMETABLE_WIDTH}px`, height: `${TIMETABLE_WIDTH*1.5}px` }}
+                            className={`relative shrink-0 rounded-[3px] ${activeIndexList[index] ? RoomStatusList[index] === 1 ? 'bg-[#17659c]' : 'bg-[#212121]' : status ? 'bg-[#0D99FF]' : 'bg-[#EBF0F7]'}`}
                         ><RoomItemDetail isActive={getIsActive(index)} lecture={touchedLecture} /></button>
                     ))}
                 </div>
