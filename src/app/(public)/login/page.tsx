@@ -10,6 +10,7 @@ import CommonBtn from "@/components/buttons/commonBtn";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
 import { PostPortal } from "@/api/user/postPortal";
 import { UserContext } from "@/context/UserContext";
+import { set } from 'lodash';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -27,6 +28,8 @@ export default function LoginPage() {
 
   const [waitForNotice, setWaitForNotice] = useState<boolean>(true);
   const [searchParams, setSearchParams] = useState<any>(null); // useSearchParams에 대한 상태 추가
+
+  const [isLoginPressed, setIsLoginPressed] = useState(false);
 
   useEffect(() => {
     setIsClient(true); // 클라이언트 사이드에서만 렌더링하도록 설정
@@ -144,10 +147,12 @@ export default function LoginPage() {
   ): Promise<void> => {
     e.preventDefault();
     try {
+      setIsLoginPressed(true);
       // 구글 로그인 URL로 리디렉션
-      window.location.href = "https://codin.inu.ac.kr/api/auth/google";
+      //window.location.href = "https://codin.inu.ac.kr/api/auth/google";
     } catch (error) {
       console.error("로그인 실패", error);
+      setIsLoginPressed(false);
       alert("로그인 오류");
     }
   };
@@ -224,24 +229,33 @@ export default function LoginPage() {
         {/*<div className="flex items-center justify-center text-Mr text-[#808080] w-[312px] rounded-[12px] bg-white/[88] px-6 py-2 mb-[32px] drop-shadow-[0_3px_8px_rgba(0,0,0,0.15)]">
           <span className="text-[#0D99FF]">@inu.ac.kr</span>계정만 사용할 수 있어요
         </div> */}
-          { waitForNotice ? 
-            <div className="w-[348.5px] h-[48.5px] mb-[62px] flex gap-[8px] items-center justify-center rounded-[5px] bg-white floatBtnBefore" >
-              <p className="text-XLm text-[rgba(0,0,0,0.3)] leading-none floatBtnBeforeText">@inu.ac.kr 계정을 사용해주세요</p>
-            </div>
-            :
-           <>
-              <div className='bubble relative flex items-center justify-center'>
-                <img src="/icons/auth/onlyInuAccount.svg" className="mb-[24px] flex items-center justify-center"></img>
-                <p className="absolute top-0 transform translate-y-1/2 text-sub text-Mr">
-                  <span className='text-active'>@inu.ac.kr</span> 계정만 사용할 수 있어요
-                </p>
-              </div>
-             <button onClick={handleGoogleLogin} className="w-[348.5px] h-[48.5px] mb-[62px] flex gap-[8px] items-center justify-center shadow-[0_0_12px_4px_rgba(0,44,76,0.25)] rounded-[5px] bg-white floatBtn">
-                <img src='/icons/auth/googleLogo.png' className="w-[14px] h-[14px]"/>
-                <p className="text-XLm leading-none">Google계정으로 로그인</p>
-              </button>
-            </>
-         }
+          
+        
+        <div className={`${waitForNotice ? "hidden " : ""} bubble relative flex items-center justify-center transition-all duration-[500ms] mb-[24px] ${isLoginPressed ? "h-[140px] " : "h-[62px]"}`}>
+          <img src="/icons/auth/onlyInuAccount.svg" className={`h-full `}/>
+          <p className={"absolute top-0 transform text-sub "+ ( isLoginPressed ? "translate-y-[190%] scale-[105%] bubbleTextAfterPressed" : "translate-y-1/2 text-Mr")}>
+            <span className='text-active'>@inu.ac.kr</span> 계정만 사용할 수 있어요
+          </p>
+        </div>
+        
+        
+
+        { waitForNotice ?
+          <div className="w-[348.5px] h-[48.5px] mb-[62px] flex gap-[8px] items-center justify-center rounded-[5px] bg-white floatBtnBefore" >
+            <p className="text-XLm text-[rgba(0,0,0,0.3)] leading-none floatBtnBeforeText">@inu.ac.kr 계정을 사용해주세요</p>
+          </div> 
+          :
+          <button onClick={handleGoogleLogin} disabled={isLoginPressed} className={"btnAppearAnimation w-[348.5px] h-[48.5px] mb-[62px] flex gap-[8px] items-center justify-center shadow-[0_0_12px_4px_rgba(0,44,76,0.25)] rounded-[5px] bg-white floatBtn"
+            +"disabled:cursor-not-allowed disabled:opacity-25 "+ ( isLoginPressed ? "btnClickedAnimation" : "")}>
+            <img src='/icons/auth/googleLogo.png' className="w-[14px] h-[14px]"/>
+            <p className="text-XLm leading-none">Google계정으로 로그인</p>
+          </button>
+        }
+        { isLoginPressed && 
+          <div className="overlayBeforeLogin" />
+        }  
+             
+         
         </div>
       </DefaultBody>
     </Suspense>
