@@ -149,7 +149,7 @@ export default function LoginPage() {
     try {
       setIsLoginPressed(true);
       // 구글 로그인 URL로 리디렉션
-      //window.location.href = "https://codin.inu.ac.kr/api/auth/google";
+      window.location.href = "https://codin.inu.ac.kr/api/auth/google";
     } catch (error) {
       console.error("로그인 실패", error);
       setIsLoginPressed(false);
@@ -233,7 +233,7 @@ export default function LoginPage() {
         
         <div className={`${waitForNotice ? "hidden " : ""} bubble relative flex items-center justify-center transition-all duration-[500ms] mb-[24px] ${isLoginPressed ? "h-[140px] " : "h-[62px]"}`}>
           <img src="/icons/auth/onlyInuAccount.svg" className={`h-full `}/>
-          <p className={"absolute top-0 transform text-sub "+ ( isLoginPressed ? "translate-y-[190%] scale-[105%] bubbleTextAfterPressed" : "translate-y-1/2 text-Mr")}>
+          <p className={"absolute top-0 transform text-sub "+ ( isLoginPressed ? "translate-y-[190%] scale-[105%] bubbleTextAfterPressed font-medium" : "translate-y-1/2 text-Mr")}>
             <span className='text-active'>@inu.ac.kr</span> 계정만 사용할 수 있어요
           </p>
         </div>
