@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import PostItem from "@/components/board/PostItem";
+import PostItem from "@/components/board/PostItem/PostItem";
 import PageHeaderModal from "@/components/board/pageHeaderModal";
 import PostDetailClient from "@/app/(auth-required)/main/boards/[boardName]/[postId]/PostDetailClient";
 

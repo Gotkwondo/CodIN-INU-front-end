@@ -1,6 +1,5 @@
 
 'use client';
-import '../vote.css';
 import { useRouter } from 'next/navigation';
 import { useContext, useState, useEffect, useRef } from 'react';
 import DatePicker from 'react-datepicker';  // 날짜 선택을 위한 라이브러리

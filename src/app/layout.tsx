@@ -1,7 +1,6 @@
 import './globals.css';
 import { ReactNode } from 'react';
 import { UserProvider } from '@/context/UserContext';
-import BottomNav from '../components/Layout/BottomNav';
 import { AuthProvider } from '@/context/AuthContext';
 import type { Viewport } from 'next'
 import ReviewProvider from '@/context/WriteReviewContext';

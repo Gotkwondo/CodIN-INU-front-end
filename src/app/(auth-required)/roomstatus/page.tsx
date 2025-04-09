@@ -2,7 +2,6 @@
 
 import { FC, useState, useEffect, useRef } from "react";
 import apiClient from "@/api/clients/apiClient";
-import axios from "axios";
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { Suspense } from "react";
 import Header from "@/components/Layout/header/Header";
@@ -12,7 +11,7 @@ import { Lecture, LectureDict } from "./interfaces/page_interface";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
 
 const RoomStatus: FC = () => {
-  // const [accessToken, setAccessToken] = useState<string>("");
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>(null);
   const [floor, setFloor] = useState<number>(1);
@@ -23,7 +22,6 @@ const RoomStatus: FC = () => {
     null,
     null,
   ]);
-
 
 
    useEffect(() => {
@@ -63,24 +61,6 @@ const RoomStatus: FC = () => {
         .finally(() => {
           setIsLoading(false);
         });
-
-      /*
-            try{
-                const response = await axios.get(`https://codin.inu.ac.kr/api/rooms/empty`, {
-                    headers: {
-                        Authorization: accessToken,
-                    },
-                });
-                const la:LectureDict[] = response.data.data;
-                //let newrs = roomStatus; newrs[floor-1]=la;
-                localStorage.setItem("roomStatus", JSON.stringify(la));
-                localStorage.setItem("roomStatusUpdatedAt", day);
-                setRoomStatus(la);
-            }catch(err){
-                setError(err.message);
-            }finally {
-                setIsLoading(false);
-            }*/
     };
 
     getRoomStatus();
@@ -176,65 +156,72 @@ const RoomStatus: FC = () => {
         </Header>
 
         <DefaultBody hasHeader={1}>
-          <div className="px-0 pt-[18px] overflow-hidden">
+          <div className="px-0 pt-[18px]">
             <div
               id="scrollbar-hidden"
-              className="flex w-full justify-start overflow-x-scroll gap-[7px]"
+              className="flex justify-start overflow-x-scroll gap-[7px]"
             >
               <SmRoundedBtn
                 text="1층"
                 status={floor === 1 ? 1 : 0}
                 onClick={() => {
-                  if (floor !== 1) setFloor(1);
+                  if (floor !== 1) setFloor(1); scrollRef.current?.scrollTo({ left: 0});
                 }}
               />
               <SmRoundedBtn
                 text="2층"
                 status={floor === 2 ? 1 : 0}
                 onClick={() => {
-                  if (floor !== 2) setFloor(2);
+                  if (floor !== 2) setFloor(2); scrollRef.current?.scrollTo({ left: 0});
                 }}
               />
               <SmRoundedBtn
                 text="3층"
                 status={floor === 3 ? 1 : 0}
                 onClick={() => {
-                  if (floor !== 3) setFloor(3);
+                  if (floor !== 3) setFloor(3); scrollRef.current?.scrollTo({ left: 0});
                 }}
               />
               <SmRoundedBtn
                 text="4층"
                 status={floor === 4 ? 1 : 0}
                 onClick={() => {
-                  if (floor !== 4) setFloor(4);
+                  if (floor !== 4) setFloor(4); scrollRef.current?.scrollTo({ left: 0});
                 }}
               />
               <SmRoundedBtn
                 text="5층"
                 status={floor === 5 ? 1 : 0}
                 onClick={() => {
-                  if (floor !== 5) setFloor(5);
+                  if (floor !== 5) setFloor(5); scrollRef.current?.scrollTo({ left: 0});
                 }}
               />
             </div>
 
-            {roomStatus[floor - 1] &&
-              Object.entries(roomStatus[floor - 1]).map(([roomNum, status]) => {
-                const [timeTable, boundaryTable] = getTimeTableData(status);
-                return (
-                  <div
-                    key={roomNum}
-                    className="flex flex-col my-[24px] gap-[48px]"
-                  >
-                    <RoomItem
-                      RoomName={roomNum + "호"}
-                      LectureList={status}
-                      RoomStatusList={timeTable}
-                      BoundaryList={boundaryTable}
-                    />
-                  </div>
-                );
-              })}
+            <div 
+              ref={scrollRef}
+              id="scrollbar-hidden" 
+              className="overflow-x-scroll relative" 
+            >
+
+              {roomStatus[floor - 1] &&
+                Object.entries(roomStatus[floor - 1]).map(([roomNum, status]) => {
+                  const [timeTable, boundaryTable] = getTimeTableData(status);
+                  return (
+                    <div
+                      key={roomNum}
+                      className="flex flex-col my-[24px] gap-[58px] w-max"
+                    >
+                      <RoomItem
+                        RoomName={roomNum + "호"}
+                        LectureList={status}
+                        RoomStatusList={timeTable}
+                        BoundaryList={boundaryTable}
+                      />
+                    </div>
+                  );
+                })}
+            </div>
           </div>
         </DefaultBody>
 

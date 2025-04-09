@@ -67,6 +67,7 @@ const CommentInput = ({
                         onSubmit,
                         submitLoading,
                         placeholder,
+                        replyTargetNickname,
                       }: {
   anonymous: boolean;
   setAnonymous: (value: (prev: boolean) => boolean) => void;
@@ -75,8 +76,9 @@ const CommentInput = ({
   onSubmit: () => void;
   submitLoading: boolean;
   placeholder: string;
+  replyTargetNickname?: string | null;
 }) => (
-    <div className=" flex items-center justify-center rounded-[34px] bg-[#FCFCFC] px-[12px] py-[8px]">
+    <div className="flex items-center justify-start rounded-[34px] bg-[#FCFCFC] py-[8px]">
       {/* 익명 토글 버튼 */}
       <button
           onClick={() => setAnonymous((prev) => !prev)}
@@ -89,24 +91,36 @@ const CommentInput = ({
         />
         <span className={`text-[10px] w-6 ${anonymous ? "text-active" : "text-sub"}`}>
         익명
-      </span>
+        </span>
       </button>
 
       {/* 입력창 */}
-      <input
-          value={value}
-          onChange={onChange}
-          placeholder={placeholder}
-          className="ml-[8px] w-full bg-transparent text-Mr outline-none placeholder-[#808080]"
-      />
+      <div className="w-full flex">
+        {replyTargetNickname ? replyTargetNickname.length > 3 ? 
+              (<span className="text-sub whitespace-nowrap text-sr flex items-start mt-[1px]">
+                @{replyTargetNickname.slice(0,3)+".."}
+              </span>)
+              :
+              (<span className="text-sub whitespace-nowrap text-sr flex items-start mt-[1px]">
+                @{replyTargetNickname}
+              </span>)
+          : null
+        }
+        <input
+            value={value}
+            onChange={onChange}
+            placeholder={placeholder}
+            className="w-full ml-[8px] flex-1 bg-transparent text-Mr outline-none placeholder-[#808080]"
+        />
+      </div>
 
       {/* 전송 버튼 */}
       <button
           onClick={onSubmit}
-          className="mt-[-13px] mr-[14px] rounded-full "
+          className="flex items-center justify-center mr-[8px]"
           disabled={submitLoading}
       >
-        <img src="/icons/board/Send.svg" className="absolute w-[20px] h-[20px]"/>
+        <img src="/icons/board/Send.svg" className="min-w-[20px] min-h-[20px] max-w-[20px] max-h-[20px]"/>
       </button>
     </div>
 );
@@ -128,6 +142,7 @@ export default function CommentSection({
   // 대댓글 작성
   const [newReply, setNewReply] = useState<string>("");
   const [replyTargetId, setReplyTargetId] = useState<string | null>(null);
+  const [replyTargetNickname, setreplyTargetNickname] = useState<string | null>(null);
 
   // 메뉴 관련
   const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
@@ -412,7 +427,7 @@ export default function CommentSection({
         throw new Error(data.message || "대댓글 작성 실패");
       }
     } catch (err: any) {
-      setError(err.message || "API 호출 중 오류가 발생했습니다.");
+      setError( `${err.message} , ${commentId}` || "API 호출 중 오류가 발생했습니다.");
     } finally {
       setSubmitLoading(false);
     }
@@ -484,9 +499,10 @@ export default function CommentSection({
   const renderComments = (
       commentList: Comment[],
       depth = 0,
-      status: string
+      status: string,
+      idFromParent: string | null,
   ) => (
-      <ul>
+      <ul className="w-full">
         {commentList.map((comment) => (
             <div className="flex w-full flex-row gap-[8px] pt-[24px]">
               <img
@@ -601,7 +617,8 @@ export default function CommentSection({
                               <button
                                   className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-gray-700"
                                   onClick={() => {
-                                    setReplyTargetId(comment._id);
+                                    setreplyTargetNickname(status === "REPLY" ? comment.nickname : null);
+                                    setReplyTargetId(comment._id );
                                     setMenuOpenId(null);
                                   }}
                               >
@@ -659,7 +676,7 @@ export default function CommentSection({
 
                 {/* 대댓글 작성 인풋창(현재 댓글에 답글 달기 클릭 시) */}
                 {replyTargetId === comment._id && (
-                    <div className="mt-3 bg-white relative">
+                    <div className="w-full mt-3 bg-white">
                       {/* 상단 헤더: "답글 입력" & 닫기 버튼(X) */}
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sr text-[#808080]">답글 입력</span>
@@ -678,16 +695,17 @@ export default function CommentSection({
                           setAnonymous={setAnonymous}
                           value={newReply}
                           onChange={(e) => setNewReply(e.target.value)}
-                          onSubmit={() => submitReply(newReply, comment._id)}
+                          onSubmit={() => replyTargetNickname ? submitReply("@"+replyTargetNickname+" "+newReply, idFromParent) : submitReply(newReply, comment._id)}
                           submitLoading={submitLoading}
-                          placeholder="답글을 입력하세요"
+                          replyTargetNickname={replyTargetNickname}
+                          placeholder={replyTargetNickname !== null ? "에게 답글 .. " : "답글을 입력하세요"}
                       />
                     </div>
                 )}
 
                 {/* 재귀적으로 대댓글 렌더링 */}
                 {comment.replies.length > 0 &&
-                    renderComments(comment.replies, depth + 1, "REPLY")}
+                    renderComments(comment.replies, depth + 1, "REPLY", comment._id)}
               </li>
             </div>
         ))}
@@ -695,14 +713,14 @@ export default function CommentSection({
   );
 
   return (
-      <div className="relative w-full max-w-[500px] mx-auto"> {/* max-w-[500px] 및 mx-auto 추가 */}
-        <div className="bg-[#FCFCFC] h-[8px] w-full mt-[24px]" />
+      <div className="relative w-full max-w-[500px] mx-auto" id="scrollbar-hidden"> {/* max-w-[500px] 및 mx-auto 추가 */}
+        <div className="bg-[#FCFCFC] h-[8px] w-full mt-[24px]" id="scrollbar-hidden" />
 
         {/* 에러 메시지 */}
         {error && <p className="text-red-500 mb-2">{error}</p>}
 
         {/* 댓글 목록 */}
-        {renderComments(comments, 0, "COMMENT")}
+        {renderComments(comments, 0, "COMMENT", null)}
 
         {/* 삭제 모달 */}
         {renderDeleteModal()}

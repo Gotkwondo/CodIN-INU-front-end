@@ -1,5 +1,4 @@
 'use client';
-import '../vote.css';
 import { useRouter } from 'next/navigation';
 import { useContext, useState, useEffect, useRef } from 'react';
 import apiClient from "@/api/clients/apiClient"; // 공통 apiClient 불러오기
