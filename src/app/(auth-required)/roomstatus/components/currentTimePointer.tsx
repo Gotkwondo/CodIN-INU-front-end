@@ -20,7 +20,6 @@ const CurrentTimePointer: React.FC<{
     useEffect(() => {
         const updateDate = () => { 
             const date = new Date();
-            date.setHours(16);
             setCurrentTime(date); 
             setCurrentTimeText(getCurrentTimeText(date));
 
