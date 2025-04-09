@@ -20,6 +20,7 @@ const CurrentTimePointer: React.FC<{
     useEffect(() => {
         const updateDate = () => { 
             const date = new Date();
+            date.setHours(16);
             setCurrentTime(date); 
             setCurrentTimeText(getCurrentTimeText(date));
 
@@ -100,7 +101,7 @@ const CurrentTimePointer: React.FC<{
     }
 
     
-    if( currentTime.getHours() < maxHour ){ //오후 4시 이전 , 글자가 오른쪽에 보임
+    if( currentTime.getHours() < maxHour-2 ){ //오후 4시 이전 , 글자가 오른쪽에 보임
         return(
             <>
                 { showNav === "left" && <button onClick={()=>{scrollToNow(0);}} className="fixed top-[159px] left-[18px] top- text-[#FFB300] text-sm"><span className="text-sr text-[#FFB300] ml-[2px]">◀</span> 현재 시간</button> }
