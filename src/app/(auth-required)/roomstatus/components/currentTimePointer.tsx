@@ -1,22 +1,16 @@
 "use client";
 
-import { set } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { CurrentTimePointerProps } from "../interfaces/currentTimePointer_interface";
+import { getMarginLeft } from "../utils/timePointerUtils";
 
-const CurrentTimePointer: React.FC<{
-        minHour:number, maxHour:number, 
-        widthOfBlock: number, gapBetweenBlocks: number,
-        numOfBlocks: number,
-        refOfParent: React.RefObject<HTMLDivElement>, 
-    }> = ({minHour, maxHour, widthOfBlock, gapBetweenBlocks, numOfBlocks, refOfParent}) => {
+const CurrentTimePointer: React.FC<CurrentTimePointerProps> = ({minHour, maxHour, widthOfBlock, gapBetweenBlocks, numOfBlocks, refOfParent, setShowNav}) => {
     
     const [currentTime, setCurrentTime] = useState(new Date());
     const [currentTimeText, setCurrentTimeText] = useState("오후 9:00");
 
     const [pointerHeight, setPointerHeight] = useState(0);
-    const [windowScrollY, setWindowScrollY] = useState(0);
 
-    const [showNav, setShowNav] = useState(null);
     const currentTimeRef = React.useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -49,7 +43,7 @@ const CurrentTimePointer: React.FC<{
         const handleScroll = () => {
           const rect = currentTimeRef.current?.getBoundingClientRect();
           if (!rect) return;
-      
+
           if (rect.left < -77) {
             setShowNav("left");
           } else if (rect.right > window.innerWidth+77) {
@@ -59,33 +53,18 @@ const CurrentTimePointer: React.FC<{
           }
         };
         
-        const handleScrollY = () => {
-            setWindowScrollY(window.scrollY);
-        }
 
         const scrollParent = refOfParent.current;
         scrollParent?.addEventListener("scroll", handleScroll);
-        window.addEventListener("scroll", handleScrollY);
         window.addEventListener("resize", handleScroll);
 
         return () => {
           scrollParent?.removeEventListener("scroll", handleScroll);
           window.removeEventListener("resize", handleScroll);
         };
-
       }, []);
-      
-    
-    const getMarginLeft = () => {        
-        const currentHour = currentTime.getHours();
-        const currentMinute = currentTime.getMinutes();
-        const totalMinutes = (currentHour - minHour) * 60 + currentMinute;
-        const totalWidth = numOfBlocks * (widthOfBlock + gapBetweenBlocks);
-        const marginLeft = (totalWidth / ((maxHour - minHour) * 60)) * totalMinutes;
-        return Math.floor(marginLeft);
 
-    }
-    
+
     const getCurrentTimeText = (date: Date) => {
         const hours = date.getHours();
         const minutes = date.getMinutes();
@@ -95,24 +74,10 @@ const CurrentTimePointer: React.FC<{
         return `${period} ${formattedHour}:${formattedMinute}`;
     };
     
-    const scrollToNow = ( direction: number ) => {
-        if( currentTime.getHours() < minHour || currentTime.getHours() >= maxHour){
-            console.log(minHour,currentTime.getHours(),maxHour );
-            refOfParent.current?.scrollTo({ left: 0, behavior: "smooth" });
-        } else if (!direction){
-            refOfParent.current?.scrollTo({ left: getMarginLeft() - window.innerWidth/2, behavior: "smooth" });
-        } else{
-            refOfParent.current?.scrollTo({ left: getMarginLeft() + window.innerWidth/2, behavior: "smooth" });
-        }
-    }
-
-    
-    if( currentTime.getHours() < maxHour-2 ){ //오후 4시 이전 , 글자가 오른쪽에 보임
+    if( minHour <= currentTime.getHours() && currentTime.getHours() < maxHour-2 ){ //오후 4시 이전 , 글자가 오른쪽에 보임
         return(
             <>
-                { showNav === "left" && <button onClick={()=>{scrollToNow(0);}} style={{transform: `translateY(-${windowScrollY}px)`}} className="fixed top-[159px] left-[18px] text-[#FFB300] text-sm"><span className="text-sr text-[#FFB300] ml-[2px]">◀</span> 현재 시간</button> }
-                { showNav === "right" && <button onClick={()=>{scrollToNow(1);}} style={{transform: `translateY(-${windowScrollY}px)`}} className="fixed top-[159px] right-[18px] text-[#FFB300] text-sm">현재 시간 <span className="text-sr text-[#FFB300] ml-[2px]">▶</span> </button> }
-                <div ref={currentTimeRef} className="flex flex-col gap-[8px] w-max" style={{ transform: `translateX(${getMarginLeft()}px)` }}>
+                <div ref={currentTimeRef} className="flex flex-col gap-[4px] w-max" style={{ transform: `translateX(${getMarginLeft()}px)` }}>
                     <span className="text-sm text-[#FFB300]">
                         <span className="text-sr text-[#FFB300] mr-[8px]">▼</span> 
                         {currentTimeText}
@@ -123,12 +88,10 @@ const CurrentTimePointer: React.FC<{
                 </div>
             </>
         );
-    }else if( currentTime.getHours() < maxHour ){ //오후 4시 ~ 오후 6시, 글자가 왼쪽에 보임
+    }else if( minHour <= currentTime.getHours() && currentTime.getHours() < maxHour ){ //오후 4시 ~ 오후 6시, 글자가 왼쪽에 보임
         return(
             <>
-                { showNav === "left" && <button onClick={()=>{scrollToNow(0);}} style={{transform: `translateY(-${windowScrollY}px)`}} className="fixed top-[159px] left-[18px] text-[#FFB300] text-sm"><span className="text-sr text-[#FFB300] ml-[2px]">◀</span> 현재 시간</button> }
-                { showNav === "right" && <button onClick={()=>{scrollToNow(1);}} style={{transform: `translateY(-${windowScrollY}px)`}} className="fixed top-[159px] right-[18px] text-[#FFB300] text-sm">현재 시간 <span className="text-sr text-[#FFB300] ml-[2px]">▶</span> </button> }
-                <div ref={currentTimeRef} className="flex flex-col gap-[8px] w-max" style={{ transform: `translateX(${getMarginLeft()-77}px)` }}>
+                <div ref={currentTimeRef} className="flex flex-col gap-[4px] w-max" style={{ transform: `translateX(${getMarginLeft()-77}px)` }}>
                     <span className="text-sm text-[#FFB300] ml-[11px]">
                         {currentTimeText}
                         <span className="text-sr text-[#FFB300] ml-[8px]">▼</span> 
@@ -144,9 +107,7 @@ const CurrentTimePointer: React.FC<{
     }else{ //그 외 시간, 글자가 맨 왼쪽에 보임
         return(
             <>
-                { showNav === "left" && <button onClick={()=>{scrollToNow(0);}} style={{transform: `translateY(-${windowScrollY}px)`}} className="fixed top-[159px] left-[18px] text-[#FFB300] text-sm"><span className="text-sr text-[#FFB300] ml-[2px]">◀</span> 현재 시간</button> }
-                { showNav === "right" && <button onClick={()=>{scrollToNow(1);}} style={{transform: `translateY(-${windowScrollY}px)`}} className="fixed top-[159px] right-[18px] text-[#FFB300] text-sm">현재 시간 <span className="text-sr text-[#FFB300] ml-[2px]">▶</span> </button> }
-                <div ref={currentTimeRef} className="flex flex-col gap-[8px] w-max opacity-50">
+                <div ref={currentTimeRef} className="flex flex-col gap-[4px] w-max opacity-50" >
                     <span className="text-sm text-[#FFB300] mb-[8px]">
                         <span className="text-sr text-[#FFB300] mr-[8px]">▼</span> 
                         {currentTimeText}

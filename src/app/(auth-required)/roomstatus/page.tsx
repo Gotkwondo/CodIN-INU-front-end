@@ -10,7 +10,8 @@ import RoomItem from "./components/roomItem";
 import CurrentTimePointer from "./components/currentTimePointer";
 import { Lecture, LectureDict } from "./interfaces/page_interface";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
-import { TIMETABLE_GAP, TIMETABLE_LENGTH, TIMETABLE_WIDTH } from "./constants/timeTableSize";
+import { MAXHOUR, MINHOUR, TIMETABLE_GAP, TIMETABLE_LENGTH, TIMETABLE_WIDTH } from "./constants/timeTableData";
+import { getMarginLeft } from "./utils/timePointerUtils";
 
 const RoomStatus: FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -25,8 +26,10 @@ const RoomStatus: FC = () => {
     null,
   ]);
 
+  //자식 요소에서 가져오는 props
+  const [showNav, setShowNav] = useState(null);
   
-   useEffect(() => {
+  useEffect(() => {
     const date = new Date();
     const day = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 
@@ -144,6 +147,17 @@ const RoomStatus: FC = () => {
     return [timeTable, boundaryTable];
   };
 
+  const scrollToNow = ( direction: number ) => {
+      const currentTime = new Date();
+      if( currentTime.getHours() < MINHOUR || currentTime.getHours() >= MAXHOUR){
+          scrollRef.current?.scrollTo({ left: 0, behavior: "smooth" });
+      } else if (!direction){
+          scrollRef.current?.scrollTo({ left: getMarginLeft() - window.innerWidth/2, behavior: "smooth" });
+      } else{
+          scrollRef.current?.scrollTo({ left: getMarginLeft() + window.innerWidth/2, behavior: "smooth" });
+      }
+  }
+
   return (
     <Suspense>
       <div className={"w-full h-full"}>
@@ -194,16 +208,21 @@ const RoomStatus: FC = () => {
                 }}
               />
             </div>
-            
+
+            <div className={"flex items-end w-full h-[24px] bg-[rgba(0,0,0,0)] z-40 relative " + (showNav === "left" ?  "justify-start" : "justify-end")}>
+              { showNav === "left"  && <button onClick={()=>{scrollToNow(0);}} className="text-[#FFB300] text-sm z-40 translate-y-full"><span className="text-sr text-[#FFB300] ml-[2px]">◀</span> 현재 시간</button> }
+              { showNav === "right" && <button onClick={()=>{scrollToNow(1);}} className="text-[#FFB300] text-sm z-40 translate-y-full">현재 시간 <span className="text-sr text-[#FFB300] ml-[2px]">▶</span> </button> }
+            </div>
+
             <div 
               ref={scrollRef}
               id="scrollbar-hidden" 
-              className="overflow-x-scroll relative mt-[24px] h-fit" 
+              className="overflow-x-scroll relative h-fit" 
             >
               <CurrentTimePointer
-                minHour={9} maxHour={18}
+                minHour={MINHOUR} maxHour={MAXHOUR}
                 widthOfBlock={TIMETABLE_WIDTH} gapBetweenBlocks={TIMETABLE_GAP} numOfBlocks={TIMETABLE_LENGTH}
-                refOfParent={scrollRef}
+                refOfParent={scrollRef} setShowNav={setShowNav}
               />
 
               {roomStatus[floor - 1] &&
