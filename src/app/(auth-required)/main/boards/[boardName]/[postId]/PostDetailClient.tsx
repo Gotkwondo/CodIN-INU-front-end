@@ -113,34 +113,7 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
       </div>
     );
   }
-  const matches = post.content.match(/\[\[.*?\]\]/g);
-  console.log("matches", matches);
-    const filtered = matches.map((raw) => {
-        try {
-            const parsed = JSON.parse(raw.replace(/'/g, '"')); // 작은따옴표 → JSON 호환
-            // console.log(parsed)
-            if (
-                Array.isArray(parsed) &&
-                parsed.length >= 2 &&
-                parsed.every((row) => Array.isArray(row))
-            ) {
-                return {
-                    data: parsed,
-                    index: post.content.indexOf(raw),
-                    length: raw.length
-                };
-                // return [parsed, post.content.indexOf(raw), raw.length];
-            }
-        } catch (e) {
-            return;
-        }
-    });
-    console.log('filtered', filtered)
-    // const test = post.content.split);
-    // for (const { data, index, length } of filtered) {
-        
-    // }
-    console.log('splitted', post.content)
+  
   // 렌더링
     return (
         <div className="bg-white min-h-screen flex justify-center">
