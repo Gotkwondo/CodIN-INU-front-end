@@ -26,7 +26,7 @@ export default function LoginPage() {
 
   const [isClient, setIsClient] = useState(false); // 클라이언트에서만 렌더링하도록 상태 추가
 
-  const [waitForNotice, setWaitForNotice] = useState<boolean>(true);
+  const [waitForNotice, setWaitForNotice] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useState<any>(null); // useSearchParams에 대한 상태 추가
 
   const [isLoginPressed, setIsLoginPressed] = useState(false);
@@ -117,12 +117,12 @@ export default function LoginPage() {
     }
   }, [Auth.accessToken]); // Auth.accessToken의 변경을 감지
 
-  useEffect(() => {
+  /* useEffect(() => {
     setTimeout(() => {
       setWaitForNotice(false);
       console.log("hi")
     }, 3000);
-  }, []);
+  }, []); */
   // if(!schoolLoginExplained){
   //     return (
   //         <DefaultBody hasHeader={0}>
@@ -147,9 +147,13 @@ export default function LoginPage() {
   ): Promise<void> => {
     e.preventDefault();
     try {
+      if( !isLoginPressed ) {
+        setTimeout(() => {
+          window.location.href = "https://codin.inu.ac.kr/api/auth/google";
+        }, 2500);
+      }
       setIsLoginPressed(true);
       // 구글 로그인 URL로 리디렉션
-      window.location.href = "https://codin.inu.ac.kr/api/auth/google";
     } catch (error) {
       console.error("로그인 실패", error);
       setIsLoginPressed(false);
