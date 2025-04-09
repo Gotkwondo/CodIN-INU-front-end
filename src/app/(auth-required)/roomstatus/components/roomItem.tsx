@@ -110,7 +110,7 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
                         </p>
                     ))}
                 </div>
-                <div className={`flex gap-[${TIMETABLE_GAP}px] ml-[3px] flex-nowrap `}>
+                <div style={{ gap: TIMETABLE_GAP }}className={`flex ml-[3px] flex-nowrap `} >
                     {RoomStatusList.map((status, index) => (
                         <button
                             key={index}
