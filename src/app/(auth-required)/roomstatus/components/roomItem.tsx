@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { roomItemProps } from "./interfaces/roomItem_interface";
+import { roomItemProps } from "../interfaces/roomItem_interface";
 import RoomItemDetail from "./roomItemDetail";
-import { Lecture } from "./interfaces/page_interface";
+import { Lecture } from "../interfaces/page_interface";
 
-import styles from './styles/roomItem.module.css';
+import styles from '../styles/roomItem.module.css';
 
 const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusList, BoundaryList }) => {
 
@@ -101,9 +101,9 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
     return (
         <div className="flex flex-col gap-[12px]">
 
-            <h3 className="text-[#212121] text-[16px] font-medium">{RoomName}</h3>
+            <h3 className="text-[#212121] text-[16px] w-max bg-white z-30 font-medium">{RoomName}</h3>
 
-            <div className={styles.scrollHint}>
+            <div>
                 <div className="flex w-full gap-[4px] mb-[6px]">
                     {[9, 10, 11, 12, 1, 2, 3, 4, 5].map((number) => (
                         <p key={number} className="flex-1 text-[#808080] font-regular text-[14px]">
@@ -118,7 +118,7 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
                             id={`room-${RoomName}-time-${index}`}  
                             onTouchStart={()=>onClickTimeLine(index)}
                             onTouchEnd={()=>onClickTimeLine(-1)}
-                            className={`relative w-[16px] shrink-0 h-[24px] rounded-[3px] ${activeIndexList[index] ? RoomStatusList[index] === 1 ? 'bg-[#17659c]' : 'bg-[#212121]' : status ? 'bg-[#0D99FF]' : 'bg-[#EBF0F7]'}`}
+                            className={`relative w-[14px] shrink-0 h-[18px] rounded-[3px] ${activeIndexList[index] ? RoomStatusList[index] === 1 ? 'bg-[#17659c]' : 'bg-[#212121]' : status ? 'bg-[#0D99FF]' : 'bg-[#EBF0F7]'}`}
                         ><RoomItemDetail isActive={getIsActive(index)} lecture={touchedLecture} /></button>
                     ))}
                 </div>

@@ -6,7 +6,8 @@ import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { Suspense } from "react";
 import Header from "@/components/Layout/header/Header";
 import SmRoundedBtn from "@/components/buttons/smRoundedBtn";
-import RoomItem from "./roomItem";
+import RoomItem from "./components/roomItem";
+import CurrentTimePointer from "./components/currentTimePointer";
 import { Lecture, LectureDict } from "./interfaces/page_interface";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
 
@@ -25,11 +26,6 @@ const RoomStatus: FC = () => {
 
 
    useEffect(() => {
-  //   if (!accessToken) {
-  //     return;
-  //   }
-  //   //로그인 안되어 있으면 실행 안함
-
     const date = new Date();
     const day = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 
@@ -156,7 +152,7 @@ const RoomStatus: FC = () => {
         </Header>
 
         <DefaultBody hasHeader={1}>
-          <div className="px-0 pt-[18px]">
+          <div className="px-0 pt-[18px] flex flex-col">
             <div
               id="scrollbar-hidden"
               className="flex justify-start overflow-x-scroll gap-[7px]"
@@ -165,44 +161,49 @@ const RoomStatus: FC = () => {
                 text="1층"
                 status={floor === 1 ? 1 : 0}
                 onClick={() => {
-                  if (floor !== 1) setFloor(1); scrollRef.current?.scrollTo({ left: 0});
+                  if (floor !== 1) setFloor(1); scrollRef.current?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
                 }}
               />
               <SmRoundedBtn
                 text="2층"
                 status={floor === 2 ? 1 : 0}
                 onClick={() => {
-                  if (floor !== 2) setFloor(2); scrollRef.current?.scrollTo({ left: 0});
+                  if (floor !== 2) setFloor(2); scrollRef.current?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
                 }}
               />
               <SmRoundedBtn
                 text="3층"
                 status={floor === 3 ? 1 : 0}
                 onClick={() => {
-                  if (floor !== 3) setFloor(3); scrollRef.current?.scrollTo({ left: 0});
+                  if (floor !== 3) setFloor(3); scrollRef.current?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
                 }}
               />
               <SmRoundedBtn
                 text="4층"
                 status={floor === 4 ? 1 : 0}
                 onClick={() => {
-                  if (floor !== 4) setFloor(4); scrollRef.current?.scrollTo({ left: 0});
+                  if (floor !== 4) setFloor(4); scrollRef.current?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
                 }}
               />
               <SmRoundedBtn
                 text="5층"
                 status={floor === 5 ? 1 : 0}
                 onClick={() => {
-                  if (floor !== 5) setFloor(5); scrollRef.current?.scrollTo({ left: 0});
+                  if (floor !== 5) setFloor(5); scrollRef.current?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
                 }}
               />
             </div>
-
+            
             <div 
               ref={scrollRef}
               id="scrollbar-hidden" 
-              className="overflow-x-scroll relative" 
+              className="overflow-x-scroll relative mt-[24px] h-fit" 
             >
+              <CurrentTimePointer
+                minHour={9} maxHour={18}
+                widthOfBlock={14} gapBetweenBlocks={2} numOfBlocks={36}
+                refOfParent={scrollRef}
+              />
 
               {roomStatus[floor - 1] &&
                 Object.entries(roomStatus[floor - 1]).map(([roomNum, status]) => {
@@ -210,7 +211,7 @@ const RoomStatus: FC = () => {
                   return (
                     <div
                       key={roomNum}
-                      className="flex flex-col my-[24px] gap-[58px] w-max"
+                      className="flex flex-col gap-[58px] w-max mb-[24px]"
                     >
                       <RoomItem
                         RoomName={roomNum + "호"}
