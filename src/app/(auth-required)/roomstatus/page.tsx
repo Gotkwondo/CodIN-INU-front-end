@@ -10,6 +10,7 @@ import RoomItem from "./components/roomItem";
 import CurrentTimePointer from "./components/currentTimePointer";
 import { Lecture, LectureDict } from "./interfaces/page_interface";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
+import { TIMETABLE_GAP, TIMETABLE_LENGTH, TIMETABLE_WIDTH } from "./constants/timeTableSize";
 
 const RoomStatus: FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -24,7 +25,7 @@ const RoomStatus: FC = () => {
     null,
   ]);
 
-
+  
    useEffect(() => {
     const date = new Date();
     const day = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
@@ -39,27 +40,27 @@ const RoomStatus: FC = () => {
       return;
     }
 
-    const getRoomStatus = async () => {
-      setIsLoading(true);
-
-      apiClient
-        .get("/rooms/empty")
-        .then((response) => {
-          const la: LectureDict[] = response.data.data;
-          localStorage.setItem("roomStatus", JSON.stringify(la));
-          localStorage.setItem("roomStatusUpdatedAt", day);
-          setRoomStatus(la);
-          console.log(la);
-        })
-        .catch((err) => {
-          setError(err.message);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
+  const getRoomStatus = async () => {
+    setIsLoading(true);
+    apiClient
+      .get("/rooms/empty")
+      .then((response) => {
+        const la: LectureDict[] = response.data.data;
+        localStorage.setItem("roomStatus", JSON.stringify(la));
+        localStorage.setItem("roomStatusUpdatedAt", day);
+        setRoomStatus(la);
+        console.log(la);
+      })
+      .catch((err) => {
+        setError(err.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
     };
 
     getRoomStatus();
+  
   }, []);
 
   if (isLoading) {
@@ -98,8 +99,8 @@ const RoomStatus: FC = () => {
 
   const getTimeTableData = (listOfLecture: Lecture[]) => {
     let lecture: Lecture;
-    let timeTable = Array.from({ length: 36 }, () => 0);
-    let boundaryTable = Array.from({ length: 36 }, () => 0);
+    let timeTable = Array.from({ length: TIMETABLE_LENGTH }, () => 0);
+    let boundaryTable = Array.from({ length: TIMETABLE_LENGTH }, () => 0);
     for (lecture of listOfLecture) {
       const start = lecture.startTime;
       const end = lecture.endTime;
@@ -201,7 +202,7 @@ const RoomStatus: FC = () => {
             >
               <CurrentTimePointer
                 minHour={9} maxHour={18}
-                widthOfBlock={14} gapBetweenBlocks={2} numOfBlocks={36}
+                widthOfBlock={TIMETABLE_WIDTH} gapBetweenBlocks={TIMETABLE_GAP} numOfBlocks={TIMETABLE_LENGTH}
                 refOfParent={scrollRef}
               />
 
