@@ -7,6 +7,7 @@ import CommentSection from "@/components/comment/CommentSection";
 import ZoomableImageModal from "@/components/modals/ZoomableImageModal";
 import { FaEye, FaHeart, FaRegCommentDots, FaBookmark } from "react-icons/fa";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
+import { checkChartTypeList } from './utils/textToChartData';
 
 interface PostDetailClientProps {
     postId: string;
@@ -113,7 +114,7 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
       </div>
     );
   }
-  
+  checkChartTypeList(post.content);
   // 렌더링
     return (
         <div className="bg-white min-h-screen flex justify-center">
@@ -152,7 +153,8 @@ export default function PostDetailClient({ postId }: PostDetailClientProps) {
                     <h3 className="text-Lm mb-[12px]">{post.title}</h3>
                     {/* 본문 텍스트 가독성 증가를 위해 white-space 스타일 적용 */}
                     <p className="text-Mr mb-[24px] whitespace-pre-wrap">
-                        {post.content}
+                        {/* {post.content} */}
+                        {checkChartTypeList(post.content)}
                     </p>
                 </div>
                 <div className="mb-[24px]">
