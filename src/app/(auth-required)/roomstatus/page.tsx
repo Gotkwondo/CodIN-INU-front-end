@@ -217,7 +217,7 @@ const RoomStatus: FC = () => {
             <div 
               ref={scrollRef}
               id="scrollbar-hidden" 
-              className="overflow-x-scroll relative overflow-y-visible" 
+              className="overflow-x-scroll relative overflow-y-hidden" 
             >
               <CurrentTimePointer
                 minHour={MINHOUR} maxHour={MAXHOUR}
