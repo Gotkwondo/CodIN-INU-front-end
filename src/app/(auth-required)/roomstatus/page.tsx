@@ -217,11 +217,10 @@ const RoomStatus: FC = () => {
             <div 
               ref={scrollRef}
               id="scrollbar-hidden" 
-              className="overflow-x-scroll relative h-fit" 
+              className="overflow-x-scroll relative overflow-y-visible" 
             >
               <CurrentTimePointer
                 minHour={MINHOUR} maxHour={MAXHOUR}
-                widthOfBlock={TIMETABLE_WIDTH} gapBetweenBlocks={TIMETABLE_GAP} numOfBlocks={TIMETABLE_LENGTH}
                 refOfParent={scrollRef} setShowNav={setShowNav}
               />
 
