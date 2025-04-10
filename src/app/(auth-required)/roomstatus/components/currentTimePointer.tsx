@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CurrentTimePointerProps } from "../interfaces/currentTimePointer_interface";
 import { getMarginLeft } from "../utils/timePointerUtils";
 
-const CurrentTimePointer: React.FC<CurrentTimePointerProps> = ({minHour, maxHour, widthOfBlock, gapBetweenBlocks, numOfBlocks, refOfParent, setShowNav}) => {
+const CurrentTimePointer: React.FC<CurrentTimePointerProps> = ({minHour, maxHour, refOfParent, setShowNav}) => {
     
     const [currentTime, setCurrentTime] = useState(new Date());
     const [currentTimeText, setCurrentTimeText] = useState("오후 9:00");
