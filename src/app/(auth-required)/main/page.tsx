@@ -97,14 +97,14 @@ const MainPage: FC = () => {
 
   // const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
-  const mapPostCategoryToLabel = (postCategory: string) => {
-    for (const boardKey in boardData) {
-      const board = boardData[boardKey];
-      const tab = board.tabs.find((tab) => tab.postCategory === postCategory);
-      if (tab) return board.name;
-    }
-    return "알 수 없음";
-  };
+  // const mapPostCategoryToLabel = (postCategory: string) => {
+  //   for (const boardKey in boardData) {
+  //     const board = boardData[boardKey];
+  //     const tab = board.tabs.find((tab) => tab.postCategory === postCategory);
+  //     if (tab) return board.name;
+  //   }
+  //   return "알 수 없음";
+  // };
 
   // 메인 페이지가 로딩되었을 때(세션 내 최초) 웹뷰로 "LOGIN_SUCCESS" 메시지 전송
   useEffect(() => {
