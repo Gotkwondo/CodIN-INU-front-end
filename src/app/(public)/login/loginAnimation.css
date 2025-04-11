@@ -11,6 +11,7 @@
 }
 
 .bubble {
+  z-index: 30;
   animation: floatBubble 3s ease-in-out infinite; /* 애니메이션 적용 */
 }
 
@@ -26,13 +27,19 @@
   }
 }
 .floatBtn {
-    animation: floatBtn 3s ease-in-out infinite; /* 애니메이션 적용 */
+  z-index: 30;
+  transition: all 0.5s ease-in-out;
+  opacity: 100;
+  animation: floatBtn 4s ease-in-out infinite; /* 애니메이션 적용 */
+}
+.floatBtn:hover{
+  opacity: 50%;
 }
 
 @keyframes floatBtnBefore {
 }
 .floatBtnBefore {
-    animation: floatBtnBefore 3s ease-in ; /* 애니메이션 적용 */
+  animation: floatBtnBefore 3s ease-in ; /* 애니메이션 적용 */
 }
 
 @keyframes floatBtnBeforeText {
@@ -48,5 +55,74 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 200% 100%;
-  animation: floatBtnBeforeText 3s linear forwards;
+  animation: floatBtnBeforeText 2.5s linear forwards;
+}
+.bubbleTextAfterPressed{ 
+  background: linear-gradient(to right,  rgba(0, 119, 204, 0.55), rgba(0, 119, 204, 1), rgba(0, 119, 204, 1));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 100%;
+  animation: floatBtnBeforeText 2.5s linear infinite;
+
+}
+
+@keyframes loginButtonAppear {
+  from {
+    opacity: 0%;
+  }
+  to {
+    opacity: 100%;
+  }
+}
+.btnAppearAnimation{
+  animation: loginButtonAppear 1.2s linear;
+}
+
+@keyframes btnClickedBounce {
+  0%   { transform: translateY(0);}
+  10%  { transform: translateY(-20px); }   
+  25%  { transform: translateY(5px); }     
+  40%  { transform: translateY(-12px); }  
+  55%  { transform: translateY(3px); }
+  70%  { transform: translateY(-6px); }
+  85%  { transform: translateY(2px); }
+  100% { transform: translateY(0);  }
+}
+
+.btnClickedAnimation {
+  animation: btnClickedBounce 1.5s linear;
+}
+
+
+@keyframes expandBeforeLogin {
+  0% {
+    transform: translateX(-50%) scale(6);
+  }
+  50% {
+    transform: translateX(-50%) scale(10);
+  }
+  100% {
+    transform: translateX(-50%) scale(6);
+  }
+}
+
+.overlayBeforeLogin{
+  position: fixed;
+  left: 50%;
+  bottom: 210px;
+  width: 20px;
+  height: 20px;
+  transform : translateX(-50%) scale(10);
+  background: radial-gradient(
+        circle at center,
+        rgba(0, 119, 204, 0.75) 0%,
+        transparent 25%,
+        rgba(0, 119, 204, 0.35) 50%,
+        transparent 75%,
+        rgba(0, 119, 204, 0.12) 100%
+      );
+  z-index: 20;
+  border-radius: 100%;
+  filter: blur(3px);
+  animation: expandBeforeLogin 5s ease-in-out infinite;
 }

@@ -1,16 +1,15 @@
 "use client";
 
 import React from "react";
-import { roomItemProps } from "./interfaces/roomItem_interface";
+import { roomItemProps } from "../interfaces/roomItem_interface";
 import RoomItemDetail from "./roomItemDetail";
-import { Lecture } from "./interfaces/page_interface";
-
-import styles from './styles/roomItem.module.css';
+import { Lecture } from "../interfaces/page_interface";
+import { TIMETABLE_GAP, TIMETABLE_LENGTH, TIMETABLE_WIDTH } from "../constants/timeTableData";
 
 const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusList, BoundaryList }) => {
 
     const [clicked, setClicked] = React.useState<number>(-1);
-    const [activeIndexList, setActiveIndexList] = React.useState<number[]>(Array.from({ length: 36 }, () => 0));
+    const [activeIndexList, setActiveIndexList] = React.useState<number[]>(Array.from({ length: TIMETABLE_LENGTH }, () => 0));
     const [touchedLecture, setTouchedLecture] = React.useState<Lecture>(null);
     
 
@@ -59,25 +58,25 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
     const highlightTouchedLecture = (idx: number) =>{
         if(idx >= 0){
             let st = 0;
-            let end = 36;
+            let end = TIMETABLE_LENGTH;
 
             for(let i = idx-1 ; i >= 0 ; i--){
                 if(BoundaryList[i] === 1) { st = i; break; }
             }
-            for(let i = idx ; i <= 36 ; i++){
+            for(let i = idx ; i <= TIMETABLE_LENGTH ; i++){
                 if(BoundaryList[i] === 1) { end = i; break; }
             }
-            let nl = Array.from({ length: 36 }, () => 0);
+            let nl = Array.from({ length: TIMETABLE_LENGTH }, () => 0);
 
             //강의중이 아닌 시간을 고를 경우, 수업이 아닌 부분만 선택되도록 설정
-            if ( RoomStatusList[idx]===0) { [st, end] = [ (st===0) ? st : st+1, (end===36)? end: end-1] } else { }
+            if ( RoomStatusList[idx]===0) { [st, end] = [ (st===0) ? st : st+1, (end===TIMETABLE_LENGTH)? end: end-1] } else { }
 
             for (let i = st; i <= end; i++) {
                 nl[i] = 1;
             }
             setActiveIndexList(nl);
         }else{
-            const emptyList = Array.from({ length: 36 }, () => 0);
+            const emptyList = Array.from({ length: TIMETABLE_LENGTH }, () => 0);
             setActiveIndexList(emptyList);
         }
     }
@@ -101,24 +100,25 @@ const RoomItem: React.FC<roomItemProps> = ({ RoomName, LectureList, RoomStatusLi
     return (
         <div className="flex flex-col gap-[12px]">
 
-            <h3 className="text-[#212121] text-[16px] font-medium">{RoomName}</h3>
+            <h3 className="text-[#212121] text-[14px] w-max bg-white z-30 font-medium">{RoomName}</h3>
 
-            <div className={styles.scrollHint}>
+            <div>
                 <div className="flex w-full gap-[4px] mb-[6px]">
                     {[9, 10, 11, 12, 1, 2, 3, 4, 5].map((number) => (
-                        <p key={number} className="flex-1 text-[#808080] font-regular text-[14px]">
+                        <p key={number} className="flex-1 text-[#808080] font-regular text-[12px]">
                             {number}
                         </p>
                     ))}
                 </div>
-                <div className="flex gap-[2px] ml-[3px] flex-nowrap ">
+                <div style={{ gap: TIMETABLE_GAP }}className={`flex ml-[3px] flex-nowrap `} >
                     {RoomStatusList.map((status, index) => (
                         <button
                             key={index}
                             id={`room-${RoomName}-time-${index}`}  
                             onTouchStart={()=>onClickTimeLine(index)}
                             onTouchEnd={()=>onClickTimeLine(-1)}
-                            className={`relative w-[16px] shrink-0 h-[24px] rounded-[3px] ${activeIndexList[index] ? RoomStatusList[index] === 1 ? 'bg-[#17659c]' : 'bg-[#212121]' : status ? 'bg-[#0D99FF]' : 'bg-[#EBF0F7]'}`}
+                            style={{ width: `${TIMETABLE_WIDTH}px`, height: `${TIMETABLE_WIDTH*1.6}px` }}
+                            className={`relative shrink-0 rounded-[1.8px] ${activeIndexList[index] ? RoomStatusList[index] === 1 ? 'bg-[#17659c]' : 'bg-[#212121]' : status ? 'bg-[#0D99FF]' : 'bg-[#EBF0F7]'}`}
                         ><RoomItemDetail isActive={getIsActive(index)} lecture={touchedLecture} /></button>
                     ))}
                 </div>

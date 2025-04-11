@@ -6,9 +6,12 @@ import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import { Suspense } from "react";
 import Header from "@/components/Layout/header/Header";
 import SmRoundedBtn from "@/components/buttons/smRoundedBtn";
-import RoomItem from "./roomItem";
+import RoomItem from "./components/roomItem";
+import CurrentTimePointer from "./components/currentTimePointer";
 import { Lecture, LectureDict } from "./interfaces/page_interface";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
+import { MAXHOUR, MINHOUR, TIMETABLE_GAP, TIMETABLE_LENGTH, TIMETABLE_WIDTH } from "./constants/timeTableData";
+import { getMarginLeft } from "./utils/timePointerUtils";
 
 const RoomStatus: FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -23,13 +26,10 @@ const RoomStatus: FC = () => {
     null,
   ]);
 
-
-   useEffect(() => {
-  //   if (!accessToken) {
-  //     return;
-  //   }
-  //   //로그인 안되어 있으면 실행 안함
-
+  //자식 요소에서 가져오는 props
+  const [showNav, setShowNav] = useState(null);
+  
+  useEffect(() => {
     const date = new Date();
     const day = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 
@@ -43,27 +43,27 @@ const RoomStatus: FC = () => {
       return;
     }
 
-    const getRoomStatus = async () => {
-      setIsLoading(true);
-
-      apiClient
-        .get("/rooms/empty")
-        .then((response) => {
-          const la: LectureDict[] = response.data.data;
-          localStorage.setItem("roomStatus", JSON.stringify(la));
-          localStorage.setItem("roomStatusUpdatedAt", day);
-          setRoomStatus(la);
-          console.log(la);
-        })
-        .catch((err) => {
-          setError(err.message);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
+  const getRoomStatus = async () => {
+    setIsLoading(true);
+    apiClient
+      .get("/rooms/empty")
+      .then((response) => {
+        const la: LectureDict[] = response.data.data;
+        localStorage.setItem("roomStatus", JSON.stringify(la));
+        localStorage.setItem("roomStatusUpdatedAt", day);
+        setRoomStatus(la);
+        console.log(la);
+      })
+      .catch((err) => {
+        setError(err.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
     };
 
     getRoomStatus();
+  
   }, []);
 
   if (isLoading) {
@@ -102,8 +102,8 @@ const RoomStatus: FC = () => {
 
   const getTimeTableData = (listOfLecture: Lecture[]) => {
     let lecture: Lecture;
-    let timeTable = Array.from({ length: 36 }, () => 0);
-    let boundaryTable = Array.from({ length: 36 }, () => 0);
+    let timeTable = Array.from({ length: TIMETABLE_LENGTH }, () => 0);
+    let boundaryTable = Array.from({ length: TIMETABLE_LENGTH }, () => 0);
     for (lecture of listOfLecture) {
       const start = lecture.startTime;
       const end = lecture.endTime;
@@ -147,6 +147,17 @@ const RoomStatus: FC = () => {
     return [timeTable, boundaryTable];
   };
 
+  const scrollToNow = ( direction: number ) => {
+      const currentTime = new Date();
+      if( currentTime.getHours() < MINHOUR || currentTime.getHours() >= MAXHOUR){
+          scrollRef.current?.scrollTo({ left: 0, behavior: "smooth" });
+      } else if (!direction){
+          scrollRef.current?.scrollTo({ left: getMarginLeft() - window.innerWidth/2, behavior: "smooth" });
+      } else{
+          scrollRef.current?.scrollTo({ left: getMarginLeft() + window.innerWidth/2, behavior: "smooth" });
+      }
+  }
+
   return (
     <Suspense>
       <div className={"w-full h-full"}>
@@ -156,7 +167,7 @@ const RoomStatus: FC = () => {
         </Header>
 
         <DefaultBody hasHeader={1}>
-          <div className="px-0 pt-[18px]">
+          <div className="px-0 pt-[18px] flex flex-col">
             <div
               id="scrollbar-hidden"
               className="flex justify-start overflow-x-scroll gap-[7px]"
@@ -165,44 +176,53 @@ const RoomStatus: FC = () => {
                 text="1층"
                 status={floor === 1 ? 1 : 0}
                 onClick={() => {
-                  if (floor !== 1) setFloor(1); scrollRef.current?.scrollTo({ left: 0});
+                  if (floor !== 1) setFloor(1); scrollRef.current?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
                 }}
               />
               <SmRoundedBtn
                 text="2층"
                 status={floor === 2 ? 1 : 0}
                 onClick={() => {
-                  if (floor !== 2) setFloor(2); scrollRef.current?.scrollTo({ left: 0});
+                  if (floor !== 2) setFloor(2); scrollRef.current?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
                 }}
               />
               <SmRoundedBtn
                 text="3층"
                 status={floor === 3 ? 1 : 0}
                 onClick={() => {
-                  if (floor !== 3) setFloor(3); scrollRef.current?.scrollTo({ left: 0});
+                  if (floor !== 3) setFloor(3); scrollRef.current?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
                 }}
               />
               <SmRoundedBtn
                 text="4층"
                 status={floor === 4 ? 1 : 0}
                 onClick={() => {
-                  if (floor !== 4) setFloor(4); scrollRef.current?.scrollTo({ left: 0});
+                  if (floor !== 4) setFloor(4); scrollRef.current?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
                 }}
               />
               <SmRoundedBtn
                 text="5층"
                 status={floor === 5 ? 1 : 0}
                 onClick={() => {
-                  if (floor !== 5) setFloor(5); scrollRef.current?.scrollTo({ left: 0});
+                  if (floor !== 5) setFloor(5); scrollRef.current?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
                 }}
               />
+            </div>
+
+            <div className={"flex items-end w-full h-[24px] bg-[rgba(0,0,0,0)] z-40 relative " + (showNav === "left" ?  "justify-start" : "justify-end")}>
+              { showNav === "left"  && <button onClick={()=>{scrollToNow(0);}} className="text-[#FFB300] text-sm z-40 translate-y-full"><span className="text-sr text-[#FFB300] ml-[2px]">◀</span> 현재 시간</button> }
+              { showNav === "right" && <button onClick={()=>{scrollToNow(1);}} className="text-[#FFB300] text-sm z-40 translate-y-full">현재 시간 <span className="text-sr text-[#FFB300] ml-[2px]">▶</span> </button> }
             </div>
 
             <div 
               ref={scrollRef}
               id="scrollbar-hidden" 
-              className="overflow-x-scroll relative" 
+              className="overflow-x-scroll relative overflow-y-hidden" 
             >
+              <CurrentTimePointer
+                minHour={MINHOUR} maxHour={MAXHOUR}
+                refOfParent={scrollRef} setShowNav={setShowNav}
+              />
 
               {roomStatus[floor - 1] &&
                 Object.entries(roomStatus[floor - 1]).map(([roomNum, status]) => {
@@ -210,7 +230,7 @@ const RoomStatus: FC = () => {
                   return (
                     <div
                       key={roomNum}
-                      className="flex flex-col my-[24px] gap-[58px] w-max"
+                      className="flex flex-col gap-[58px] w-max mb-[24px]"
                     >
                       <RoomItem
                         RoomName={roomNum + "호"}
