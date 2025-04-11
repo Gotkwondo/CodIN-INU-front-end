@@ -59,7 +59,11 @@ const menuItems = [
     href: "/roomstatus",
     icon: "/icons/anonymous-chat.png",
   },
-  { label: "익명 투표", href: "/vote", icon: "/icons/anonymous-vote.png" },
+  {
+    label: "익명 투표",
+    href: "/vote",
+    icon: "/icons/anonymous-vote.png"
+  },
   {
     label: "수강 후기",
     href: "/main/info/course-reviews",
@@ -89,9 +93,9 @@ const MainPage: FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
-  const [hasNewAlarm, setHasNewAlarm] = useState(false); // 알람 여부
+  // const [hasNewAlarm, setHasNewAlarm] = useState(false); // 알람 여부
 
-  const handleOpenModal = () => setIsModalOpen(true);
+  // const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
   const mapPostCategoryToLabel = (postCategory: string) => {
     for (const boardKey in boardData) {
@@ -158,12 +162,12 @@ const MainPage: FC = () => {
                       />
                     </div>
                     <span className="text-sm font-medium mt-2 break-words leading-tight">
-                  {menu.label.split(" ").map((word, i) => (
-                      <span key={i} className="block">
-                      {word}
+                      {menu.label.split(" ").map((word, i) => (
+                          <span key={i} className="block">
+                            {word}
+                          </span>
+                      ))}
                     </span>
-                  ))}
-                </span>
                   </Link>
               ))}
             </div>
@@ -201,35 +205,38 @@ const MainPage: FC = () => {
                               </p>
                               <div className="flex justify-between items-center text-sr text-sub">
                                 <div className="flex space-x-[6px]">
-                            <span className="flex items-center gap-[4.33px]">
-                              <img
-                                  src="/icons/board/viewIcon.svg"
-                                  width={16}
-                                  height={16}
-                              />
-                              {post.hits || 0}
-                            </span>
                                   <span className="flex items-center gap-[4.33px]">
-                              <img
-                                  src="/icons/board/heartIcon.svg"
-                                  width={16}
-                                  height={16}
-                              />
+                                    <img
+                                        src="/icons/board/viewIcon.svg"
+                                        width={16}
+                                        height={16}
+                                        alt="조회수 아이콘"
+                                    />
+                                    {post.hits || 0}
+                                  </span>
+                                  <span className="flex items-center gap-[4.33px]">
+                                    <img
+                                        src="/icons/board/heartIcon.svg"
+                                        width={16}
+                                        height={16}
+                                        alt="좋아요 아이콘"
+                                    />
                                     {post.likeCount || 0}
-                            </span>
+                                  </span>
                                   <span className="flex items-center gap-[4.33px]">
-                              <img
-                                  src="/icons/board/commentIcon.svg"
-                                  width={16}
-                                  height={16}
-                              />
+                                    <img
+                                        src="/icons/board/commentIcon.svg"
+                                        width={16}
+                                        height={16}
+                                        alt="댓글 아이콘"
+                                    />
                                     {post.commentCount || 0}
-                            </span>
+                                  </span>
                                 </div>
                                 <div className="flex items-centertext-sub space-x-1 text-sr">
-                            <span>
-                              {post.anonymous ? "익명" : post.nickname}
-                            </span>
+                                  <span>
+                                    {post.anonymous ? "익명" : post.nickname}
+                                  </span>
                                   <span> · </span>
                                   <span>{timeAgo(post.createdAt)}</span>
                                 </div>
