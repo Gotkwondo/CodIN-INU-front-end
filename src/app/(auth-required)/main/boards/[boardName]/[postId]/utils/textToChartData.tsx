@@ -33,13 +33,13 @@ const checkChartTypeList = (content: string) => {
 
   let list = [];
   let result = [];
-  // for (let chart of filtered) {
   for (let c = 0; c < filtered.length; c++) {
     const chart = filtered[c];
-    // console.log(chart)
     if (chart) {
       const { data, index, length } = chart;
       const headerRowspanCnt = Array.from({ length: data[0].length }, () => 0);
+
+      // 헤더의 공백 제거를 위한 탐색
       for (let i = 0; i < data[0].length; i++) {
         const head = data[0][i];
         if (head === "") {
@@ -57,22 +57,11 @@ const checkChartTypeList = (content: string) => {
           headerRowspanCnt[i] += 1;
         }
       }
-      console.log(headerRowspanCnt);
-      // 헤더 분리
-      // const header = data[0].map((td, j) => (
-      //   <th
-      //     key={j}
-      //     rowSpan={headerRowspanCnt[j]}
-      //     className="border border-gray-300 bg-gray-100 p-2 text-xs text-center"
-      //   >
-      //     {td.replaceAll("\n", " ").trim()}
-      //   </th>
-      // ));
+
       const header = [];
       for (let i = 0; i < data[0].length; i++) {
         const thData = data[0][i];
         if (thData === "") continue;
-        console.log(headerRowspanCnt[i]);
         header.push(
           <th
             key={`${thData.slice(1, 3)}_${i}`}
@@ -85,18 +74,38 @@ const checkChartTypeList = (content: string) => {
       }
 
       // 바디 렌더링
-      const bodyRows = data.slice(1).map((row, i) => (
-        <tr key={i}>
-          {row.map((cell, j) => (
+      const bodyRows = [];
+      for (let i = 1; i < data.length; i++) {
+        const row = [];
+        for (let j = 0; j < data[i].length; j++) {
+          row.push(
             <td
-              key={`${cell.slice(1, 3)}_${j}`}
+              key={`${data[i][j].slice(1, 3)}_${j}`}
               className="border border-gray-300 p-2 text-xs text-center"
             >
-              {cell.replaceAll("\n", " ").trim()}
+              {data[i][j].replaceAll("\n", " ").trim()}
             </td>
-          ))}
-        </tr>
-      ));
+          );
+        }
+        bodyRows.push(
+          <tr key={i}>
+            {row}
+          </tr>
+        )
+      }
+
+      // const bodyRows = data.slice(1).map((row, i) => (
+      //   <tr key={i}>
+      //     {row.map((cell, j) => (
+      //       <td
+      //         key={`${cell.slice(1, 3)}_${j}`}
+      //         className="border border-gray-300 p-2 text-xs text-center"
+      //       >
+      //         {cell.replaceAll("\n", " ").trim()}
+      //       </td>
+      //     ))}
+      //   </tr>
+      // ));
 
       list.push({
         data: (
@@ -113,49 +122,10 @@ const checkChartTypeList = (content: string) => {
         index: index,
         length: length,
       });
-      // let newData = [];
-      // let headerLength = 0;
-      // for (let i = 0; i < data.length; i++) {
-      //   const col = data[i];
-      //   let newCol = [];
-      //   for (let j = 0; j < col.length; j++) {
-      //     const td = col[j];
-      //     if (
-      //       (!/(\\[nrtbf\\'""])/.test(td)) && // 이스케이프 코드의 유지를 위한 정규 표현식
-      //       !/[\u2190-\u21FF]/.test(td) // 화살표 제거를 위한 정규 표현식
-      //     ) {
-      //       if (i === 0) headerLength += 1;
-      //       newCol[j] = (
-      //         <td className="border border-gray-300 text-xs p-1">
-      //           {td.replaceAll("\n", " ").trim()}
-      //         </td>
-      //       );
-      //     }
-      //   }
-      //   if (newCol.length > 0) {
-      //     newData.push(<tr className="border border-gray-300">{...newCol}</tr>);
-      //   }
-      // }
-      // // console.log(newData)
-      // list.push({
-      //   data: (
-      //     <table className="w-full border-collapse border border-gray-400 my-3">
-      //       {...newData}
-      //     </table>
-      //   ),
-      //   index: index,
-      //   length: length,
-      // });
     }
   }
-  console.log(list);
+
   if (list.length) {
-    // result.push(content.slice(0, list[0].index));
-    // if (list.length === 1) {
-    //   const { data, index, length } = list[0];
-    //   result.push(data);
-    //   result.push(content.slice(index + length + 1, content.length));
-    // }
     result.push(content.slice(0, list[0].index));
     for (let j = 0; j < list.length; j++) {
       const { data, index, length } = list[j];
