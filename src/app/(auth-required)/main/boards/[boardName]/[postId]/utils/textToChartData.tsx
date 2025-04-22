@@ -20,8 +20,12 @@ type tableArrayType = {
  * @param {string} content
  * @returns {chartType[] | undefined} filteredArray
  */
-const filterChartData = (content: string, matches: RegExpMatchArray) => {
+const filterChartData = (
+  content: string,
+  matches: RegExpMatchArray
+): chartType[] | undefined => {
   const filtered: chartType[] | undefined = [];
+
   for (let row of matches) {
     try {
       const parsed = JSON.parse(row.replace(/['"]/g, '"')); // 작은따옴표 → JSON 호환
@@ -44,6 +48,83 @@ const filterChartData = (content: string, matches: RegExpMatchArray) => {
 };
 
 /**
+ *  헤더의 rowspan 개수를 세는 함수
+ * @param headerData 헤더 데이터
+ * @returns {number[]} 헤더의 rowspan 개수 배열
+ */
+const countHeaderRowspan = (headerData: string[]): number[] => {
+  const headerRowspanCnt = Array.from({ length: headerData.length }, () => 0);
+  // 헤더의 공백 제거를 위한 탐색
+  for (let i = 0; i < headerData.length; i++) {
+    const head = headerData[i];
+    if (head === "") {
+      let prevIdx = i;
+      for (let j = i - 1; j >= 0; j--) {
+        if (headerData[j] !== "") {
+          prevIdx = j;
+          break;
+        }
+      }
+      if (prevIdx !== i) {
+        headerRowspanCnt[prevIdx] += 1;
+      }
+    } else {
+      headerRowspanCnt[i] += 1;
+    }
+  }
+  return headerRowspanCnt;
+};
+
+/**
+ * 테이블의 헤더를 만들어주는 함수
+ * @param headerData 헤더 데이터
+ * @param headerRowspanCnt 헤더의 rowspan 개수
+ * @returns {JSX.Element[]} 헤더의 JSX 엘리먼트 배열
+ */
+const makeTableHeader = (headerData: string[], headerRowspanCnt: number[]) => {
+  const result: JSX.Element[] = [];
+
+  for (let i = 0; i < headerData.length; i++) {
+    const thData = headerData[i];
+    if (thData === "") continue; // 공백인 경우 skip
+    result.push(
+      <th
+        key={`${thData.slice(1, 3)}_${i}`}
+        colSpan={headerRowspanCnt[i]}
+        className="border border-gray-300 bg-gray-100 p-2 text-xs text-center"
+      >
+        {thData.replaceAll("\n", " ").trim()}
+      </th>
+    );
+  }
+  return result;
+};
+
+/**
+ * 테이블의 바디를 만들어주는 함수
+ * @param bodyData 바디 데이터
+ * @returns {JSX.Element[]} 바디의 JSX 엘리먼트 배열
+ */
+const makeBodyRow = (bodyData: string[][]) => {
+  const bodyRows = [];
+  for (let i = 1; i < bodyData.length; i++) {
+    const row = [];
+    for (let j = 0; j < bodyData[i].length; j++) {
+      row.push(
+        <td
+          key={`${bodyData[i][j].slice(1, 3)}_${j}`}
+          className="border border-gray-300 p-2 text-xs text-center"
+        >
+          {bodyData[i][j].replaceAll("\n", " ").trim()}
+        </td>
+      );
+    }
+    bodyRows.push(<tr key={i}>{row}</tr>);
+  }
+  return bodyRows;
+};
+
+/**
  * 테이블에 들어갈 tr 및 td 태그의 배열을 만들어주는 함수
  * @param {chartType[]} filteredArray (테이블 양식에 맞는 문자열들의 배열)
  * @returns {tableArrayType[]} 테이블에 들어갈 HTMLElement들(tr, td)
@@ -55,58 +136,9 @@ const makeTableData = (filteredArray: chartType[]): tableArrayType[] => {
     const chart = filteredArray[c];
     if (chart) {
       const { data, index, length } = chart;
-      const headerRowspanCnt = Array.from({ length: data[0].length }, () => 0);
-
-      // 헤더의 공백 제거를 위한 탐색
-      for (let i = 0; i < data[0].length; i++) {
-        const head = data[0][i];
-        if (head === "") {
-          let prevIdx = i;
-          for (let j = i - 1; j >= 0; j--) {
-            if (data[0][j] !== "") {
-              prevIdx = j;
-              break;
-            }
-          }
-          if (prevIdx !== i) {
-            headerRowspanCnt[prevIdx] += 1;
-          }
-        } else {
-          headerRowspanCnt[i] += 1;
-        }
-      }
-
-      const header = [];
-      for (let i = 0; i < data[0].length; i++) {
-        const thData = data[0][i];
-        if (thData === "") continue;
-        header.push(
-          <th
-            key={`${thData.slice(1, 3)}_${i}`}
-            colSpan={headerRowspanCnt[i]}
-            className="border border-gray-300 bg-gray-100 p-2 text-xs text-center"
-          >
-            {thData.replaceAll("\n", " ").trim()}
-          </th>
-        );
-      }
-
-      // 바디 렌더링
-      const bodyRows = [];
-      for (let i = 1; i < data.length; i++) {
-        const row = [];
-        for (let j = 0; j < data[i].length; j++) {
-          row.push(
-            <td
-              key={`${data[i][j].slice(1, 3)}_${j}`}
-              className="border border-gray-300 p-2 text-xs text-center"
-            >
-              {data[i][j].replaceAll("\n", " ").trim()}
-            </td>
-          );
-        }
-        bodyRows.push(<tr key={i}>{row}</tr>);
-      }
+      const headerRowspanCnt = countHeaderRowspan(data[0]); // 헤더의 rowspan 개수 세기
+      const header = makeTableHeader(data[0], headerRowspanCnt);
+      const bodyRows = makeBodyRow(data);
 
       tableArray.push({
         data: (
@@ -143,8 +175,7 @@ const makeTableArray = (
   result.push(content.slice(0, tableData[0].index));
   for (let j = 0; j < tableData.length; j++) {
     const { data, index, length } = tableData[j];
-    const nextIdx =
-      j < tableData.length - 1 ? tableData[j + 1].index : content.length;
+    const nextIdx = j < tableData.length - 1 ? tableData[j + 1].index : content.length;
     result.push(data);
     result.push(content.slice(index + length + 1, nextIdx));
   }
