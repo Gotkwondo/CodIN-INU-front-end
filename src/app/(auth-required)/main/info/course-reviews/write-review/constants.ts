@@ -19,3 +19,9 @@ export const SEMESTER = [
   { label: "24 - 2", value: "24-2" },
   { label: "25 - 1", value: "25-1" },
 ];
+
+export const SELECTINITIALSTATE = {
+  lecture: { label: "학과", value: "" },
+  grade: { label: "학년", value: "" },
+  semester: { label: "수강학기", value: "" },
+}
