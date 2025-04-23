@@ -7,8 +7,11 @@ import { RateBar } from "@/components/Review/RateBar";
 import {
   SetStateAction,
   Suspense,
+  useCallback,
   useContext,
   useEffect,
+  useMemo,
+  useRef,
   useState,
 } from "react";
 import { departMentType, selectType } from "./type";
@@ -16,8 +19,6 @@ import {
   DEPARTMENT,
   GRADE,
   SEMESTER,
-  ALERTMESSAGE,
-  TEMPLATETEXT,
 } from "./constants";
 import { CustomSelect } from "@/components/Review/CustomSelect";
 import { useSearchedReviewContext } from "@/api/review/useSearchedReviewContext";
@@ -29,6 +30,8 @@ import { ReviewContext } from "@/context/WriteReviewContext";
 
 const WriteReview = () => {
   const router = useRouter();
+  const textareaRef = useRef<HTMLTextAreaElement>();
+
   const [isClient, setIsClient] = useState(false);
   const [rating, setRating] = useState(0);
   const [lecture, setLecture] = useState<selectType>({
@@ -48,12 +51,11 @@ const WriteReview = () => {
     label: "학과, 학년, 학기를 선택해주세요",
     value: "",
   });
-  const [reviewContents, setReviewContents] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const { data } = useContext(ReviewContext);
 
-  const getReviewList = async () => {
+  const getReviewList = useCallback(async () => {
     try {
       const response = await useSearchedReviewContext({
         department: lecture.value,
@@ -69,15 +71,20 @@ const WriteReview = () => {
       setDepartmentList(data);
     } catch (error) {
       console.error(error);
+      return [];
     }
-  };
+  }, [lecture, grade, semester]);
+
+  const writeText = (text: string) => {
+    textareaRef.current.value = text;
+  }
 
   const onSummitReview = async () => {
     if (department.value === "") return;
     else {
       const response = await submitReview({
         lectureId: department.value,
-        content: reviewContents,
+        content: textareaRef.current.value,
         starRating: rating,
         semester: semester.value,
       });
@@ -88,10 +95,7 @@ const WriteReview = () => {
   };
 
   useEffect(() => {
-    // if (data.departments.value !== '' && data.grade) {
-    //   setLecture(data.departments);
-    //   setGrade(data.grade);
-    // }
+    setIsClient(true);
     if (data.departments.value !== "") {
       setLecture(data.departments);
     }
@@ -101,14 +105,12 @@ const WriteReview = () => {
   }, []);
 
   useEffect(() => {
-    setIsClient(true);
     if (
-      lecture.value !== "null" &&
-      grade.value !== "null" &&
-      semester.value !== "null"
+      lecture.value !== "" &&
+      grade.value !== "" &&
+      semester.value !== ""
     ) {
       getReviewList();
-      setDepartment({ label: "학과, 학년, 학기를 선택해주세요", value: "" });
     }
   }, [lecture, grade, semester]);
 
@@ -170,9 +172,7 @@ const WriteReview = () => {
               />
             </div>
 
-            <p className="text-XLm mt-[24px]">
-              전반적인 수업 경험은 어땠나요?
-            </p>
+            <p className="text-XLm mt-[24px]">전반적인 수업 경험은 어땠나요?</p>
             {/* 수업 후기 점수 평가  */}
             <div className="w-full mt-[12px]">
               {/* 1-5점  해당 바를 눌러 점수를 정할 수 있도록 기능 구현 필요*/}
@@ -184,7 +184,9 @@ const WriteReview = () => {
                   <span className="text-[#E5E7EB]">/ 5.0 </span>
                 </div>
 
-                <span className="text-[#0D99FF] text-Mm">{calcEmotion(rating)}</span>
+                <span className="text-[#0D99FF] text-Mm">
+                  {calcEmotion(rating)}
+                </span>
               </div>
               <RateBar
                 score={rating}
@@ -201,19 +203,16 @@ const WriteReview = () => {
             <div className="mt-3">
               {/* 후기 내용 */}
               <textarea
+                ref={textareaRef}
                 className="border-[1px] focus:border-[#0D99FF] focus:outline-none focus:ring-1 focus:ring-[#0D99FF] border-gray-200 text-Mr rounded-md px-[16px] py-[12px] sm:mt-5 w-full h-[20vh] sm:h-[30vh] resize-none"
                 placeholder="상세한 후기를 작성해주세요"
-                onChange={(e) => setReviewContents(e.target.value)}
-                value={reviewContents}
+                onChange={(e) => writeText(e.target.value)}
               ></textarea>
             </div>
             <div className="w-full flex justify-end sm:mt-3">
               <button
                 className="bg-[#0D99FF] text-white text-Mm rounded-full px-[16px] py-[8px] mt-[6px] hover:bg-[#51b4fa]"
-                onClick={() => {
-                  // setReviewContents('강의와 교재는? : \n과제는? : \n시험은? : \n조별 과제는? : \n\n\n나만의 꿀팁 : ');
-                  setIsModalOpen(true);
-                }}
+                onClick={() => setIsModalOpen(true)}
               >
                 템플릿 사용하기
               </button>
@@ -228,12 +227,7 @@ const WriteReview = () => {
         </div>
 
         {isModalOpen && (
-          <AlertModal
-            text={ALERTMESSAGE}
-            templateText={TEMPLATETEXT}
-            modalStateSetter={setReviewContents}
-            onClose={setIsModalOpen}
-          />
+          <AlertModal modalStateSetter={writeText} onClose={setIsModalOpen} />
         )}
       </DefaultBody>
 

@@ -1,24 +1,19 @@
 import { Dispatch, SetStateAction } from 'react';
 
 type AlertModalType = {
-  text: string;
-  templateText: string;
-  modalStateSetter: Dispatch<SetStateAction<string>>;
+  modalStateSetter: (text: string) => void;
   onClose: Dispatch<SetStateAction<boolean>>;
 };
 
 const AlertModal = ({
-  text,
-  templateText,
   modalStateSetter,
   onClose,
 }: AlertModalType) => {
   const onConfirm = (
-    templateText: string,
     modalStateSetter: Dispatch<SetStateAction<string>>,
     onClose: Dispatch<SetStateAction<boolean>>
   ) => {
-    modalStateSetter(templateText);
+    modalStateSetter("강의와 교재는? : \n과제는? : \n시험은? : \n조별 과제는? : \n\n\n나만의 꿀팁 : ");
     onClose(false);
   };
 
@@ -31,11 +26,13 @@ const AlertModal = ({
         className="w-[20rem] h-[15rem] bg-white rounded-2xl px-7"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="w-full mt-10 text-lg whitespace-pre-wrap">{text}</div>
+        <div className="w-full mt-10 text-lg whitespace-pre-wrap">
+          {"작성 중이던 리뷰는 모두 지워져요.\n템플릿을 적용할까요?"}
+        </div>
         <div className="mt-9 flex flex-col">
           <button
             className="bg-[#0D99FF] rounded-lg h-10 text-white hover:bg-[#51b4fa]"
-            onClick={() => onConfirm(templateText, modalStateSetter, onClose)}
+            onClick={() => onConfirm(modalStateSetter, onClose)}
           >
             확인
           </button>

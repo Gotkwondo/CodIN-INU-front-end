@@ -1,4 +1,5 @@
 import { selectType} from '@/app/(auth-required)/main/info/course-reviews/write-review/type';
+import React from 'react';
 import { SetStateAction } from 'react';
 import { BiFontSize } from 'react-icons/bi';
 import Select, { GroupBase, OptionsOrGroups } from 'react-select'
@@ -16,7 +17,7 @@ type CustomSelectType = {
   rounded?: boolean;
 };
 
-const CustomSelect = ({
+const CustomSelect = React.memo(({
   options,
   onChange,
   value,
@@ -109,6 +110,6 @@ const CustomSelect = ({
       isSearchable={isSearchable}
     />
   );
-};
+});
 
 export { CustomSelect };
