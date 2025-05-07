@@ -145,7 +145,7 @@ const MainPage: FC = () => {
           <Calendar />
 
           {/* 메뉴 섹션 */}
-          <section className="mt-[12px] relative flex flex-col">
+          <section className="mt-[32px] relative flex flex-col">
             <div className="grid grid-cols-4 justify-between gap-y-[24px]">
               {menuItems.map((menu, index) => (
                   <Link
