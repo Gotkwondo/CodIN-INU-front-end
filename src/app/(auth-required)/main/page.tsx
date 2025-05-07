@@ -74,7 +74,7 @@ const menuItems = [
 const Calendar = () => {
   return (
       <div className="relative w-full mt-[18px]">
-        <ZoomableImageModal images={`/images/calendar/4.png`} />
+        <ZoomableImageModal images={`/images/calendar/정보기술대_5월_캘린더.png`} />
       </div>
   );
 };
