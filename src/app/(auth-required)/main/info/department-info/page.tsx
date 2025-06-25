@@ -8,6 +8,7 @@ import Header from '@/components/Layout/header/Header'; // Link 추가
 import DefaultBody from '@/components/Layout/Body/defaultBody';
 import BottomNav from '@/components/Layout/BottomNav/BottomNav';
 import Category from '@/components/info/partner/category';
+import { schema } from './schema';
 
 export default function DepartmentInfoPage() {
   const [activeTab, setActiveTab] = useState('phoneDirectory');
@@ -51,24 +52,6 @@ export default function DepartmentInfoPage() {
       name: '교학실',
       image: '/images/교학실.png',
       departmentName: 'IT_COLLEGE',
-    },
-  ];
-
-  const partners = [
-    {
-      name: '홍콩반점 송도점',
-      image: 'unknown',
-      category: ['컴공', '임베', '학과 제휴'],
-    },
-    {
-      name: '홍콩반점 송도점',
-      image: 'unknown',
-      category: ['컴공', '임베', '학과 제휴'],
-    },
-    {
-      name: '홍콩반점 송도점',
-      image: 'unknown',
-      category: ['컴공', '임베', '학과 제휴'],
     },
   ];
 
@@ -149,14 +132,14 @@ export default function DepartmentInfoPage() {
         )}
         {activeTab === 'partners' && (
           <ul className="grid grid-cols-2 gap-[18px] w-full">
-            {partners.map((partner, id) => (
+            {schema.map((partner, id) => (
               <li key={id}>
                 <Link href={`#`}>
                   <div className="block border border-[#D4D4D4] flex-1 rounded-[16px] cursor-pointer">
                     <div className="flex flex-col items-center justify-center px-[14px] py-[17px]">
                       <img
-                        src={partner.image.replace('/public', '')}
-                        alt={partner.image}
+                        src={partner.img.main.replace('/public', '')}
+                        alt={partner.img.main}
                         className="min-h-[97px] max-h-[97px] border rounded-[15px] aspect-square"
                       />
                       <p className="text-center text-[15px] my-[9px]">{partner.name}</p>
@@ -164,11 +147,11 @@ export default function DepartmentInfoPage() {
                         id="scrollbar-hidden"
                         className="flex w-full h-[22px] gap-[3px] overflow-x-scroll"
                       >
-                        {partner.category.map((category, id) => (
+                        {partner.tags.map((tag, id) => (
                           <Category
                             key={id}
-                            category={category}
-                            others={['컴공', '임베', '정통'].includes(category)}
+                            category={tag}
+                            others={['컴공', '임베', '정통'].includes(tag)}
                           />
                         ))}
                       </div>
