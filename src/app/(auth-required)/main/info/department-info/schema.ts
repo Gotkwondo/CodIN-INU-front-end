@@ -1,7 +1,7 @@
 export const schema: IPartner[] = [
   {
     name: '홍콩반점 송도점',
-    tags: ['컴공', '임베', '정통'],
+    tags: ['컴공', '임베'],
     benefits: ['탕수육 주문 시, 탕수육 공짜 !', '평일 언제나 80% 대박 할인!'],
     start_date: new Date('2023-10-01'),
     end_date: new Date('2024-01-01'),
@@ -12,7 +12,7 @@ export const schema: IPartner[] = [
   },
   {
     name: '홍콩반점 송도점',
-    tags: ['컴공', '임베', '정통'],
+    tags: ['컴공', '정통'],
     benefits: ['탕수육 주문 시, 탕수육 공짜 !', '평일 언제나 80% 대박 할인!'],
     start_date: new Date('2023-10-01'),
     end_date: new Date('2024-01-01'),

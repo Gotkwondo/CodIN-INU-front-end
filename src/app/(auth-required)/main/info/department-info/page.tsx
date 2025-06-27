@@ -7,8 +7,9 @@ import Link from 'next/link';
 import Header from '@/components/Layout/header/Header'; // Link 추가
 import DefaultBody from '@/components/Layout/Body/defaultBody';
 import BottomNav from '@/components/Layout/BottomNav/BottomNav';
-import Category from '@/components/info/partner/category';
+import Tags from '@/components/info/partner/tag';
 import { schema } from './schema';
+import type { Tag } from './schema';
 
 export default function DepartmentInfoPage() {
   const [activeTab, setActiveTab] = useState('phoneDirectory');
@@ -62,11 +63,15 @@ export default function DepartmentInfoPage() {
         setError(null);
 
         try {
-          const response = await axios.get('https://codin.inu.ac.kr/api/info/lab');
+          const response = await axios.get(
+            'https://codin.inu.ac.kr/api/info/lab'
+          );
           if (response.data.success) {
             setProfessorPosts(response.data.dataList);
           } else {
-            setError(response.data.message || '데이터를 가져오는 데 실패했습니다.');
+            setError(
+              response.data.message || '데이터를 가져오는 데 실패했습니다.'
+            );
           }
         } catch (err) {
           setError(err.message || '알 수 없는 오류가 발생했습니다.');
@@ -88,7 +93,11 @@ export default function DepartmentInfoPage() {
 
       <DefaultBody hasHeader={1}>
         <div className="mt-[18px]" />
-        <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
+        <Tabs
+          tabs={tabs}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
         <div className="mt-[18px]" />
 
         {activeTab === 'phoneDirectory' && (
@@ -120,10 +129,15 @@ export default function DepartmentInfoPage() {
             ) : (
               <ul className="grid grid-cols-1 gap-4">
                 {professorPosts.map(post => (
-                  <li key={post.id} className="p-4 border rounded-lg shadow bg-white">
+                  <li
+                    key={post.id}
+                    className="p-4 border rounded-lg shadow bg-white"
+                  >
                     <h2 className="font-bold text-gray-800">{post.title}</h2>
                     <p className="text-gray-600 mt-1">{post.content}</p>
-                    <p className="text-sm text-gray-500 mt-1">담당 교수: {post.professor}</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      담당 교수: {post.professor}
+                    </p>
                   </li>
                 ))}
               </ul>
@@ -142,18 +156,32 @@ export default function DepartmentInfoPage() {
                         alt={partner.img.main}
                         className="min-h-[97px] max-h-[97px] border rounded-[15px] aspect-square"
                       />
-                      <p className="text-center text-[15px] my-[9px]">{partner.name}</p>
+                      <p className="text-center text-[15px] my-[9px]">
+                        {partner.name}
+                      </p>
                       <div
                         id="scrollbar-hidden"
                         className="flex w-full h-[22px] gap-[3px] overflow-x-scroll"
                       >
                         {partner.tags.map((tag, id) => (
-                          <Category
+                          <Tags
                             key={id}
-                            category={tag}
-                            others={['컴공', '임베', '정통'].includes(tag)}
+                            tag={tag}
                           />
                         ))}
+                        {(['컴공', '임베', '정통'] as Tag[]).every(tag =>
+                          partner.tags.includes(tag)
+                        ) ? (
+                          <Tags
+                            tag="정보대 제휴"
+                            other
+                          />
+                        ) : (
+                          <Tags
+                            tag="학과 제휴"
+                            other
+                          />
+                        )}
                       </div>
                     </div>
                   </div>
