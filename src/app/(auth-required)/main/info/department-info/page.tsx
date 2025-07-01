@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Header from '@/components/Layout/header/Header'; // Link 추가
 import DefaultBody from '@/components/Layout/Body/defaultBody';
 import BottomNav from '@/components/Layout/BottomNav/BottomNav';
-import Tags from '@/components/info/partner/tag';
+import { Tags, OtherTag } from '@/components/info/partner/tag';
 import { schema } from './schema';
 import type { Tag } from './schema';
 
@@ -148,7 +148,9 @@ export default function DepartmentInfoPage() {
           <ul className="grid grid-cols-2 gap-[18px] w-full">
             {schema.map((partner, id) => (
               <li key={id}>
-                <Link href={`#`}>
+                <Link
+                  href={`/main/info/department-info/map/?pname=${partner.name}`}
+                >
                   <div className="block border border-[#D4D4D4] flex-1 rounded-[16px] cursor-pointer">
                     <div className="flex flex-col items-center justify-center px-[14px] py-[17px]">
                       <img
@@ -169,19 +171,7 @@ export default function DepartmentInfoPage() {
                             tag={tag}
                           />
                         ))}
-                        {(['컴공', '임베', '정통'] as Tag[]).every(tag =>
-                          partner.tags.includes(tag)
-                        ) ? (
-                          <Tags
-                            tag="정보대 제휴"
-                            other
-                          />
-                        ) : (
-                          <Tags
-                            tag="학과 제휴"
-                            other
-                          />
-                        )}
+                        <OtherTag tags={partner.tags} />
                       </div>
                     </div>
                   </div>

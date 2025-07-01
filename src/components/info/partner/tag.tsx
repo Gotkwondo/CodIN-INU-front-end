@@ -1,11 +1,18 @@
 import type { Tag } from '@/app/(auth-required)/main/info/department-info/schema';
+import { tagsArray } from '@/app/(auth-required)/main/info/department-info/schema';
 
 interface ITag {
   tag: string | Tag;
   other?: boolean;
 }
 
-export default function Tags(
+const tagMap: Record<Tag, string> = {
+  COMPUTER_SCI: '컴공',
+  EMBEDDED: '임베',
+  INFO_COMM: '정통',
+};
+
+export function Tags(
   { tag, other }: ITag = {
     tag: 'undefined',
     other: false,
@@ -14,10 +21,28 @@ export default function Tags(
   return (
     <div
       className={`${
-        !other ? 'bg-main text-white' : 'bg-sub text-normal '
+        !other ? 'bg-main text-white' : 'bg-sub text-normal opacity-70'
       } min-w-fit px-[9px] pt-[2px] pb-[3px] rounded-[5px] text-[12px] leading-[1.45]`}
     >
-      {!other && '#'} {tag}
+      {!other && '#'} {tagMap[tag as Tag] ? tagMap[tag] : tag}
     </div>
+  );
+}
+
+export function OtherTag({ tags }: { tags: Tag[] }) {
+  return (
+    <>
+      {tagsArray.every(tag => tags.includes(tag)) ? (
+        <Tags
+          tag="정보대 제휴"
+          other
+        />
+      ) : (
+        <Tags
+          tag="학과 제휴"
+          other
+        />
+      )}
+    </>
   );
 }
