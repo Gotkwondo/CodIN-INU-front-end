@@ -17,7 +17,7 @@ export default function MapContainer({
 
   const initMap = (x: number, y: number) => {
     var map = new naver.maps.Map('map', {
-      center: new naver.maps.LatLng(x, y),
+      center: new naver.maps.LatLng(x - 0.01, y),
       zoom: 15,
     });
 
@@ -38,7 +38,7 @@ export default function MapContainer({
             '-webkit-user-select: none; width: 46px; height: 59px; left: 0px; top: 0px;"></img>',
           '<div class="relative ml-[50%]">',
           '<div class="flex flex-col items-center -translate-x-1/2 absolute text-[12px] text-shadow max-w-[120px] min-w-[70px] break-words break-keep text-center">',
-          `<strong class="absolute">${placename}</strong>`,
+          `<strong class="absolute text-shadow rounded-[15px]">${placename}</strong>`,
           '</div>',
           '</div>',
         ].join(''),

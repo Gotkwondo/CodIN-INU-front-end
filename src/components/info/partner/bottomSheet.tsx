@@ -23,12 +23,12 @@ export default function BottomSheet({
   benefits,
   img,
 }: BottomSheetProps) {
-  const [sheetHeight, setSheetHeight] = useState(65);
+  const [sheetHeight, setSheetHeight] = useState(60);
   const [isTransition, setIsTransition] = useState(false);
 
   // percentage of the screen height
-  const minHeight = 22;
-  const defaultHeight = 65;
+  const minHeight = 20;
+  const defaultHeight = 60;
   const maxHeight = 90;
 
   interface PointerEventWithButtons extends React.PointerEvent<HTMLDivElement> {
