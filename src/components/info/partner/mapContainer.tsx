@@ -10,11 +10,23 @@ export default function MapContainer({
   address: string;
   placename?: string;
 }) {
+  const isInvalidPlacename = (p: string): boolean => {
+    const regex = /^[a-zA-Z0-9가-힣\s]+$/;
+    return regex.test(p);
+  };
+
   const initMap = (x: number, y: number) => {
     var map = new naver.maps.Map('map', {
       center: new naver.maps.LatLng(x, y),
       zoom: 15,
     });
+
+    if (!isInvalidPlacename(placename)) {
+      alert(
+        'invalid placename. Please use only alphanumeric characters and spaces.'
+      );
+      return;
+    }
 
     var marker = new naver.maps.Marker({
       position: new naver.maps.LatLng(x, y),
