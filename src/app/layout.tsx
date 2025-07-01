@@ -25,6 +25,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <head>
         <title>인천대학교 정보대 SNS</title>
+
+        <Script
+          strategy="beforeInteractive"
+          type="text/javascript"
+          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${CLIENT_ID}&submodules=geocoder`}
+        />
+        <Script
+          strategy="beforeInteractive"
+          type="text/javascript"
+          src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${CLIENT_ID}`}
+        />
       </head>
 
       {/* Google Analytics gtag.js */}
@@ -43,16 +54,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           gtag('config', 'G-643XQ6BZ59');
         `}
       </Script>
-      {/* <Script
-        strategy="beforeInteractive"
-        type="text/javascript"
-        src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${CLIENT_ID}&submodules=geocoder`}
-      />
-      <Script
-        strategy="beforeInteractive"
-        type="text/javascript"
-        src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${CLIENT_ID}`}
-      /> */}
       <AuthProvider>
         <UserProvider>
           <ReviewProvider>

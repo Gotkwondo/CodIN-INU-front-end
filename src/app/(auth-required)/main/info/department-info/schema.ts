@@ -5,6 +5,7 @@ export const schema: IPartner[] = [
     benefits: ['탕수육 주문 시, 탕수육 공짜 !', '평일 언제나 80% 대박 할인!'],
     start_date: new Date('2023-10-01'),
     end_date: new Date('2024-01-01'),
+    location: '인천 연수구 송도동 3-2',
     img: {
       main: 'https://example.com/image1.jpg',
       sub: [
@@ -22,6 +23,7 @@ export const schema: IPartner[] = [
     benefits: ['탕수육 주문 시, 탕수육 공짜 !', '평일 언제나 80% 대박 할인!'],
     start_date: new Date('2023-10-01'),
     end_date: new Date('2024-01-01'),
+    location: '인천 연수구 송도동 3-2',
     img: {
       main: 'https://example.com/image1.jpg',
       sub: ['https://example.com/image2.jpg', 'https://example.com/image3.jpg'],
@@ -33,6 +35,7 @@ export const schema: IPartner[] = [
     benefits: ['탕수육 주문 시, 탕수육 공짜 !', '평일 언제나 80% 대박 할인!'],
     start_date: new Date('2023-10-01'),
     end_date: new Date('2024-01-01'),
+    location: '인천 연수구 송도동 3-2',
     img: {
       main: 'https://example.com/image1.jpg',
       sub: ['https://example.com/image2.jpg', 'https://example.com/image3.jpg'],
@@ -48,6 +51,7 @@ export interface IPartner {
   benefits: string[];
   start_date: Date;
   end_date: Date;
+  location: string;
   img: {
     main: string;
     sub: string[];

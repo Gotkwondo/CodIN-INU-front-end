@@ -1,22 +1,40 @@
 'use client';
-import Script from 'next/script';
 import { Coordinate, NaverMap } from '@/interfaces/map';
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 export default function Map({ loc }: { loc: Coordinate }) {
   const mapRef = useRef<NaverMap | null>(null);
-  const CLIENT_ID = process.env.NAVER_MAP_CLIENT_ID;
 
-  const intializeMap = useCallback(() => {
-    const mapOptions = {
-      center: new naver.maps.LatLng(37.5665, 126.9789), // 서울시청 좌표
-      zoom: 10,
-      scaleControl: true,
-      mapTypeControl: true,
-    };
-    const map = new naver.maps.Map('map', mapOptions);
-    mapRef.current = map;
-  }, [loc]);
+  const initMap = (x: number, y: number) => {
+    var map = new naver.maps.Map('map', {
+      center: new naver.maps.LatLng(x, y),
+      zoom: 15,
+    });
+
+    var mapMarker = new naver.maps.Marker({
+      position: new naver.maps.LatLng(x, y),
+      map: map,
+    });
+  };
+
+  useEffect(() => {
+    naver.maps.Service.geocode(
+      {
+        query: '여러분이 찾고 싶은 주소',
+      },
+      function (status, response) {
+        if (status === naver.maps.Service.Status.ERROR) {
+          return alert('Someting Wrong!');
+        }
+
+        const result = response.v2.addresses[0];
+        const x = Number(result.x);
+        const y = Number(result.y);
+
+        initMap(y, x);
+      }
+    );
+  }, []);
 
   return (
     <>

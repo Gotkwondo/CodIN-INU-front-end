@@ -149,7 +149,7 @@ export default function DepartmentInfoPage() {
             {schema.map((partner, id) => (
               <li key={id}>
                 <Link
-                  href={`/main/info/department-info/map/?pname=${partner.name}`}
+                  href={`/main/info/department-info/map/?pname=${partner.location}`}
                 >
                   <div className="block border border-[#D4D4D4] flex-1 rounded-[16px] cursor-pointer">
                     <div className="flex flex-col items-center justify-center px-[14px] py-[17px]">

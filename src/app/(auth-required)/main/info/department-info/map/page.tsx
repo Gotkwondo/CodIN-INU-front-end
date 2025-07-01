@@ -11,14 +11,18 @@ export default async function MapPage(props: { searchParams: SearchParams }) {
   const query = searchParams.pname;
 
   const JSON = schema.find(partner => partner.name === query);
-  const { name, tags, benefits, start_date, end_date, img } = JSON || {};
+  const { name, tags, benefits, start_date, end_date, img, location } =
+    JSON || {};
 
-  console.log('MapPage query:', query);
+  console.log('MapPage query:', location);
 
   return (
     <>
-      <div className="absolute w-full h-[100vh] bg-slate-400"></div>
-      {/* <MapContainer address={query} /> */}
+      {/* <div className="absolute w-full h-[100vh] bg-slate-400"></div> */}
+      <MapContainer
+        address={location}
+        placename={name}
+      />
       <BottomSheet
         title={name}
         tags={tags}

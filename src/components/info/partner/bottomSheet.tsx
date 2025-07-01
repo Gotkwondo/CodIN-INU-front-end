@@ -54,7 +54,6 @@ export default function BottomSheet({
     function dragMove(e: PointerEvent) {
       const delta: number = startY - e.clientY;
       initialHeight = sheetHeight + (delta / window.innerHeight) * 100;
-      console.log('dragStart', initialHeight);
       setSheetHeight(Math.max(minHeight, Math.min(initialHeight, maxHeight)));
     }
 
