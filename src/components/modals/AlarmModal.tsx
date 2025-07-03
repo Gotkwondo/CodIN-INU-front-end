@@ -2,40 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import Header from "@/components/Layout/header/Header";
-import { Notification } from "@/api/notification/getNotificationList";
+import { GetNotificationList, Notification } from "@/api/notification/getNotificationList";
 import { useRouter } from "next/navigation";
-
-// 더미 데이터
-const dummyNotifications: Notification[] = [
-    {
-        id: "1",
-        title: "질문합니다",
-        message: "댓글이 달렸습니다: 와 이건 진짜 궁금하네요",
-        createdAt: new Date().toISOString(),
-        isRead: false,
-    },
-    {
-        id: "2",
-        title: "질문합니다",
-        message: "댓글이 달렸습니다: 본인 상황이신거죠.. 저였는데도 궁금하네요. 더 길게 입력해보겠습니다.",
-        createdAt: new Date().toISOString(),
-        isRead: false,
-    },
-    {
-        id: "3",
-        title: "질문합니다",
-        message: "댓글이 달렸습니다: 음 쪽지 드릴게요.",
-        createdAt: new Date().toISOString(),
-        isRead: true,
-    },
-    {
-        id: "4",
-        title: "익명 채팅방",
-        message: "새로운 채팅이 있습니다.",
-        createdAt: new Date().toISOString(),
-        isRead: false,
-    },
-];
 
 // 읽음 처리 더미 (추후 실제 API 연결)
 const markNotificationAsRead = async (notificationId: string) => {
@@ -56,7 +24,10 @@ const AlarmModal: React.FC<ModalProps> = ({ onClose }) => {
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
-                setNotifications(dummyNotifications);
+                const res = await GetNotificationList();
+                if (res.success) {
+                    setNotifications(res.dataList);
+                }
             } catch (error) {
                 console.error("알림 목록 불러오기 실패:", error);
             } finally {
@@ -77,7 +48,6 @@ const AlarmModal: React.FC<ModalProps> = ({ onClose }) => {
     };
 
     const handleNotificationClick = async (notification: Notification) => {
-        // 먼저 읽음 처리
         if (!notification.isRead) {
             await markNotificationAsRead(notification.id);
             setNotifications((prev) =>
@@ -85,17 +55,8 @@ const AlarmModal: React.FC<ModalProps> = ({ onClose }) => {
             );
         }
 
-        // 채팅/게시글 경로 분기 후 이동
+        // TODO: 채팅/게시글 경로 분기 필요
         router.push(`/main/boards/notification/${notification.id}`);
-        // TODO: 실제 분기 설정으로 변경 필요
-        // if (
-        //     notification.title === "익명 채팅방" ||
-        //     notification.message.startsWith("새로운 채팅이 있습니다.")
-        // ) {
-        //     router.push(`/chat/${notification.id}`);
-        // } else {
-        //     router.push(`/main/boards/notification/${notification.id}`);
-        // }
     };
 
     return (
@@ -105,7 +66,7 @@ const AlarmModal: React.FC<ModalProps> = ({ onClose }) => {
                 <Header.Title>알람</Header.Title>
             </Header>
 
-            {/* 헤더 하단 카테고리 버튼 - 우측 정렬, 크게 */}
+            {/* 카테고리 버튼 */}
             <div className="flex mt-20 justify-start gap-2 px-4 py-3">
                 {[
                     { key: "all", label: "전체" },
@@ -156,7 +117,12 @@ const AlarmModal: React.FC<ModalProps> = ({ onClose }) => {
                                     {!notification.isRead && (
                                         <span className="absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full bg-red-500" />
                                     )}
-                                    <span className="text-[10px] text-gray-400">1분 전</span>
+                                    <span className="text-[10px] text-gray-400">
+                                        {new Date(notification.createdAt).toLocaleTimeString("ko-KR", {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })}
+                                    </span>
                                 </div>
                             </li>
                         ))}
