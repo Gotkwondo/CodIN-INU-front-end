@@ -93,6 +93,8 @@ export default function MyPage() {
     { label: "좋아요", href: "/mypage/board/likes", isSpacer: true },
     { label: "스크랩", href: "/mypage/board/scraps", isSpacer: true },
     { label: "이용약관", href: "/mypage/condition", isSpacer: true },
+    { label: "알림 설정", href: "/mypage/notification" },
+
     // {
     //   label: "문의하기",
     //   href: "https://docs.google.com/forms/d/1pDj4qKQMMVY87zrT-1QvoqljuJap5cDQaFaDeJII00A/edit?pli=1",
