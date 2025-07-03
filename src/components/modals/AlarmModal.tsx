@@ -86,14 +86,16 @@ const AlarmModal: React.FC<ModalProps> = ({ onClose }) => {
         }
 
         // 채팅/게시글 경로 분기 후 이동
-        if (
-            notification.title === "익명 채팅방" ||
-            notification.message.startsWith("새로운 채팅이 있습니다.")
-        ) {
-            router.push(`/chat/${notification.id}`);
-        } else {
-            router.push(`/main/boards/notification/${notification.id}`);
-        }
+        router.push(`/main/boards/notification/${notification.id}`);
+        // TODO: 실제 분기 설정으로 변경 필요
+        // if (
+        //     notification.title === "익명 채팅방" ||
+        //     notification.message.startsWith("새로운 채팅이 있습니다.")
+        // ) {
+        //     router.push(`/chat/${notification.id}`);
+        // } else {
+        //     router.push(`/main/boards/notification/${notification.id}`);
+        // }
     };
 
     return (
