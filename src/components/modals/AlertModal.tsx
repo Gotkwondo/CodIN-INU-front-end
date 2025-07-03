@@ -1,51 +1,55 @@
-import { Dispatch, SetStateAction } from 'react';
+"use client";
+import { useEffect, useState } from "react";
+import { GetNotificationList } from "@/api/notification/getNotificationList";
+import { GetNotificationDetail } from "@/api/notification/getNotificationDetail";
 
-type AlertModalType = {
-  text: string;
-  templateText: string;
-  modalStateSetter: Dispatch<SetStateAction<string>>;
-  onClose: Dispatch<SetStateAction<boolean>>;
-};
+const NotificationPage = () => {
+  const [notifications, setNotifications] = useState([]);
+  const [selectedNotification, setSelectedNotification] = useState(null);
 
-const AlertModal = ({
-  text,
-  templateText,
-  modalStateSetter,
-  onClose,
-}: AlertModalType) => {
-  const onConfirm = (
-    templateText: string,
-    modalStateSetter: Dispatch<SetStateAction<string>>,
-    onClose: Dispatch<SetStateAction<boolean>>
-  ) => {
-    modalStateSetter(templateText);
-    onClose(false);
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const res = await GetNotificationList();
+        setNotifications(res.dataList);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
+  const handleReadNotification = async (id: string) => {
+    try {
+      const res = await GetNotificationDetail(id);
+      setSelectedNotification(res.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
-    <div
-      className="fixed inset-0 w-screen h-screen bg-gray-500/50 flex justify-center items-center z-30"
-      onClick={() => onClose(false)}
-    >
-      <div
-        className="w-[20rem] h-[15rem] bg-white rounded-2xl px-7"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="w-full mt-10 text-lg whitespace-pre-wrap">{text}</div>
-        <div className="mt-9 flex flex-col">
-          <button
-            className="bg-[#0D99FF] rounded-lg h-10 text-white hover:bg-[#51b4fa]"
-            onClick={() => onConfirm(templateText, modalStateSetter, onClose)}
-          >
-            확인
-          </button>
-          <button className="rounded-lg h-10" onClick={() => onClose(false)}>
-            취소
-          </button>
-        </div>
+      <div className="p-4">
+        <h1 className="text-lg font-semibold mb-4">알림 목록</h1>
+        <ul>
+          {notifications.map((notification) => (
+              <li key={notification.id} className="border p-2 mb-2 cursor-pointer" onClick={() => handleReadNotification(notification.id)}>
+                <div className="font-medium">{notification.title}</div>
+                <div className="text-sm text-gray-600">{notification.message}</div>
+              </li>
+          ))}
+        </ul>
+
+        {selectedNotification && (
+            <div className="mt-4 p-4 border rounded">
+              <h2 className="text-md font-semibold">알림 상세</h2>
+              <p>{selectedNotification.title}</p>
+              <p>{selectedNotification.message}</p>
+            </div>
+        )}
       </div>
-    </div>
   );
 };
 
-export { AlertModal };
+export default NotificationPage;
