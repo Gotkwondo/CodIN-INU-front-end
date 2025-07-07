@@ -38,7 +38,7 @@ export default function MapContainer({
             '-webkit-user-select: none; width: 46px; height: 59px; left: 0px; top: 0px;"></img>',
           '<div class="relative ml-[50%]">',
           '<div class="flex flex-col items-center -translate-x-1/2 absolute text-[12px] text-shadow max-w-[120px] min-w-[70px] break-words break-keep text-center">',
-          `<strong class="absolute text-shadow rounded-[15px]">${placename}</strong>`,
+          `<div class="absolute text-shadow rounded-[15px]">${placename}</div>`,
           '</div>',
           '</div>',
         ].join(''),
@@ -49,35 +49,40 @@ export default function MapContainer({
   };
 
   useEffect(() => {
-    console.log('MapContainer mounted with address:', address);
-
-    if (!window.naver || !window.naver.maps || !window.naver.maps.Service) {
-      console.warn('naver.maps is not ready yet!');
-      return;
-    }
-
-    naver.maps.Service.geocode(
-      {
-        query: address,
-      },
-      function (status, response) {
-        if (status !== naver.maps.Service.Status.OK) {
-          console.error('Geocode error:', response);
-          return;
-        }
-
-        const result = response.v2;
-        const items = result.addresses;
-        console.log('Geocode result:', items[0].x, items[0].y);
-
-        if (items.length === 0) {
-          console.warn('No results found for the address:', address);
-          return;
-        }
-
-        initMap(Number(items[0].y), Number(items[0].x));
+    const checkAndInit = () => {
+      if (!window.naver || !window.naver.maps || !window.naver.maps.Service) {
+        console.warn('naver.maps is not ready yet! Retrying...');
+        setTimeout(checkAndInit, 300); // 300ms 후 재시도
+        return;
       }
-    );
+
+      if (!address) {
+        console.error('Address is not provided.');
+        return;
+      }
+
+      naver.maps.Service.geocode(
+        { query: address },
+        function (status, response) {
+          if (status !== naver.maps.Service.Status.OK) {
+            console.error('Geocode error:', response);
+            return;
+          }
+
+          const result = response.v2;
+          const items = result.addresses;
+
+          if (items.length === 0) {
+            console.warn('No results found for the address:', address);
+            return;
+          }
+
+          initMap(Number(items[0].y), Number(items[0].x));
+        }
+      );
+    };
+
+    checkAndInit();
   }, []);
 
   return (

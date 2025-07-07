@@ -1,5 +1,4 @@
-import type { Tag } from '@/app/(auth-required)/main/info/department-info/schema';
-import { tagsArray } from '@/app/(auth-required)/main/info/department-info/schema';
+import { Tag, tagsArray } from '@/interfaces/partners';
 
 interface ITag {
   tag: string | Tag;
@@ -10,6 +9,7 @@ const tagMap: Record<Tag, string> = {
   COMPUTER_SCI: '컴공',
   EMBEDDED: '임베',
   INFO_COMM: '정통',
+  IT_COLLEGE: '정보대',
 };
 
 export function Tags(
@@ -32,7 +32,8 @@ export function Tags(
 export function OtherTag({ tags }: { tags: Tag[] }) {
   return (
     <>
-      {tagsArray.every(tag => tags.includes(tag)) ? (
+      {tagsArray.every(tag => tags.includes(tag)) ||
+      tags.includes('IT_COLLEGE') ? (
         <Tags
           tag="정보대 제휴"
           other

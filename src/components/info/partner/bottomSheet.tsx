@@ -1,10 +1,10 @@
 'use client';
 
-import { Tag } from '@/app/(auth-required)/main/info/department-info/schema';
 import BackButton from '@/components/Layout/header/BackButton';
 import MapLinkButton from '@/components/Layout/header/MapLinkButton';
 import { Tags, OtherTag } from './tag';
 import { useState } from 'react';
+import { Tag } from '@/interfaces/partners';
 
 interface BottomSheetProps {
   title: string;
@@ -131,7 +131,7 @@ export default function BottomSheet({
                 year: 'numeric',
                 month: '2-digit',
               })}
-              {timeDescription}
+              ({timeDescription})
             </div>
           </div>
           <div>

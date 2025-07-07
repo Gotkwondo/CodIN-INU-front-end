@@ -8,14 +8,15 @@ import Header from '@/components/Layout/header/Header'; // Link 추가
 import DefaultBody from '@/components/Layout/Body/defaultBody';
 import BottomNav from '@/components/Layout/BottomNav/BottomNav';
 import { Tags, OtherTag } from '@/components/info/partner/tag';
-import { schema } from './schema';
-import type { Tag } from './schema';
+import type { IPartners } from '@/interfaces/partners';
+import { set } from 'lodash';
 
 export default function DepartmentInfoPage() {
   const [activeTab, setActiveTab] = useState('phoneDirectory');
   const [professorPosts, setProfessorPosts] = useState([]); // 교수님 및 연구실 데이터 상태
   const [loading, setLoading] = useState(false); // 로딩 상태
   const [error, setError] = useState(null); // 에러 상태
+  const [partners, setPartners] = useState<IPartners[]>([]); // 제휴 업체 데이터 상태
 
   const navigateToMain = () => {
     if (typeof window !== 'undefined') {
@@ -82,6 +83,22 @@ export default function DepartmentInfoPage() {
 
       fetchProfessorPosts();
     }
+    if (activeTab === 'partners') {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(
+            'https://codin.inu.ac.kr/api/info/partner'
+          );
+          console.log('Fetched partner data:', response.data.dataList);
+          setPartners(response.data.dataList);
+        } catch (err) {
+          setError(err.message || '알 수 없는 오류가 발생했습니다.');
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchData();
+    }
   }, [activeTab]);
 
   return (
@@ -146,16 +163,14 @@ export default function DepartmentInfoPage() {
         )}
         {activeTab === 'partners' && (
           <ul className="grid grid-cols-2 gap-[18px] w-full">
-            {schema.map((partner, id) => (
+            {partners.map((partner, id) => (
               <li key={id}>
-                <Link
-                  href={`/main/info/department-info/map/?pname=${partner.location}`}
-                >
+                <Link href={`/main/info/department-info/m/${partner.id}`}>
                   <div className="block border border-[#D4D4D4] flex-1 rounded-[16px] cursor-pointer">
                     <div className="flex flex-col items-center justify-center px-[14px] py-[17px]">
                       <img
-                        src={partner.img.main.replace('/public', '')}
-                        alt={partner.img.main}
+                        src={partner.mainImg}
+                        alt={partner.name}
                         className="min-h-[97px] max-h-[97px] border rounded-[15px] aspect-square"
                       />
                       <p className="text-center text-[15px] my-[9px]">
