@@ -173,7 +173,7 @@ export default function DepartmentInfoPage() {
                         alt={partner.name}
                         className="min-h-[97px] max-h-[97px] border rounded-[15px] aspect-square"
                       />
-                      <p className="text-center text-[15px] my-[9px]">
+                      <p className="text-center text-[15px] my-[9px] multiline-ellipsis">
                         {partner.name}
                       </p>
                       <div
