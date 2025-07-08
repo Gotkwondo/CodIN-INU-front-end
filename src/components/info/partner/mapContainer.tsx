@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Coordinate } from '@/interfaces/map';
 import Map from './map';
+import Script from 'next/script';
 
 export default function MapContainer({
   address,
@@ -50,14 +51,28 @@ export default function MapContainer({
 
   useEffect(() => {
     const checkAndInit = () => {
-      if (!window.naver || !window.naver.maps || !window.naver.maps.Service) {
-        console.warn('naver.maps is not ready yet! Retrying...');
-        setTimeout(checkAndInit, 300); // 300ms 후 재시도
+      if (
+        !window.naver ||
+        !window.naver.maps ||
+        !window.naver.maps.Service ||
+        !window.naver.maps.Service.geocode
+      ) {
+        console.warn('naver.maps.Service is not fully ready yet! Retrying...');
+        setTimeout(checkAndInit, 300);
         return;
       }
 
-      if (!address) {
-        console.error('Address is not provided.');
+      if (!address || address.trim() === '') {
+        console.error('Address is not provided or empty.');
+        return;
+      }
+
+      tryGeocode();
+    };
+
+    const tryGeocode = (retryCount = 0) => {
+      if (retryCount > 3) {
+        console.error('Geocode failed after multiple retries.');
         return;
       }
 
@@ -65,7 +80,8 @@ export default function MapContainer({
         { query: address },
         function (status, response) {
           if (status !== naver.maps.Service.Status.OK) {
-            console.error('Geocode error:', response);
+            console.error('Geocode error:', response, 'Retrying...');
+            setTimeout(() => tryGeocode(retryCount + 1), 500);
             return;
           }
 
@@ -87,12 +103,14 @@ export default function MapContainer({
 
   return (
     address && (
-      <div className="absolute top-0 left-0 right-0 h-[100vh]">
-        <div
-          id="map"
-          className="w-full h-[100vh]"
-        ></div>
-      </div>
+      <>
+        <div className="absolute top-0 left-0 right-0 h-[100vh]">
+          <div
+            id="map"
+            className="w-full h-[100vh]"
+          ></div>
+        </div>
+      </>
     )
   );
 }

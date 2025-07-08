@@ -6,14 +6,14 @@ import type { Viewport } from 'next';
 import ReviewProvider from '@/context/WriteReviewContext';
 import Script from 'next/script';
 
+const CLIENT_ID = process.env.NAVER_MAP_CLIENT_ID;
+
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
 };
-
-const CLIENT_ID = process.env.NAVER_MAP_CLIENT_ID;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -39,6 +39,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
 
       {/* Google Analytics gtag.js */}
+
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=G-643XQ6BZ59"
         strategy="afterInteractive"
