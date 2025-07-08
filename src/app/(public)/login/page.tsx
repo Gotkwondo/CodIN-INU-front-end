@@ -1,23 +1,23 @@
-"use client";
+'use client';
 //import './login.css';
-import './loginAnimation.css'; 
-import "@/app/globals.css";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { Suspense, useState, useContext, useEffect } from "react";
-import { PostLogin } from "@/api/user/postLogin";
-import { AuthContext } from "@/context/AuthContext";
-import CommonBtn from "@/components/buttons/commonBtn";
-import DefaultBody from "@/components/Layout/Body/defaultBody";
-import { PostPortal } from "@/api/user/postPortal";
-import { UserContext } from "@/context/UserContext";
+import './loginAnimation.css';
+import '@/app/globals.css';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { Suspense, useState, useContext, useEffect } from 'react';
+import { PostLogin } from '@/api/user/postLogin';
+import { AuthContext } from '@/context/AuthContext';
+import CommonBtn from '@/components/buttons/commonBtn';
+import DefaultBody from '@/components/Layout/Body/defaultBody';
+import { PostPortal } from '@/api/user/postPortal';
+import { UserContext } from '@/context/UserContext';
 import { set } from 'lodash';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [studentId, setStudentId] = useState<string>("");
+  const [studentId, setStudentId] = useState<string>('');
   const [rememberMe, setRememberMe] = useState<boolean>(false);
-  const [password, setPassword] = useState<string>("");
-  
+  const [password, setPassword] = useState<string>('');
+
   const [schoolLoginExplained, setSchoolLoginExplained] =
     useState<boolean>(false);
   const authContext = useContext(AuthContext);
@@ -37,24 +37,22 @@ export default function LoginPage() {
   }, []);
 
   if (!userContext) {
-    throw new Error("MyConsumer must be used within a MyProvider");
+    throw new Error('MyConsumer must be used within a MyProvider');
   }
 
   const { User, updateUser } = userContext;
 
   if (!authContext) {
-    throw new Error("AuthContext를 사용하려면 AuthProvider로 감싸야 합니다.");
+    throw new Error('AuthContext를 사용하려면 AuthProvider로 감싸야 합니다.');
   }
 
   const { Auth, updateAuth } = authContext;
 
-
   useEffect(() => {
-    if (searchParams && searchParams.get("error") === "invalid_email_domain") {
-      alert("@inu.ac.kr 계정으로 로그인 해주세요");
+    if (searchParams && searchParams.get('error') === 'invalid_email_domain') {
+      alert('@inu.ac.kr 계정으로 로그인 해주세요');
     }
   }, [searchParams]);
-
 
   const handleStudentIdChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -77,7 +75,7 @@ export default function LoginPage() {
   ): Promise<void> => {
     e.preventDefault();
     if (!studentId || !password) {
-      alert("아이디와 비밀번호를 입력해주세요.");
+      alert('아이디와 비밀번호를 입력해주세요.');
       return;
     }
 
@@ -86,26 +84,26 @@ export default function LoginPage() {
       console.log(`학번 업데이트: ${studentId}`);
       const response = await PostPortal(studentId, password);
       console.log(`로그인 결과: ${response}`);
-      const token = response.headers["authorization"];
-      const refreshToken = response.headers["x-refresh-token"];
+      const token = response.headers['authorization'];
+      const refreshToken = response.headers['x-refresh-token'];
       const code = response.status;
       if (token) {
-        console.log("Authorization 토큰:", token);
-        console.log("리프레시:", refreshToken);
+        console.log('Authorization 토큰:', token);
+        console.log('리프레시:', refreshToken);
 
         // 토큰 저장 (localStorage 또는 sessionStorage)
-        localStorage.setItem("accessToken", token);
-        localStorage.setItem("refresh-token", `Bearer ${refreshToken}`);
+        localStorage.setItem('accessToken', token);
+        localStorage.setItem('refresh-token', `Bearer ${refreshToken}`);
         // AuthContext 업데이트
         updateAuth({ accessToken: token });
 
         // 로그인 성공 후 메인 페이지로 이동
-        router.push("/main");
+        router.push('/main');
       } else if (code === 201) {
-        router.push("/signup/profile");
+        router.push('/signup/profile');
       }
     } catch (error) {
-      console.error("로그인 실패", error);
+      console.error('로그인 실패', error);
       alert(error);
       //alert('이메일 혹은 비밀번호가 틀립니다. 다시 시도해주세요.');
     }
@@ -113,7 +111,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (Auth.accessToken) {
-      console.log("새로운 토큰이 설정되었습니다:", Auth.accessToken);
+      console.log('새로운 토큰이 설정되었습니다:', Auth.accessToken);
     }
   }, [Auth.accessToken]); // Auth.accessToken의 변경을 감지
 
@@ -147,20 +145,19 @@ export default function LoginPage() {
   ): Promise<void> => {
     e.preventDefault();
     try {
-      if( !isLoginPressed ) {
+      if (!isLoginPressed) {
         setTimeout(() => {
-          window.location.href = "https://codin.inu.ac.kr/api/auth/google";
+          window.location.href = 'https://codin.inu.ac.kr/api/auth/google';
         }, 2500);
       }
       setIsLoginPressed(true);
       // 구글 로그인 URL로 리디렉션
     } catch (error) {
-      console.error("로그인 실패", error);
+      console.error('로그인 실패', error);
       setIsLoginPressed(false);
-      alert("로그인 오류");
+      alert('로그인 오류');
     }
   };
-
 
   const handleappleLogin = async (
     e: React.MouseEvent<HTMLButtonElement>
@@ -168,10 +165,10 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       // 구글 로그인 URL로 리디렉션
-      window.location.href = "https://codin.inu.ac.kr/api/auth/apple";
+      window.location.href = 'https://codin.inu.ac.kr/api/auth/apple';
     } catch (error) {
-      console.error("로그인 실패", error);
-      alert("로그인 오류");
+      console.error('로그인 실패', error);
+      alert('로그인 오류');
     }
   };
 
@@ -205,7 +202,7 @@ export default function LoginPage() {
                       />
                       <a href="https://portal.inu.ac.kr:444/enview/" className='text-Mr underline text-[#808080] w-full text-right'>비밀번호를 잊으셨나요?</a>
                   </div> */}
-         {/*
+          {/*
                   <div id="else">
 
                       <button id="findPW" onClick={()=> router.push('/findPW')}> 비밀번호 찾기</button>
@@ -221,48 +218,68 @@ export default function LoginPage() {
                       <div className='w-[12px] h-[12px] bg-[#EBF0F7] rounded-[12px]'/>
                   </div>
                   <CommonBtn id="loginBtn" text="로그인하기" status={1} onClick={handleLogin}/> */}
-        
 
-        {/*
+          {/*
           <button onClick={handleappleLogin}>
             <img src="/images/apple.png" className="w-[175px] h-[42px] mt-3" ></img>
           </button>
           */}
-       </div>
-        <div className='absolute bottom-[0px] w-full px-[20px] left-0 flex flex-col items-center justify-end h-[330px] '>
-        {/*<div className="flex items-center justify-center text-Mr text-[#808080] w-[312px] rounded-[12px] bg-white/[88] px-6 py-2 mb-[32px] drop-shadow-[0_3px_8px_rgba(0,0,0,0.15)]">
+        </div>
+        <div className="absolute bottom-[0px] w-full px-[20px] left-0 flex flex-col items-center justify-end h-[330px] ">
+          {/*<div className="flex items-center justify-center text-Mr text-[#808080] w-[312px] rounded-[12px] bg-white/[88] px-6 py-2 mb-[32px] drop-shadow-[0_3px_8px_rgba(0,0,0,0.15)]">
           <span className="text-[#0D99FF]">@inu.ac.kr</span>계정만 사용할 수 있어요
         </div> */}
-          
-        
-        <div className={`${waitForNotice ? "hidden " : ""} bubble relative flex items-center justify-center transition-all duration-[500ms] mb-[24px] ${isLoginPressed ? "h-[140px] " : "h-[62px]"}`}>
-          <img src="/icons/auth/onlyInuAccount.svg" className={`h-full `}/>
-          <p className={"absolute top-0 transform text-sub "+ ( isLoginPressed ? "translate-y-[190%] scale-[105%] bubbleTextAfterPressed font-medium" : "translate-y-1/2 text-Mr")}>
-            <span className='text-active'>@inu.ac.kr</span> 계정만 사용할 수 있어요
-          </p>
-        </div>
-        
-        
 
-        { waitForNotice ?
-          <div className="w-[348.5px] h-[48.5px] mb-[62px] flex gap-[8px] items-center justify-center rounded-[5px] bg-white floatBtnBefore" >
-            <p className="text-XLm text-[rgba(0,0,0,0.3)] leading-none floatBtnBeforeText">@inu.ac.kr 계정을 사용해주세요</p>
-          </div> 
-          :
-          <button onClick={handleGoogleLogin} disabled={isLoginPressed} className={"btnAppearAnimation w-[348.5px] h-[48.5px] mb-[62px] flex gap-[8px] items-center justify-center shadow-[0_0_12px_4px_rgba(0,44,76,0.25)] rounded-[5px] bg-white floatBtn"
-            +"disabled:cursor-not-allowed disabled:opacity-25 "+ ( isLoginPressed ? "btnClickedAnimation" : "")}>
-            <img src='/icons/auth/googleLogo.png' className="w-[14px] h-[14px]"/>
-            <p className="text-XLm leading-none">Google계정으로 로그인</p>
-          </button>
-        }
-        { isLoginPressed && 
-          <div className="overlayBeforeLogin" />
-        }  
-             
-         
+          <div
+            className={`${
+              waitForNotice ? 'hidden ' : ''
+            } bubble relative flex items-center justify-center transition-all duration-[500ms] mb-[24px] ${
+              isLoginPressed ? 'h-[140px] ' : 'h-[62px]'
+            }`}
+          >
+            <img
+              src="/icons/auth/onlyInuAccount.svg"
+              className={`h-full `}
+            />
+            <p
+              className={
+                'absolute top-0 transform text-sub ' +
+                (isLoginPressed
+                  ? 'translate-y-[190%] scale-[105%] bubbleTextAfterPressed font-medium'
+                  : 'translate-y-1/2 text-Mr')
+              }
+            >
+              <span className="text-active">@inu.ac.kr</span> 계정만 사용할 수
+              있어요
+            </p>
+          </div>
+
+          {waitForNotice ? (
+            <div className="w-[348.5px] h-[48.5px] mb-[62px] flex gap-[8px] items-center justify-center rounded-[5px] bg-white floatBtnBefore">
+              <p className="text-XLm text-[rgba(0,0,0,0.3)] leading-none floatBtnBeforeText">
+                @inu.ac.kr 계정을 사용해주세요
+              </p>
+            </div>
+          ) : (
+            <button
+              onClick={handleGoogleLogin}
+              disabled={isLoginPressed}
+              className={
+                'btnAppearAnimation w-[348.5px] h-[48.5px] mb-[62px] flex gap-[8px] items-center justify-center shadow-[0_0_12px_4px_rgba(0,44,76,0.25)] rounded-[5px] bg-white floatBtn' +
+                'disabled:cursor-not-allowed disabled:opacity-25 ' +
+                (isLoginPressed ? 'btnClickedAnimation' : '')
+              }
+            >
+              <img
+                src="/icons/auth/googleLogo.png"
+                className="w-[14px] h-[14px]"
+              />
+              <p className="text-XLm leading-none">Google계정으로 로그인</p>
+            </button>
+          )}
+          {isLoginPressed && <div className="overlayBeforeLogin" />}
         </div>
       </DefaultBody>
     </Suspense>
-
   );
 }
