@@ -6,6 +6,7 @@ import BottomNav from '@/components/Layout/BottomNav/BottomNav';
 import { use, useEffect, useState } from 'react';
 import { IPartner } from '@/interfaces/partners';
 import apiClient from '@/api/clients/apiClient';
+import Script from 'next/script';
 
 export default function MapPage({
   params,
@@ -54,6 +55,7 @@ export default function MapPage({
       {partner && (
         <>
           <MapContainer
+            key={partner.location}
             address={partner.location}
             placename={partner.name}
           />
