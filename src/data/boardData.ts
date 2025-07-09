@@ -64,4 +64,13 @@ export const boardData: Record<string, Board> = {
         ],
         type: 'gallery',
     },
+    'ticketing': {
+        name: '간식나눔',
+        backLink: '/ticketing',
+        tabs: [
+            { label: '송도캠', value: 'songdo', postCategory: 'songdo' },
+            { label: '미추홀캠', value: 'Michuhol', postCategory: 'Michuhol' },
+        ],
+        type: 'gallery',
+    },
 };
