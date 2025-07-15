@@ -1,8 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { Coordinate } from '@/interfaces/map';
-import Map from './map';
-import Script from 'next/script';
+import { useEffect } from 'react';
 
 export default function MapContainer({
   address,
