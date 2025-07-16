@@ -1,11 +1,9 @@
-// src/app/oauth-success/page.tsx
-'use client';
 
 import { useEffect } from 'react';
 
 const OAuthSuccess = () => {
   useEffect(() => {
-    // ✅ React Native WebView에 로그인 성공 메시지 전달
+    // ✅ Native 앱에 로그인 성공 전달
     if (window.ReactNativeWebView) {
       window.ReactNativeWebView.postMessage(
         JSON.stringify({ type: 'LOGIN_SUCCESS' })
@@ -17,10 +15,15 @@ const OAuthSuccess = () => {
   }, []);
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>로그인 성공 🎉</h1>
-      <p>잠시 후 메인 페이지로 이동합니다...</p>
-    </div>
+    <html>
+      <head>
+        <title>로그인 중...</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body>
+        <p>로그인 성공! 메인 페이지로 이동 중입니다...</p>
+      </body>
+    </html>
   );
 };
 
