@@ -5,9 +5,20 @@ import { useState, useEffect, Suspense } from 'react';
 import BottomNav from "@/components/Layout/BottomNav/BottomNav";
 import Header from '@/components/Layout/header/Header';
 import DefaultBody from '@/components/Layout/Body/defaultBody';
+import UserInfoModal from '@/components/modals/UserInfoModal';
 
 export default function SnackDetail() {
     const router = useRouter();
+
+    const [isInfo, setIsInfo] = useState(false); // 수령자 정보 입력 여부
+    const [showModal, setShowModal] = useState(false);
+
+    // isInfo가 false일 경우 모달 띄우기
+    useEffect(() => {
+        if (!isInfo) {
+        setShowModal(true);
+        }
+    }, [isInfo]);
 
     const dummyData = {
         image: "/images/snack.svg", // 교체 가능
@@ -26,6 +37,7 @@ export default function SnackDetail() {
                 <Header.Title>{`간식나눔`}</Header.Title>
             </Header>
             <DefaultBody hasHeader={1}>
+                 {showModal && <UserInfoModal onClose={() => setShowModal(false)} />}
                 <div className="flex flex-col items-center gap-4">
                     {/* 이미지 */}
                     <div className='w-full bg-white rounded-[15px] drop-shadow-lg'> 
