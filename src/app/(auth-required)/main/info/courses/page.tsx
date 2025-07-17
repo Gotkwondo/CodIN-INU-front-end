@@ -45,9 +45,9 @@ export default function CoursePage() {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-[18px] border-t-[1px] border-[#D4D4D4] pt-[12px]">
-          <CourseCard></CourseCard>
-          <CourseCard></CourseCard>
-          <CourseCard></CourseCard>
+          <CourseCard fav={true} />
+          <CourseCard fav={false} />
+          <CourseCard fav={false} />
         </div>
       </DefaultBody>
     </Suspense>

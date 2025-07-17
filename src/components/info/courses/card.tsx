@@ -1,14 +1,14 @@
-import Image from 'next/image';
 import CourseTag from './tag';
 import Link from 'next/link';
+import Heart from '@public/icons/heart.svg';
 
-export default function CourseCard() {
+export default function CourseCard({ fav = false }: { fav: boolean }) {
   const id = 'course-id'; // Replace with actual course ID or prop if needed
 
   return (
     <Link
       href={`/main/info/courses/${id}`}
-      className="flex items-center aspect-square shadow-[0px_5px_13.3px_4px_#D4D4D496] rounded-[15px]"
+      className="flex items-center aspect-square shadow-05134 rounded-[15px]"
     >
       <div className="flex w-full px-[16px] py-[22px] justify-between items-start">
         <div>
@@ -27,12 +27,12 @@ export default function CourseCard() {
             <CourseTag tag="팀플" />
           </div>
         </div>
-        <Image
-          src={'/icons/heart.svg'}
+        <Heart
           width={16}
           height={16}
-          alt="heart"
-        ></Image>
+          stroke={fav ? '#CDCDCD' : '#0D99FF'}
+          fill={!fav ? '#0D99FF' : 'none'}
+        />
       </div>
     </Link>
   );
