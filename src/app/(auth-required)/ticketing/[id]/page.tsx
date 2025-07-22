@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, Suspense } from 'react';
-import BottomNav from "@/components/Layout/BottomNav/BottomNav";
+import LoadingOverlay from '@/components/common/LoadingOverlay';
 import Header from '@/components/Layout/header/Header';
 import DefaultBody from '@/components/Layout/Body/defaultBody';
 import UserInfoModal from '@/components/modals/UserInfoModal';
@@ -11,6 +11,7 @@ export default function SnackDetail() {
     const router = useRouter();
 
     const [isInfo, setIsInfo] = useState(false); // 수령자 정보 입력 여부
+    const [isLoading, setIsLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [ticketStatus, setTicketStatus] = useState<'available' | 'upcoming' | 'countdown' | 'closed'>('closed');
     const [remainingTime, setRemainingTime] = useState('00:51');
@@ -69,6 +70,13 @@ export default function SnackDetail() {
         return () => clearInterval(interval);
         }, []);
 
+        const handleTicketClick = () => {
+            setIsLoading(true);
+            setTimeout(() => {
+                router.push('/ticketing/ticket');
+            }, 2000); // 2초 후 이동 (로딩 시간)
+        };
+
     return (
         <Suspense>
             <Header>
@@ -77,6 +85,7 @@ export default function SnackDetail() {
             </Header>
             <DefaultBody hasHeader={1}>
                  {showModal && <UserInfoModal onClose={() => setShowModal(false)} />}
+                 {isLoading && <LoadingOverlay />}
                 <div className="flex flex-col items-center gap-4">
                     {/* 이미지 */}
                     <div className='w-full bg-white rounded-[15px] drop-shadow-lg'> 
@@ -132,7 +141,7 @@ export default function SnackDetail() {
                 
                 <div className="fixed bottom-0 left-0 w-full px-4 bg-white pb-[35px]">
                     {ticketStatus === 'available' && (
-                    <button className="mt-3 w-full h-[50px] bg-[#0D99FF] text-white rounded-[5px] text-[18px] font-bold">
+                    <button className="mt-3 w-full h-[50px] bg-[#0D99FF] text-white rounded-[5px] text-[18px] font-bold" onClick={handleTicketClick}>
                         티켓팅하기
                     </button>
                     )}
@@ -159,6 +168,7 @@ export default function SnackDetail() {
                     )}
                 </div>
                 {/* <BottomNav /> */}
+                
             </DefaultBody>
         </Suspense>
     );
