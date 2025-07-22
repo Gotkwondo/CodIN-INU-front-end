@@ -95,7 +95,7 @@ export default function SnackDetail() {
                     {/* 잔여 수량 */}
                     <div className="w-full">
                         <div className="flex justify-between items-center">
-                            <div className="flex flex-row items-start font-semibold text-[18px]">잔여 수량<span className="text-blue-500 ml-1 mt-[-10px]">•</span></div>
+                            <div className="flex flex-row items-start font-semibold text-[18px]">잔여 수량<span className="text-[#0D99FF] ml-1 mt-[-10px]">•</span></div>
                             <div className="text-[#0D99FF] font-semibold text-[18px]">{dummyData.quantity}</div>
                         </div>
                         <div className="text-[12px] text-black mt-1">실시간으로 업데이트 됩니다.</div>
@@ -139,28 +139,28 @@ export default function SnackDetail() {
                     </div>
                 </div> 
                 
-                <div className="fixed bottom-0 left-0 w-full px-4 bg-white pb-[35px]">
+                <div className="fixed bottom-0 left-0 w-full px-4 bg-white pb-[35px] flex justify-center">
                     {ticketStatus === 'available' && (
-                    <button className="mt-3 w-full h-[50px] bg-[#0D99FF] text-white rounded-[5px] text-[18px] font-bold" onClick={handleTicketClick}>
+                    <button className="mt-3 w-full h-[50px] bg-[#0D99FF] text-white rounded-[5px] text-[18px] font-bold max-w-[500px]" onClick={handleTicketClick}>
                         티켓팅하기
                     </button>
                     )}
 
                     {ticketStatus === 'upcoming' && (
-                    <button className="mt-3 w-full h-[50px] border border-[#0D99FF] text-[#0D99FF] bg-white rounded-[5px] text-[18px] font-bold flex items-center justify-center gap-2">
+                    <button className="mt-3 w-full h-[50px] border border-[#0D99FF] text-[#0D99FF] bg-white rounded-[5px] text-[18px] font-bold flex items-center justify-center gap-2 max-w-[500px]">
                         <img src='/icons/alert.svg' className='flex'></img> 오픈 전 알림 받기
                     </button>
                     )}
 
                     {ticketStatus === 'countdown' && (
-                    <button className="mt-3 w-full h-[50px] border border-[#0D99FF] text-[#0D99FF] bg-[#EBF0F7] rounded-[5px] text-[18px] font-bold flex items-center justify-center gap-2">
+                    <button className="mt-3 w-full h-[50px] border border-[#0D99FF] text-[#0D99FF] bg-[#EBF0F7] rounded-[5px] text-[18px] font-bold flex items-center justify-center gap-2 max-w-[500px]">
                         <img src='/icons/timer.svg'></img> <span>{remainingTime}</span>
                     </button>
                     )}
 
                     {ticketStatus === 'closed' && (
                     <button
-                        className="mt-3 w-full h-[50px] bg-[#A6A6AB] text-[#808080] rounded-[5px] text-[18px] font-bold"
+                        className="mt-3 w-full h-[50px] bg-[#A6A6AB] text-[#808080] rounded-[5px] text-[18px] font-bold max-w-[500px]"
                         disabled
                     >
                         티켓팅 마감
