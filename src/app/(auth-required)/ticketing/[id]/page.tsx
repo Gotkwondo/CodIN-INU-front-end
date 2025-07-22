@@ -12,6 +12,8 @@ export default function SnackDetail() {
 
     const [isInfo, setIsInfo] = useState(false); // 수령자 정보 입력 여부
     const [showModal, setShowModal] = useState(false);
+    const [ticketStatus, setTicketStatus] = useState<'available' | 'upcoming' | 'countdown' | 'closed'>('closed');
+    const [remainingTime, setRemainingTime] = useState('00:51');
 
     // isInfo가 false일 경우 모달 띄우기
     useEffect(() => {
@@ -24,13 +26,48 @@ export default function SnackDetail() {
         image: "/images/snack.svg", // 교체 가능
         quantity: "500개",
         title: "총장님과 함께하는 중간고사 간식나눔",
-        date: "2025.04.16 (수) 17:00",
+        date: "2025-07-22T18:43:00",
         location: "인천대학교 송도캠퍼스 17호관 앞",
         organizer: "인천대 재학생",
         ticketTime: "17:00",
         href:'https://www.instagram.com/',
         phone:'010-0000-0000'
     };
+
+
+    useEffect(() => {
+        const updateTicketStatus = () => {
+            const ticketDate = new Date(dummyData.date); // dummyData.date 파싱
+            const now = new Date();
+            
+
+            const diffMs = ticketDate.getTime() - now.getTime();
+            const diffSec = Math.floor(diffMs / 1000);
+            if (diffSec <= 0) {
+            // 티켓팅 오픈됨
+            setTicketStatus('available');
+            setRemainingTime('00:00');
+            } else if (diffSec <= 180) {
+            // 오픈 3분 전 → countdown
+            setTicketStatus('countdown');
+            const min = String(Math.floor(diffSec / 60)).padStart(2, '0');
+            const sec = String(diffSec % 60).padStart(2, '0');
+            setRemainingTime(`${min}:${sec}`);
+            } else {
+            // 오픈 전 알림 상태
+            setTicketStatus('upcoming');
+            }
+        };
+
+        updateTicketStatus(); // 초기 실행
+
+        // 카운트다운 업데이트용 interval
+        const interval = setInterval(() => {
+            updateTicketStatus();
+        }, 1000);
+
+        return () => clearInterval(interval);
+        }, []);
 
     return (
         <Suspense>
@@ -93,8 +130,33 @@ export default function SnackDetail() {
                     </div>
                 </div> 
                 
-                <div className="fixed bottom-[0px] pb-[35px] left-0 w-full px-4 bg-white">
-                <button className="mt-3 w-full h-[50px] bg-[#0D99FF] text-white rounded-[5px] py-3 text-[18px] font-bold">티켓팅하기</button>
+                <div className="fixed bottom-0 left-0 w-full px-4 bg-white pb-[35px]">
+                    {ticketStatus === 'available' && (
+                    <button className="mt-3 w-full h-[50px] bg-[#0D99FF] text-white rounded-[5px] text-[18px] font-bold">
+                        티켓팅하기
+                    </button>
+                    )}
+
+                    {ticketStatus === 'upcoming' && (
+                    <button className="mt-3 w-full h-[50px] border border-[#0D99FF] text-[#0D99FF] bg-white rounded-[5px] text-[18px] font-bold flex items-center justify-center gap-2">
+                        <img src='/icons/alert.svg' className='flex'></img> 오픈 전 알림 받기
+                    </button>
+                    )}
+
+                    {ticketStatus === 'countdown' && (
+                    <button className="mt-3 w-full h-[50px] border border-[#0D99FF] text-[#0D99FF] bg-[#EBF0F7] rounded-[5px] text-[18px] font-bold flex items-center justify-center gap-2">
+                        <img src='/icons/timer.svg'></img> <span>{remainingTime}</span>
+                    </button>
+                    )}
+
+                    {ticketStatus === 'closed' && (
+                    <button
+                        className="mt-3 w-full h-[50px] bg-[#A6A6AB] text-[#808080] rounded-[5px] text-[18px] font-bold"
+                        disabled
+                    >
+                        티켓팅 마감
+                    </button>
+                    )}
                 </div>
                 {/* <BottomNav /> */}
             </DefaultBody>
