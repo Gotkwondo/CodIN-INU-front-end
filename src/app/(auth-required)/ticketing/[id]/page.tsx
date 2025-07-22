@@ -28,6 +28,8 @@ export default function SnackDetail() {
         location: "인천대학교 송도캠퍼스 17호관 앞",
         organizer: "인천대 재학생",
         ticketTime: "17:00",
+        href:'https://www.instagram.com/',
+        phone:'010-0000-0000'
     };
 
     return (
@@ -47,31 +49,54 @@ export default function SnackDetail() {
                     {/* 잔여 수량 */}
                     <div className="w-full">
                         <div className="flex justify-between items-center">
-                            <div className="font-semibold text-[18px]">잔여 수량<span className="text-blue-500 ml-1 mt-[-40px]">•</span></div>
+                            <div className="flex flex-row items-start font-semibold text-[18px]">잔여 수량<span className="text-blue-500 ml-1 mt-[-10px]">•</span></div>
                             <div className="text-[#0D99FF] font-semibold text-[18px]">{dummyData.quantity}</div>
                         </div>
-                        <div className="text-sm text-gray-500 mt-1">실시간으로 업데이트 됩니다.</div>
+                        <div className="text-[12px] text-black mt-1">실시간으로 업데이트 됩니다.</div>
                     </div>
 
+                    {/* 구분선 */}
+                    <div className='w-full border border-t-1 border-[#D4D4D4]'></div>
+
+                    {/* 수령자 정보 */}
                     <div className='border-t-1 border-[#D4D4D4] flex justify-start flex-col items-center'>
-                        <div className="text-sm text-gray-700 mt-2 text-center">빠른 티켓팅을 위해 수령자 <br/>  정보를 먼저 입력해주세요.</div>
-                        <button className="mt-3 text-white text-[12px] px-[22px] py-[6px] gap-[10px] bg-[#0D99FF] rounded-[20px]">수령자 정보 입력</button>
+                        <div className="text-sm text-black mt-2 text-center font-medium leading-[17px]">
+                            {isInfo ? (
+                                    '수령자 정보를 이미 입력했어요.') : (
+                                        <>
+                                        빠른 티켓팅을 위해 수령자 <br /> 정보를 먼저 입력해주세요.
+                                        </>
+                                    )}
+                        </div>
+                        <button className="mt-3 text-white text-[12px] px-[22px] py-[6px] gap-[10px] bg-[#0D99FF] rounded-[20px]" onClick={()=>setShowModal(true)}> {isInfo?  '수령자 정보 수정': '수령자 정보 입력'} </button>
                     </div>
 
+                    {/* 상세정보 유의사항 */}
+                    <div className='w-full flex flex-row justify-end  text-[11px] leading-[13px] text-center font-medium text-[#0D99FF] gap-3 underline underline-offset-2'>
+                        <button className=''>상세정보</button>
+                        <button>유의사항</button>
+                    </div>
                     {/* 간식 정보 카드 */}
-                    <div className="w-full bg-white rounded-[15px] shadow-[0px_5px_13.3px_4px_rgba(212,212,212,0.59)] p-4">
-                        <div className="font-semibold text-base mb-2">{dummyData.title}</div>
-                        <div className="text-sm text-gray-700">일시: {dummyData.date}</div>
-                        <div className="text-sm text-gray-700">장소: {dummyData.location}</div>
-                        <div className="text-sm text-gray-700">대상: {dummyData.organizer}</div>
-                        <div className="text-sm text-gray-700">수량: {dummyData.quantity}</div>
-                        <div className="text-sm text-gray-700">티켓팅 가능 시간: {dummyData.ticketTime}</div>
+                    <div className="flex flex-col w-full bg-white rounded-[15px] shadow-[0px_5px_13.3px_4px_rgba(212,212,212,0.59)] p-4 text-[12px]  font-normal text-black gap-y-1">
+                        <div className="font-bold text-[14px] mb-2">{dummyData.title}</div>
+                        <div className="">일시: {dummyData.date}</div>
+                        <div className="">장소: {dummyData.location}</div>
+                        <div className="">대상: {dummyData.organizer}</div>
+                        <div className="">수량: {dummyData.quantity}</div>
+                        <div className="">티켓팅 가능 시간: {dummyData.ticketTime}</div>
+
+                        <div className='text-black/50 self-center mt-[18px]'>학생회 작성 설명</div>
+                        <a href={dummyData.href} className='text-[#0D99FF] mt-[18px]'>학생회 간식나눔 홍보글 링크</a>
+
+                        <div className='self-end text-[#AEAEAE]'>문의: {dummyData.phone}</div>
                        
                     </div>
                 </div> 
                 
-                <button className="mt-3 w-full bg-[#0D99FF] text-white rounded py-2 text-sm font-semibold">티켓팅하기</button>
-                <BottomNav />
+                <div className="fixed bottom-[0px] pb-[35px] left-0 w-full px-4 bg-white">
+                <button className="mt-3 w-full h-[50px] bg-[#0D99FF] text-white rounded-[5px] py-3 text-[18px] font-bold">티켓팅하기</button>
+                </div>
+                {/* <BottomNav /> */}
             </DefaultBody>
         </Suspense>
     );
