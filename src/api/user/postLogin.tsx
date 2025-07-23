@@ -19,6 +19,17 @@ export const PostLogin = async (
         { withCredentials: true }
     );
 
+    if( process.env.NEXT_PUBLIC_ENV === 'dev'){
+
+      const token = response.headers["authorization"].split(" ")[1];
+      if (token) {
+        localStorage.removeItem("accessToken"); // 기존 토큰 제거
+        localStorage.setItem("accessToken", token);
+        document.cookie = `access_token=${token}; path=/; max-age=3600; SameSite=Lax`;
+
+      }
+    }
+
     console.log(response.data);
     console.log(response.headers);
 
