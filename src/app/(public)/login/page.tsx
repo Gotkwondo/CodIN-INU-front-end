@@ -225,6 +225,12 @@ export default function LoginPage() {
           </button>
           */}
         </div>
+
+        {process.env.NEXT_PUBLIC_ENV === 'dev' && (
+            <div className="text-center mt-5 pd-5 font-bold  mb-4">
+              🚧 Admin으로 로그인해야 합니다. 앱을 재시작해주십시오.
+            </div>
+        )}
         <div className="absolute bottom-[0px] w-full px-[20px] left-0 flex flex-col items-center justify-end h-[330px] ">
           {/*<div className="flex items-center justify-center text-Mr text-[#808080] w-[312px] rounded-[12px] bg-white/[88] px-6 py-2 mb-[32px] drop-shadow-[0_3px_8px_rgba(0,0,0,0.15)]">
           <span className="text-[#0D99FF]">@inu.ac.kr</span>계정만 사용할 수 있어요
