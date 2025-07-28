@@ -4,7 +4,8 @@ import CourseCard from '@/components/info/courses/card';
 import DefaultBody from '@/components/Layout/Body/defaultBody';
 import Header from '@/components/Layout/header/Header';
 import Select from '@/components/select/Select';
-import Image from 'next/image';
+import CheckBox from '@public/icons/checkbox.svg';
+import Search from '@public/icons/search.svg';
 import { Suspense } from 'react';
 
 export default function CoursePage() {
@@ -22,11 +23,9 @@ export default function CoursePage() {
             placeholder="과목명, 관심분야, 희망 직무를 검색해보세요"
           />
           <div>
-            <Image
-              src={'/icons/search.svg'}
-              width={16}
-              height={16}
-              alt="search"
+            <Search
+              width={20}
+              height={20}
             />
           </div>
         </div>
@@ -35,12 +34,10 @@ export default function CoursePage() {
         </div>
         <div className="mb-[14px]">
           <div className="flex items-center gap-[11px]">
-            <Image
-              src={'/icons/checkbox.svg'}
+            <CheckBox
               width={14.25}
               height={14.25}
-              alt="checkbox"
-            ></Image>
+            />
             <h3 className="text-Mm text-[#808080]">좋아요한 과목 모아보기</h3>
           </div>
         </div>
@@ -53,3 +50,18 @@ export default function CoursePage() {
     </Suspense>
   );
 }
+
+// /main/info/courses
+
+/*
+request GET /main/info/courses
+headers {
+  Authorization: Bearer {accessToken}
+}
+*/
+
+// interface Course {
+//   id: string;
+//   department: string;
+
+// }
