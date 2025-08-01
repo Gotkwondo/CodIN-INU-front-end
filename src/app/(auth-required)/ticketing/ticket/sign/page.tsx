@@ -5,10 +5,12 @@ import { useState, useRef, Suspense } from 'react';
 import Header from '@/components/Layout/header/Header';
 import DefaultBody from '@/components/Layout/Body/defaultBody';
 import SignatureCanvas from 'react-signature-canvas';
+import AdminPasswordModal from '@/components/modals/AdminPasswordModal';
 
-export default function SnackDetail() {
+export default function SignPage() {
     const router = useRouter();
 
+    const [showModal, setShowModal] = useState(false);
     const sigCanvasRef = useRef<SignatureCanvas>(null);
     const [imageURL, setImageURL] = useState<string | null>(null);
 
@@ -17,12 +19,12 @@ export default function SnackDetail() {
         setImageURL(null);
     };
 
-    const handleConfirm = async () => {
-        if (!sigCanvasRef.current?.isEmpty()) {
-        const dataUrl = sigCanvasRef.current.getTrimmedCanvas().toDataURL('image/png');
-        setImageURL(dataUrl);
+    const sendToBackend = () => {
+    const dataUrl = sigCanvasRef.current?.toDataURL();
+    if (!dataUrl) return;
 
-        }}
+    
+  };
 
    
 
@@ -62,12 +64,18 @@ export default function SnackDetail() {
                         다시 쓰기
                     </button> 
                     
-                    <button className="mt-3 w-full h-[50px] bg-[#0D99FF] text-white rounded-[5px] text-[18px] font-bold max-w-[500px]" onClick={handleConfirm}>
+                    <button className="mt-3 w-full h-[50px] bg-[#0D99FF] text-white rounded-[5px] text-[18px] font-bold max-w-[500px]" onClick={()=> setShowModal(true)}>
                         확인
                     </button>
                     
                 </div>
-                {/* <BottomNav /> */}
+                
+                {showModal && (
+                    <AdminPasswordModal
+                    onClose={() => setShowModal(false)}
+                    onSubmit={sendToBackend}
+                    />
+                )}
                 
             </DefaultBody>
         </Suspense>
