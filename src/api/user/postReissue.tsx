@@ -5,14 +5,23 @@ const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 export const PostReissue = async (): Promise<any> => {
   axios.defaults.withCredentials = true;
   try {
-    const response: AxiosResponse<any> = await axios.post(
-      `${apiUrl}/auth/reissue`
-    );
 
-    console.log(response.data);
-    console.log(response.headers);
+    let response: AxiosResponse<any>;
+
+    if( process.env.NEXT_PUBLIC_ENV === 'dev'){
+      console.log(response.data);
+      console.log(response.headers);
+      return response;
+    }else{
+
+      response = await axios.post(
+        `${apiUrl}/auth/reissue`
+      );
+
+    }
 
     return response;
+    
   } catch (error: any) {
     if (error.response) {
       const { status, data } = error.response;
