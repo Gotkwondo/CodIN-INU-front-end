@@ -53,7 +53,8 @@ export default function SnackDetail() {
                 <div className="fixed bottom-0 left-0 w-full px-4 bg-white pb-[35px] flex flex-col items-center">
                     <div className='text-[11px] leading-[13px] text-center text-[#FF2525] font-normal'>{dummyData.date}까지 오지 않으면 티켓이 자동 취소돼요. <br/> 그 전에 꼭 방문해 주세요!</div>
                     
-                    <button className="mt-3 w-full h-[50px] bg-[#0D99FF] text-white rounded-[5px] text-[18px] font-bold max-w-[500px]" >
+                    <button className="mt-3 w-full h-[50px] bg-[#0D99FF] text-white rounded-[5px] text-[18px] font-bold max-w-[500px]" 
+                        onClick={()=> router.push('/ticketing/ticket/sign')}>
                         서명 하기
                     </button>
                     

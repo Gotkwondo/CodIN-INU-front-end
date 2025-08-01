@@ -88,7 +88,7 @@ export default function SnackDetail() {
                  {isLoading && <LoadingOverlay />}
                 <div className="flex flex-col items-center gap-4">
                     {/* 이미지 */}
-                    <div className='w-full bg-white rounded-[15px] drop-shadow-lg'> 
+                    <div className='w-full bg-white rounded-[15px] shadow-[0px_5px_13.3px_4px_rgba(212,212,212,0.59)]'> 
                         <img src={dummyData.image} alt="간식 이미지" />
                     </div>
                    
