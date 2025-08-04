@@ -147,7 +147,8 @@ export default function LoginPage() {
     try {
       if (!isLoginPressed) {
         setTimeout(() => {
-          window.location.href = 'https://codin.inu.ac.kr/api/auth/google';
+          const redirectUrl = window.location.origin;
+          window.location.href = `https://codin.inu.ac.kr/api/auth/google?redirect_url=${encodeURIComponent(redirectUrl)}`;
         }, 2500);
       }
       setIsLoginPressed(true);
