@@ -8,13 +8,12 @@ export const PostReissue = async (): Promise<any> => {
     let response: AxiosResponse<any>;
 
     if (process.env.NEXT_PUBLIC_ENV === 'dev') {
-      console.log(response.data);
-      console.log(response.headers);
+
       return response;
     } else {
       response = await axios.post(`${apiUrl}/auth/reissue`, {
         headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
+          //Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
         },
       });
     }
