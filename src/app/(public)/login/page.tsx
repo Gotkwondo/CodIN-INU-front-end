@@ -229,7 +229,7 @@ export default function LoginPage() {
 
         {process.env.NEXT_PUBLIC_ENV === 'dev' && (
             <div className="text-center mt-5 pd-5 font-bold  mb-4">
-              🚧 Admin으로 로그인해야 합니다. 앱을 재시작해주십시오.
+              🚧 개발용 모바일 앱으로 접근 중이신 경우, admin로그인을 사용해주세요
             </div>
         )}
         <div className="absolute bottom-[0px] w-full px-[20px] left-0 flex flex-col items-center justify-end h-[330px] ">
