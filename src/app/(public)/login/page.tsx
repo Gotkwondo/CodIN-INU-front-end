@@ -11,6 +11,7 @@ import DefaultBody from '@/components/Layout/Body/defaultBody';
 import { PostPortal } from '@/api/user/postPortal';
 import { UserContext } from '@/context/UserContext';
 import { set } from 'lodash';
+import { fetchClient } from '@/api/clients/fetchClient';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -34,6 +35,18 @@ export default function LoginPage() {
   useEffect(() => {
     setIsClient(true); // 클라이언트 사이드에서만 렌더링하도록 설정
     setSearchParams(new URLSearchParams(window.location.search)); // 클라이언트에서만 URL 파라미터 읽기
+    
+    //일단 이렇게 구현했는데 추후 프론트에서 토큰 식별이 가능해지면 수정해야 할듯 -경완 25.08.04
+    //토큰 꺼내서 있으면 자동 로그인으로
+    const autoLogin = async () => {
+      const response = await fetchClient('/users');
+      const result = await response.json();
+      if (result.success) {
+        router.push('/main');
+      }
+    }
+    autoLogin();
+
   }, []);
 
   if (!userContext) {
@@ -147,7 +160,8 @@ export default function LoginPage() {
     try {
       if (!isLoginPressed) {
         setTimeout(() => {
-          window.location.href = 'https://codin.inu.ac.kr/api/auth/google';
+          const redirectUrl = window.location.origin;
+          window.location.href = `https://codin.inu.ac.kr/api/auth/google?redirect_url=${encodeURIComponent(redirectUrl)}`;
         }, 2500);
       }
       setIsLoginPressed(true);
@@ -228,7 +242,7 @@ export default function LoginPage() {
 
         {process.env.NEXT_PUBLIC_ENV === 'dev' && (
             <div className="text-center mt-5 pd-5 font-bold  mb-4">
-              🚧 Admin으로 로그인해야 합니다. 앱을 재시작해주십시오.
+              🚧 개발용 모바일 앱으로 접근 중이신 경우, admin로그인을 사용해주세요
             </div>
         )}
         <div className="absolute bottom-[0px] w-full px-[20px] left-0 flex flex-col items-center justify-end h-[330px] ">

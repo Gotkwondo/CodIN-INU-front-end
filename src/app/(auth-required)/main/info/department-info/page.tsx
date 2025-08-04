@@ -10,6 +10,7 @@ import BottomNav from '@/components/Layout/BottomNav/BottomNav';
 import { Tags, OtherTag } from '@/components/info/partner/tag';
 import type { IPartners } from '@/interfaces/partners';
 import { set } from 'lodash';
+import apiClient from '@/api/clients/apiClient';
 
 export default function DepartmentInfoPage() {
   const [activeTab, setActiveTab] = useState('phoneDirectory');
@@ -86,11 +87,17 @@ export default function DepartmentInfoPage() {
     if (activeTab === 'partners') {
       const fetchData = async () => {
         try {
-          const response = await axios.get(
-            'https://codin.inu.ac.kr/api/info/partner'
+          const res = await axios.get(
+            'https://codin.inu.ac.kr/api/info/partner',
+            {
+              headers: {
+                Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
+              },
+            }
           );
-          console.log('Fetched partner data:', response.data.dataList);
-          setPartners(response.data.dataList);
+
+          console.log('Fetched partner data:', res.data.dataList);
+          setPartners(res.data.dataList);
         } catch (err) {
           setError(err.message || '알 수 없는 오류가 발생했습니다.');
         } finally {
