@@ -11,6 +11,7 @@ import DefaultBody from '@/components/Layout/Body/defaultBody';
 import { PostPortal } from '@/api/user/postPortal';
 import { UserContext } from '@/context/UserContext';
 import { set } from 'lodash';
+import { fetchClient } from '@/api/clients/fetchClient';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -34,6 +35,18 @@ export default function LoginPage() {
   useEffect(() => {
     setIsClient(true); // 클라이언트 사이드에서만 렌더링하도록 설정
     setSearchParams(new URLSearchParams(window.location.search)); // 클라이언트에서만 URL 파라미터 읽기
+    
+    //일단 이렇게 구현했는데 추후 프론트에서 토큰 식별이 가능해지면 수정해야 할듯 -경완 25.08.04
+    //토큰 꺼내서 있으면 자동 로그인으로
+    const autoLogin = async () => {
+      const response = await fetchClient('/users');
+      const result = await response.json();
+      if (result.success) {
+        router.push('/main');
+      }
+    }
+    autoLogin();
+
   }, []);
 
   if (!userContext) {
