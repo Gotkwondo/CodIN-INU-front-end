@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    types: [opened, synchronize, reopened]
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -56,11 +54,3 @@ jobs:
               docker images -f "dangling=true" -q | xargs sudo docker rmi || true
               docker ps -a
             "
-  gpt-review:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' # 👉 PR에서만 자동 리뷰 실행
-    steps:
-      - uses: Gotkwondo/ChatGPT_Auto_CodeReviewer@main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
