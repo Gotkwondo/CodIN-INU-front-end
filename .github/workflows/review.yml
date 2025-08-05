@@ -1,0 +1,15 @@
+name: GPT PR Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  gpt-review:
+    name: Run GPT Code Reviewer
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Gotkwondo/ChatGPT_Auto_CodeReviewer@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
