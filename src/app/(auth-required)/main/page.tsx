@@ -74,7 +74,7 @@ const menuItems = [
 const Calendar = () => {
   return (
       <div className="relative w-full mt-[18px]">
-        <ZoomableImageModal images={`/images/calendar/4.png`} />
+        <ZoomableImageModal images={`/images/calendar/정보기술대_5월_캘린더.png`} />
       </div>
   );
 };
@@ -141,11 +141,18 @@ const MainPage: FC = () => {
         </Header>
 
         <DefaultBody hasHeader={1}>
+
+          {process.env.NEXT_PUBLIC_ENV === 'dev' && (
+            <div className="text-center mt-5 pd-5 font-bold  mb-4">
+              🚧 이곳은 개발 서버입니다.
+            </div>
+          )}
+
           {/* 캘린더 */}
           <Calendar />
 
           {/* 메뉴 섹션 */}
-          <section className="mt-[12px] relative flex flex-col">
+          <section className="mt-[32px] relative flex flex-col">
             <div className="grid grid-cols-4 justify-between gap-y-[24px]">
               {menuItems.map((menu, index) => (
                   <Link

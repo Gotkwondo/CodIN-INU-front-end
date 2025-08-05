@@ -7,6 +7,7 @@ import DefaultBody from "@/components/Layout/Body/defaultBody";
 import { PostLogout } from "@/api/user/postLogout";
 import { DeleteUser } from "@/api/user/deleteUser";
 import WebModal, { WebModalHandles } from "@/components/modals/WebModal";
+import { fetchClient } from "@/api/clients/fetchClient";
 
 interface MenuItem {
   label: string;
@@ -25,13 +26,9 @@ export default function MyPage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch("https://codin.inu.ac.kr/api/users", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetchClient('/users');
         const result = await response.json();
+
         if (result.success) {
           setUserData(result.data);
         } else {
@@ -93,6 +90,8 @@ export default function MyPage() {
     { label: "좋아요", href: "/mypage/board/likes", isSpacer: true },
     { label: "스크랩", href: "/mypage/board/scraps", isSpacer: true },
     { label: "이용약관", href: "/mypage/condition", isSpacer: true },
+    { label: "알림 설정", href: "/mypage/notification" },
+
     // {
     //   label: "문의하기",
     //   href: "https://docs.google.com/forms/d/1pDj4qKQMMVY87zrT-1QvoqljuJap5cDQaFaDeJII00A/edit?pli=1",
