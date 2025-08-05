@@ -33,8 +33,6 @@ jobs:
       - name: .env setting
         run: |
           echo "NEXT_PUBLIC_API_URL"=${{ secrets.NEXT_PUBLIC_API_URL }} >> .env
-          echo "NAVER_MAP_CLIENT_ID"=${{ secrets.NAVER_MAP_CLIENT_ID }} >> .env
-          echo "NAVER_MAP_CLIENT_SECRET"=${{ secrets.NAVER_MAP_CLIENT_SECRET }} >> .env
           
       - name: Build Docker image And Push
         run: docker buildx build -t ${{ secrets.DOCKERHUB_USERNAME }}/codin-frontend:latest --push .
@@ -56,3 +54,10 @@ jobs:
               docker images -f "dangling=true" -q | xargs sudo docker rmi || true
               docker ps -a
             "
+  gpt-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Gotkwondo/ChatGPT_Auto_CodeReviewer@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
