@@ -72,6 +72,11 @@
     backdrop-filter: blur(1px);
   }
 
+  /* 그림자 */
+  .shadow-05134 {
+    @apply shadow-[0px_5px_13.3px_4px_#D4D4D496];
+  }
+
   /* 배경 색상 */
   .bg-black {
     background-color: #212121;
