@@ -1,4 +1,5 @@
 import { selectType} from '@/app/(auth-required)/main/info/course-reviews/write-review/type';
+import React, { MemoExoticComponent } from 'react';
 import { SetStateAction } from 'react';
 import { BiFontSize } from 'react-icons/bi';
 import Select, { GroupBase, OptionsOrGroups } from 'react-select'
@@ -7,7 +8,7 @@ import { ValueContainer } from 'react-select/animated';
 type CustomSelectType = {
   options?: OptionsOrGroups<any, GroupBase<any>>;
   onChange?: (
-    value: SetStateAction<selectType>
+    value: any
   ) => void;
   value?: any;
   isSearchable?: boolean;
@@ -16,7 +17,11 @@ type CustomSelectType = {
   rounded?: boolean;
 };
 
-const CustomSelect = ({
+type SelectBarType = {
+  children: React.ReactNode;
+};
+
+const CustomSelect = React.memo(({
   options,
   onChange,
   value,
@@ -109,6 +114,17 @@ const CustomSelect = ({
       isSearchable={isSearchable}
     />
   );
+});
+
+
+const SelectOptionBar = ({ children }: SelectBarType) => {
+  return <div className="w-full flex pt-[18px]">{children}</div>;
 };
 
-export { CustomSelect };
+const SelectDepartmentBar = ({ children }: SelectBarType) => { 
+  return (
+    <div className="mt-5">{children}</div>
+  );
+}
+
+export { CustomSelect, SelectOptionBar, SelectDepartmentBar };

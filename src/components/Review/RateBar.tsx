@@ -1,3 +1,4 @@
+import React from 'react';
 import { ComponentProps, Dispatch, SetStateAction } from 'react';
 
 type RateBarType = {
@@ -58,7 +59,7 @@ const generateClickableBars = (coloredBarCnt: number, barWidth: number, clickFn:
   return bars;
 };
 
-const RateBar = ({
+const RateBar = React.memo(({
   score,
   barWidth,
   clickable = false,
@@ -77,6 +78,6 @@ const RateBar = ({
       })}
     </div>
   );
-};
+});
 
 export { RateBar };
