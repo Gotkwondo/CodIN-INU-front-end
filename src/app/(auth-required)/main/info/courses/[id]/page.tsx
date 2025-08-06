@@ -2,10 +2,11 @@
 import Title from '@/components/common/title';
 import DefaultBody from '@/components/Layout/Body/defaultBody';
 import Header from '@/components/Layout/header/Header';
-import { Suspense, use } from 'react';
-import Heart from '@public/icons/heart.svg';
+import { Suspense, use, useEffect, useState } from 'react';
 import Review from '@/components/info/courses/review';
 import PercentBox from '@/components/info/courses/percentBox';
+import { Course } from '@/interfaces/course';
+import { fetchClient } from '@/api/clients/fetchClient';
 
 export default function CourseDetail({
   params,
@@ -13,6 +14,29 @@ export default function CourseDetail({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+
+  const [course, setCourse] = useState<Course | null>(null);
+
+  useEffect(() => {
+    if (!id) {
+      console.error('Query parameter "id" is missing');
+      return;
+    }
+    console.log('Fetching course data for ID:', id);
+
+    const fetchCourse = async () => {
+      try {
+        const res = await fetchClient(`/lectures/${id}`);
+        const data = await res.json();
+        console.log('Fetched course data:', data);
+
+        setCourse(data);
+      } catch (error) {
+        console.error('Error fetching course data:', error);
+      }
+    };
+    fetchCourse();
+  }, []);
 
   return (
     <Suspense>
