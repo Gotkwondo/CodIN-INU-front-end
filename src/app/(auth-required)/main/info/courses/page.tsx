@@ -15,30 +15,41 @@ export default function CoursePage() {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [selectedDept, setSelectedDept] = useState('ALL');
+  const [selectedOrder, setSelectedOrder] = useState('ALL');
+  const [searchQuery, setSearchQuery] = useState('');
+
   const observer = useRef<IntersectionObserver | null>(null);
 
   const departments = [
-    '전체 학과',
-    '컴퓨터공학부',
-    '정보통신학과',
-    '임베디드 시스템공학과',
+    ['전체 학과', 'ALL'],
+    ['컴퓨터공학부', 'COMPUTER_SCI'],
+    ['정보통신공학부', 'INFO_COMM'],
+    ['임베디드 시스템공학부', 'EMBEDDED'],
   ];
   const orders = [
-    '정렬 순서',
-    '평점 높은 순',
-    '좋아요 많은 순',
-    '조회수 순',
-    '정확도 순',
+    ['정렬 순서', 'ALL'],
+    ['평점 높은 순', 'RATING'],
+    ['좋아요 많은 순', 'LIKE'],
+    ['조회수 순', 'HIT'],
+    ['정확도 순', 'RELEVANCE'],
   ];
 
   const fetchCourses = async (page: number) => {
     try {
       setIsLoading(true);
 
-      const res = await fetchClient(`/lectures/courses?page=${page}`);
+      const res = await fetchClient(
+        `/lectures/courses?page=${page}${
+          searchQuery ? `&keyword=${searchQuery}` : ''
+        }${selectedDept !== 'ALL' ? `&department=${selectedDept}` : ''}${
+          selectedOrder !== 'ALL' ? `&order=${selectedOrder}` : ''
+        }`
+      );
       const json = await res.json();
       const data = json.data;
-      console.log('Fetched courses:', data);
+      console.log(data);
       const newCourses: Course[] = data.contents;
 
       setCourses(prev => [...prev, ...newCourses]);
@@ -71,10 +82,22 @@ export default function CoursePage() {
     fetchCourses(page);
   }, [page]);
 
-  const handleSelectChange = (value: string) => {
-    const query =
-      value === '전체 학과' ? '' : `?department=${encodeURIComponent(value)}`;
+  const handleDepartmentChange = (value: string) => {
     console.log(`Selected1: ${value}`);
+    setSelectedDept(value);
+  };
+  const handleOrderChange = (value: string) => {
+    console.log(`Selected2: ${value}`);
+    setSelectedOrder(value);
+  };
+
+  const handleSearch = () => {
+    console.log('Search clicked');
+    setCourses([]); // 검색 시 기존 데이터 초기화
+    setPage(0); // 페이지 초기화
+    setHasMore(true); // 더 많은 데이터가 있다고 가정
+    console.log(`Search query: ${searchQuery}`);
+    fetchCourses(0); // 첫 페이지 데이터 재요청
   };
 
   return (
@@ -89,8 +112,9 @@ export default function CoursePage() {
             type="text"
             className="w-full px-[20px] text-[13px] bg-transparent placeholder:text-[#CDCDCD] outline-none"
             placeholder="과목명, 관심분야, 희망 직무를 검색해보세요"
+            onBlur={e => setSearchQuery(e.target.value)}
           />
-          <div>
+          <div onClick={handleSearch}>
             <Search
               width={20}
               height={20}
@@ -99,11 +123,11 @@ export default function CoursePage() {
         </div>
         <div className="flex justify-end gap-[8px] mt-[28px] mb-[29px] h-[35px]">
           <CustomSelect
-            onChange={handleSelectChange}
+            onChange={handleDepartmentChange}
             options={departments}
           />
           <CustomSelect
-            onChange={handleSelectChange}
+            onChange={handleOrderChange}
             options={orders}
           />
         </div>

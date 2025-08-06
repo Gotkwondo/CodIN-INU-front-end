@@ -5,11 +5,11 @@ import Polygon from '@public/icons/polygon.svg';
 
 interface CustomSelectProps {
   onChange: (value: string) => void;
-  options: string[];
+  options: string[][];
 }
 
 export default function CustomSelect({ onChange, options }: CustomSelectProps) {
-  const [selected, setSelected] = useState(options[0]);
+  const [selected, setSelected] = useState(options[0][0]);
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -24,9 +24,9 @@ export default function CustomSelect({ onChange, options }: CustomSelectProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSelect = (dept: string) => {
-    setSelected(dept);
-    onChange(dept);
+  const handleSelect = (value: string[]) => {
+    setSelected(value[0]);
+    onChange(value[1]);
     setIsOpen(false);
   };
 
@@ -54,19 +54,21 @@ export default function CustomSelect({ onChange, options }: CustomSelectProps) {
           absolute text-[10px] top-[42px] w-full rounded-[10px] bg-[#FAF9F9] overflow-hidden
           shadow-[0px_4px_4px_0_rgba(0,0,0,0.09)] z-10"
         >
-          {options.slice(1).map(dept => (
-            <div
-              key={dept}
-              onClick={() => handleSelect(dept)}
-              className={`py-[5px] cursor-pointer text-center hover:bg-[#EBF0F7] ${
-                dept === selected
-                  ? 'bg-[#EBF0F7] text-active font-normal'
-                  : 'text-sub'
-              }`}
-            >
-              {dept}
-            </div>
-          ))}
+          {options.slice(1).map(val => {
+            return (
+              <div
+                key={val[1]}
+                onClick={() => handleSelect(val)}
+                className={`py-[5px] cursor-pointer text-center hover:bg-[#EBF0F7] ${
+                  val[0] === selected
+                    ? 'bg-[#EBF0F7] text-active font-normal'
+                    : 'text-sub'
+                }`}
+              >
+                {val[0]}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
