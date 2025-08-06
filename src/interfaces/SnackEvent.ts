@@ -30,3 +30,14 @@ export interface TicketEvent { // 이벤트 리스트
     promotionLink?: string;
     status: string;
 }
+
+export interface FetchSnackResponse {
+  success: boolean;
+  code: number;
+  message: string;
+  data: {
+    eventList: TicketEvent[];
+    lastPage: number;
+    nextPage: number;
+  };
+}

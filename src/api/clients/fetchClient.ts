@@ -1,17 +1,17 @@
 // fetchClient.ts
 
 import { PostReissue } from '../user/postReissue';
-
 export interface FetchOptions extends RequestInit {
   _retry?: boolean;
 }
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export async function fetchClient<T = any>(
+export async function fetchClient<Response = any>(
   path: string,
   init?: FetchOptions
-): Promise<T> {
+): Promise<Response> {
+  
   const url = `${apiUrl}${path}`;
   const options: FetchOptions = {
     ...init,
@@ -49,5 +49,5 @@ export async function fetchClient<T = any>(
   }
 
   const data = await response.json();
-  return data as T;
+  return data as Response;
 }
