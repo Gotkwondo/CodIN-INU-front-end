@@ -13,30 +13,30 @@ const DefaultBody: React.FC<DefaultBodyProps> = ({ hasHeader, children }) => {
     
     const pt = hasHeader? " pt-[80px]" : "";
 
-    useEffect(()=>{
-        const Postreissue = async (retryCount=0) => 
+    // useEffect(()=>{
+    //     const Postreissue = async (retryCount=0) => 
         
-        { if (retryCount < 3) {
-                console.log(`🔄 재시도 중... (${retryCount + 1}/2)`);
+    //     { if (retryCount < 3) {
+    //             console.log(`🔄 재시도 중... (${retryCount + 1}/2)`);
                 
-                try {
-                    const res = await PostReissue(); // 토큰 재발급 요청
-                    console.log(res);
+    //             try {
+    //                 const res = await PostReissue(); // 토큰 재발급 요청
+    //                 console.log(res);
                     
                    
-                } catch (error) {
-                    retryCount + 1;
+    //             } catch (error) {
+    //                 retryCount + 1;
                     
-                }
-            }
-            else{
-            console.error("❌ 토큰 재발급 실패");
+    //             }
+    //         }
+    //         else{
+    //         console.error("❌ 토큰 재발급 실패");
                     
-                }
+    //             }
       
-          }
-          Postreissue();
-        }, [])
+    //       }
+    //       Postreissue();
+    //     }, [])
 
 
 
