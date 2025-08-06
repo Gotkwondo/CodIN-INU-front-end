@@ -1,14 +1,11 @@
-export interface SnackEvent { // 이벤트 상세
+export interface SnackEvent { // 이벤트 리스트
   eventId: number;
-  eventTime: string;
-  eventEndTime: string;
-  eventImageUrls: string;
+  eventDate: string;
+  eventImageUrl: string;
   eventTitle: string;
   locationInfo: string;
   quantity: number;
   currentQuantity: number;
-  target: string;
-  description: string;
 }
 
 export interface SnackDetailClientProps {
@@ -16,19 +13,20 @@ export interface SnackDetailClientProps {
 }
 
 
-export interface TicketEvent { // 이벤트 리스트
-    id: number; 
+export interface TicketEvent { // 이벤트 상세
+    eventId: number; 
+    currentQuantity: number;
+    description: string;
     campus: string;
     eventTime: string;
     eventEndTime: string;
-    eventImageUrl: string;
-    title: string;
+    eventImageUrls: string;
+    eventTitle: string;
     locationInfo: string;
-    stock: number;
+    quantity: string;
     target: string;
     inquiryNumber: string;
     promotionLink?: string;
-    status: string;
 }
 
 export interface FetchSnackResponse {
@@ -36,8 +34,15 @@ export interface FetchSnackResponse {
   code: number;
   message: string;
   data: {
-    eventList: TicketEvent[];
+    eventList: SnackEvent[];
     lastPage: number;
     nextPage: number;
   };
+}
+
+export interface FetchSnackDetailResponse {
+  success: boolean;
+  code: number;
+  message: string;
+  data: TicketEvent;
 }
