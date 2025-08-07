@@ -52,14 +52,14 @@ export default function CustomSelect({ onChange, options }: CustomSelectProps) {
         <div
           className="
           absolute text-[10px] top-[42px] w-full rounded-[10px] bg-[#FAF9F9] overflow-hidden
-          shadow-[0px_4px_4px_0_rgba(0,0,0,0.09)] z-10"
+          shadow-[0px_4px_4px_0_rgba(0,0,0,0.09)] z-[100]"
         >
           {options.slice(1).map(val => {
             return (
               <div
                 key={val[1]}
                 onClick={() => handleSelect(val)}
-                className={`py-[5px] cursor-pointer text-center hover:bg-[#EBF0F7] ${
+                className={`relative py-[5px] cursor-pointer text-center hover:bg-[#EBF0F7] z-[100] ${
                   val[0] === selected
                     ? 'bg-[#EBF0F7] text-active font-normal'
                     : 'text-sub'

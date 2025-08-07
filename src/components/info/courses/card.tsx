@@ -12,8 +12,17 @@ interface Props {
 
 const CourseCard = forwardRef<HTMLDivElement, Props>(
   ({ fav = false, value }, ref) => {
-    const { id, title, professor, type, grade, credit, tags, department } =
-      value;
+    const {
+      id,
+      title,
+      professor,
+      type,
+      grade,
+      credit,
+      tags,
+      department,
+      starRating,
+    } = value;
 
     return (
       <div ref={ref}>
@@ -37,7 +46,7 @@ const CourseCard = forwardRef<HTMLDivElement, Props>(
                     {grade}학년 {credit}학점
                   </div>
                 </div>
-                <Rating score={3.65} />
+                <Rating score={starRating} />
               </div>
               <div className="flex gap-[4px] overflow-x-hidden">
                 {tags.map((tag, index) => (
