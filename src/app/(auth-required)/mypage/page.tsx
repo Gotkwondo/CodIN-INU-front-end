@@ -26,8 +26,8 @@ export default function MyPage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetchClient('/users');
-        const result = await response.json();
+        const result = await fetchClient('/users');
+        
 
         if (result.success) {
           setUserData(result.data);

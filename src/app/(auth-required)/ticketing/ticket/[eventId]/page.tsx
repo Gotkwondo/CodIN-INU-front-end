@@ -5,13 +5,14 @@ import { useParams, useRouter } from 'next/navigation';
 import { useState, Suspense } from 'react';
 import Header from '@/components/Layout/header/Header';
 import DefaultBody from '@/components/Layout/Body/defaultBody';
-import SignModal from '@/components/modals/SignModal';
+import SignModal from '@/components/modals/ticketing/SignModal';
 import { formatDateTimeWithDay } from '@/utils/date';
+import CancelModal from '@/components/modals/ticketing/CancelModal';
 
 export default function SnackDetail() {
   const router = useRouter();
   const { eventId } = useParams(); // ✅ URL 파라미터 받기
-
+  const [showCancelModal, setShowCancelModal] = useState(false);
   const [showSignModal, setShowSignModal] = useState(false);
 
   const dummyData = {
@@ -66,7 +67,7 @@ export default function SnackDetail() {
 
           <button
             className="mt-3 w-full h-[50px] bg-[#EBF0F7] text-[#808080] rounded-[5px] text-[18px] font-medium max-w-[500px]"
-            disabled
+            onClick={()=>setShowCancelModal(true)}
           >
             티켓팅 취소하기
           </button>
@@ -78,6 +79,13 @@ export default function SnackDetail() {
             eventId={String(eventId)}
           />
         )}
+
+         {showCancelModal && (
+            <CancelModal
+              onClose={() => setShowCancelModal(false)}
+              eventId={String(eventId)}
+            />
+          )}
       </DefaultBody>
     </Suspense>
   );

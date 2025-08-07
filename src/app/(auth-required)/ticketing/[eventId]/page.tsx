@@ -5,10 +5,11 @@ import { useState, useEffect, Suspense } from 'react';
 import LoadingOverlay from '@/components/common/LoadingOverlay';
 import Header from '@/components/Layout/header/Header';
 import DefaultBody from '@/components/Layout/Body/defaultBody';
-import UserInfoModal from '@/components/modals/UserInfoModal';
+import UserInfoModal from '@/components/modals/ticketing/UserInfoModal';
 import { fetchClient } from '@/api/clients/fetchClient';
 import { FetchSnackDetailResponse, TicketEvent } from '@/interfaces/SnackEvent';
 import { formatDateTimeWithDay } from '@/utils/date';
+import { method } from 'lodash';
 
 export default function SnackDetail() {
     const router = useRouter();
@@ -21,9 +22,6 @@ export default function SnackDetail() {
     const [remainingTime, setRemainingTime] = useState('00:00');
     const [errorMessage, setErrorMessage] = useState('');
 
-    useEffect(() => {
-        if (!isInfo) setShowModal(true);
-    }, [isInfo]);
 
     useEffect(() => {
         const fetchDetail = async () => {
@@ -31,6 +29,8 @@ export default function SnackDetail() {
             try {
                 const response = await fetchClient<FetchSnackDetailResponse>(`/ticketing/event/${eventId}`);
                 setEventData(response.data);
+                setIsInfo(response.data.existParticipationData);
+                if (response.data.existParticipationData == false) setShowModal(true);
                 console.log(response);
             } catch (err) {
                 console.error('❌ 이벤트 상세 불러오기 실패:', err);
@@ -68,19 +68,29 @@ export default function SnackDetail() {
         return () => clearInterval(interval);
     }, [eventData]);
 
-    const handleTicketClick = async() => {
+    const handleTicketClick = async () => {
         setIsLoading(true);
-        try{
-            const response = fetchClient(`ticketing/event/join/${eventId}`);
-            console.log(response);
-        }catch(err){
-            console.error(err);
+        try {
+            const res = await fetchClient(`/ticketing/event/join/${eventId}`, { method: 'POST' });
+
+            if (res.code === 200) {
+            // ✅ 티켓팅 성공
+            router.push(`/ticketing/result?status=success&eventId=${eventId}`);
+            } else if (res.code === 409) {
+            // ✅ 티켓 매진
+            router.push(`/ticketing/result?status=soldout&eventId=${eventId}`);
+            } else {
+            // ✅ 기타 오류
+            router.push(`/ticketing/result?status=error&eventId=${eventId}`);
+            }
+        } catch (err: any) {
+            console.error('티켓팅 실패', err);
+            router.push(`/ticketing/result?status=error&eventId=${eventId}`);
+        } finally {
+            setIsLoading(false);
         }
-    
-        setTimeout(() => {
-            router.push(`/ticketing/ticket/${eventId}`);
-        }, 2000);
     };
+
 
     return (
         <Suspense>
@@ -101,6 +111,7 @@ export default function SnackDetail() {
                         initialStep={isInfo ? 2 : 1}
                     />
                     )}
+               
                 {errorMessage && (
                     <div className="text-red-500 text-center my-4 text-sm">
                         {errorMessage}
@@ -151,9 +162,9 @@ export default function SnackDetail() {
                             <div>대상: {eventData.target}</div>
                             <div>수량: {eventData.quantity}</div>
                             <div>티켓팅 가능 시간: {formatDateTimeWithDay(eventData.eventTime)}</div>
-                            <div className='text-black/50 self-center mt-[18px]'>학생회 작성 설명</div>
-                            <a href="https://www.instagram.com/" className='text-[#0D99FF] mt-[18px]'>학생회 간식나눔 홍보글 링크</a>
-                            <div className='self-end text-[#AEAEAE]'>문의: 010-0000-0000</div>
+                            <div className='text-black/50 self-center mt-[18px]'>{eventData.description}</div>
+                            <a href={eventData.promotionLink} className='text-[#0D99FF] mt-[18px]'>학생회 간식나눔 홍보글 링크</a>
+                            <div className='self-end text-[#AEAEAE]'>문의: {eventData.inquiryNumber}</div>
                         </div>
                     </div>
                 )}

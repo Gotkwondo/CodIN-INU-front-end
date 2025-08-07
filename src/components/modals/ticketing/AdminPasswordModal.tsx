@@ -71,18 +71,18 @@ const AdminPasswordModal: FC<AdminPasswordModalProps> = ({
           ✕
         </button>
 
-        <p className="text-[13px] font-medium mb-4">
+        <p className="text-[13px] font-medium mb-[22px]">
           관리자 비밀번호를 입력하세요. ({attempts}/{maxAttempts})
         </p>
 
         {/* 점 표시 */}
-        <div className="flex justify-center gap-2 mb-5">
+        <div className="flex justify-center gap-[31px] mb-5">
           {[...Array(4)].map((_, i) => (
             <div
               key={i}
-              className="w-3 h-3 rounded-full"
+              className="w-[14px] h-[14px] rounded-full"
               style={{
-                backgroundColor: i < password.length ? dotColors[i] : '#D9D9D9',
+                backgroundColor: i < password.length ? dotColors[i] : '#AEAEAE',
               }}
             />
           ))}

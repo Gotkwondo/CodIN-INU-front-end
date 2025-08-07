@@ -9,14 +9,14 @@ import { SnackEvent, FetchSnackResponse } from "@/interfaces/SnackEvent";
 import { formatDateTimeWithDay } from '@/utils/date';
 
 const TicketingPage: FC = () => {
-  const board = boardData['ticketing'];
+  const board = boardData['ticketingAdmin'];
   const router = useRouter();
   const { tabs } = board;
   const defaultTab = tabs.length > 0 ? tabs[0].value : "default";
 
   const [activeTab, setActiveTab] = useState<string>(defaultTab);
   const [snacks, setSnacks] = useState<SnackEvent[]>([]);
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
 
@@ -33,7 +33,7 @@ const TicketingPage: FC = () => {
         tabs.find((tab) => tab.value === activeTab)?.postCategory || "";
 
       const response = await fetchClient<FetchSnackResponse>(
-        `/ticketing/event?campus=${activePostCategory}&page=${pageNumber}`
+        `/ticketing/admin/event/list?status=${activePostCategory}&page=${pageNumber}`
       );
       console.log(response)
       const eventList = response?.data?.eventList;
@@ -62,9 +62,9 @@ const TicketingPage: FC = () => {
   useEffect(() => {
     const initialize = async () => {
       setSnacks([]);
-      setPage(0);
+      setPage(1);
       setHasMore(true);
-      await fetchPosts(0);
+      await fetchPosts(1);
     };
 
     initialize();
@@ -90,7 +90,7 @@ const TicketingPage: FC = () => {
 
   // 페이지 변경 시
   useEffect(() => {
-    if (page > 0) {
+    if (page > 1) {
       fetchPosts(page);
     }
   }, [page]);
@@ -114,17 +114,42 @@ const TicketingPage: FC = () => {
         {snacks.map((snack) => (
           <div
             key={snack.eventId}
-            className="bg-white rounded-[15px] shadow-[0px_5px_13.3px_4px_rgba(212,212,212,0.59)] py-[29px] px-4"
-            onClick={() => router.push(`/ticketing/${snack.eventId}`)}
+            className="bg-white rounded-[15px] shadow-[0px_5px_13.3px_4px_rgba(212,212,212,0.59)] py-[29px] px-4 flex flex-row"
+            onClick={() => router.push(`/admin/ticketing/${snack.eventId}`)}
           >
-            <div className="flex items-start">
-              <p className="font-semibold text-[14px]">{snack.eventTitle}</p>
-              <p className="text-[25px] text-[#0D99FF] mt-[-17px]"> •</p>
-            </div>
-            <div className="mt-[22px] text-[12px] text-black">{formatDateTimeWithDay(snack.eventDate)}</div>
-            <div className="text-[12px] text-black">{snack.locationInfo}</div>
-            <div className="text-[12px] text-black">{snack.quantity}명</div>
-            <div className="text-[12px] text-[#0D99FF]">티켓팅 오픈: {formatDateTimeWithDay(snack.eventDate)}</div>
+            <img src={snack.eventImageUrl} className="w-[93px] h-[93px] border border-[#d4d4d4] rounded-[10px] p-2 mr-[14px]"></img>
+            <div className="flex flex-col items-start">
+                <div className="flex items-start">
+                <p className="font-semibold text-[14px]">{snack.eventTitle}</p>
+                <p className="text-[25px] text-[#0D99FF] mt-[-17px]"> •</p>
+                </div>
+                <div className="mt-[22px] text-[12px] text-black">{formatDateTimeWithDay(snack.eventDate)}</div>
+                <div className="text-[12px] text-black">{snack.locationInfo}</div>
+                <div className="text-[12px] text-[#0D99FF]">잔여수량 {snack.currentQuantity} | 수령대기 | 예비번호 </div>
+                
+                {/* 하단 버튼 */}
+                    {snack && (
+                        <div className="w-full bg-white flex justify-start">
+                            {snack.eventStatus === 'OPEN' && (
+                                <button className="bg-[#0D99FF] rounded-[20px] justify-center items-center py-[7px] gap-[10px] text-[14px] text-[#ffffff] w-[135px] mt-[9px]" >
+                                    티켓팅 종료하기
+                                </button>
+                            )}
+
+                            {snack.eventStatus === 'UPCOMING' && (
+                                <button className="bg-[#EBF0F7] rounded-[20px] text-[14px] text-[#808080] mt-[9px] px-[19px] py-[7px]">
+                                    티켓팅 수동 오픈
+                                </button>
+                            )}
+
+                            {snack.eventStatus === 'ENDED' && (
+                                <button className="w-full h-[50px] bg-[#A6A6AB] text-[#808080] rounded-[5px] text-[18px] font-bold max-w-[500px]" disabled>
+                                    행사 종료
+                                </button>
+                            )}
+                        </div>
+                    )}
+                </div>
           </div>
         ))}
       </div>
