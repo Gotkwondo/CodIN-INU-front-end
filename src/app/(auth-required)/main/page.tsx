@@ -264,7 +264,11 @@ const MainPage: FC = () => {
                 ) : null;
               })
             ) : (
-              <p className="text-center text-gray-500">게시물이 없습니다.</p>
+              <>
+                <p className="text-center text-gray-500">게시물이 없습니다.</p>
+
+                <Link href={'/main/info/courses'}>test for courses</Link>
+              </>
             )}
           </div>
         </section>

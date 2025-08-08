@@ -13,39 +13,58 @@ export interface Course {
 }
 
 export interface CourseDetail extends Course {
-  evaluation: string; // 예: "이수인정", "학점인정" 등
-  lectureType: string; // 예: "RISE(시간표 없음)", "시간표 있음" 등
-  schedule: string[]; // 시간표 정보가 문자열 배열로 들어올 수도 있음 (아니면 구조 바꿔야 함)
-  preCourse: string | null; // 선수과목, 없으면 null
-  emotion: {
-    hard: number; // 어려움 정도
-    ok: number; // 보통 정도
-    best: number; // 최고 정도
+  college: string; // 예: "정보기술대학"
+  evaluation: string; // 예: "상대평가", "절대평가"
+  lectureType: string; // 예: "강의(이론)", "실습" 등
+  schedule: {
+    day: string; // 요일 (예: "MONDAY", "TUESDAY" 등)
+    start: string; // 시작 시간 (예: "09:00")
+    end: string; // 종료 시간 (예: "10:30")
+  }[];
+  preCourse?: string[] | null; // 선수과목
+  emotion?: {
+    hard: number; // 어려움 정도 백분율
+    ok: number; // 보통 정도 백분율
+    best: number; // 최고 정도 백분율
   };
-  openKeyword: boolean; // 키워드 공개 여부
-  liked: boolean | null; // 로그인 여부에 따라 null일 수 있음
+  openKeyword?: boolean; // 키워드 공개 여부
 }
 
-// export interface CourseDetail {
-//   id: number;
-//   title: string;
-//   professor: string;
-//   type: string; // 예: "전공심화"
-//   grade: number; // 0 = 학년 없음 or 전체 학년
-//   credit: number; // 학점
-//   tags: string[]; // 태그 배열 (비어있을 수도 있음)
-//   department: string; // 예: "컴퓨터공학부"
-//   college: string; // 예: "정보기술대학"
-//   evaluation: string; // 예: "이수인정"
-//   lectureType: string; // 예: "RISE(시간표 없음)"
-//   schedule: string[]; // 시간표 정보가 문자열 배열로 들어올 수도 있음 (아니면 구조 바꿔야 함)
-//   preCourse: string | null; // 선수과목, 없으면 null
-//   emotion: {
-//     hard: number;
-//     ok: number;
-//     best: number;
-//   };
-//   openKeyword: boolean;
-//   likes: number;
-//   liked: boolean | null; // 로그인 여부에 따라 null일 수 있음
-// }
+export const exampleCourse: CourseDetail = {
+  id: 3,
+  title: '대학수학(1)',
+  professor: '한상현',
+  type: '기초교양',
+  grade: 1,
+  credit: 3,
+  tags: [],
+  department: '컴퓨터공학부',
+  college: '정보기술대학',
+  evaluation: '상대평가',
+  lectureType: '강의(이론)',
+  schedule: [
+    { day: 'THURSDAY', start: '13:00', end: '15:50' },
+    { day: 'THURSDAY', start: '09:00', end: '10:15' },
+    { day: 'THURSDAY', start: '10:30', end: '11:45' },
+  ],
+  preCourse: null,
+  emotion: {
+    hard: 0,
+    ok: 100,
+    best: 0,
+  },
+  openKeyword: false,
+  likes: 0,
+  starRating: 3,
+  liked: null,
+};
+
+export interface CourseReview {
+  id: number;
+  content: string;
+  starRating: number; // 평점 0~5
+  likeCount: number; // 좋아요 수
+  semester: string; // 예: "25-1"
+  likes: number;
+  liked: boolean; // 로그인한 유저가 좋아요를 눌렀는지 여부
+}

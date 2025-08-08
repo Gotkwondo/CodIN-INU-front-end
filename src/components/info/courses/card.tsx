@@ -1,9 +1,10 @@
-import CourseTag from './tag';
+import { CourseTag } from './tag';
 import Link from 'next/link';
 import Heart from '@public/icons/heart.svg';
 import Rating from '@/components/info/rating';
 import { Course } from '@/interfaces/course';
-import { forwardRef } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
+import { fetchClient } from '@/api/clients/fetchClient';
 
 interface Props {
   fav?: boolean;
@@ -22,10 +23,50 @@ const CourseCard = forwardRef<HTMLDivElement, Props>(
       tags,
       department,
       starRating,
+      likes,
     } = value;
+    const [tempFav, setTempFav] = useState(fav);
+    const [tempFavNum, setTempFavNum] = useState(likes ?? 0);
+    const [busy, setBusy] = useState(false);
+
+    const LikeUpdate = async () => {
+      if (busy || !id) return;
+      setBusy(true);
+
+      try {
+        const res = await fetchClient('/lectures/likes', {
+          method: 'POST',
+          body: JSON.stringify({
+            likeType: 'LECTURE',
+            likeTypeId: id.toString(),
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        console.log('좋아요 업데이트 성공:', res);
+        setTempFav(prev => {
+          const next = !prev;
+          setTempFavNum(n => Math.max(0, n + (next ? 1 : -1)));
+          return next;
+        });
+      } catch (error) {
+        console.error('좋아요 업데이트 실패:', error);
+        setTempFav(prev => {
+          const rollback = !prev; // 방금 토글의 반대
+          setTempFavNum(n => Math.max(0, n + (rollback ? 1 : -1)));
+          return rollback;
+        });
+      } finally {
+        setBusy(false);
+      }
+    };
 
     return (
-      <div ref={ref}>
+      <div
+        ref={ref}
+        className="relative"
+      >
         <Link
           href={`/main/info/courses/${id}`}
           className="flex items-center aspect-square shadow-05134 rounded-[15px]"
@@ -57,24 +98,27 @@ const CourseCard = forwardRef<HTMLDivElement, Props>(
                 ))}
               </div>
             </div>
-            <div className="absolute right-[14px] flex gap-[3px] items-center">
-              <Heart
-                width={16}
-                height={16}
-                stroke={!fav ? '#CDCDCD' : '#0D99FF'}
-                fill={fav ? '#0D99FF' : 'none'}
-              />
-              <span
-                className="text-[11px] h-[16px] leading-[1.45]"
-                style={{
-                  color: fav ? '#0D99FF' : '#CDCDCD',
-                }}
-              >
-                15
-              </span>
-            </div>
           </div>
         </Link>
+        <div
+          onClick={LikeUpdate}
+          className="absolute top-[20px] right-[9px] p-[5px] flex gap-[3px] items-center cursor-pointer"
+        >
+          <Heart
+            width={16}
+            height={16}
+            stroke={tempFav ? '#0D99FF' : '#CDCDCD'}
+            fill={tempFav ? '#0D99FF' : 'none'}
+          />
+          <span
+            className="text-[11px] h-[16px] leading-[1.45]"
+            style={{
+              color: tempFav ? '#0D99FF' : '#CDCDCD',
+            }}
+          >
+            {tempFavNum}
+          </span>
+        </div>
       </div>
     );
   }

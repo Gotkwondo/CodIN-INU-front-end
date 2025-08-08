@@ -8,7 +8,6 @@ import Header from '@/components/Layout/header/Header';
 import { Course } from '@/interfaces/course';
 import CheckBox from '@public/icons/checkbox.svg';
 import Search from '@public/icons/search.svg';
-import { filter, set } from 'lodash';
 import { Suspense, useEffect, useState, useRef, useCallback } from 'react';
 
 export default function CoursePage() {
@@ -50,7 +49,7 @@ export default function CoursePage() {
   ];
 
   const fetchCourses = async (page: number, filters: Filters) => {
-    if (isLoading) return; // ✅ 이미 로딩 중이면 무시
+    if (isLoading) return; // 이미 로딩 중이면 무시
 
     try {
       const { dept, order, query, fav } = filters;
@@ -59,12 +58,13 @@ export default function CoursePage() {
       const res = await fetchClient(
         `/lectures/courses?page=${page}` +
           (query ? `&keyword=${encodeURIComponent(query)}` : '') +
-          (dept !== 'ALL' ? `&dept=${dept}` : '') +
-          (order !== 'ALL' ? `&order=${order}` : '') +
+          (dept !== 'ALL' ? `&department=${dept}` : '') +
+          (order !== 'ALL' ? `&sort=${order}` : '') +
           (fav ? `&like=${fav}` : '')
       );
 
       const data = res.data;
+      console.log(data);
       const newCourses: Course[] = data.contents;
 
       setCourses(prev => [...prev, ...newCourses]);
@@ -105,12 +105,18 @@ export default function CoursePage() {
   const handleLikeToggle = () => updateFilters({ fav: !filters.fav });
 
   useEffect(() => {
-    if (page === 0) {
-      setCourses([]);
-      setHasMore(true);
-    }
+    setCourses([]);
+    setHasMore(true);
+    setPage(0); // 스크롤 카운터 리셋
 
-    fetchCourses(page, filters); // filters를 파라미터로 전달
+    // 여기서 바로 0페이지 요청 (이게 핵심)
+    fetchCourses(0, filters);
+  }, [filters]);
+
+  useEffect(() => {
+    if (page > 0) {
+      fetchCourses(page, filters);
+    }
   }, [page, filters]);
 
   return (
