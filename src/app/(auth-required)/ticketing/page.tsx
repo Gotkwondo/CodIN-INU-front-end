@@ -114,17 +114,23 @@ const TicketingPage: FC = () => {
         {snacks.map((snack) => (
           <div
             key={snack.eventId}
-            className="bg-white rounded-[15px] shadow-[0px_5px_13.3px_4px_rgba(212,212,212,0.59)] py-[29px] px-4"
+            className="bg-white rounded-[15px] shadow-[0px_5px_13.3px_4px_rgba(212,212,212,0.59)] py-[29px] px-4 "
             onClick={() => router.push(`/ticketing/${snack.eventId}`)}
           >
-            <div className="flex items-start">
+            <div className="flex items-start mb-[13px]">
               <p className="font-semibold text-[14px]">{snack.eventTitle}</p>
               <p className="text-[25px] text-[#0D99FF] mt-[-17px]"> •</p>
             </div>
-            <div className="mt-[22px] text-[12px] text-black">{formatDateTimeWithDay(snack.eventEndTime)}</div>
-            <div className="text-[12px] text-black">{snack.locationInfo}</div>
-            <div className="text-[12px] text-black">{snack.quantity}명</div>
-            <div className="text-[12px] text-[#0D99FF]">티켓팅 오픈: {formatDateTimeWithDay(snack.eventTime)}</div>
+            <div className="flex flex-row justify-center items-start">
+              <div className="flex flex-col justify-start">
+                <div className="mt-[5px] text-[12px] text-black">{formatDateTimeWithDay(snack.eventEndTime)}</div>
+                <div className="text-[12px] text-black">{snack.locationInfo}</div>
+                <div className="text-[12px] text-black">{snack.quantity}명</div>
+                <div className="text-[12px] text-[#0D99FF]">티켓팅 오픈: {formatDateTimeWithDay(snack.eventTime)}</div>
+              </div>
+              <img src={snack.eventImageUrl} className="w-[93px] h-[93px] border border-1 border-[#d4d4d4] rounded-[10px] p-2 mr-[14px] ml-[23px]"></img>
+            </div>
+            
           </div>
         ))}
       </div>
