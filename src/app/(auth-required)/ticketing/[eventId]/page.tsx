@@ -9,7 +9,6 @@ import UserInfoModal from '@/components/modals/ticketing/UserInfoModal';
 import { fetchClient } from '@/api/clients/fetchClient';
 import { FetchSnackDetailResponse, TicketEvent } from '@/interfaces/SnackEvent';
 import { formatDateTimeWithDay } from '@/utils/date';
-import { method } from 'lodash';
 
 export default function SnackDetail() {
     const router = useRouter();

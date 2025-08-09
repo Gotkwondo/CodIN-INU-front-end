@@ -84,6 +84,10 @@ export interface FetchUserResponse {
     eventParticipationProfileResponseList: eventParticipationProfileResponseList[];
     lastPage: number;
     nextPage: number;
+    title: string;
+    stock: number;
+    waitNum:number;
+    eventEndTime:string;
   };
 }
 

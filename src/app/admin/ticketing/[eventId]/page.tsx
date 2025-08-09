@@ -4,6 +4,7 @@ import { FC, useState, useEffect, useRef, Suspense } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fetchClient } from "@/api/clients/fetchClient";
 import { eventParticipationProfileResponseList, FetchUserResponse } from "@/interfaces/SnackEvent";
+import { formatDateTimeWithDay } from "@/utils/date";
 import Header from "@/components/Layout/header/Header";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
 import SearchInput from "@/components/common/SearchInput";
@@ -18,6 +19,11 @@ const TicketingUserListPage: FC = () => {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [isInitialize, setIsInitialize] = useState<boolean>(false);
   const isFetching = useRef(false);
+  const [title, setTitle] = useState<string>('');
+  const [eventEndTime, setEventEndTime] = useState<string>('');
+  const [stock, setStock] = useState<number>();
+  const [waitNum, setWaitNum] = useState<number>();
+
 
   useEffect(() => {
   if (!isInitialize) {
@@ -46,6 +52,12 @@ const TicketingUserListPage: FC = () => {
       );
 
       const eventList = response?.data?.eventParticipationProfileResponseList ?? [];
+      setEventEndTime(formatDateTimeWithDay(response.data.eventEndTime));
+      setTitle(response.data.title);
+      setStock(response.data.stock);
+      setWaitNum(response.data.waitNum);
+
+      
 
       if (!Array.isArray(eventList)) {
         console.error("응답 형식이 배열이 아님");
@@ -102,6 +114,10 @@ const TicketingUserListPage: FC = () => {
       <Header>
         <Header.BackButton onClick={() => router.back()} />
         <Header.Title>간식나눔</Header.Title>
+        <Header.DownloadButton
+          endpoint={`/ticketing/excel/${eventId}`}
+          filename={`${eventEndTime} ${title} 참가자 목록`}
+          method="GET"/>
       </Header>
 
       <DefaultBody hasHeader={1}>
@@ -118,7 +134,7 @@ const TicketingUserListPage: FC = () => {
           onChange={(query) => setSearchQuery(query)}
         />
 
-        <div className="flex flex-col gap-[22px] w-full border-b-[1px] border-[#d4d4d4] mt-4">
+        <div className="flex flex-col  w-full border-b-[1px] border-[#d4d4d4] mt-4">
           {filteredUsers.map((user, index) => (
             <div
               key={user.userId}
