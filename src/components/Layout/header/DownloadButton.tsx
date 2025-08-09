@@ -61,10 +61,10 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({
       onClick={handleDownload}
       disabled={loading}
       className={`px-4 py-2 rounded font-bold ${
-        loading ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600 text-white'
+        loading ? 'bg-gray-100' : ''
       }`}
     >
-      {loading ? '다운로드 중...' : '다운로드'}
+      <img src='/icons/button/download.svg' className='pointer-events-none'></img>
     </button>
   );
 };
