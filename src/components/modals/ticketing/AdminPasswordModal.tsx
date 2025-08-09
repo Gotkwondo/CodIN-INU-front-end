@@ -2,6 +2,7 @@
 import { FC, useState } from 'react';
 import { fetchClient } from '@/api/clients/fetchClient';
 import { dataUrlToFile } from '@/utils/dataUrlToFile';
+import { compressBase64Image } from '@/utils/compressBase64Image';
 interface AdminPasswordModalProps {
   onClose: () => void;
   onSubmit: () => void;
@@ -35,10 +36,15 @@ const AdminPasswordModal: FC<AdminPasswordModalProps> = ({
 
   try {
     const formData = new FormData(); 
-    const signImg = dataUrlToFile(signatureImage, signatureImage);
-    console.log(signImg);
     formData.append('password', password);
-    formData.append('signatureImage',signImg); // base64 string
+     const compressed = await compressBase64Image(signatureImage, {
+      maxBytes: 180 * 1024,   // 필요 시 조정: 200*1024, 300*1024 등
+      maxWidth: 900,          // 서명이라면 600~1000 사이 권장
+      minWidth: 240,          // 더 줄일 최소 너비
+      startQuality: 0.72,
+      minQuality: 0.4
+    });
+    formData.append('signatureImage', compressed);
 
     const response = await fetchClient(`/ticketing/event/complete/${eventId}`, {
       method: 'POST',
