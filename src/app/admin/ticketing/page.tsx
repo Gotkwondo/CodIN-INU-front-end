@@ -7,19 +7,21 @@ import { useRouter } from "next/navigation";
 import { fetchClient } from "@/api/clients/fetchClient";
 import { SnackEvent, FetchSnackResponse } from "@/interfaces/SnackEvent";
 import { formatDateTimeWithDay } from '@/utils/date';
+import ChangeEventCheckModal from "@/components/modals/ticketing/ChangeEventCheckModal";
 
 const TicketingPage: FC = () => {
   const board = boardData['ticketingAdmin'];
   const router = useRouter();
   const { tabs } = board;
   const defaultTab = tabs.length > 0 ? tabs[0].value : "default";
-
+  const [showChangeEventModal, setShowChangeEventModal] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>(defaultTab);
   const [snacks, setSnacks] = useState<SnackEvent[]>([]);
   const [page, setPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
-
+  const [selectedEvent, setSelectedEvent] = useState<number>();
+  const [changeEventStatus, setChangeEventStatus]= useState<string>('');
   const isFetching = useRef(false);
 
   const fetchPosts = async (pageNumber: number) => {
@@ -95,6 +97,12 @@ const TicketingPage: FC = () => {
     }
   }, [page]);
 
+  const changeEvent = (eventId, status)=>{
+    setSelectedEvent(eventId);
+    setChangeEventStatus(status);
+    setShowChangeEventModal(true);
+  }
+
   return (
     <BoardLayout
       board={board}
@@ -130,14 +138,22 @@ const TicketingPage: FC = () => {
                 {/* 하단 버튼 */}
                     {snack && (
                         <div className="w-full bg-white flex justify-start">
-                            {snack.eventStatus === 'OPEN' && (
-                                <button className="bg-[#0D99FF] rounded-[20px] justify-center items-center py-[7px] gap-[10px] text-[14px] text-[#ffffff] w-[135px] mt-[9px]" >
+                            {snack.eventStatus === 'ACTIVE' && (
+                                <button className="bg-[#0D99FF] rounded-[20px] justify-center items-center py-[7px] gap-[10px] text-[14px] text-[#ffffff] w-[135px] mt-[9px]" 
+                                        onClick={(e)=> {
+                                          e.stopPropagation();
+                                          changeEvent(snack.eventId, 'close');                                          
+                                        }}>
                                     티켓팅 종료하기
                                 </button>
                             )}
 
                             {snack.eventStatus === 'UPCOMING' && (
-                                <button className="bg-[#EBF0F7] rounded-[20px] text-[14px] text-[#808080] mt-[9px] px-[19px] py-[7px]">
+                                <button className="bg-[#EBF0F7] rounded-[20px] text-[14px] text-[#808080] mt-[9px] px-[19px] py-[7px]"
+                                        onClick={(e)=> {
+                                          e.stopPropagation();
+                                          changeEvent(snack.eventId, 'open');
+                                        }}>
                                     티켓팅 수동 오픈
                                 </button>
                             )}
@@ -152,6 +168,18 @@ const TicketingPage: FC = () => {
                 </div>
           </div>
         ))}
+
+        {showChangeEventModal && selectedEvent && (
+            <ChangeEventCheckModal
+              eventId={selectedEvent}
+              status={changeEventStatus}
+              onClose={() => setShowChangeEventModal(false)}
+              onComplete={() => {
+                setShowChangeEventModal(false);
+                window.location.reload();
+              }}
+            />
+          )}
       </div>
     </BoardLayout>
   );
