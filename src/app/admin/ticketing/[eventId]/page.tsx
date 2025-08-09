@@ -8,6 +8,7 @@ import { formatDateTimeWithDay } from "@/utils/date";
 import Header from "@/components/Layout/header/Header";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
 import SearchInput from "@/components/common/SearchInput";
+import ChangeStatusModal from "@/components/modals/ticketing/ChangeStatusModal";
 
 const TicketingUserListPage: FC = () => {
   const router = useRouter();
@@ -23,6 +24,9 @@ const TicketingUserListPage: FC = () => {
   const [eventEndTime, setEventEndTime] = useState<string>('');
   const [stock, setStock] = useState<number>();
   const [waitNum, setWaitNum] = useState<number>();
+  const [showChangeModal, setShowChangeModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<eventParticipationProfileResponseList | null>(null);
+
 
 
   useEffect(() => {
@@ -109,6 +113,13 @@ const TicketingUserListPage: FC = () => {
         return target.includes(keyword);
       });
 
+  //유저 수령완료로 변경
+  const changeUserStatus = (user: eventParticipationProfileResponseList) => {
+    setSelectedUser(user);
+    setShowChangeModal(true);
+  };
+
+
   return (
     <Suspense>
       <Header>
@@ -156,13 +167,27 @@ const TicketingUserListPage: FC = () => {
                     서명 보기
                   </button>
                 ) : (
-                  <span className="bg-[#EBF0F7] text-[#808080] text-[14px] rounded-full px-3 py-[7px]">
+                  <span className="bg-[#EBF0F7] text-[#808080] text-[14px] rounded-full px-3 py-[7px]" onClick={()=>changeUserStatus(user)}>
                     수령 대기
                   </span>
                 )}
               </div>
             </div>
           ))}
+
+          {showChangeModal && selectedUser && (
+            <ChangeStatusModal
+              userInfo={selectedUser}
+              eventId={String(eventId)}   // useParams() 보호 차원에서 문자열로 캐스팅
+              onClose={() => setShowChangeModal(false)}
+              onComplete={() => {
+                setShowChangeModal(false);
+                window.location.reload();
+              }}
+            />
+          )}
+
+
         </div>
       </DefaultBody>
     </Suspense>
