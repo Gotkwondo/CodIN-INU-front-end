@@ -1,21 +1,46 @@
 // components/UserInfoModal.tsx
 'use client';
 import { FC, useState } from 'react';
-
+import { fetchClient } from '@/api/clients/fetchClient';
 interface UserInfoModalProps {
   onClose: () => void;
+  onComplete: () => void;
+  initialStep?: 1 | 2 | 3;
 }
 
 const departments = [
-  { id: 1, name: '임베디드 시스템공학과', icon: '/icons/ticketing/imbe.svg' },
-  { id: 2, name: '컴퓨터공학부', icon: '/icons/ticketing/cse.svg' },
-  { id: 3, name: '정보통신공학과', icon: '/icons/ticketing/infoCo.svg' }
+  { id: 1, name: '임베디드 시스템공학과', icon: '/icons/ticketing/imbe.svg', sendData:'EMBEDDED'  },
+  { id: 2, name: '컴퓨터공학부', icon: '/icons/ticketing/cse.svg', sendData:'COMPUTER_SCI' },
+  { id: 3, name: '정보통신공학과', icon: '/icons/ticketing/infoCo.svg', sendData:'INFO_COMM'}
 ];
 
-const UserInfoModal: FC<UserInfoModalProps> = ({ onClose }) => {
-  const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [selectedDept, setSelectedDept] = useState<number | null>(null);
+const UserInfoModal: FC<UserInfoModalProps> = ({ onClose, onComplete,  initialStep = 1 }) => {
+  const [step, setStep] = useState<1 | 2 | 3>(initialStep);
+  const [selectedDept, setSelectedDept] = useState<string | null>(null);
   const [studentId, setStudentId] = useState<string>('');
+
+  const putUserInfo = async () => {
+    if (!selectedDept || !studentId) return;
+
+    try {
+      const response = await fetchClient('/users/ticketing-participation', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          department: selectedDept,
+          studentId: studentId,
+        }),
+      });
+      
+      console.log('✅ 유저 정보 업데이트 성공:', response);
+      onComplete();
+    } catch (error) {
+      console.error('❌ 유저 정보 업데이트 실패:', error);
+    }
+  };
+
 
   return (
     <div className="fixed inset-0 backdrop-blur-sm bg-black/50 flex items-center justify-center z-50 ">
@@ -73,9 +98,9 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ onClose }) => {
               {departments.map((dept) => (
                 <button
                   key={dept.id}
-                  onClick={() => setSelectedDept(dept.id)}
+                  onClick={() => setSelectedDept(dept.sendData)}
                   className={`flex flex-col items-center justify-start py-3 transition rounded-[8px] shadow-[0px_5px_8.5px_1px_rgba(212,212,212,0.59)] ${
-                    selectedDept === dept.id
+                    selectedDept === dept.sendData
                       ? 'border-blue-500 bg-blue-50'
                       : 'border-gray-200 bg-white'
                   }`}
@@ -155,10 +180,9 @@ const UserInfoModal: FC<UserInfoModalProps> = ({ onClose }) => {
                 studentId ? '' : 'opacity-50 cursor-not-allowed'
               }`}
               disabled={!studentId}
-              onClick={() => {
-                alert(`입력한 학번: ${studentId}`);
-                onClose();
-              }}
+              onClick={
+                putUserInfo
+              }
             >
               다음
             </button>

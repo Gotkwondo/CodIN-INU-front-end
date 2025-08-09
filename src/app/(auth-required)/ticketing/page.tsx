@@ -5,17 +5,17 @@ import { boardData } from "@/data/boardData";
 import BoardLayout from "@/components/Layout/BoardLayout";
 import { useRouter } from "next/navigation";
 import { fetchClient } from "@/api/clients/fetchClient";
-import { TicketEvent,  FetchSnackResponse } from "@/interfaces/SnackEvent";
+import { SnackEvent, FetchSnackResponse } from "@/interfaces/SnackEvent";
+import { formatDateTimeWithDay } from '@/utils/date';
 
 const TicketingPage: FC = () => {
   const board = boardData['ticketing'];
   const router = useRouter();
-  const { tabs, type: boardType } = board;
-  const hasTabs = tabs.length > 0;
-  const defaultTab = hasTabs ? tabs[0].value : "default";
+  const { tabs } = board;
+  const defaultTab = tabs.length > 0 ? tabs[0].value : "default";
 
   const [activeTab, setActiveTab] = useState<string>(defaultTab);
-  const [snacks, setSnacks] = useState<TicketEvent[]>([]);
+  const [snacks, setSnacks] = useState<SnackEvent[]>([]);
   const [page, setPage] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -25,57 +25,52 @@ const TicketingPage: FC = () => {
   const fetchPosts = async (pageNumber: number) => {
     if (isFetching.current) return;
 
+    isFetching.current = true;
+    setIsLoading(true);
+
     try {
       const activePostCategory =
         tabs.find((tab) => tab.value === activeTab)?.postCategory || "";
 
-      console.log("API 호출: 카테고리", activePostCategory, "페이지:", pageNumber);
-
-      setIsLoading(true);
-      isFetching.current = true;
-
       const response = await fetchClient<FetchSnackResponse>(
         `/ticketing/event?campus=${activePostCategory}&page=${pageNumber}`
       );
-      const eventList = response.data.eventList;
-
+      console.log(response)
+      const eventList = response?.data?.eventList;
       if (!Array.isArray(eventList)) {
         console.error('eventList가 배열이 아닙니다:', eventList);
-        return;
-        }
-
-        if (eventList.length === 0) {
         setHasMore(false);
-        } else {
+        return;
+      }
+
+      if (eventList.length === 0) {
+        setHasMore(false);
+      } else {
         setSnacks((prev) => [...prev, ...eventList]);
-        }
+      }
+
     } catch (e) {
-      console.log("이벤트 로딩 실패.", e);
+      console.error("이벤트 로딩 실패.", e);
       setHasMore(false);
     } finally {
-      isLoading && setIsLoading(false);
+      setIsLoading(false);
       isFetching.current = false;
     }
   };
 
+  // 초기화
   useEffect(() => {
-    const initializeBoard = async () => {
-      setIsLoading(true);
-      try {
-        setSnacks([]); // snacks 초기화
-        setPage(0);
-        setHasMore(true);
-        await fetchPosts(0);
-      } catch (error) {
-        console.error("초기화 실패:", error);
-      } finally {
-        setIsLoading(false);
-      }
+    const initialize = async () => {
+      setSnacks([]);
+      setPage(0);
+      setHasMore(true);
+      await fetchPosts(0);
     };
 
-    initializeBoard();
+    initialize();
   }, [activeTab]);
 
+  // 스크롤 처리
   useEffect(() => {
     const handleScroll = () => {
       if (
@@ -85,7 +80,6 @@ const TicketingPage: FC = () => {
         hasMore &&
         !isFetching.current
       ) {
-        console.log("스크롤 이벤트: 다음 페이지 로드");
         setPage((prevPage) => prevPage + 1);
       }
     };
@@ -94,9 +88,9 @@ const TicketingPage: FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isLoading, hasMore]);
 
+  // 페이지 변경 시
   useEffect(() => {
     if (page > 0) {
-      console.log("페이지 변경: 새 데이터 요청 ->", page);
       fetchPosts(page);
     }
   }, [page]);
@@ -105,13 +99,10 @@ const TicketingPage: FC = () => {
     <BoardLayout
       board={board}
       activeTab={activeTab}
-      onTabChange={(tab) => {
-        console.log("탭 변경:", tab);
-        setActiveTab(tab);
-      }}
+      onTabChange={(tab) => setActiveTab(tab)}
       showSearchButton={false}
     >
-      {isLoading && (
+      {isLoading && snacks.length === 0 && (
         <div className="text-center my-4 text-gray-500">로딩 중...</div>
       )}
 
@@ -122,19 +113,24 @@ const TicketingPage: FC = () => {
       <div className="flex flex-col gap-[22px] py-[29px] w-full">
         {snacks.map((snack) => (
           <div
-            key={snack.id}
-            className="bg-white rounded-[15px] shadow-[0px_5px_13.3px_4px_rgba(212,212,212,0.59)] py-[29px] px-4"
-            onClick={() => router.push(`/ticketing/${snack.id}`)}
+            key={snack.eventId}
+            className="bg-white rounded-[15px] shadow-[0px_5px_13.3px_4px_rgba(212,212,212,0.59)] py-[29px] px-4 "
+            onClick={() => router.push(`/ticketing/${snack.eventId}`)}
           >
-            <div className="flex items-start">
-              <p className="font-semibold text-[14px]">{snack.title}</p>
+            <div className="flex items-start mb-[13px]">
+              <p className="font-semibold text-[14px]">{snack.eventTitle}</p>
               <p className="text-[25px] text-[#0D99FF] mt-[-17px]"> •</p>
             </div>
-            <div className="mt-[22px] text-[12px] text-black">{snack.eventTime}</div>
-            <div className="text-[12px] text-black">인천대학교 {snack.campus} {snack.locationInfo}</div>
-            <div className="text-[12px] text-black">
-              {snack.stock}명
+            <div className="flex flex-row justify-center items-start">
+              <div className="flex flex-col justify-start">
+                <div className="mt-[5px] text-[12px] text-black">{formatDateTimeWithDay(snack.eventEndTime)}</div>
+                <div className="text-[12px] text-black">{snack.locationInfo}</div>
+                <div className="text-[12px] text-black">{snack.quantity}명</div>
+                <div className="text-[12px] text-[#0D99FF]">티켓팅 오픈: {formatDateTimeWithDay(snack.eventTime)}</div>
+              </div>
+              <img src={snack.eventImageUrl} className="w-[93px] h-[93px] border border-1 border-[#d4d4d4] rounded-[10px] p-2 mr-[14px] ml-[23px]"></img>
             </div>
+            
           </div>
         ))}
       </div>
