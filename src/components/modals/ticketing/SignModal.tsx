@@ -89,7 +89,7 @@ const SignModal: FC<SignModalProps> = ({ onClose, eventId }) => {
           <AdminPasswordModal
             onClose={() => setShowAdminModal(false)}
             onSubmit={() => {
-              
+              onclose
             }}
             eventId={eventId}
             signatureImage={signatureDataUrl}
