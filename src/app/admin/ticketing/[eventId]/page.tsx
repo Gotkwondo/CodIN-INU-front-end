@@ -133,7 +133,7 @@ const TicketingUserListPage: FC = () => {
         <Header.BackButton onClick={() => router.back()} />
         <Header.Title>간식나눔</Header.Title>
         <Header.DownloadButton
-          endpoint={`/ticketing/excel/${eventId}`}
+          endpoint={`/ticketing/ticketing/excel/${eventId}`}
           filename={`${eventEndTime} ${title} 참가자 목록`}
           method="GET"/>
       </Header>
