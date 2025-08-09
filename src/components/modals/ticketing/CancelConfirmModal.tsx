@@ -24,7 +24,10 @@ const CancelConfirmModal: FC<CancelConfirmModalProps> = ({
         {/* 확인 버튼 */}
         <button
           className={`w-full h-10 mt-2 font-bold text-[14px] rounded transition-all duration-200`}
-          onClick={()=>onClose()}
+          onClick={()=>{
+            onClose();
+            window.location
+          }}
         >
             확인
         </button>
