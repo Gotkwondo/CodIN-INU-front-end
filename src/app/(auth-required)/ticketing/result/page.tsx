@@ -10,6 +10,7 @@ import SignModal from '@/components/modals/ticketing/SignModal';
 import { formatDateTimeWithDay } from '@/utils/date';
 import CancelModal from '@/components/modals/ticketing/CancelModal';
 import { fetchClient } from '@/api/clients/fetchClient';
+import { TicketInfo } from '@/interfaces/SnackEvent';
 
 export default function TicketingResultPage() {
   const searchParams = useSearchParams();
@@ -19,30 +20,26 @@ export default function TicketingResultPage() {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showSignModal, setShowSignModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [ticket, setTicket] = useState<TicketInfo>();
 
-   const dummyData = {
-    num: '001',
-    image: '/images/snack.svg',
-    quantity: '500개',
-    title: '총장님과 함께하는 중간고사 간식나눔',
-    date: '2025-07-22T18:43:00',
-    location: '인천대학교 송도캠퍼스 17호관 앞',
-    organizer: '인천대 재학생',
-    ticketTime: '17:00',
-    href: 'https://www.instagram.com/',
-    phone: '010-0000-0000',
-  };
+
   
   useEffect(()=>{
     const fetchData = async() => {
         setIsLoading(true);
         try {
-            //const res = await fetchClient(`/ticketing/event/join/${eventId}`, { method: 'POST' });
+            const res = await fetchClient(`/ticketing/event/participation/${eventId}`);
+            console.log(res.data);
+
+            setTicket(res.data);
+
 
     }catch(err){
-
+        console.error(err);
     }}
-  })
+
+    fetchData();
+  },[eventId])
 
   useEffect(() => {
     if (!status || !eventId) {
@@ -50,7 +47,7 @@ export default function TicketingResultPage() {
     }
   }, [status, eventId]);
 
-  if (!status || !eventId) return null;
+  if (!status || !eventId || !ticket) return null;
 
   switch (status) {
     case 'success':
@@ -64,40 +61,59 @@ export default function TicketingResultPage() {
         <DefaultBody hasHeader={1}>
             <div className="w-full flex justify-center items-center mt-[15%] px-[40px]">
             <img src="/icons/ticketing/ticket.svg" />
-            <p className="absolute text-[40px] text-[#0D99FF] mt-[-30px] font-extrabold">no. {dummyData.num}</p>
+            <p className="absolute text-[40px] text-[#0D99FF] mt-[-30px] font-extrabold">no. {String(ticket.ticketNumber).padStart(3, '0')}</p>
             </div>
 
-            <div>
-            <p className="font-bold text-[14px] text-center text-[#0D99FF]">
-                수령장소: {dummyData.location}
-                <span className="text-[#0D99FF] ml-1 mt-[-10px] font-semibold text-[18px]">•</span>
-            </p>
-            <p className="font-bold text-[12px] text-center text-black">관리자에게 이 화면을 보여준 후 서명하세요</p>
-            <p className="text-[12px] text-center text-black/50 font-normal mt-[13px]">
-                교환권은 마이페이지에서도 확인 가능해요
-            </p>
-            </div>
+            {ticket.status === 'WAITING' &&(
+              <>
+                <div>
+                <p className="font-bold text-[14px] text-center text-[#0D99FF]">
+                    수령장소: {ticket.locationInfo}
+                    <span className="text-[#0D99FF] ml-1 mt-[-10px] font-semibold text-[18px]">•</span>
+                </p>
+                <p className="font-bold text-[12px] text-center text-black">관리자에게 이 화면을 보여준 후 서명하세요</p>
+                <p className="text-[12px] text-center text-black/50 font-normal mt-[13px]">
+                    교환권은 마이페이지에서도 확인 가능해요
+                </p>
+                </div>
 
-            <div className="fixed bottom-0 left-0 w-full px-4 bg-white pb-[35px] flex flex-col items-center">
-            <div className="text-[11px] text-center text-[#FF2525] font-normal">
-                {formatDateTimeWithDay(dummyData.date)}까지 오지 않으면 티켓이 자동 취소돼요.
-                <br /> 그 전에 꼭 방문해 주세요!
-            </div>
+                <div className="fixed bottom-0 left-0 w-full px-4 bg-white pb-[35px] flex flex-col items-center">
+                <div className="text-[11px] text-center text-[#FF2525] font-normal">
+                    {formatDateTimeWithDay(ticket.eventEndTime)}까지 오지 않으면 티켓이 자동 취소돼요.
+                    <br /> 그 전에 꼭 방문해 주세요!
+                </div>
 
-            <button
-                className="mt-3 w-full h-[50px] bg-[#0D99FF] text-white rounded-[5px] text-[18px] font-bold max-w-[500px]"
-                onClick={() => setShowSignModal(true)} // ✅ 모달 열기
-            >
-                서명 하기
-            </button>
+                <button
+                    className="mt-3 w-full h-[50px] bg-[#0D99FF] text-white rounded-[5px] text-[18px] font-bold max-w-[500px]"
+                    onClick={() => setShowSignModal(true)} // ✅ 모달 열기
+                >
+                    서명 하기
+                </button>
 
-            <button
-                className="mt-3 w-full h-[50px] bg-[#EBF0F7] text-[#808080] rounded-[5px] text-[18px] font-medium max-w-[500px]"
-                onClick={()=>setShowCancelModal(true)}
-            >
-                티켓팅 취소하기
-            </button>
-            </div>
+                <button
+                    className="mt-3 w-full h-[50px] bg-[#EBF0F7] text-[#808080] rounded-[5px] text-[18px] font-medium max-w-[500px]"
+                    onClick={()=>setShowCancelModal(true)}
+                >
+                    티켓팅 취소하기
+                </button>
+                </div>
+              </>
+            )}
+            {ticket.status === 'COMPLETED' && (
+              <div>
+                <p className="font-bold text-[14px] text-center text-[#0D99FF]">
+                    CodIN
+                    <span className='text-black'>과 함께 맛있는 시간 보내세요!</span>
+                    <span className="text-[#0D99FF] ml-1 mt-[-10px] font-semibold text-[18px]">•</span>
+                </p>
+
+                <div className='w-full bg-white shadow-[0px_5px_13.3px_4px_rgba(212,212,212,0.59)] rounded-[15px] flex justify-center items-center px-4'>
+                  <img src={ticket.signatureImgUrl} className=''></img>
+                </div>
+              </div>
+            )}
+
+            
 
             {showSignModal && (
             <SignModal

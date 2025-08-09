@@ -1,6 +1,7 @@
 export interface SnackEvent { // 이벤트 리스트
   eventId: number;
-  eventDate: string;
+  eventTime: string;
+  eventEndTime:string;
   eventImageUrl: string;
   eventTitle: string;
   locationInfo: string;
@@ -11,7 +12,7 @@ export interface SnackEvent { // 이벤트 리스트
 }
 
 export interface SnackDetailClientProps {
-  event: SnackEvent;
+  event: SnackEvent | AdminSnackEvent;
 }
 
 
@@ -51,12 +52,22 @@ export interface FetchSnackDetailResponse {
   data: TicketEvent;
 }
 
+//티켓 정보
+export interface TicketInfo {
+    ticketNumber: number;
+    locationInfo: string;
+    eventEndTime: string;
+    signatureImgUrl: string;
+    status: 'WAITING' | 'COMPLETED' ;
+  };
+
 
 //관리자 페이지 인터페이스
 
 export interface AdminSnackEvent { // 이벤트 리스트
   eventId: number;
-  eventDate: string;
+  eventEndTime: string;
+  eventTime: string;
   eventImageUrl: string;
   eventTitle: string;
   locationInfo: string;

@@ -1,3 +1,4 @@
+// [ 년도.월.일 (요일) 시:분 ] 으로 바꿔주는 함수입니다
 export function formatDateTimeWithDay(isoDateTime: string): string {
   const date = new Date(isoDateTime);
 

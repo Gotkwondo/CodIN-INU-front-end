@@ -1,3 +1,4 @@
+//URL string을 파일로 바꿔주는 함수입니다
 export function dataUrlToFile(dataUrl: string, filename: string): File {
   const arr = dataUrl.split(',');
   const mimeMatch = arr[0].match(/:(.*?);/);
