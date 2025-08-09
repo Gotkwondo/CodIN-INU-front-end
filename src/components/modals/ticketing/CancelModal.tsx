@@ -25,7 +25,6 @@ const CancelModal: FC<CancelModalProps> = ({
 
     console.log('✅ 삭제 성공:', response);
     setShowConfirmModal(true);
-    onClose();
   } catch (error) {
     console.error('❌ 전송 실패:', error);
     alert('오류가 발생했습니다.');
