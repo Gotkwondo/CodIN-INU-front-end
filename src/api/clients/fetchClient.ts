@@ -26,7 +26,7 @@ export async function fetchClient<Response = any>(
   let response = await fetch(url, options);
 
   // 401 처리
-  if (response.status === 401 && !init?._retry) {
+  if (response.status === 401 || response.status === 403 && !init?._retry) {
     try {
       console.log('🔄 401 Unauthorized - 토큰 재발급 시도 중...');
       await PostReissue();
@@ -48,6 +48,18 @@ export async function fetchClient<Response = any>(
     throw new Error(`API 요청 실패: ${response.status}`);
   }
 
-  const data = await response.json();
-  return data as Response;
+  const contentType = response.headers.get('content-type') || '';
+  const text = await response.text();
+  if (!text.trim()) {
+    // 바디가 비어 있으면 null 반환
+    return null;
+  }
+
+  // JSON이면 파싱
+  if (contentType.includes('application/json')) {
+    return JSON.parse(text) as Response;
+  }
+
+  // 그 외 타입(text/plain 등)은 그대로 반환
+  return text as unknown as Response;
 }
