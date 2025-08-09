@@ -100,16 +100,18 @@ export default function TicketingResultPage() {
               </>
             )}
             {ticket.status === 'COMPLETED' && (
-              <div>
+              <div className=' flex flex-col'>
                 <p className="font-bold text-[14px] text-center text-[#0D99FF]">
                     CodIN
                     <span className='text-black'>과 함께 맛있는 시간 보내세요!</span>
                     <span className="text-[#0D99FF] ml-1 mt-[-10px] font-semibold text-[18px]">•</span>
                 </p>
 
-                <div className='w-full bg-white shadow-[0px_5px_13.3px_4px_rgba(212,212,212,0.59)] rounded-[15px] flex justify-center items-center px-4'>
-                  <img src={ticket.signatureImgUrl} className=''></img>
+                <div className='w-full h-[200px] bg-white shadow-[0px_5px_13.3px_4px_rgba(212,212,212,0.59)] rounded-[15px] flex justify-center items-center px-4 mt-[72px]'>
+                  <img src={ticket.signatureImgUrl} className='w-full max-h-[200px]'></img>
+                  
                 </div>
+                <p className="text-center text-[12px] text-black/50 mt-[19px] mb-4">수령 확인 및 본인 확인 용도로 사용됩니다.</p>
               </div>
             )}
 
