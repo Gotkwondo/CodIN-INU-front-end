@@ -9,6 +9,7 @@ import Header from "@/components/Layout/header/Header";
 import DefaultBody from "@/components/Layout/Body/defaultBody";
 import SearchInput from "@/components/common/SearchInput";
 import ChangeStatusModal from "@/components/modals/ticketing/ChangeStatusModal";
+import ViewUserSignModal from "@/components/modals/ticketing/ViewUserSignModal";
 
 const TicketingUserListPage: FC = () => {
   const router = useRouter();
@@ -25,6 +26,7 @@ const TicketingUserListPage: FC = () => {
   const [stock, setStock] = useState<number>();
   const [waitNum, setWaitNum] = useState<number>();
   const [showChangeModal, setShowChangeModal] = useState(false);
+  const [showSignModal, setShowSignModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<eventParticipationProfileResponseList | null>(null);
 
 
@@ -119,6 +121,11 @@ const TicketingUserListPage: FC = () => {
     setShowChangeModal(true);
   };
 
+  const showUserSign = (user: eventParticipationProfileResponseList) => {
+    setSelectedUser(user);
+    setShowSignModal(true);
+  };
+
 
   return (
     <Suspense>
@@ -163,7 +170,7 @@ const TicketingUserListPage: FC = () => {
 
               <div>
                 {user.imageURL ? (
-                  <button className="bg-[#0D99FF] text-white text-[14px] rounded-full px-3 py-[7px]">
+                  <button className="bg-[#0D99FF] text-white text-[14px] rounded-full px-3 py-[7px]" onClick={()=>showUserSign(user)}>
                     서명 보기
                   </button>
                 ) : (
@@ -182,6 +189,17 @@ const TicketingUserListPage: FC = () => {
               onClose={() => setShowChangeModal(false)}
               onComplete={() => {
                 setShowChangeModal(false);
+                window.location.reload();
+              }}
+            />
+          )}
+
+          {showSignModal && selectedUser && (
+            <ViewUserSignModal
+              userInfo={selectedUser}
+              onClose={() => setShowSignModal(false)}
+              onComplete={() => {
+                setShowSignModal(false);
                 window.location.reload();
               }}
             />
