@@ -114,9 +114,16 @@ const TicketingPage: FC = () => {
         {snacks.map((snack) => (
           <div
             key={snack.eventId}
-            className="bg-white rounded-[15px] shadow-[0px_5px_13.3px_4px_rgba(212,212,212,0.59)] py-[29px] px-4 "
-            onClick={() => router.push(`/ticketing/${snack.eventId}`)}
+            className="relative rounded-[15px] py-[29px] px-4 flex flex-col
+                shadow-[0px_5px_13.3px_4px_rgba(212,212,212,0.59)]
+                cursor-pointer "
+            onClick={() => {if (snack.eventStatus !== 'ENDED') { router.push(`/ticketing/${snack.eventId}`)}
+            }}
           >
+            {/* 오버레이: 이벤트 종료 시 */}
+              {snack.eventStatus === 'ENDED' && (
+                <div className="absolute inset-0 bg-[rgba(0,0,0,0.18)] rounded-[15px] z-20 cursor-not-allowed" />
+              )}
             <div className="flex items-start mb-[13px]">
               <p className="font-semibold text-[14px]">{snack.eventTitle}</p>
               <p className="text-[25px] text-[#0D99FF] mt-[-17px]"> •</p>
