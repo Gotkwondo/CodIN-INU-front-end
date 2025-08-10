@@ -9,6 +9,7 @@ import MenuItem from '@/components/common/Menu/MenuItem';
 import Logo from './Logo';
 import Notice from './Notice';
 import DownloadButton from './DownloadButton';
+import ReloadButton from './ReloadButton';
 
 /** Header의 자식 요소 타입 */
 interface HeaderProps {
@@ -30,6 +31,7 @@ const Header = ({ children }: HeaderProps) => {
   let logo: ReactNode = null;
   let notice: ReactNode = null;
   let downloadButton: ReactNode = null;
+  let reloadButton: ReactNode = null;
   const others: ReactNode[] = [];
 
   // children 순회하면서 원하는 컴포넌트를 찾아서 할당
@@ -48,6 +50,8 @@ const Header = ({ children }: HeaderProps) => {
       notice = child;
     } else if (isElementType(child, Header.DownloadButton)) {
       downloadButton = child;
+    }  else if (isElementType(child, Header.ReloadButton)) {
+      reloadButton = child;
     }  else {
       others.push(child);
     }
@@ -97,6 +101,7 @@ const Header = ({ children }: HeaderProps) => {
         {menu}
         {notice}
         {downloadButton}
+        {reloadButton}
       </div>
     </header>
   );
@@ -111,5 +116,6 @@ Header.MenuItem = MenuItem;
 Header.Logo = Logo;
 Header.Notice = Notice;
 Header.DownloadButton = DownloadButton;
+Header.ReloadButton = ReloadButton;
 
 export default Header;
