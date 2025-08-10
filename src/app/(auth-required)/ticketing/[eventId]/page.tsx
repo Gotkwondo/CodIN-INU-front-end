@@ -49,14 +49,16 @@ export default function SnackDetail() {
             const now = new Date();
             const diffSec = Math.floor((ticketDate.getTime() - now.getTime()) / 1000);
 
-            if (diffSec <= 0) {
+            if (eventData.eventStatus === "ACTIVE" && diffSec <= 0) {
                 setTicketStatus('available');
                 setRemainingTime('00:00');
-            } else if (diffSec <= 180) {
+            } else if (eventData.eventStatus === "UPCOMING" && diffSec <= 180) {
                 setTicketStatus('countdown');
                 const min = String(Math.floor(diffSec / 60)).padStart(2, '0');
                 const sec = String(diffSec % 60).padStart(2, '0');
                 setRemainingTime(`${min}:${sec}`);
+            } else if (eventData.eventStatus === 'ENDED'){
+                setTicketStatus('closed');
             } else {
                 setTicketStatus('upcoming');
             }
