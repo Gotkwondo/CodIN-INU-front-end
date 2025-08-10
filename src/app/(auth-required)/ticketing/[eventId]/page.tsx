@@ -23,6 +23,9 @@ export default function SnackDetail() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isSelected, setIsSelected] = useState<'info' | 'note'>('info');
 
+  //알림 구현되면 삭제
+  const [upcomingLabel, setUpcomingLabel] = useState('');
+
   // SSE refs
   const sseRef = useRef<EventSource | null>(null);
   const retryTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -149,43 +152,59 @@ export default function SnackDetail() {
     if (idStr) fetchDetail();
   }, [idStr]);
 
-  // 서버 시각 보정 기반 상태 업데이트 (ms 단위)
-  useEffect(() => {
-    if (!eventData) return;
+  // 서버 시각 보정 기반 상태 업데이트 (ms 단위) --------------------------------------
+    useEffect(() => {
+        if (!eventData) return;
 
-    const updateTicketStatus = () => {
-      const ticketMs = new Date(eventData.eventTime).getTime();
-      const nowMs = Date.now() + serverOffsetRef.current; // ★ 서버 보정
-      const diffMs = ticketMs - nowMs;
+        const updateTicketStatus = () => {
+            const ticketMs = new Date(eventData.eventTime).getTime();
+            const nowMs = Date.now() + serverOffsetRef.current; // 서버 시간 보정
+            const diffMs = ticketMs - nowMs;
 
-      if (eventData.eventStatus === 'ENDED') {
-        setTicketStatus('closed');
-        return;
-      }
+            if (eventData.eventStatus === 'ENDED') {
+            setTicketStatus('closed');
+            setUpcomingLabel('');
+            return;
+            }
 
-      if (diffMs <= 0) {
-        setTicketStatus('available');
-        setRemainingTime('00:00');
-        return;
-      }
+            if (diffMs <= 0) {
+            setTicketStatus('available');
+            setRemainingTime('00:00');
+            setUpcomingLabel('');
+            return;
+            }
 
-      // 카운트다운 3분 이내
-      if (diffMs <= 180_000) {
-        setTicketStatus('countdown');
-        const sec = Math.ceil(diffMs / 1000);
-        const mm = String(Math.floor(sec / 60)).padStart(2, '0');
-        const ss = String(sec % 60).padStart(2, '0');
-        setRemainingTime(`${mm}:${ss}`);
-        return;
-      }
+            // 하루 이상 남음 → "오픈 n일 전"
+            if (diffMs >= 86_400_000) {
+            setTicketStatus('upcoming');
+            const days = Math.floor(diffMs / 86_400_000);
+            setUpcomingLabel(`오픈 ${days}일 전`);
+            return;
+            }
 
-      setTicketStatus('upcoming');
-    };
+            // 하루 미만 → "오픈 n시간 n분 전"
+            if (diffMs > 180_000) {
+            setTicketStatus('upcoming');
+            const hours = Math.floor(diffMs / 3_600_000);
+            const minutes = Math.floor((diffMs % 3_600_000) / 60_000);
+            setUpcomingLabel(`오픈 ${hours}시간 ${minutes}분 전`);
+            return;
+            }
 
-    updateTicketStatus();
-    const interval = setInterval(updateTicketStatus, 250);
-    return () => clearInterval(interval);
-  }, [eventData]);
+            // 3분 이하 → 기존 카운트다운
+            setTicketStatus('countdown');
+            const sec = Math.ceil(diffMs / 1000);
+            const mm = String(Math.floor(sec / 60)).padStart(2, '0');
+            const ss = String(sec % 60).padStart(2, '0');
+            setRemainingTime(`${mm}:${ss}`);
+            setUpcomingLabel('');
+        };
+
+        updateTicketStatus();
+        const interval = setInterval(updateTicketStatus, 250);
+        return () => clearInterval(interval);
+        }, [eventData]);
+
 
   // 클릭 시 안전 버퍼 + 타임스탬프 로깅 + 헤더로 전달
   const handleTicketClick = async () => {
@@ -377,7 +396,8 @@ export default function SnackDetail() {
 
             {ticketStatus === 'upcoming' && (
               <button className="w-full h-[50px] border border-[#0D99FF] text-[#0D99FF] bg-white rounded-[5px] text-[18px] font-bold flex items-center justify-center gap-2 max-w-[500px]">
-                <img src="/icons/alert.svg" alt="alert" /> 오픈 전 알림 받기
+                {/* <img src="/icons/alert.svg" alt="alert" /> 오픈 전 알림 받기 */}
+                {upcomingLabel} 
               </button>
             )}
 
