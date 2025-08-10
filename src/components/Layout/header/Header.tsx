@@ -72,12 +72,23 @@ const Header = ({ children }: HeaderProps) => {
       {/* 중앙 영역: Title (항상 중앙 고정) */}
       <div
         className="
-                absolute inset-0 flex items-end justify-center
-                pointer-events-none
-                bottom-[26px]
-            "
+          absolute inset-0 flex items-end justify-center
+          pointer-events-none
+          bottom-[26px]
+          px-4
+        "
       >
-        {title}
+        <div
+          className="
+            max-w-[60%] 
+            overflow-hidden 
+            whitespace-nowrap 
+            text-ellipsis 
+            pointer-events-auto
+          "
+        >
+          {title}
+        </div>
       </div>
 
       {/* 오른쪽 영역: SearchButton, Menu */}
