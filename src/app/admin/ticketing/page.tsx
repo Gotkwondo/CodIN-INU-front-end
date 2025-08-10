@@ -121,10 +121,22 @@ const TicketingPage: FC = () => {
       <div className="flex flex-col gap-[22px] py-[29px] w-full">
         {snacks.map((snack) => (
           <div
-            key={snack.eventId}
-            className="bg-white rounded-[15px] shadow-[0px_5px_13.3px_4px_rgba(212,212,212,0.59)] py-[29px] px-4 flex flex-row"
-            onClick={() => router.push(`/admin/ticketing/${snack.eventId}`)}
-          >
+              key={snack.eventId}
+              className="
+                relative rounded-[15px] py-[29px] px-4 flex flex-row
+                shadow-[0px_5px_13.3px_4px_rgba(212,212,212,0.59)]
+                cursor-pointer
+              "
+              onClick={() => {
+                if (snack.eventStatus !== 'ENDED') {
+                  router.push(`/admin/ticketing/${snack.eventId}`);
+                }
+              }}
+            >
+              {/* 오버레이: 이벤트 종료 시 */}
+              {snack.eventStatus === 'ENDED' && (
+                <div className="absolute inset-0 bg-[rgba(0,0,0,0.18)] rounded-[15px] z-20 cursor-not-allowed" />
+              )}
             <img src={snack.eventImageUrl} className="w-[93px] h-[93px] border border-[#d4d4d4] rounded-[10px] p-2 mr-[14px]"></img>
             <div className="flex flex-col items-start">
                 <div className="flex items-start">
@@ -159,7 +171,7 @@ const TicketingPage: FC = () => {
                             )}
 
                             {snack.eventStatus === 'ENDED' && (
-                                <button className="w-full h-[50px] bg-[#A6A6AB] text-[#808080] rounded-[5px] text-[18px] font-bold max-w-[500px]" disabled>
+                                <button className="bg-[#A6A6AB] rounded-[20px] text-[14px] text-[#808080] mt-[9px] px-[40px] py-[7px]" disabled>
                                     행사 종료
                                 </button>
                             )}
