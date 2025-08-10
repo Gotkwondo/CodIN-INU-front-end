@@ -35,13 +35,13 @@ const ChangeStatusModal: FC<ChangeStatusModalProps> = ({ onClose, onComplete, us
       const dataUrl = sigCanvasRef.current?.toDataURL();
 
     try {
-      const response = await fetchClient(`ticketing/admin/event/${eventId}/management/status/${userInfo.userId}`, {
+      const response = await fetchClient(`/ticketing/admin/event/${eventId}/management/status/${userInfo.userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          dataUrl
+          signImage:dataUrl
         }),
       });
       
@@ -54,7 +54,7 @@ const ChangeStatusModal: FC<ChangeStatusModalProps> = ({ onClose, onComplete, us
 
 
   return (
-    <div className="fixed inset-0 backdrop-blur-sm bg-black/50 flex items-center justify-center z-50 ">
+    <div className="fixed inset-0 backdrop-blur-sm bg-black/50 flex items-center justify-center z-[70] ">
         <div className="bg-white rounded-2xl w-[80%] px-6 py-[14px] shadow-xl text-center relative max-w-[500px]">
           {/* STEP 1 - Intro */}
         {step === 1 && (

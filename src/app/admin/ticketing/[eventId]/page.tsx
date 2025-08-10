@@ -158,7 +158,7 @@ const TicketingUserListPage: FC = () => {
         <div className="
           absolute top-14 left-1/2 -translate-x-1/2
           flex flex-row text-[12px] text-[#0D99FF]
-          items-center z-[60]
+          items-center z-[54]
         ">
           잔여수량 {stock} | 수령대기 {waitNum}
         </div>
