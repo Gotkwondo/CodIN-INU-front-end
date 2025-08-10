@@ -9,6 +9,7 @@ import MenuItem from '@/components/common/Menu/MenuItem';
 import Logo from './Logo';
 import Notice from './Notice';
 import DownloadButton from './DownloadButton';
+import ReloadButton from './ReloadButton';
 
 /** Header의 자식 요소 타입 */
 interface HeaderProps {
@@ -30,6 +31,7 @@ const Header = ({ children }: HeaderProps) => {
   let logo: ReactNode = null;
   let notice: ReactNode = null;
   let downloadButton: ReactNode = null;
+  let reloadButton: ReactNode = null;
   const others: ReactNode[] = [];
 
   // children 순회하면서 원하는 컴포넌트를 찾아서 할당
@@ -48,6 +50,8 @@ const Header = ({ children }: HeaderProps) => {
       notice = child;
     } else if (isElementType(child, Header.DownloadButton)) {
       downloadButton = child;
+    }  else if (isElementType(child, Header.ReloadButton)) {
+      reloadButton = child;
     }  else {
       others.push(child);
     }
@@ -72,12 +76,23 @@ const Header = ({ children }: HeaderProps) => {
       {/* 중앙 영역: Title (항상 중앙 고정) */}
       <div
         className="
-                absolute inset-0 flex items-end justify-center
-                pointer-events-none
-                bottom-[26px]
-            "
+          absolute inset-0 flex items-end justify-center
+          pointer-events-none
+          bottom-[26px]
+          px-4
+        "
       >
-        {title}
+        <div
+          className="
+            max-w-[60%] 
+            overflow-hidden 
+            whitespace-nowrap 
+            text-ellipsis 
+            pointer-events-auto
+          "
+        >
+          {title}
+        </div>
       </div>
 
       {/* 오른쪽 영역: SearchButton, Menu */}
@@ -86,6 +101,7 @@ const Header = ({ children }: HeaderProps) => {
         {menu}
         {notice}
         {downloadButton}
+        {reloadButton}
       </div>
     </header>
   );
@@ -100,5 +116,6 @@ Header.MenuItem = MenuItem;
 Header.Logo = Logo;
 Header.Notice = Notice;
 Header.DownloadButton = DownloadButton;
+Header.ReloadButton = ReloadButton;
 
 export default Header;

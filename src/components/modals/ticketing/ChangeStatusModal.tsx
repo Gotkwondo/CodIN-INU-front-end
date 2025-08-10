@@ -3,6 +3,7 @@
 import { FC, useState, useRef } from 'react';
 import { fetchClient } from '@/api/clients/fetchClient';
 import SignatureCanvas from 'react-signature-canvas';
+import { compressBase64Image } from '@/utils/compressBase64Image';
 interface ChangeStatusModalProps {
   eventId: string | string[];
   userInfo:{
@@ -33,19 +34,24 @@ const ChangeStatusModal: FC<ChangeStatusModalProps> = ({ onClose, onComplete, us
       }
   
       const dataUrl = sigCanvasRef.current?.toDataURL();
+      const formData = new FormData(); 
+           const compressed = await compressBase64Image(dataUrl, {
+            maxBytes: 180 * 1024,   // 필요 시 조정: 200*1024, 300*1024 등
+            maxWidth: 900,          // 서명이라면 600~1000 사이 권장
+            minWidth: 240,          // 더 줄일 최소 너비
+            startQuality: 0.72,
+            minQuality: 0.4
+          });
+          formData.append('signImage', compressed);
 
     try {
-      const response = await fetchClient(`ticketing/admin/event/${eventId}/management/status/${userInfo.userId}`, {
+      const response = await fetchClient(`/ticketing/admin/event/${eventId}/management/status/${userInfo.userId}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          dataUrl
-        }),
+        body:  formData,
       });
       
       console.log('✅ 유저 정보 업데이트 성공:', response);
+      alert('수령 완료로 변경하였습니다');
       onComplete();
     } catch (error) {
       console.error('❌ 유저 정보 업데이트 실패:', error);
@@ -54,7 +60,7 @@ const ChangeStatusModal: FC<ChangeStatusModalProps> = ({ onClose, onComplete, us
 
 
   return (
-    <div className="fixed inset-0 backdrop-blur-sm bg-black/50 flex items-center justify-center z-50 ">
+    <div className="fixed inset-0 backdrop-blur-sm bg-black/50 flex items-center justify-center z-[70] ">
         <div className="bg-white rounded-2xl w-[80%] px-6 py-[14px] shadow-xl text-center relative max-w-[500px]">
           {/* STEP 1 - Intro */}
         {step === 1 && (

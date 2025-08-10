@@ -16,6 +16,7 @@ interface BoardLayoutProps extends PropsWithChildren {
     activeTab: string;
     onTabChange: (tabValue: string) => void;
     showSearchButton?: boolean; // SearchButton 표시 여부 props 추가
+    showReloadButton?: boolean;
 }
 
 const BoardLayout: FC<BoardLayoutProps> = ({
@@ -24,6 +25,7 @@ const BoardLayout: FC<BoardLayoutProps> = ({
     onTabChange,
     children,
     showSearchButton = true, // 기본값 true
+    showReloadButton = false
 }) => {
     const router = useRouter();
     const { name, icon, tabs, backLink } = board;
@@ -50,6 +52,7 @@ const BoardLayout: FC<BoardLayoutProps> = ({
                 <Header.BackButton onClick={handleBack} />
                 <Header.Title>{name}</Header.Title>
                 {showSearchButton && <Header.SearchButton />} {/* 조건부 렌더링 */}
+                {showReloadButton && <Header.ReloadButton />}
             </Header>
 
             <DefaultBody hasHeader={1}>
