@@ -23,6 +23,7 @@ const TicketingPage: FC = () => {
   const [selectedEvent, setSelectedEvent] = useState<number>();
   const [changeEventStatus, setChangeEventStatus]= useState<string>('');
   const isFetching = useRef(false);
+  const [isSelected, setIsSelected] = useState<'info' | 'note'>('info')
 
   const fetchPosts = async (pageNumber: number) => {
     if (isFetching.current) return;
