@@ -122,10 +122,10 @@ useEffect(() => {
             const now = new Date();
             const diffSec = Math.floor((ticketDate.getTime() - now.getTime()) / 1000);
 
-            if (eventData.eventStatus === "ACTIVE" && diffSec <= 0) {
+            if (diffSec <= 0) {
                 setTicketStatus('available');
                 setRemainingTime('00:00');
-            } else if (eventData.eventStatus === "UPCOMING" && diffSec <= 180) {
+            } else if (diffSec <= 180 && diffSec > 0) {
                 setTicketStatus('countdown');
                 const min = String(Math.floor(diffSec / 60)).padStart(2, '0');
                 const sec = String(diffSec % 60).padStart(2, '0');
@@ -138,7 +138,7 @@ useEffect(() => {
         };
 
         updateTicketStatus();
-        const interval = setInterval(updateTicketStatus, 1000);
+        const interval = setInterval(updateTicketStatus, 500);
         return () => clearInterval(interval);
     }, [eventData]);
 
