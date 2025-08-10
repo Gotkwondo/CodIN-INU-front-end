@@ -8,6 +8,7 @@ export interface SnackEvent { // 이벤트 리스트
   quantity: number;
   currentQuantity: number;
   eventStatus: string;
+  waitQuantity: number;
 
 }
 
@@ -25,6 +26,7 @@ export interface TicketEvent { // 이벤트 상세
     eventEndTime: string;
     eventImageUrls: string;
     eventTitle: string;
+    eventStatus: string;
     locationInfo: string;
     quantity: string;
     target: string;
@@ -74,6 +76,7 @@ export interface AdminSnackEvent { // 이벤트 리스트
   quantity: number;
   currentQuantity: number;
   eventStatus: string;
+  waitQuantity:number;
 }
 
 export interface FetchUserResponse {
