@@ -64,4 +64,24 @@ export const boardData: Record<string, Board> = {
         ],
         type: 'gallery',
     },
+    'ticketing': {
+        name: '간식나눔',
+        backLink: '/ticketing',
+        tabs: [
+            { label: '송도캠', value: 'songdo', postCategory: 'SONGDO_CAMPUS' },
+            { label: '미추홀캠', value: 'Michuhol', postCategory: 'MICHUHOL_CAMPUS' },
+        ],
+        type: 'gallery',
+    },
+
+     'ticketingAdmin': {
+        name: '간식나눔 행사 관리',
+        backLink: '/ticketing/admin',
+        tabs: [
+            { label: '전체', value: 'all', postCategory: 'all' },
+            { label: '진행 중', value: 'open', postCategory: 'open' },
+            { label: '진행 완료', value: 'ended', postCategory: 'ended' },
+        ],
+        type: 'gallery',
+    },
 };

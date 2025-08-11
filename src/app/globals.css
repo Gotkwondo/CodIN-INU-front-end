@@ -127,6 +127,31 @@
   #scrollbar-hidden::-webkit-scrollbar {
     display: none; /* Chrome, Safari, and Opera */
   }
+
+  /* 키프레임 애니메이션 */
+  @keyframes bounceUpDown {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-bounce-delay-0 {
+    animation: bounceUpDown 1.2s ease-in-out infinite;
+    animation-delay: 0s;
+  }
+
+  .animate-bounce-delay-1 {
+    animation: bounceUpDown 1.2s ease-in-out infinite;
+    animation-delay: 0.4s;
+  }
+
+  .animate-bounce-delay-2 {
+    animation: bounceUpDown 1.2s ease-in-out infinite;
+    animation-delay: 0.8s;
+  }
 }
 
 /* 복사 금지 스타일 지정*/

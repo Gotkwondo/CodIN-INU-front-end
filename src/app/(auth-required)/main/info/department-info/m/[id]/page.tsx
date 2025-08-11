@@ -7,6 +7,7 @@ import { use, useEffect, useState } from 'react';
 import { IPartner } from '@/interfaces/partners';
 import apiClient from '@/api/clients/apiClient';
 import Script from 'next/script';
+import axios from 'axios';
 
 export default function MapPage({
   params,
@@ -27,7 +28,7 @@ export default function MapPage({
 
     const fetchPartner = async () => {
       try {
-        const { data } = await apiClient.get(
+        const { data } = await axios.get(
           `https://codin.inu.ac.kr/api/info/partner/${id}`
         );
         console.log('Fetched partner data:', data.data.location);

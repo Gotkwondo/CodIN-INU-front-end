@@ -2,7 +2,7 @@
 
 "use client";
 
-import {FC, PropsWithChildren, useEffect} from "react";
+import { FC, PropsWithChildren, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Tabs from "@/components/Layout/Tabs";
 import { boardData } from "@/data/boardData"; // boardData 불러오기
@@ -15,20 +15,26 @@ interface BoardLayoutProps extends PropsWithChildren {
     board: any;
     activeTab: string;
     onTabChange: (tabValue: string) => void;
+    showSearchButton?: boolean; // SearchButton 표시 여부 props 추가
+    showReloadButton?: boolean;
 }
 
 const BoardLayout: FC<BoardLayoutProps> = ({
-                                               board,
-                                               activeTab,
-                                               onTabChange,
-                                               children,
-                                           }) => {
+    board,
+    activeTab,
+    onTabChange,
+    children,
+    showSearchButton = true, // 기본값 true
+    showReloadButton = false
+}) => {
     const router = useRouter();
     const { name, icon, tabs, backLink } = board;
     const hasTabs = tabs.length > 0;
+
     useEffect(() => {
         console.log("BoardLayout: board", board);
-    },[activeTab]);
+    }, [activeTab]);
+
     // backLink 정보가 있으면 해당 URL로, 없으면 기본 router.back() 실행
     const handleBack = () => {
         console.log("backLink", backLink);
@@ -45,7 +51,8 @@ const BoardLayout: FC<BoardLayoutProps> = ({
             <Header>
                 <Header.BackButton onClick={handleBack} />
                 <Header.Title>{name}</Header.Title>
-                <Header.SearchButton />
+                {showSearchButton && <Header.SearchButton />} {/* 조건부 렌더링 */}
+                {showReloadButton && <Header.ReloadButton />}
             </Header>
 
             <DefaultBody hasHeader={1}>
