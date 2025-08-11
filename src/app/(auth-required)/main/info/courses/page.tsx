@@ -8,6 +8,7 @@ import Header from '@/components/Layout/header/Header';
 import { Course } from '@/interfaces/course';
 import CheckBox from '@public/icons/checkbox.svg';
 import Search from '@public/icons/search.svg';
+import Sad from '@public/icons/sad.svg';
 import { Suspense, useEffect, useState, useRef, useCallback } from 'react';
 
 export default function CoursePage() {
@@ -45,7 +46,6 @@ export default function CoursePage() {
     ['평점 높은 순', 'RATING'],
     ['좋아요 많은 순', 'LIKE'],
     ['조회수 순', 'HIT'],
-    ['정확도 순', 'RELEVANCE'],
   ];
 
   const fetchCourses = async (page: number, filters: Filters) => {
@@ -123,7 +123,7 @@ export default function CoursePage() {
     <Suspense>
       <Header>
         <Header.BackButton />
-        <Header.Title>교과목 검색 및 추천 </Header.Title>
+        <Header.Title>교과목 검색 및 추천</Header.Title>
       </Header>
       <DefaultBody hasHeader={1}>
         <div className="sticky top-[80px] bg-white z-10">
@@ -176,19 +176,28 @@ export default function CoursePage() {
           </div>
           <div className="absolute w-[110%] h-[175px] -left-[20px] bg-white top-0 z-10 rounded-[30px]"></div>
         </div>
-        <div className="grid grid-cols-2 gap-[18px] pt-[12px]">
-          {courses.map((v, i) => {
-            const isLast = i === courses.length - 1;
-            return (
-              <CourseCard
-                key={v.id}
-                ref={isLast ? lastCourseRef : null}
-                value={v}
-                fav={v.liked}
-              />
-            );
-          })}
-        </div>
+        {courses.length === 0 && !isLoading ? (
+          <div className="flex flex-col items-center justify-center gap-[17px] mt-[18vh]">
+            <Sad />
+            <div className="col-span-2 text-center text-sub text-[14px]">
+              일치하는 검색 결과가 없습니다.
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-[18px] pt-[12px]">
+            {courses.map((v, i) => {
+              const isLast = i === courses.length - 1;
+              return (
+                <CourseCard
+                  key={v.id}
+                  ref={isLast ? lastCourseRef : null}
+                  value={v}
+                  fav={v.liked}
+                />
+              );
+            })}
+          </div>
+        )}
       </DefaultBody>
     </Suspense>
   );

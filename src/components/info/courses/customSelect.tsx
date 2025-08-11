@@ -33,7 +33,7 @@ export default function CustomSelect({ onChange, options }: CustomSelectProps) {
   return (
     <div
       className="
-      flex justify-center relative min-w-[85px] max-w-[90px] w-fit h-[35px]
+      flex justify-center relative min-w-[117px] max-w-[117px] w-fit h-[35px]
       break-keep whitespace-normal
       shadow-[0px_6px_7.2px_rgba(182,182,182,0.30)] rounded-[14px] bg-[#F9F9F9]"
       ref={ref}

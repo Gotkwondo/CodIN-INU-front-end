@@ -76,7 +76,7 @@ const CourseCard = forwardRef<HTMLDivElement, Props>(
               <div className="mb-[12px]">
                 <div className="mb-[15px]">
                   <p className="text-[11px] text-[#0D99FF]">{type}</p>
-                  <h3 className="text-[16px] font-bold whitespace-nowrap">
+                  <h3 className="text-[16px] font-bold overflow-ellipsis whitespace-nowrap w-[150px] overflow-hidden">
                     {title}
                   </h3>
                   <p className="text-[12px] text-sub">{professor}</p>
