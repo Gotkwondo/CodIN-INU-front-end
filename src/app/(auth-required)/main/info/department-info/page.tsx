@@ -88,12 +88,7 @@ export default function DepartmentInfoPage() {
       const fetchData = async () => {
         try {
           const res = await axios.get(
-            'https://codin.inu.ac.kr/api/info/partner',
-            {
-              headers: {
-                Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_TOKEN}`,
-              },
-            }
+            'https://codin.inu.ac.kr/api/info/partner'
           );
 
           console.log('Fetched partner data:', res.data.dataList);
