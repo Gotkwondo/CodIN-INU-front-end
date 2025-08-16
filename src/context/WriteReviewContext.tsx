@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { selectType } from '@/app/(auth-required)/main/info/course-reviews/write-review/type';
+import { selectType } from '@/app/(auth-required)/info/course-reviews/write-review/type';
 import {
   createContext,
   ReactNode,
   useState,
   Dispatch,
   SetStateAction,
-} from "react";
+} from 'react';
 
 type DataType = {
   departments: selectType;
@@ -26,8 +26,8 @@ type Props = { children: ReactNode };
 
 export default function ReviewProvider({ children }: Props) {
   const [data, setData] = useState<DataType>({
-    departments: { label: "컴공", value: "COMPUTER_SCI" },
-    grade: { label: "", value: "" },
+    departments: { label: '컴공', value: 'COMPUTER_SCI' },
+    grade: { label: '', value: '' },
   });
 
   return (

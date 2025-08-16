@@ -42,7 +42,7 @@ export default function LoginPage() {
       const response = await fetchClient('/users');
       const result = await response.json();
       if (result.success) {
-        router.push('/main');
+        router.push('/main/home');
       }
     };
     autoLogin();
@@ -194,7 +194,7 @@ export default function LoginPage() {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <DefaultBody hasHeader={0}>
+      <DefaultBody>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <img
             className="w-[171.41px] mb-[72px]"
