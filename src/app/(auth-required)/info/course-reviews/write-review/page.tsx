@@ -1,54 +1,54 @@
-"use client";
+'use client';
 
-import DefaultBody from "@/components/Layout/Body/defaultBody";
-import BottomNav from "@/components/Layout/BottomNav/BottomNav";
-import Header from "@/components/Layout/header/Header";
-import { RateBar } from "@/components/Review/RateBar";
+import DefaultBody from '@/components/Layout/Body/defaultBody';
+import BottomNav from '@/components/Layout/BottomNav/BottomNav';
+import Header from '@/components/Layout/header/Header';
+import { RateBar } from '@/components/Review/RateBar';
 import {
   SetStateAction,
   Suspense,
   useContext,
   useEffect,
   useState,
-} from "react";
-import { departMentType, selectType } from "./type";
+} from 'react';
+import { departMentType, selectType } from './type';
 import {
   DEPARTMENT,
   GRADE,
   SEMESTER,
   ALERTMESSAGE,
   TEMPLATETEXT,
-} from "./constants";
-import { CustomSelect } from "@/components/Review/CustomSelect";
-import { useSearchedReviewContext } from "@/api/review/useSearchedReviewContext";
-import { AlertModal } from "@/components/modals/AlertModal";
-import { submitReview } from "@/api/review/submitReview";
-import { useRouter } from "next/navigation";
-import { calcEmotion } from "./util/calcEmotion";
-import { ReviewContext } from "@/context/WriteReviewContext";
+} from './constants';
+import { CustomSelect } from '@/components/Review/CustomSelect';
+import { useSearchedReviewContext } from '@/api/review/useSearchedReviewContext';
+import { AlertModal } from '@/components/modals/AlertModal';
+import { submitReview } from '@/api/review/submitReview';
+import { useRouter } from 'next/navigation';
+import { calcEmotion } from './util/calcEmotion';
+import { ReviewContext } from '@/context/WriteReviewContext';
 
 const WriteReview = () => {
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const [rating, setRating] = useState(0);
   const [lecture, setLecture] = useState<selectType>({
-    label: "학과",
-    value: "",
+    label: '학과',
+    value: '',
   });
   const [grade, setGrade] = useState<selectType>({
-    label: "학년",
-    value: "",
+    label: '학년',
+    value: '',
   });
   const [semester, setSemester] = useState<selectType>({
-    label: "수강 학기",
-    value: "",
+    label: '수강 학기',
+    value: '',
   });
   const [departmentList, setDepartmentList] = useState([]);
   const [department, setDepartment] = useState<selectType>({
-    label: "학과, 학년, 학기를 선택해주세요",
-    value: "",
+    label: '학과, 학년, 학기를 선택해주세요',
+    value: '',
   });
-  const [reviewContents, setReviewContents] = useState<string>("");
+  const [reviewContents, setReviewContents] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const { data } = useContext(ReviewContext);
@@ -73,7 +73,7 @@ const WriteReview = () => {
   };
 
   const onSummitReview = async () => {
-    if (department.value === "") return;
+    if (department.value === '') return;
     else {
       const response = await submitReview({
         lectureId: department.value,
@@ -92,10 +92,10 @@ const WriteReview = () => {
     //   setLecture(data.departments);
     //   setGrade(data.grade);
     // }
-    if (data.departments.value !== "") {
+    if (data.departments.value !== '') {
       setLecture(data.departments);
     }
-    if (data.grade.value !== "") {
+    if (data.grade.value !== '') {
       setGrade(data.grade);
     }
   }, []);
@@ -103,22 +103,22 @@ const WriteReview = () => {
   useEffect(() => {
     setIsClient(true);
     if (
-      lecture.value !== "null" &&
-      grade.value !== "null" &&
-      semester.value !== "null"
+      lecture.value !== 'null' &&
+      grade.value !== 'null' &&
+      semester.value !== 'null'
     ) {
       getReviewList();
-      setDepartment({ label: "학과, 학년, 학기를 선택해주세요", value: "" });
+      setDepartment({ label: '학과, 학년, 학기를 선택해주세요', value: '' });
     }
   }, [lecture, grade, semester]);
 
   if (!isClient) return null; // 서버에서는 렌더링하지 않음
   return (
     <Suspense>
-      <Header>
-        <Header.BackButton />
-        <Header.Title>후기 작성하기</Header.Title>
-      </Header>
+      <Header
+        showBack
+        title="후기 작성하기"
+      />
       <DefaultBody hasHeader={1}>
         <div className="flex flex-col justify-between">
           <div>
@@ -170,21 +170,21 @@ const WriteReview = () => {
               />
             </div>
 
-            <p className="text-XLm mt-[24px]">
-              전반적인 수업 경험은 어땠나요?
-            </p>
+            <p className="text-XLm mt-[24px]">전반적인 수업 경험은 어땠나요?</p>
             {/* 수업 후기 점수 평가  */}
             <div className="w-full mt-[12px]">
               {/* 1-5점  해당 바를 눌러 점수를 정할 수 있도록 기능 구현 필요*/}
               <div className="text-XLm flex items-center mb-[12px] gap-[16px]">
                 <div className="flex">
                   <span className="text-[#0D99FF] text-right">{`${
-                    rating % 1 ? rating : rating + ".0"
-                  }`}</span>{" "}
+                    rating % 1 ? rating : rating + '.0'
+                  }`}</span>{' '}
                   <span className="text-[#E5E7EB]">/ 5.0 </span>
                 </div>
 
-                <span className="text-[#0D99FF] text-Mm">{calcEmotion(rating)}</span>
+                <span className="text-[#0D99FF] text-Mm">
+                  {calcEmotion(rating)}
+                </span>
               </div>
               <RateBar
                 score={rating}
@@ -203,7 +203,7 @@ const WriteReview = () => {
               <textarea
                 className="border-[1px] focus:border-[#0D99FF] focus:outline-none focus:ring-1 focus:ring-[#0D99FF] border-gray-200 text-Mr rounded-md px-[16px] py-[12px] sm:mt-5 w-full h-[20vh] sm:h-[30vh] resize-none"
                 placeholder="상세한 후기를 작성해주세요"
-                onChange={(e) => setReviewContents(e.target.value)}
+                onChange={e => setReviewContents(e.target.value)}
                 value={reviewContents}
               ></textarea>
             </div>

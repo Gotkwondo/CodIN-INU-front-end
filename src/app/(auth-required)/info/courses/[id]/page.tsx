@@ -13,6 +13,7 @@ import type { CourseReview } from '@/interfaces/course';
 import { CourseTagDetail } from '@/components/info/courses/tag';
 import Lock from '@public/icons/Lock.svg';
 import Arrow from '@public/icons/arrow.svg';
+import Link from 'next/link';
 
 export default function CourseDetailPage() {
   const params = useParams();
@@ -123,11 +124,11 @@ export default function CourseDetailPage() {
   );
 
   return (
-    <Suspense>
-      <Header>
-        <Header.BackButton />
-        <Header.Title>{course.title}</Header.Title>
-      </Header>
+    <>
+      <Header
+        showBack
+        title={course.title}
+      />
       <DefaultBody hasHeader={1}>
         <div className="relative px-[35px] py-[28px] shadow-05134 rounded-[15px] mt-[13px]">
           <div className="flex flex-col text-[12px] gap-[4px]">
@@ -262,8 +263,32 @@ export default function CourseDetailPage() {
             </div>
           </div>
         </div>
+
+        <div className="absolute right-[78px]">
+          <Link
+            href={`/info/course-reviews/write-review`}
+            className="fixed bottom-[108px] bg-main text-white rounded-full shadow-lg p-4 hover:bg-blue-600 transition duration-300"
+            aria-label="글쓰기"
+          >
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 22 22"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3.80002 14.5999L8.00002 18.1999M3.20002 14.5999L15.0314 2.35533C16.3053 1.08143 18.3707 1.08143 19.6446 2.35533C20.9185 3.62923 20.9185 5.69463 19.6446 6.96853L7.40002 18.7999L1.40002 20.5999L3.20002 14.5999Z"
+                stroke="white"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </Link>
+        </div>
       </DefaultBody>
-    </Suspense>
+    </>
   );
 }
 

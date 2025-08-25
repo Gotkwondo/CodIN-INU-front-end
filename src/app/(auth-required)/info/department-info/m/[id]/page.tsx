@@ -8,6 +8,7 @@ import { IPartner } from '@/interfaces/partners';
 import apiClient from '@/api/clients/apiClient';
 import Script from 'next/script';
 import axios from 'axios';
+import { fetchClient } from '@/api/clients/fetchClient';
 
 export default function MapPage({
   params,
@@ -28,20 +29,18 @@ export default function MapPage({
 
     const fetchPartner = async () => {
       try {
-        const { data } = await axios.get(
-          `https://codin.inu.ac.kr/api/info/partner/${id}`
-        );
-        console.log('Fetched partner data:', data.data.location);
+        const { data } = await fetchClient(`/info/partner/${id}`);
+        console.log('Fetched partner data:', data.location);
         setParter({
-          name: data.data.name,
-          tags: data.data.tags,
-          benefits: data.data.benefits,
-          start_date: new Date(data.data.startDate),
-          end_date: new Date(data.data.startDate),
-          location: data.data.location,
+          name: data.name,
+          tags: data.tags,
+          benefits: data.benefits,
+          start_date: new Date(data.startDate),
+          end_date: new Date(data.startDate),
+          location: data.location,
           img: {
-            main: data.data.img.main,
-            sub: data.data.img.sub || [],
+            main: data.img.main,
+            sub: data.img.sub || [],
           },
         });
       } catch (error) {

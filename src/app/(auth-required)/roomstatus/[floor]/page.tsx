@@ -175,7 +175,7 @@ export default function RoomStatus() {
   };
 
   return (
-    <div className="flex flex-col mt-[32px]">
+    <div className="flex flex-col">
       <div
         ref={ref_w}
         className="mx-[7px]"

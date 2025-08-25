@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 dayjs.locale('en');
 
 import LeftArrow from '@public/icons/arrow/arrow_left.svg';
@@ -7,6 +7,9 @@ import RightArrow from '@public/icons/arrow/arrow_right.svg';
 import Calendar from '@public/icons/calendar.svg';
 import ShadowBox from '@/components/common/shadowBox';
 import CloseIcon from '@public/icons/button/x.svg';
+import { fetchClient } from '@/api/clients/fetchClient';
+import clsx from 'clsx';
+import { Tag } from '@/interfaces/partners';
 
 export default function DateCalendar() {
   // 연도 변환 모달
@@ -29,7 +32,20 @@ export default function DateCalendar() {
   const dayOfTheWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
   // 날짜 상태관리
+
+  interface CalendarData {
+    date: string;
+    totalCont: number;
+    items: Array<{
+      eventId: string;
+      content: string;
+      department: Tag | 'OTHERS';
+    }>;
+  }
   const [today, setToday] = useState(dayjs());
+  const [selectedDate, setSelectedDate] =
+    useState<[string, number, dayjs.Dayjs]>(null);
+  const [calendarData_fetched, setCalendarData] = useState<CalendarData[]>([]);
 
   // 해당 달의 전체일수를 구함
   const daysInMonth = today.daysInMonth();
@@ -77,9 +93,9 @@ export default function DateCalendar() {
   };
 
   // 날짜 선택(변경) (= input 값 변경)
-  const onClickChangeDate = date => {
-    // setToday(dayjs(today).set('date', date.date.date()));
-    showDateCalendarModalBtn();
+  const onClickChangeDate = (date: DateWithStatus, index: number) => {
+    setSelectedDate([date.date.format('YYYY-MM-DD'), index, date.date]);
+    console.log('선택된 날짜:', date.date.format('YYYY-MM-DD'), index);
   };
 
   // 연도 모달 on, off
@@ -92,12 +108,77 @@ export default function DateCalendar() {
     setShowYearModal(false);
   };
 
+  useEffect(() => {
+    const fetchCalendarData = async () => {
+      try {
+        const response = await fetchClient(
+          `/calendar/month?year=${today.year()}&month=${today.month() + 1}`
+        );
+        if (response.success) {
+          const data = response.data.days;
+          setCalendarData(data);
+          console.log('Fetched calendar data:', data);
+        } else {
+          console.error('Failed to fetch calendar data:', response.message);
+        }
+      } catch (error) {
+        console.error('Error fetching calendar data:', error);
+      }
+    };
+    fetchCalendarData();
+  }, [today]);
+
+  useEffect(() => {
+    document.addEventListener('click', e => {
+      e.preventDefault();
+      const target = e.target as HTMLElement;
+      if (!target.id.includes('calendar-day')) {
+        setSelectedDate(null);
+      }
+    });
+    return () => {
+      document.removeEventListener('click', () => null);
+    };
+  }, []);
+
   return (
     <ShadowBox>
       {/* Date Calendar */}
       <div className="z-[200]">
         {/* 달력 모달과 연도 선택 모달이 둘 다 켜진 경우, 구분을 위해 달력 모달에 배경색을 입힌다. */}
         <div className="pb-[16px]">
+          {selectedDate &&
+            calendarData_fetched[selectedDate[1]].items.length > 0 && (
+              <div className="absolute w-max text-[10px] top-[60px] left-[50%] translate-x-[-50%] rounded-[10px] backdrop-blur-[2px] bg-[#111111A3] text-white pt-[9px] pb-[13px] px-[13px]">
+                <div className="ml-[13px] font-normal">
+                  {selectedDate[2].format('MM.DD')}
+                </div>
+                {calendarData_fetched[selectedDate[1]].items.map((item, i) => (
+                  <div key={i}>
+                    <div className="flex items-center mt-[2px]">
+                      <div
+                        className={clsx(
+                          'h-[6px] aspect-square rounded-full',
+                          item.department === 'COMPUTER_SCI'
+                            ? 'bg-main'
+                            : item.department === 'EMBEDDED'
+                            ? 'bg-[#87B9BA]'
+                            : item.department === 'INFO_COMM'
+                            ? 'bg-[#FE908A]'
+                            : item.department === 'OTHERS'
+                            ? 'bg-[#FBE08D]'
+                            : 'bg-main'
+                        )}
+                      />
+                      <span className="ml-[7px] leading-[14px]">
+                        {item.content}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
           {/* 달력의 헤더 */}
           <header>
             <div className="relative flex justify-between pt-[18px] pb-[15px] border-b border-[#D4D4D4] p-[9px]">
@@ -183,41 +264,61 @@ export default function DateCalendar() {
               {calenderData.map((date, index) => (
                 <li
                   key={index}
-                  className="w-[14.28%] mt-[11px] flex flex-col items-center"
+                  className="w-[14.28%] mt-[11px]"
                 >
                   {date !== null && (
-                    <>
+                    <div className="relative flex flex-col items-center">
                       <div
-                        onClick={() => onClickChangeDate(date)}
-                        className={`cursor-pointer flex justify-center items-center text-[10px] font-bold w-[25px] aspect-square rounded-full
-                          ${
-                            date.date.day() === 0
-                              ? 'text-[#FE908A]'
-                              : date.date.day() === 6
-                              ? 'text-active'
-                              : 'text-sub'
-                          }
-                          ${
-                            date.date.format('YYYY-MM-DD') ===
+                        id="calendar-day"
+                        onClick={() =>
+                          onClickChangeDate(date, index - emptyDates.length + 1)
+                        }
+                        className={clsx(
+                          'cursor-pointer flex justify-center items-center text-[10px] font-bold w-[25px] aspect-square rounded-full',
+                          date.date.day() === 0
+                            ? '!text-[#FE908A]'
+                            : date.date.day() === 6
+                            ? '!text-active'
+                            : 'text-sub',
+                          date.date.format('YYYY-MM-DD') ===
                             dayjs().format('YYYY-MM-DD')
-                              ? 'bg-main text-white'
-                              : 'bg-sub text-sub hover:bg-gray'
-                          }`}
-                        // if SUN = #FE908A, if SAT = text-active, else text-sub
+                            ? 'bg-main !text-white'
+                            : 'bg-sub text-sub hover:bg-gray',
+                          selectedDate &&
+                            selectedDate[0] ===
+                              date.date.format('YYYY-MM-DD') &&
+                            selectedDate[0] !== dayjs().format('YYYY-MM-DD') &&
+                            'border-[2px] border-[#AEAEAE]'
+                        )}
                       >
                         {date.date.format('D')}
                       </div>
-                      <div className="mt-[5px] h-[6px]">
-                        {date.status.length > 0 &&
-                          date.status.map((v, i) => (
+                      <div className="flex mt-[5px] h-[6px] gap-[3px]">
+                        {calendarData_fetched &&
+                          calendarData_fetched[index - emptyDates.length + 1] &&
+                          calendarData_fetched[index - emptyDates.length + 1]
+                            .items.length > 0 &&
+                          calendarData_fetched[
+                            index - emptyDates.length + 1
+                          ].items.map((item, i) => (
                             <div
                               key={i}
-                              id={v}
-                              className="h-[6px] aspect-square rounded-full"
-                            ></div>
+                              className={clsx(
+                                'h-[6px] aspect-square rounded-full',
+                                item.department === 'COMPUTER_SCI'
+                                  ? 'bg-main'
+                                  : item.department === 'EMBEDDED'
+                                  ? 'bg-[#87B9BA]'
+                                  : item.department === 'INFO_COMM'
+                                  ? 'bg-[#FE908A]'
+                                  : item.department === 'OTHERS'
+                                  ? 'bg-[#FBE08D]'
+                                  : 'bg-main'
+                              )}
+                            />
                           ))}
                       </div>
-                    </>
+                    </div>
                   )}
                 </li>
               ))}

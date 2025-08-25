@@ -16,15 +16,18 @@ type NavItem = { title: string; path: string };
 interface HeaderProps {
   title?: string;
   showBack?: boolean;
+  backOnClick?: () => void;
   showLogo?: boolean;
 
   showSearch?: boolean;
-  showMenu?: boolean;
+  searchOnClick?: () => void;
+  MenuItems?: () => React.ReactNode;
   showNotice?: boolean;
   showDownload?: boolean;
   showReload?: boolean;
 
   topNav?: NavItem[];
+  topBarSetCenter?: boolean;
 
   className?: string;
 }
@@ -32,13 +35,16 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({
   title,
   showBack = false,
+  backOnClick = undefined,
   showLogo = false,
   showSearch = false,
-  showMenu = false,
+  searchOnClick = () => {},
+  MenuItems,
   showNotice = false,
   showDownload = false,
   showReload = false,
   topNav = undefined,
+  topBarSetCenter = false,
   className = '',
 }) => {
   return (
@@ -53,7 +59,9 @@ const Header: React.FC<HeaderProps> = ({
         <div className="relative flex px-[20px] max-w-[460px] items-center justify-center w-full h-[77px]">
           {/* Left Area */}
           <div className="absolute left-[12px] flex items-center gap-2">
-            {showBack ? <BackButton /> : null}
+            {showBack ? (
+              <BackButton onClick={backOnClick ? backOnClick : undefined} />
+            ) : null}
             {showLogo ? <Logo /> : null}
           </div>
 
@@ -66,8 +74,12 @@ const Header: React.FC<HeaderProps> = ({
 
           {/* Right Area */}
           <div className="absolute right-[12px] flex items-center gap-2">
-            {showSearch ? <SearchButton /> : null}
-            {/* {showMenu ? <Menu /> : null} */}
+            {showSearch ? <SearchButton onClick={searchOnClick} /> : null}
+            {MenuItems ? (
+              <Menu>
+                <MenuItems />
+              </Menu>
+            ) : null}
             {showNotice ? <Notice /> : null}
             {/* {showDownload ? <DownloadButton /> : null} */}
             {showReload ? <ReloadButton /> : null}
@@ -75,7 +87,10 @@ const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      <TopNav nav={topNav} />
+      <TopNav
+        nav={topNav}
+        setCenter={topBarSetCenter}
+      />
     </header>
   );
 };

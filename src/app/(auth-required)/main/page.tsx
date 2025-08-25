@@ -13,6 +13,12 @@ import Intro from '@public/icons/main_routing_img/intro.svg';
 import Search from '@public/icons/main_routing_img/search.svg';
 import Ticket from '@public/icons/main_routing_img/ticket.svg';
 import RightArrow from '@public/icons/arrow/arrow_right.svg';
+import { fetchClient } from '@/api/clients/fetchClient';
+import RoomItemHourly from '../roomstatus/components/roomItemHourly';
+import { Lecture, LectureDict } from '../roomstatus/interfaces/page_interface';
+import { TIMETABLE_LENGTH } from '../roomstatus/constants/timeTableData';
+import clsx from 'clsx';
+import PageBar from '@/components/Layout/pageBar';
 
 const timeAgo = (timestamp: string): string => {
   const now = new Date();
@@ -42,23 +48,24 @@ type MenuItem = {
 const menuItems = [
   {
     label: '정보대 소개',
-    href: '/boards/extracurricular',
-    icon: Intro,
+    href: '/info/department-info/phone',
+    icon: Intro as SvgIcon,
   },
   {
     label: '교과목 검색 및 추천',
     href: '/info/courses',
-    icon: Search,
+    icon: Search as SvgIcon,
   },
   {
     label: '비교과',
-    href: '/info/department-info',
-    icon: Extra,
+    // href: '/boards/extracurricular',
+    href: '/#',
+    icon: Extra as SvgIcon,
   },
   {
     label: '간식나눔 티켓팅',
     href: '/boards/extracurricular',
-    icon: Ticket,
+    icon: Ticket as SvgIcon,
   },
 ] satisfies MenuItem[];
 
@@ -76,6 +83,14 @@ const MainPage: FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
+  const [roomStatus, setRoomStatus] = useState<LectureDict[]>([
+    null,
+    null,
+    null,
+    null,
+    null,
+  ]);
+  const [floor, setFloor] = useState<number>(1);
   // const [hasNewAlarm, setHasNewAlarm] = useState(false); // 알람 여부
 
   // const handleOpenModal = () => setIsModalOpen(true);
@@ -117,9 +132,78 @@ const MainPage: FC = () => {
         setLoading(false);
       }
     };
-
     fetchRankingPosts();
   }, []);
+
+  const getTimeTableData = (listOfLecture: Lecture[]) => {
+    let lecture: Lecture;
+    let timeTable = Array.from({ length: TIMETABLE_LENGTH }, () => 0);
+    let boundaryTable = Array.from({ length: TIMETABLE_LENGTH }, () => 0);
+    for (lecture of listOfLecture) {
+      const start = lecture.startTime;
+      const end = lecture.endTime;
+
+      const time = ['09', '10', '11', '12', '13', '14', '15', '16', '17', '18'];
+      const startPointer = time.indexOf(start.split(':')[0]);
+      const endPointer = time.indexOf(end.split(':')[0]);
+
+      const startMin = parseInt(start.split(':')[1]);
+      const endMin = parseInt(end.split(':')[1]);
+
+      let boundary = 0;
+      if (startPointer >= 0 && endPointer < 10) {
+        for (let i = startPointer; i <= endPointer; i++) {
+          for (let j = 0; j <= 4; j++) {
+            if (i > startPointer && i < endPointer) {
+              timeTable[i * 4 + j] = 1;
+            } else if (i === startPointer && j * 15 >= startMin) {
+              if (boundary === 0) {
+                boundaryTable[i * 4 + j] = 1;
+                boundary = 1;
+              }
+              timeTable[i * 4 + j] = 1;
+            } else if (i === endPointer && j * 15 <= endMin) {
+              timeTable[i * 4 + j] = 1;
+            } else {
+              if (boundary === 1) {
+                boundaryTable[i * 4 + j - 1] = 1;
+                boundary = 0;
+                break;
+              }
+            }
+          }
+        }
+        if (boundary === 1) {
+          boundaryTable[endPointer * 4 + 4] = 1;
+        }
+      }
+    }
+
+    return [timeTable, boundaryTable];
+  };
+
+  useEffect(() => {
+    const fetchMiniRoomStatus = async () => {
+      try {
+        const response = await fetchClient('/rooms/empty');
+        console.log(response);
+        if (response.success) {
+          setRoomStatus(response.data);
+        } else {
+          console.error('Failed to fetch room status:', response.message);
+        }
+      } catch (error) {
+        console.error('Error fetching room status:', error);
+        // reload the page to retry
+        window.location.reload();
+      }
+    };
+    fetchMiniRoomStatus();
+  }, []);
+
+  const handleFloorChange = () => {
+    setFloor(prev => (prev === 5 ? 1 : prev + 1));
+  };
 
   return (
     <>
@@ -130,7 +214,7 @@ const MainPage: FC = () => {
         </div>
       )}
 
-      <ShadowBox className="pl-[19px] pr-[14px] pt-[28px] pb-[25px] mt-[30px] h-[213px]">
+      <ShadowBox className="pl-[19px] pr-[14px] pt-[28px] pb-[25px] h-[213px]">
         <div>
           <div className="ml-[4px] mb-[10px]">
             <h1 className="text-[22px] font-bold">
@@ -181,7 +265,7 @@ const MainPage: FC = () => {
 
       {/* 강의실 축약 UI */}
       <ShadowBox className="mt-[34px]">
-        <div className="flex justify-between pl-[14px] pr-[5px] py-[23px] font-bold">
+        <div className="flex justify-between pl-[14px] pr-[5px] pt-[23px] pb-[18px] font-bold">
           <div className="text-[16px]">빈 강의실을 찾고 있나요?</div>
           <Link
             href={'/roomstatus/1'}
@@ -191,7 +275,37 @@ const MainPage: FC = () => {
             <RightArrow />
           </Link>
         </div>
-        <div className="px-[14px]"></div>
+        <div className="px-[14px]">
+          {roomStatus[floor - 1] &&
+            Object.entries(roomStatus[floor - 1])
+              .slice(0, 2)
+              .map(([roomNum, status]) => {
+                const [timeTable, boundaryTable] = getTimeTableData(status);
+                return (
+                  <div
+                    key={roomNum}
+                    className="relative flex flex-col w-full py-[5px]"
+                  >
+                    <RoomItemHourly
+                      RoomName={roomNum + '호'}
+                      LectureList={status}
+                      RoomStatusList={timeTable}
+                      BoundaryList={boundaryTable}
+                      summaryView
+                    />
+                  </div>
+                );
+              })}
+        </div>
+        <div
+          className="flex justify-center py-[22px]"
+          onClick={handleFloorChange}
+        >
+          <PageBar
+            value={floor}
+            count={5}
+          />
+        </div>
       </ShadowBox>
 
       {/* 게시물 랭킹 */}
@@ -210,7 +324,7 @@ const MainPage: FC = () => {
               return boardPath ? (
                 <Link
                   key={index}
-                  href={`/main/boards/${boardPath}?postId=${post._id}`}
+                  href={`/boards/${boardPath}?postId=${post._id}`}
                   className="block"
                 >
                   <div className="flex flex-col gap-[8px] bg-white">

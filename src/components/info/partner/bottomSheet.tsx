@@ -119,7 +119,7 @@ export default function BottomSheet({
         </div>
         <div className="flex flex-col gap-[15px] px-[12px]">
           <div>
-            <div className='border-b bg-[#D4D4D] w-full mt-[24px] mb-[12px]'/>
+            <div className="border-b bg-[#D4D4D] w-full mt-[24px] mb-[12px]" />
             <h2 className="text-Mm mb-[6px]">제휴기간</h2>
             <div className="text-Mr text-sub">
               {/* 2025.03 ~ 2026.03 (1학기 시작 전까지) */}

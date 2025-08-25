@@ -120,11 +120,11 @@ export default function CoursePage() {
   }, [page, filters]);
 
   return (
-    <Suspense>
-      <Header>
-        <Header.BackButton />
-        <Header.Title>교과목 검색 및 추천</Header.Title>
-      </Header>
+    <>
+      <Header
+        showBack
+        title="교과목 검색 및 추천"
+      />
       <DefaultBody hasHeader={1}>
         <div className="sticky top-[80px] bg-white z-10">
           <div className="flex relative justify-center items-center bg-[#F9F9F9] w-full h-[46px] px-[20px] rounded-[14px] shadow-[0px_6px_7.2px_#B6B6B64D] gap-[16px] z-[60]">
@@ -199,6 +199,6 @@ export default function CoursePage() {
           </div>
         )}
       </DefaultBody>
-    </Suspense>
+    </>
   );
 }

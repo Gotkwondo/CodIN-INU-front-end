@@ -5,6 +5,7 @@ import React from 'react';
 import { roomItemProps } from '../interfaces/roomItem_interface';
 import { Lecture } from '../interfaces/page_interface';
 import { TIMETABLE_GAP } from '../constants/timeTableData';
+import clsx from 'clsx';
 
 // 09:00 ~ 18:00
 const BASE_HOUR = 9;
@@ -79,6 +80,7 @@ const RoomItemHourly: React.FC<roomItemProps> = ({
   // 아래 두 props는 시그니처 유지용. (시간 1칸 전환 후 내부에선 사용하지 않음)
   RoomStatusList: _ignoreA,
   BoundaryList: _ignoreB,
+  summaryView = false,
 }) => {
   const [activeIdx, setActiveIdx] = React.useState<number | null>(null);
   const infos = React.useMemo(() => buildHourInfos(LectureList), [LectureList]);
@@ -94,7 +96,12 @@ const RoomItemHourly: React.FC<roomItemProps> = ({
       id="scrollbar-hidden"
       className="flex flex-col gap-[12px]"
     >
-      <h3 className="absolute top-[17px] left-[14px] text-[#212121] text-[14px] w-max bg-white z-30 font-medium">
+      <h3
+        className={clsx(
+          !summaryView ? 'left-[14px] top-[17px]' : 'top-[9px]',
+          'absolute text-[#212121] text-[14px] w-max bg-white z-30 font-medium'
+        )}
+      >
         {RoomName}
       </h3>
 

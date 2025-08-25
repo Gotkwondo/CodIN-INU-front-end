@@ -13,7 +13,7 @@ const DefaultBody: React.FC<DefaultBodyProps> = ({
   children,
 }) => {
   const pt =
-    hasHeader === 0 ? '' : hasHeader === 1 ? 'pt-[80px]' : 'pt-[130px]';
+    hasHeader === 0 ? '' : hasHeader === 1 ? 'pt-[80px]' : 'pt-[160px]';
 
   // useEffect(()=>{
   //     const Postreissue = async (retryCount=0) =>

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import SmRoundedBtn from "@/components/buttons/smRoundedBtn";
-import { DEPARTMENTS, SEARCHTYPES } from "./constants";
-import { labelType, reviewContentType, searchTypesType } from "./types";
+import SmRoundedBtn from '@/components/buttons/smRoundedBtn';
+import { DEPARTMENTS, SEARCHTYPES } from './constants';
+import { labelType, reviewContentType, searchTypesType } from './types';
 import {
   Suspense,
   useCallback,
@@ -11,30 +11,30 @@ import {
   useMemo,
   useRef,
   useState,
-} from "react";
-import { Input } from "@/components/input/Input";
-import { debounce } from "lodash";
-import { UnderbarBtn } from "@/components/buttons/underbarBtn";
-import { Subject } from "@/components/Review/Subject";
-import Header from "@/components/Layout/header/Header";
-import DefaultBody from "@/components/Layout/Body/defaultBody";
-import BottomNav from "@/components/Layout/BottomNav/BottomNav";
-import { useReviewsContext } from "@/api/review/getReviewsContext";
+} from 'react';
+import { Input } from '@/components/input/Input';
+import { debounce } from 'lodash';
+import { UnderbarBtn } from '@/components/buttons/underbarBtn';
+import { Subject } from '@/components/Review/Subject';
+import Header from '@/components/Layout/header/Header';
+import DefaultBody from '@/components/Layout/Body/defaultBody';
+import BottomNav from '@/components/Layout/BottomNav/BottomNav';
+import { useReviewsContext } from '@/api/review/getReviewsContext';
 import { ReviewBtn } from '@/components/Review/ReviewBtn';
 import { ReviewContext } from '@/context/WriteReviewContext';
 
 const CourseReviewPage = () => {
   const [selectedDepartment, setSelectedDepartment] = useState<labelType>({
-    label: "컴공",
-    value: "COMPUTER_SCI",
+    label: '컴공',
+    value: 'COMPUTER_SCI',
   });
   const [searchType, setSearchType] = useState<searchTypesType>({
-    label: "과목명",
-    value: "LEC",
+    label: '과목명',
+    value: 'LEC',
   });
 
-  const [query, setQuery] = useState<string>(""); // 입력값 즉시 반영
-  const [searchKeyword, setSearchKeyword] = useState<string>(""); // 디바운스된 값
+  const [query, setQuery] = useState<string>(''); // 입력값 즉시 반영
+  const [searchKeyword, setSearchKeyword] = useState<string>(''); // 디바운스된 값
   const [reviewContents, setReviewContents] = useState<reviewContentType[]>([]);
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -71,7 +71,7 @@ const CourseReviewPage = () => {
   // 디바운스된 검색 함수
   const debouncedSearch = useMemo(
     () =>
-      debounce((keyword) => {
+      debounce(keyword => {
         setSearchKeyword(keyword);
         setPage(0);
         setReviewContents([]);
@@ -99,10 +99,10 @@ const CourseReviewPage = () => {
         page: page,
       });
 
-      setReviewContents((prev) => [...prev, ...data.data.contents]);
+      setReviewContents(prev => [...prev, ...data.data.contents]);
       setHasMore(data.data.contents.length > 0); // 추가 데이터가 없으면 false 설정
     } catch (err) {
-      alert("데이터를 불러오지 못했습니다");
+      alert('데이터를 불러오지 못했습니다');
       setHasMore(false);
       console.error(err);
     } finally {
@@ -117,9 +117,9 @@ const CourseReviewPage = () => {
 
       if (observer.current) observer.current.disconnect();
 
-      observer.current = new IntersectionObserver((entries) => {
+      observer.current = new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) {
-          setPage((prev) => prev + 1);
+          setPage(prev => prev + 1);
         }
       });
 
@@ -131,9 +131,9 @@ const CourseReviewPage = () => {
   useEffect(() => {
     setData({
       departments: selectedDepartment,
-      grade: { label: '', value: '' }
+      grade: { label: '', value: '' },
     });
-  }, [])
+  }, []);
 
   // `page` 상태가 변경될 때마다 `getReviewsContent` 호출
   useEffect(() => {
@@ -151,15 +151,15 @@ const CourseReviewPage = () => {
 
   return (
     <Suspense>
-      <Header>
-        <Header.BackButton />
-        <Header.Title>수강 후기</Header.Title>
-      </Header>
+      <Header
+        showBack
+        title="수강 후기"
+      />
       <DefaultBody hasHeader={1}>
         <div className="w-full">
           {/* 학과 선택 버튼 */}
           <div className="px-0 pt-[18px] overflow-hidden">
-            <div 
+            <div
               id="scrollbar-hidden"
               className="flex w-full justify-start overflow-x-scroll gap-[7px]"
             >
@@ -180,7 +180,7 @@ const CourseReviewPage = () => {
               className="w-full"
               placeholder="과목명, 교수명 입력"
               value={query}
-              onChange={(e) => onSearchKeywordChange(e.target.value)}
+              onChange={e => onSearchKeywordChange(e.target.value)}
             />
             <div className="flex mt-4">
               {SEARCHTYPES.map(({ label, value }: searchTypesType) => (
@@ -199,7 +199,15 @@ const CourseReviewPage = () => {
           {reviewContents.length > 0 ? (
             reviewContents.map(
               (
-                { lectureNm, _id, starRating, professor, participants, grade, semesters },
+                {
+                  lectureNm,
+                  _id,
+                  starRating,
+                  professor,
+                  participants,
+                  grade,
+                  semesters,
+                },
                 idx
               ) => (
                 <Subject
@@ -215,13 +223,16 @@ const CourseReviewPage = () => {
               )
             )
           ) : (
-            <p className="text-center mt-6 text-gray-500">
-              데이터가 없습니다.
-            </p>
+            <p className="text-center mt-6 text-gray-500">데이터가 없습니다.</p>
           )}
           <ReviewBtn />
           {/* 마지막 요소 감지 */}
-          {hasMore && <div className="h-10" ref={lastElementRef}></div>}
+          {hasMore && (
+            <div
+              className="h-10"
+              ref={lastElementRef}
+            ></div>
+          )}
 
           {/* 로딩 표시 */}
           {loading && <p className="text-center mt-4">Loading...</p>}

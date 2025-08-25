@@ -90,9 +90,7 @@ const SearchPage: FC = () => {
   return (
     <Suspense>
       <div className={'w-full h-full'}>
-        <Header>
-          <Header.Title>검색</Header.Title>
-        </Header>
+        <Header title="검색" />
         <DefaultBody hasHeader={1}>
           {/* 검색창 및 검색 버튼 */}
           <div className="relative flex items-center w-full">
