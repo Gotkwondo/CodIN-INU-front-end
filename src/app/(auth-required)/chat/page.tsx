@@ -150,9 +150,7 @@ export default function Chat() {
 
   return (
     <Suspense>
-      <Header>
-        <Header.Title>{`쪽지`}</Header.Title>
-      </Header>
+      <Header title="쪽지" />
       <DefaultBody hasHeader={1}>
         {/* 채팅방 목록이 비어 있을 경우 안내 메시지 표시 */}
         {chatList.length === 0 ? (

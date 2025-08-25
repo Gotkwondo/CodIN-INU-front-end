@@ -1,8 +1,9 @@
-import { Lecture } from "./page_interface";
+import { Lecture } from './page_interface';
 
 export interface roomItemProps {
-    RoomName: string;
-    LectureList: Lecture[];
-    RoomStatusList: number[];
-    BoundaryList: number[];
+  RoomName: string;
+  LectureList: Lecture[];
+  RoomStatusList: number[];
+  BoundaryList: number[];
+  summaryView?: boolean;
 }

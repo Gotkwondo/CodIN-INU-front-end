@@ -4,12 +4,16 @@ import React, { useEffect } from 'react';
 import '@/app/globals.css';
 import { PostReissue } from '@/api/user/postReissue';
 interface DefaultBodyProps {
-  hasHeader: number; // 0:헤더 없음, 1:헤더 있음
+  hasHeader?: number; // 0:헤더 없음, 1: 80px 헤더, 2: 130px 헤더
   children?: React.ReactNode;
 }
 
-const DefaultBody: React.FC<DefaultBodyProps> = ({ hasHeader, children }) => {
-  const pt = hasHeader ? ' pt-[80px]' : '';
+const DefaultBody: React.FC<DefaultBodyProps> = ({
+  hasHeader = 0,
+  children,
+}) => {
+  const pt =
+    hasHeader === 0 ? '' : hasHeader === 1 ? 'pt-[80px]' : 'pt-[160px]';
 
   // useEffect(()=>{
   //     const Postreissue = async (retryCount=0) =>

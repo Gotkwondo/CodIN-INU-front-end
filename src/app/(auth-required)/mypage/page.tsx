@@ -8,6 +8,7 @@ import { PostLogout } from '@/api/user/postLogout';
 import { DeleteUser } from '@/api/user/deleteUser';
 import WebModal, { WebModalHandles } from '@/components/modals/WebModal';
 import { fetchClient } from '@/api/clients/fetchClient';
+import Head from 'next/head';
 
 interface MenuItem {
   label: string;
@@ -124,9 +125,7 @@ export default function MyPage() {
 
   return (
     <Suspense>
-      <Header>
-        <Header.Title>마이페이지</Header.Title>
-      </Header>
+      <Header title="마이페이지" />
 
       <DefaultBody hasHeader={1}>
         <div className="flex items-center justify-between pt-[18px]">

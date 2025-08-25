@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 type useSearchedReviewContextType = {
   department?: string;
@@ -24,19 +24,20 @@ const useSearchedReviewContext = async ({
       `${process.env.NEXT_PUBLIC_API_URL}/lectures/search-review?${params}`,
       {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       }
     );
+    console.log(result.data);
     return result.data;
   } catch (error) {
     if (error.response) {
       const { status, data } = error.response;
-      console.error("Error response:", status, data);
+      console.error('Error response:', status, data);
     } else if (error.request) {
-      console.error("No response received:", error.request);
+      console.error('No response received:', error.request);
     } else {
-      console.error("Error setting up request:", error.message);
+      console.error('Error setting up request:', error.message);
     }
   }
 };
