@@ -1,30 +1,30 @@
-"use client";
+'use client';
 
-import { FC, useState, useEffect, useRef, Suspense } from "react";
-import { useParams } from "next/navigation";
-import Link from "next/link";
-import axios from "axios";
+import { FC, useState, useEffect, useRef, Suspense } from 'react';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
+import axios from 'axios';
 
-import BoardLayout from "@/components/Layout/BoardLayout"; // 기존에 만든 공용 컴포넌트
-import PostList from "@/components/board/PostList";
-import { Post } from "@/interfaces/Post";
-import Header from "@/components/Layout/header/Header";
-import DefaultBody from "@/components/Layout/Body/defaultBody";
+import BoardLayout from '@/components/Layout/BoardLayout'; // 기존에 만든 공용 컴포넌트
+import PostList from '@/components/board/PostList';
+import { Post } from '@/interfaces/Post';
+import Header from '@/components/Layout/header/Header';
+import DefaultBody from '@/components/Layout/Body/defaultBody';
 
 // board 파라미터와 실제 엔드포인트 매핑
 const endpointMap: Record<string, string> = {
-  posts: "/users/post",
-  likes: "/users/like",
-  comments: "/users/comment",
-  scraps: "/users/scrap",
+  posts: '/users/post',
+  likes: '/users/like',
+  comments: '/users/comment',
+  scraps: '/users/scrap',
 };
 
 // 헤더 제목 매핑
 const headerTitleMap: Record<string, string> = {
-  posts: "내가 작성한 글",
-  likes: "좋아요 한 글",
-  comments: "댓글을 작성한 글",
-  scraps: "스크랩 한 글",
+  posts: '내가 작성한 글',
+  likes: '좋아요 한 글',
+  comments: '댓글을 작성한 글',
+  scraps: '스크랩 한 글',
 };
 
 const MyBoardPage: FC = () => {
@@ -33,7 +33,7 @@ const MyBoardPage: FC = () => {
 
   // 매핑된 엔드포인트 가져오기
   const selectedEndpoint = endpointMap[board];
-  const headerTitle = headerTitleMap[board] || "마이페이지";
+  const headerTitle = headerTitleMap[board] || '마이페이지';
 
   if (!selectedEndpoint) {
     return (
@@ -56,22 +56,19 @@ const MyBoardPage: FC = () => {
     if (isFetching.current) return;
 
     try {
-     
-
       setIsLoading(true);
       isFetching.current = true;
 
       console.log(
-        "[MyBoardPage] API 호출:",
+        '[MyBoardPage] API 호출:',
         selectedEndpoint,
-        "page:",
+        'page:',
         pageNumber
       );
 
       const response = await axios.get(
         `https://codin.inu.ac.kr/api${selectedEndpoint}`,
         {
-         
           params: {
             page: pageNumber,
           },
@@ -82,20 +79,20 @@ const MyBoardPage: FC = () => {
         const contents = Array.isArray(response.data.data.contents)
           ? response.data.data.contents
           : [];
-        console.log("가져온 데이터:", contents);
+        console.log('가져온 데이터:', contents);
 
-        setPosts((prevPosts) => [...prevPosts, ...contents]);
+        setPosts(prevPosts => [...prevPosts, ...contents]);
         if (response.data.data.nextPage === -1) {
           setHasMore(false);
-          console.log("더 이상 데이터가 없습니다.");
+          console.log('더 이상 데이터가 없습니다.');
         }
       } else {
-        console.error("데이터 로드 실패:", response.data.message);
+        console.error('데이터 로드 실패:', response.data.message);
       }
     } catch (error: any) {
-      console.error("API 호출 오류:", error);
+      console.error('API 호출 오류:', error);
       if (error.status === 401) {
-        window.location.href = "/login";
+        window.location.href = '/login';
       }
     } finally {
       setIsLoading(false);
@@ -122,31 +119,34 @@ const MyBoardPage: FC = () => {
         hasMore &&
         !isFetching.current
       ) {
-        console.log("스크롤 이벤트: 다음 페이지 로드");
-        setPage((prevPage) => prevPage + 1);
+        console.log('스크롤 이벤트: 다음 페이지 로드');
+        setPage(prevPage => prevPage + 1);
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [isLoading, hasMore]);
 
   useEffect(() => {
     if (page > 0) {
-      console.log("페이지 변경: 새 데이터 요청, 페이지:", page);
+      console.log('페이지 변경: 새 데이터 요청, 페이지:', page);
       fetchPosts(page);
     }
   }, [page]);
 
   return (
     <>
-      <Header>
-        <Header.BackButton />
-        <Header.Title>{headerTitle}</Header.Title>
-      </Header>
-
+      <Header
+        title={headerTitle}
+        showBack
+      />
       <DefaultBody hasHeader={1}>
-        <PostList posts={posts} boardName={board} boardType="myboard" />
+        <PostList
+          posts={posts}
+          boardName={board}
+          boardType="myboard"
+        />
 
         {isLoading && (
           <div className="text-center mt-[24px] text-Mm text-sub">

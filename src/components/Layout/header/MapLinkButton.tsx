@@ -8,7 +8,7 @@ export default function MapLinkButton() {
 
   return (
     <button
-      onClick={handleMapLink}
+      // onClick={handleMapLink}
       className="text-gray-600 hover:text-gray-900 flex items-center"
       aria-label="뒤로가기"
     >

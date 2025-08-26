@@ -2,13 +2,19 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Polygon from '@public/icons/polygon.svg';
+import clsx from 'clsx';
 
 interface CustomSelectProps {
   onChange: (value: string) => void;
   options: string[][];
+  onlyText?: boolean;
 }
 
-export default function CustomSelect({ onChange, options }: CustomSelectProps) {
+export default function CustomSelect({
+  onChange,
+  options,
+  onlyText = false,
+}: CustomSelectProps) {
   const [selected, setSelected] = useState(options[0][0]);
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -32,20 +38,32 @@ export default function CustomSelect({ onChange, options }: CustomSelectProps) {
 
   return (
     <div
-      className="
-      flex justify-center relative min-w-[117px] max-w-[117px] w-fit h-[35px]
-      break-keep whitespace-normal
-      shadow-[0px_6px_7.2px_rgba(182,182,182,0.30)] rounded-[14px] bg-[#F9F9F9]"
+      className={clsx(
+        'flex justify-center relative w-fit break-keep whitespace-normal',
+        !onlyText &&
+          'shadow-[0px_6px_7.2px_rgba(182,182,182,0.30)] h-[35px] rounded-[14px] bg-[#F9F9F9] min-w-[117px] max-w-[117px]'
+      )}
       ref={ref}
     >
       <button
         onClick={() => setIsOpen(prev => !prev)}
-        className="flex items-center gap-[4px] pl-[10px] pr-[12px] text-sub text-[12px]"
+        className={clsx(
+          'flex items-center gap-[4px] text-sub text-[12px]',
+          !onlyText && 'pl-[10px] pr-[12px]'
+        )}
       >
-        <div className="flex justify-center items-end w-[11px] h-[11px]">
-          <Polygon />
-        </div>
-        <span>{selected}</span>
+        {!onlyText ? (
+          <>
+            <div className="flex justify-center items-end w-[11px] h-[11px]">
+              <Polygon />
+            </div>
+            <span>{selected}</span>
+          </>
+        ) : (
+          <div className="text-active text-[16px] font-bold">
+            <span>{selected}</span>
+          </div>
+        )}
       </button>
 
       {isOpen && (

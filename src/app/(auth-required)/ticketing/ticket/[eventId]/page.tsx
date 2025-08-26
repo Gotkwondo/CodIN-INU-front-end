@@ -30,23 +30,29 @@ export default function SnackDetail() {
 
   return (
     <Suspense>
-      <Header>
-        <Header.BackButton onClick={() => router.back()} />
-        <Header.Title>간식나눔 교환권</Header.Title>
-      </Header>
+      <Header
+        title="간식나눔 교환권"
+        showBack
+      />
 
       <DefaultBody hasHeader={1}>
         <div className="w-full flex justify-center items-center mt-[15%] px-[40px]">
           <img src="/icons/ticketing/ticket.svg" />
-          <p className="absolute text-[40px] text-[#0D99FF] mt-[-30px] font-extrabold">no. {dummyData.num}</p>
+          <p className="absolute text-[40px] text-[#0D99FF] mt-[-30px] font-extrabold">
+            no. {dummyData.num}
+          </p>
         </div>
 
         <div>
           <p className="font-bold text-[14px] text-center text-[#0D99FF]">
             수령장소: {dummyData.location}
-            <span className="text-[#0D99FF] ml-1 mt-[-10px] font-semibold text-[18px]">•</span>
+            <span className="text-[#0D99FF] ml-1 mt-[-10px] font-semibold text-[18px]">
+              •
+            </span>
           </p>
-          <p className="font-bold text-[12px] text-center text-black">관리자에게 이 화면을 보여준 후 서명하세요</p>
+          <p className="font-bold text-[12px] text-center text-black">
+            관리자에게 이 화면을 보여준 후 서명하세요
+          </p>
           <p className="text-[12px] text-center text-black/50 font-normal mt-[13px]">
             교환권은 마이페이지에서도 확인 가능해요
           </p>
@@ -54,7 +60,8 @@ export default function SnackDetail() {
 
         <div className="fixed bottom-0 left-0 w-full px-4 bg-white pb-[35px] flex flex-col items-center">
           <div className="text-[11px] text-center text-[#FF2525] font-normal">
-            {formatDateTimeWithDay(dummyData.date)}까지 오지 않으면 티켓이 자동 취소돼요.
+            {formatDateTimeWithDay(dummyData.date)}까지 오지 않으면 티켓이 자동
+            취소돼요.
             <br /> 그 전에 꼭 방문해 주세요!
           </div>
 
@@ -67,7 +74,7 @@ export default function SnackDetail() {
 
           <button
             className="mt-3 w-full h-[50px] bg-[#EBF0F7] text-[#808080] rounded-[5px] text-[18px] font-medium max-w-[500px]"
-            onClick={()=>setShowCancelModal(true)}
+            onClick={() => setShowCancelModal(true)}
           >
             티켓팅 취소하기
           </button>
@@ -80,12 +87,12 @@ export default function SnackDetail() {
           />
         )}
 
-         {showCancelModal && (
-            <CancelModal
-              onClose={() => setShowCancelModal(false)}
-              eventId={String(eventId)}
-            />
-          )}
+        {showCancelModal && (
+          <CancelModal
+            onClose={() => setShowCancelModal(false)}
+            eventId={String(eventId)}
+          />
+        )}
       </DefaultBody>
     </Suspense>
   );

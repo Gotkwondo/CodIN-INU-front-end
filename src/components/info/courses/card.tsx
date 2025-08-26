@@ -68,7 +68,7 @@ const CourseCard = forwardRef<HTMLDivElement, Props>(
         className="relative"
       >
         <Link
-          href={`/main/info/courses/${id}`}
+          href={`/info/courses/${id}`}
           className="flex items-center aspect-square shadow-05134 rounded-[15px]"
         >
           <div className="relative flex w-full px-[14px] py-[25px] justify-between items-start">

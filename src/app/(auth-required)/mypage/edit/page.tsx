@@ -1,19 +1,19 @@
-"use client";
-import React, { useState, useEffect, Suspense } from "react";
-import axios from "axios";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import Header from "@/components/Layout/header/Header";
-import DefaultBody from "@/components/Layout/Body/defaultBody";
-import CommonBtn from "@/components/buttons/commonBtn";
+'use client';
+import React, { useState, useEffect, Suspense } from 'react';
+import axios from 'axios';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import Header from '@/components/Layout/header/Header';
+import DefaultBody from '@/components/Layout/Body/defaultBody';
+import CommonBtn from '@/components/buttons/commonBtn';
 
 const UserInfoEditPage = () => {
   const [userInfo, setUserInfo] = useState({
-    name: "",
-    nickname: "",
-    department: "",
-    profileImageUrl: "",
-    email: "",
+    name: '',
+    nickname: '',
+    department: '',
+    profileImageUrl: '',
+    email: '',
   });
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
@@ -26,25 +26,21 @@ const UserInfoEditPage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-
-
-        const response = await axios.get("https://codin.inu.ac.kr/api/users", {
-          headers: {
-
-          },
+        const response = await axios.get('https://codin.inu.ac.kr/api/users', {
+          headers: {},
         });
 
         const userData = response.data.data;
-        console.log("User Data:", userData);
+        console.log('User Data:', userData);
         setUserInfo({
           name: userData.name,
           nickname: userData.nickname,
           department: userData.department,
-          profileImageUrl: userData.profileImageUrl || "",
-          email: userData.email || "", // 이메일 필드를 포함시킴
+          profileImageUrl: userData.profileImageUrl || '',
+          email: userData.email || '', // 이메일 필드를 포함시킴
         });
       } catch (error) {
-        setMessage("유저 정보를 가져오는 중 오류가 발생했습니다.");
+        setMessage('유저 정보를 가져오는 중 오류가 발생했습니다.');
         console.error(error);
       }
     };
@@ -65,11 +61,17 @@ const UserInfoEditPage = () => {
       const file = e.target.files[0];
 
       // 허용된 이미지 타입 리스트
-      const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif", "image/webp"];
+      const allowedTypes = [
+        'image/png',
+        'image/jpeg',
+        'image/jpg',
+        'image/gif',
+        'image/webp',
+      ];
 
       if (!allowedTypes.includes(file.type)) {
-        alert("이미지 파일만 업로드할 수 있습니다.");
-        e.target.value = ""; // 선택한 파일 초기화
+        alert('이미지 파일만 업로드할 수 있습니다.');
+        e.target.value = ''; // 선택한 파일 초기화
         return;
       }
 
@@ -83,63 +85,59 @@ const UserInfoEditPage = () => {
 
     // 유저 정보 수정
     try {
-
-
       const userResponse = await axios.put(
-        "https://codin.inu.ac.kr/api/users",
+        'https://codin.inu.ac.kr/api/users',
         userInfo,
         {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         }
       );
-      console.log("User Info Updated:", userResponse.data);
+      console.log('User Info Updated:', userResponse.data);
     } catch (error) {
-      setMessage("유저 정보 수정 중 오류가 발생했습니다.");
+      setMessage('유저 정보 수정 중 오류가 발생했습니다.');
       console.error(error);
     }
 
     // 프로필 사진 수정
     if (profileImage) {
       const formData = new FormData();
-      formData.append("postImages", profileImage);
+      formData.append('postImages', profileImage);
 
       try {
-
         const imageResponse = await axios.put(
-          "https://codin.inu.ac.kr/api/users/profile",
+          'https://codin.inu.ac.kr/api/users/profile',
           formData,
           {
             headers: {
-
-              "Content-Type": "multipart/form-data",
+              'Content-Type': 'multipart/form-data',
             },
           }
         );
-        console.log("Profile Image Updated:", imageResponse.data);
+        console.log('Profile Image Updated:', imageResponse.data);
       } catch (error) {
-        setMessage("프로필 사진 수정 중 오류가 발생했습니다.");
+        setMessage('프로필 사진 수정 중 오류가 발생했습니다.');
         console.error(error);
       }
     }
 
     setLoading(false);
     setEditing(false);
-    setMessage("수정이 완료되었습니다.");
+    setMessage('수정이 완료되었습니다.');
   };
 
   // 뒤로 가기 버튼 클릭시 mypage로 이동
   const handleBack = () => {
-    router.push("/mypage");
+    router.push('/mypage');
   };
 
   return (
     <Suspense>
-      <Header>
-        <Header.BackButton />
-        <Header.Title>유저 정보 수정</Header.Title>
-      </Header>
+      <Header
+        title="유저 정보 수정"
+        showBack
+      />
       <DefaultBody hasHeader={1}>
         {/* 프로필 사진 수정 */}
         <div className="flex flex-col items-center mt-[18px]">
@@ -163,13 +161,12 @@ const UserInfoEditPage = () => {
             프로필 사진 변경
           </label>
           <input
-              type="file"
-              id="profileImage"
-              accept="image/png, image/jpeg, image/jpg, image/gif, image/webp"
-              onChange={handleFileChange}
-              className="hidden"
+            type="file"
+            id="profileImage"
+            accept="image/png, image/jpeg, image/jpg, image/gif, image/webp"
+            onChange={handleFileChange}
+            className="hidden"
           />
-
         </div>
 
         {/* 이름, 닉네임, 학과 수정 박스 */}
@@ -239,7 +236,11 @@ const UserInfoEditPage = () => {
 
           {/* 수정 모드로 전환 */}
           {editing ? (
-            <CommonBtn text="수정완료" status={1} type="submit" />
+            <CommonBtn
+              text="수정완료"
+              status={1}
+              type="submit"
+            />
           ) : (
             <div className="flex flex-col w-full items-start gap-[8px]">
               {message && <p className="text-Mm text-active">{message}</p>}
