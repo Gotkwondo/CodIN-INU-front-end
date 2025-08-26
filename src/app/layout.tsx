@@ -5,6 +5,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import type { Viewport } from 'next';
 import ReviewProvider from '@/context/WriteReviewContext';
 import Script from 'next/script';
+import { notoSansKR } from '@public/fonts';
 
 const CLIENT_ID = process.env.NAVER_MAP_CLIENT_ID;
 
@@ -20,7 +21,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html
       id="scrollbar-hidden"
       lang="ko"
-      className="w-full h-full relative"
+      className={`w-full h-full relative ${notoSansKR.variable}`}
       suppressHydrationWarning
     >
       <head>

@@ -11,7 +11,6 @@ export async function fetchClient<Response = any>(
   path: string,
   init?: FetchOptions
 ): Promise<Response> {
-  
   const url = `${apiUrl}${path}`;
   const options: FetchOptions = {
     ...init,
@@ -26,7 +25,7 @@ export async function fetchClient<Response = any>(
   let response = await fetch(url, options);
 
   // 401 처리
-  if (response.status === 401 || response.status === 403 && !init?._retry) {
+  if (response.status === 401 || (response.status === 403 && !init?._retry)) {
     try {
       console.log('🔄 401 Unauthorized - 토큰 재발급 시도 중...');
       await PostReissue();
@@ -57,7 +56,8 @@ export async function fetchClient<Response = any>(
 
   // JSON이면 파싱
   if (contentType.includes('application/json')) {
-    return JSON.parse(text) as Response;
+    const result = JSON.parse(text) as Response;
+    return result;
   }
 
   // 그 외 타입(text/plain 등)은 그대로 반환

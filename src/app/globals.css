@@ -14,13 +14,6 @@
   }
 }
 
-@font-face {
-  font-family: 'NotoSansKR';
-  src: url('/fonts/NotoSansKR.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
 @layer base {
   body {
     background: var(--background);
@@ -103,19 +96,17 @@
 
   .defaultInput {
     width: 100%;
-    height: 50px;
-    color: #a9adae;
-    border: 1px solid #d4d4d4;
+    height: 47px;
+    color: #aeaeae;
+    box-shadow: 0px 5px 13.3px 4px rgba(212, 212, 212, 0.59);
     box-sizing: border-box;
-    border-radius: 5px;
+    border-radius: 15px;
     padding: 0 15px;
     @apply text-Mm;
   }
   .defaultInput:focus {
     outline: none;
-    border: 1px solid #333333;
-    box-shadow: none;
-    color: #333333;
+    color: #111111;
     @apply text-Mm;
   }
 
@@ -130,7 +121,8 @@
 
   /* 키프레임 애니메이션 */
   @keyframes bounceUpDown {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0);
     }
     50% {
@@ -162,4 +154,11 @@ body {
   -ms-user-select: none; /* IE10+/Edge */
   user-select: none; /* Standard */
   touch-action: manipulation; /* 터치 이벤트 제어 */
+}
+
+input:focus {
+  outline: none;
+}
+textarea:focus {
+  outline: none;
 }

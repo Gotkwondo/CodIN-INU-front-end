@@ -41,7 +41,7 @@ export default function BottomNav({ activeIndex = 0 }: BottomNavProps) {
         </li>
         <li className="flex-1 text-center">
           <Link
-            href="/search"
+            href="/boards/top3"
             className="flex justify-center items-center h-full"
           >
             <img
