@@ -13,6 +13,13 @@ import ReloadButton from './ReloadButton';
 
 type NavItem = { title: string; path: string };
 
+interface DownloadButtonProps {
+  endpoint: string; // 백엔드 API 경로 (예: "/files/report")
+  filename?: string; // 저장할 파일 이름
+  method?: 'GET' | 'POST';
+  body?: any; // POST 시 보낼 데이터
+}
+
 interface HeaderProps {
   title?: string;
   showBack?: boolean;
@@ -23,7 +30,7 @@ interface HeaderProps {
   searchOnClick?: () => void;
   MenuItems?: () => React.ReactNode;
   showNotice?: boolean;
-  showDownload?: boolean;
+  showDownload?: DownloadButtonProps;
   showReload?: boolean;
 
   topNav?: NavItem[];
@@ -41,7 +48,7 @@ const Header: React.FC<HeaderProps> = ({
   searchOnClick = () => {},
   MenuItems,
   showNotice = false,
-  showDownload = false,
+  showDownload,
   showReload = false,
   topNav = undefined,
   topBarSetCenter = false,
@@ -81,7 +88,14 @@ const Header: React.FC<HeaderProps> = ({
               </Menu>
             ) : null}
             {showNotice ? <Notice /> : null}
-            {/* {showDownload ? <DownloadButton /> : null} */}
+            {showDownload ? (
+              <DownloadButton
+                endpoint={showDownload.endpoint}
+                filename={showDownload.filename}
+                method={showDownload.method}
+                body={showDownload.body}
+              />
+            ) : null}
             {showReload ? <ReloadButton /> : null}
           </div>
         </div>

@@ -1,23 +1,22 @@
-"use client";
-import DefaultBody from "@/components/Layout/Body/defaultBody";
-import Header from "@/components/Layout/header/Header";
-import {Suspense} from "react";
-import BottomNav from "@/components/Layout/BottomNav/BottomNav";
+'use client';
+import DefaultBody from '@/components/Layout/Body/defaultBody';
+import Header from '@/components/Layout/header/Header';
+import { Suspense } from 'react';
+import BottomNav from '@/components/Layout/BottomNav/BottomNav';
 
-const Page =()=>{
-    // backLink 정보가 있으면 해당 URL로, 없으면 기본 router.back() 실행
+const Page = () => {
+  // backLink 정보가 있으면 해당 URL로, 없으면 기본 router.back() 실행
 
+  return (
+    <Suspense>
+      <Header
+        title="이용 약관"
+        showBack
+      />
 
-    return (
-        <Suspense>
-            <Header>
-                <Header.BackButton></Header.BackButton>
-                    <Header.Title> 이용 약관 </Header.Title>
-            </Header>
-
-            <DefaultBody hasHeader={1}>
-                <div className="whitespace-pre-wrap">
-                    {`코딘 개인정보 처리방침
+      <DefaultBody hasHeader={1}>
+        <div className="whitespace-pre-wrap">
+          {`코딘 개인정보 처리방침
 
 📧 문의사항: inu.codin@gmail.com
 
@@ -116,14 +115,12 @@ const Page =()=>{
 본 약관은 2025년 3월 1일부터 시행됩니다.
 
 문의: inu.codin@gmail.com`}
+        </div>
+      </DefaultBody>
 
-
-</div>
-            </DefaultBody>
-
-            <BottomNav activeIndex={3} />
-        </Suspense>
-    )
-}
+      <BottomNav activeIndex={3} />
+    </Suspense>
+  );
+};
 
 export default Page;

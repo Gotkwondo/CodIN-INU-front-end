@@ -36,7 +36,9 @@ export default function TicketingResultInner() {
     (async () => {
       try {
         setIsLoading(true);
-        const res = await fetchClient(`/ticketing/event/participation/${eventId}`);
+        const res = await fetchClient(
+          `/ticketing/event/participation/${eventId}`
+        );
         if (!ignore) setTicket(res.data);
       } catch (err) {
         console.error(err);
@@ -44,7 +46,9 @@ export default function TicketingResultInner() {
         if (!ignore) setIsLoading(false);
       }
     })();
-    return () => { ignore = true; };
+    return () => {
+      ignore = true;
+    };
   }, [eventId]);
 
   if (!status || !eventId) return null;
@@ -55,10 +59,10 @@ export default function TicketingResultInner() {
     case 'success':
       return (
         <Suspense>
-          <Header>
-            <Header.BackButton onClick={() => router.back()} />
-            <Header.Title>간식나눔 교환권</Header.Title>
-          </Header>
+          <Header
+            title="간식나눔 교환권"
+            showBack
+          />
 
           <DefaultBody hasHeader={1}>
             <div className="w-full flex justify-center items-center mt-[15%] px-[40px]">
@@ -73,9 +77,13 @@ export default function TicketingResultInner() {
                 <div>
                   <p className="font-bold text-[14px] text-center text-[#0D99FF]">
                     수령장소: {ticket.locationInfo}
-                    <span className="text-[#0D99FF] ml-1 mt-[-10px] font-semibold text-[18px]">•</span>
+                    <span className="text-[#0D99FF] ml-1 mt-[-10px] font-semibold text-[18px]">
+                      •
+                    </span>
                   </p>
-                  <p className="font-bold text-[12px] text-center text-black">관리자에게 이 화면을 보여준 후 서명하세요</p>
+                  <p className="font-bold text-[12px] text-center text-black">
+                    관리자에게 이 화면을 보여준 후 서명하세요
+                  </p>
                   <p className="text-[12px] text-center text-black/50 font-normal mt-[13px]">
                     교환권은 마이페이지에서도 확인 가능해요
                   </p>
@@ -83,7 +91,8 @@ export default function TicketingResultInner() {
 
                 <div className="fixed bottom-0 left-0 w-full px-4 bg-white pb-[35px] flex flex-col items-center">
                   <div className="text-[11px] text-center text-[#FF2525] font-normal">
-                    {formatDateTimeWithDay(ticket.eventEndTime)}까지 오지 않으면 티켓이 자동 취소돼요.
+                    {formatDateTimeWithDay(ticket.eventEndTime)}까지 오지 않으면
+                    티켓이 자동 취소돼요.
                     <br /> 그 전에 꼭 방문해 주세요!
                   </div>
 
@@ -107,12 +116,20 @@ export default function TicketingResultInner() {
             {ticket?.status === 'COMPLETED' && (
               <div className="flex flex-col">
                 <p className="font-bold text-[14px] text-center text-[#0D99FF]">
-                  CodIN<span className="text-black">과 함께 맛있는 시간 보내세요!</span>
-                  <span className="text-[#0D99FF] ml-1 mt-[-10px] font-semibold text-[18px]">•</span>
+                  CodIN
+                  <span className="text-black">
+                    과 함께 맛있는 시간 보내세요!
+                  </span>
+                  <span className="text-[#0D99FF] ml-1 mt-[-10px] font-semibold text-[18px]">
+                    •
+                  </span>
                 </p>
 
                 <div className="w-full h-[200px] bg-white shadow-[0px_5px_13.3px_4px_rgba(212,212,212,0.59)] rounded-[15px] flex justify-center items-center px-4 mt-[72px]">
-                  <img src={ticket.signatureImgUrl} className="w-full max-h-[200px]" />
+                  <img
+                    src={ticket.signatureImgUrl}
+                    className="w-full max-h-[200px]"
+                  />
                 </div>
                 <p className="text-center text-[12px] text-black/50 mt-[19px] mb-4">
                   수령 확인 및 본인 확인 용도로 사용됩니다.
@@ -121,10 +138,16 @@ export default function TicketingResultInner() {
             )}
 
             {showSignModal && (
-              <SignModal onClose={() => setShowSignModal(false)} eventId={String(eventId)} />
+              <SignModal
+                onClose={() => setShowSignModal(false)}
+                eventId={String(eventId)}
+              />
             )}
             {showCancelModal && (
-              <CancelModal onClose={() => setShowCancelModal(false)} eventId={String(eventId)} />
+              <CancelModal
+                onClose={() => setShowCancelModal(false)}
+                eventId={String(eventId)}
+              />
             )}
           </DefaultBody>
         </Suspense>
@@ -151,7 +174,8 @@ export default function TicketingResultInner() {
           <div className="flex flex-col justify-center items-center w/full h-screen">
             <img src="/icons/ticketing/errEmo.svg" />
             <div className="text-balck text-[16px] font-bold text-center mt-4 mb-[45px]">
-              일시적인 오류로 서비스 접속에 실패했습니다. <br /> 잠시 후 다시 시도해주세요.
+              일시적인 오류로 서비스 접속에 실패했습니다. <br /> 잠시 후 다시
+              시도해주세요.
             </div>
             <button className="w-[220px] h-[50px] bg-[#0D99FF] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] rounded-full text-white">
               다시 시도하기
@@ -161,6 +185,10 @@ export default function TicketingResultInner() {
       );
 
     default:
-      return <Suspense><div>알 수 없는 상태입니다.</div></Suspense>;
+      return (
+        <Suspense>
+          <div>알 수 없는 상태입니다.</div>
+        </Suspense>
+      );
   }
 }

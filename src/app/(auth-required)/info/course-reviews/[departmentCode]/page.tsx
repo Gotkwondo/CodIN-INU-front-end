@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useParams } from "next/navigation";
-import { Suspense, useContext, useEffect, useState } from "react";
-import Header from "@/components/Layout/header/Header";
-import DefaultBody from "@/components/Layout/Body/defaultBody";
-import BottomNav from "@/components/Layout/BottomNav/BottomNav";
-import { DepartmentReviewComponent } from "@/components/Review/DepartmentReview";
-import { useDepartmentRatingInfoContext } from "@/api/review/useDepartmentRatingInfoContext";
-import { ReviewComment } from "@/components/Review/ReviewComment";
-import { useLectureReviewsContext } from "@/api/review/useLectureReviewsContext";
-import { ReviewBtn } from "@/components/Review/ReviewBtn";
+import { useParams } from 'next/navigation';
+import { Suspense, useContext, useEffect, useState } from 'react';
+import Header from '@/components/Layout/header/Header';
+import DefaultBody from '@/components/Layout/Body/defaultBody';
+import BottomNav from '@/components/Layout/BottomNav/BottomNav';
+import { DepartmentReviewComponent } from '@/components/Review/DepartmentReview';
+import { useDepartmentRatingInfoContext } from '@/api/review/useDepartmentRatingInfoContext';
+import { ReviewComment } from '@/components/Review/ReviewComment';
+import { useLectureReviewsContext } from '@/api/review/useLectureReviewsContext';
+import { ReviewBtn } from '@/components/Review/ReviewBtn';
 import { ReviewContext } from '@/context/WriteReviewContext';
 
 const DepartmentReview = () => {
@@ -37,8 +37,8 @@ const DepartmentReview = () => {
       });
       setEmotion(data.emotion);
     } catch (error) {
-      console.error("과목 �� 후기 조회 실��", error);
-      alert("과목 �� 후기 조회 실��");
+      console.error('과목 �� 후기 조회 실��', error);
+      alert('과목 �� 후기 조회 실��');
     } finally {
       return;
     }
@@ -52,8 +52,8 @@ const DepartmentReview = () => {
       const data = response.data;
       setReviewList(data.contents);
     } catch (error) {
-      console.error("과목 �� 후기 조회 실��", error);
-      alert("과목 �� 후기 조회 실��");
+      console.error('과목 �� 후기 조회 실��', error);
+      alert('과목 �� 후기 조회 실��');
     } finally {
       return;
     }
@@ -85,10 +85,10 @@ const DepartmentReview = () => {
 
   return (
     <Suspense>
-      <Header>
-        <Header.BackButton />
-        <Header.Title>과목 별 후기</Header.Title>
-      </Header>
+      <Header
+        title="과목 별 후기"
+        showBack
+      />
       <DefaultBody hasHeader={1}>
         {lectureInfo && emotion && (
           <DepartmentReviewComponent
