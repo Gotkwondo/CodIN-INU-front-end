@@ -67,8 +67,8 @@ export default function DeptOpinionPage() {
             placeholder="당신의 의견을 들려주세요"
             onChange={handleVoice}
             className={clsx(
-              'px-[18px] py-[10px] text-[12px] font-normal text-sub shadow-05134 bg-[#F9F9F9] rounded-[8px] w-full',
-              'placeholder:text-center placeholder:leading-[30px] mt-[10px] mb-[15px] resize-none h-[40px]'
+              'px-[18px] py-[10px] text-[12px] font-normal text-sub shadow-05134 bg-[#F9F9F9] rounded-[14px] w-full',
+              'placeholder:text-center placeholder:leading-[36px] mt-[10px] mb-[15px] resize-none h-[56px]'
             )}
           />
           <button

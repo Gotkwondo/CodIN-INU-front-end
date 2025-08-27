@@ -58,13 +58,12 @@ const menuItems = [
   },
   {
     label: '비교과',
-    // href: '/boards/extracurricular',
-    href: '/#',
+    href: '/boards/extracurricular',
     icon: Extra as SvgIcon,
   },
   {
     label: '간식나눔 티켓팅',
-    href: '/boards/extracurricular',
+    href: '/ticketing',
     icon: Ticket as SvgIcon,
   },
 ] satisfies MenuItem[];
@@ -91,6 +90,7 @@ const MainPage: FC = () => {
     null,
   ]);
   const [floor, setFloor] = useState<number>(1);
+
   // const [hasNewAlarm, setHasNewAlarm] = useState(false); // 알람 여부
 
   // const handleOpenModal = () => setIsModalOpen(true);
@@ -226,9 +226,12 @@ const MainPage: FC = () => {
               내 아이디어로 학교를 바꾸자!
             </span>
           </div>
-          <button className="px-[14px] py-[7px] text-[11px] bg-main text-white rounded-[20px]">
+          <Link
+            href={'/dept-boards/opinion'}
+            className="px-[14px] py-[7px] text-[11px] bg-main text-white rounded-[20px]"
+          >
             익명의 소리함 바로가기
-          </button>
+          </Link>
         </div>
         <div className="absolute bottom-[25px] right-[14px]">
           <WorkingTogether />
