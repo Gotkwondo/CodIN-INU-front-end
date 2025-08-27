@@ -208,7 +208,7 @@ export default function FaqDetailPage() {
               />
               <div className="text-[12px] text-normal">
                 <p className="font-medium">{notice.nickname}</p>
-                <p className="text-sub mt-[4px]">
+                <p className="mt-[4px] text-active">
                   {formatDateTime(notice.createdAt)}
                 </p>
               </div>

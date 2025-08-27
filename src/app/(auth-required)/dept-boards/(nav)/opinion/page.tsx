@@ -1,5 +1,7 @@
 'use client';
 
+import Sad from '@public/icons/sad.svg';
+
 import { fetchClient } from '@/api/clients/fetchClient';
 import ShadowBox from '@/components/common/shadowBox';
 import Title from '@/components/common/title';
@@ -32,6 +34,41 @@ export default function DeptOpinionPage() {
     handleResizeHeight();
   };
 
+  const uploadVoice = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (myVoice.length === 0) {
+        alert('의견을 입력해주세요');
+        return;
+      }
+      // Upload voice to the server (dummy endpoint used here)
+      await fetchClient('/voice-box', {
+        method: 'POST',
+        body: JSON.stringify({
+          department: dept,
+          content: myVoice,
+        }),
+      });
+      alert('의견이 성공적으로 전송되었습니다.');
+      setMyVoice('');
+      if (textarea.current) {
+        textarea.current.value = '';
+        textarea.current.style.height = 'auto'; // Reset height
+      }
+      // Optionally, refresh the list of voices
+      setPage(0); // Reset to first page
+      // Fetch updated opinions
+      const response = await fetchClient(
+        `/voice-box?department=${dept}&page=0`
+      );
+      const data: Opinion = response.data;
+      setVoices(data.contents);
+    } catch (error) {
+      console.error('Error uploading voice:', error);
+      alert('의견 전송에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
+
   useEffect(() => {
     const fetchOpinions = async () => {
       try {
@@ -59,7 +96,7 @@ export default function DeptOpinionPage() {
           </Title>
         </h2>
         <form
-          // action=""
+          onSubmit={uploadVoice}
           className="flex flex-col items-center"
         >
           <textarea
@@ -74,21 +111,45 @@ export default function DeptOpinionPage() {
           <button
             type="submit"
             className={clsx(
-              'py-[7px] px-[21px] text-[14px] font-medium text-sub text-center rounded-[20px]',
-              myVoice.length > 0 ? 'bg-main' : 'bg-sub'
+              'py-[7px] px-[21px] text-[14px] font-medium  text-center rounded-[20px]',
+              myVoice.length > 0 ? 'bg-main text-white' : 'bg-sub text-sub'
             )}
           >
             전송하기
           </button>
         </form>
       </ShadowBox>
-      {voices.length > 0 ? (
-        ''
-      ) : (
-        <div className="text-center mt-[20px] text-sub">
-          목소리를 찾을 수 없어요
-        </div>
-      )}
+      <div className="relative mt-[22px]">
+        {voices.length > 0 ? (
+          ''
+        ) : (
+          <ShadowBox className="px-[15px] pt-[21px] pb-[24px]">
+            <div className="font-bold">
+              <div className="text-[12px] text-active">
+                {null}월 학우들의 목소리
+              </div>
+              <div className="mt-[6px] text-[14px]">
+                학회비 낸 사람은 얼마나 이득인가요? (dummy)
+              </div>
+            </div>
+            <hr className="mt-[15px]" />
+            <div className="flex flex-col items-center">
+              <div className="text-center text-[40px]">🤔</div>
+              <div className="text-Mm">100% 이득입니다</div>
+              <div className="flex justify-between gap-[19px] mt-[15px]">
+                <div className="bg-main text-white rounded-[20px] px-[14px] py-[7px] text-Mm">
+                  <span>공감해요</span>
+                  <span className="pl-[4px]">0</span>
+                </div>
+                <div className="bg-main text-white rounded-[20px] px-[14px] py-[7px] text-Mm">
+                  <span>아쉬워요</span>
+                  <span className="pl-[4px]">0</span>
+                </div>
+              </div>
+            </div>
+          </ShadowBox>
+        )}
+      </div>
     </>
   );
 }

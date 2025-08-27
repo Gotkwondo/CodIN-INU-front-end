@@ -227,7 +227,7 @@ const MainPage: FC = () => {
             </span>
           </div>
           <Link
-            href={'/dept-boards/opinion'}
+            href={'/main/dept/#ananymous-voice-box'}
             className="px-[14px] py-[7px] text-[11px] bg-main text-white rounded-[20px]"
           >
             익명의 소리함 바로가기

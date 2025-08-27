@@ -3,14 +3,15 @@
 import { fetchClient } from '@/api/clients/fetchClient';
 import ShadowBox from '@/components/common/shadowBox';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { NoticeData } from '../type';
+import Title from '@/components/common/title';
 
-function timeAgo(createdAt) {
+function timeAgo(createdAt: string | number | Date) {
   const now = new Date();
   const created = new Date(createdAt);
-  const diffMs = now.getTime() - created.getTime(); // 밀리초 차이
+  const diffMs = now.getTime() - created.getTime();
   const diffMinutes = Math.floor(diffMs / 1000 / 60);
 
   if (diffMinutes < 1) return '방금 전';
@@ -34,24 +35,83 @@ export default function DeptNoticePage() {
   const dept = param.split('?dept=')[1] || 'COMPUTER_SCI';
 
   const [notices, setNotices] = useState<NoticeData[]>([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState<number>(0); // 첫 페이지: 0
+  const [next, setNext] = useState<number>(0); // 다음 페이지 번호(응답 기준)
+  const [loading, setLoading] = useState(false);
 
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+
+  // dept 변경 시 초기화
   useEffect(() => {
-    const fetchNoticeData = async () => {
+    setNotices([]);
+    setPage(0);
+    setNext(0);
+  }, [dept]);
+
+  // 페이지 로드
+  useEffect(() => {
+    let aborted = false;
+    const controller = new AbortController();
+
+    const load = async () => {
+      if (loading) return;
+      setLoading(true);
       try {
-        const response = await fetchClient(
-          `/notice/category?department=${dept}&page=${page}`
+        const res = await fetchClient(
+          `/notice/category?department=${dept}&page=${page}`,
+          { signal: controller.signal as any }
         );
-        const data: NoticeData[] = response.data.contents;
-        console.log(data);
-        setNotices(data);
-      } catch (error) {
-        console.error('Error fetching FAQs:', error);
+
+        // fetchClient가 응답의 data.data를 풀어서 넘긴다고 가정: { contents, lastPage, nextPage }
+        const {
+          contents,
+          nextPage,
+        }: { contents: NoticeData[]; lastPage: number; nextPage: number } =
+          res.data ?? { contents: [], lastPage: 0, nextPage: -1 };
+
+        setNotices(prev => {
+          const seen = new Set(prev.map(it => it._id));
+          const add = (contents ?? []).filter(it => !seen.has(it._id));
+          return prev.concat(add);
+        });
+
+        setNext(typeof nextPage === 'number' ? nextPage : -1);
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') {
+          console.error('Error fetching notices:', e);
+        }
+      } finally {
+        if (!aborted) setLoading(false);
       }
     };
 
-    fetchNoticeData();
-  }, []);
+    load();
+
+    return () => {
+      aborted = true;
+      controller.abort();
+    };
+  }, [dept, page /* eslint-disable-line react-hooks/exhaustive-deps */]);
+
+  // 무한 스크롤 옵저버
+  useEffect(() => {
+    const el = loaderRef.current;
+    if (!el) return;
+
+    const io = new IntersectionObserver(
+      entries => {
+        const first = entries[0];
+        if (!first.isIntersecting) return;
+        if (loading) return;
+        if (next === -1) return; // 더 없음
+        setPage(next); // 다음 페이지는 API가 준 nextPage로 이동
+      },
+      { rootMargin: '200px 0px' }
+    );
+
+    io.observe(el);
+    return () => io.disconnect();
+  }, [loading, next]);
 
   return (
     <>
@@ -59,12 +119,12 @@ export default function DeptNoticePage() {
         notices.length > 0 &&
         notices.map((item, index) => (
           <Link
-            key={index}
+            key={item._id ?? index}
             href={`/dept-boards/q/${item._id}?dept=${dept}`}
             className="mb-[22px]"
           >
             <ShadowBox className="p-[20px]">
-              <div className="text-[14px] font-bold">{item.title}</div>
+              <Title className="text-[14px] font-bold">{item.title}</Title>
               <div className="mt-[10px] mb-[22px] text-[12px] font-normal overflow-ellipsis line-clamp-3">
                 {item.content}
               </div>
@@ -74,6 +134,12 @@ export default function DeptNoticePage() {
             </ShadowBox>
           </Link>
         ))}
+
+      {/* 스타일 영향 없는 트리거 엘리먼트 */}
+      <div
+        ref={loaderRef}
+        aria-hidden
+      />
     </>
   );
 }

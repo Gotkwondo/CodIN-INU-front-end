@@ -157,7 +157,10 @@ export default function DeptPage() {
         )}
       </ShadowBox>
 
-      <ShadowBox className="mt-[22px] pb-[22px]">
+      <ShadowBox
+        id="ananymous-voice-box"
+        className="mt-[22px] pb-[22px]"
+      >
         <DeptHeader
           SVG={Opinion}
           title="익명의 소리함"
