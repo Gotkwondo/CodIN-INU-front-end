@@ -234,9 +234,11 @@ export default function CourseDetailPage() {
           <div>
             <div className="relative flex justify-evenly h-fit mb-[22px]">
               <div className="flex flex-col justify-center items-center py-[13px]">
-                <div className="text-[28px] font-[900] mb-[2px]">2.0</div>
+                <div className="text-[28px] font-[900] mb-[2px]">
+                  {course.starRating.toPrecision(2)}
+                </div>
                 <Rating score={course.starRating} />
-                <div className="text-[#CDCDCD] font-medium text-[10px] mt-[13px]">{`${3} 명의 학생이 평가했어요`}</div>
+                <div className="text-[#CDCDCD] font-medium text-[10px] mt-[13px]">{`${reviews.length} 명의 학생이 평가했어요`}</div>
               </div>
               <div className="border-l border-[#D4D4D4] self-stretch" />
               <div className="flex gap-[16px] py-[5px]">

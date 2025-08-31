@@ -15,7 +15,7 @@ export default function BottomNav() {
     pathname === href || pathname.startsWith(href + '/');
   // /chatroom/* display none
 
-  const hideOnPaths = ['/chatRoom/'];
+  const hideOnPaths = ['/chatRoom/', '/boards/', '/vote/'];
   const shouldHide = hideOnPaths.some(path => pathname.startsWith(path));
 
   return (

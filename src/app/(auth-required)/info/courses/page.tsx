@@ -174,7 +174,7 @@ export default function CoursePage() {
               </h3>
             </div>
           </div>
-          <div className="absolute w-[110%] h-[175px] -left-[20px] bg-white top-0 z-10 rounded-[30px]"></div>
+          <div className="absolute w-[110%] h-[195px] -left-[20px] bg-white top-[-20px] z-10 rounded-b-[30px]"></div>
         </div>
         {courses.length === 0 && !isLoading ? (
           <div className="flex flex-col items-center justify-center gap-[17px] mt-[18vh]">

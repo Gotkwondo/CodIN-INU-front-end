@@ -149,7 +149,7 @@ export default function DateCalendar() {
         <div className="pb-[16px]">
           {selectedDate &&
             calendarData_fetched[selectedDate[1]].items.length > 0 && (
-              <div className="absolute w-max text-[10px] top-[60px] left-[50%] translate-x-[-50%] rounded-[10px] backdrop-blur-[2px] bg-[#111111A3] text-white pt-[9px] pb-[13px] px-[13px]">
+              <div className="absolute w-max text-[10px] top-[60px] left-[50%] translate-x-[-50%] rounded-[10px] backdrop-blur-[2px] bg-[#111111A3] text-white pt-[9px] pb-[13px] px-[13px] z-[200]">
                 <div className="ml-[13px] font-normal">
                   {selectedDate[2].format('MM.DD')}
                 </div>

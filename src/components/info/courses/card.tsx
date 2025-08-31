@@ -3,13 +3,21 @@ import Link from 'next/link';
 import Heart from '@public/icons/heart.svg';
 import Rating from '@/components/info/rating';
 import { Course } from '@/interfaces/course';
-import { forwardRef, useEffect, useState } from 'react';
+import { forwardRef, useState } from 'react';
 import { fetchClient } from '@/api/clients/fetchClient';
+import { Tag, tagsArray } from '@/interfaces/partners';
 
 interface Props {
   fav?: boolean;
   value: Course;
 }
+
+const tagMap: Record<Tag, string> = {
+  COMPUTER_SCI: '컴퓨터공학과',
+  EMBEDDED: '임베디드시스템공학과',
+  INFO_COMM: '정보통신공학과',
+  IT_COLLEGE: '정보대',
+};
 
 const CourseCard = forwardRef<HTMLDivElement, Props>(
   ({ fav = false, value }, ref) => {
@@ -82,7 +90,11 @@ const CourseCard = forwardRef<HTMLDivElement, Props>(
                   <p className="text-[12px] text-sub">{professor}</p>
                 </div>
                 <div className="mt-[29px] mb-[8px] text-[12px]">
-                  <div className="text-sub text-sr">{department}</div>
+                  <div className="text-sub text-sr">
+                    {tagMap[department as Tag]
+                      ? tagMap[department]
+                      : department}
+                  </div>
                   <div className="text-[12px] font-medium">
                     {grade}학년 {credit}학점
                   </div>
